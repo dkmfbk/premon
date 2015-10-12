@@ -17,10 +17,13 @@ public class LEMON {
 	static final URI ARGUMENT = factory.createURI(NAMESPACE, "Argument");
 	static final URI SENSE_DEFINITION = factory.createURI(NAMESPACE, "SenseDefinition");
 	static final URI USAGE_EXAMPLE = factory.createURI(NAMESPACE, "UsageExample");
+	static final URI FORM = factory.createURI(NAMESPACE, "Form");
 
 	static final URI SENSE = factory.createURI(NAMESPACE, "sense");
 	static final URI VALUE = factory.createURI(NAMESPACE, "value");
 	static final URI DEFINITION = factory.createURI(NAMESPACE, "definition");
 	static final URI EXAMPLE = factory.createURI(NAMESPACE, "example");
+	static final URI CANONICAL_FORM = factory.createURI(NAMESPACE, "canonicalForm");
+	static final URI WRITTEN_REP = factory.createURI(NAMESPACE, "writtenRep");
 
 }
