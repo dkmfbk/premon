@@ -143,7 +143,10 @@ public class Extract {
 				namespace = cmd.getOptionValue("namespace", String.class);
 			}
 
-			folder = new File("/Users/alessio/Documents/scripts/pb2rdf/data/propbank-1.7");
+			// Fix due to XML library
+			System.setProperty("javax.xml.accessExternalDTD", "file");
+
+//			folder = new File("/Users/alessio/Documents/scripts/pb2rdf/data/propbank-1.7");
 //			File wnRDF = new File("/Users/alessio/Documents/scripts/pb2rdf/data/wn31.nt");
 
 //			folder = new File("/Users/alessio/Documents/scripts/pb2rdf/data/frames");
