@@ -20,10 +20,12 @@ public class LEMON {
 	static final URI FORM = factory.createURI(NAMESPACE, "Form");
 
 	static final URI SENSE = factory.createURI(NAMESPACE, "sense");
+	static final URI SENSE_RELATION = factory.createURI(NAMESPACE, "senseRelation");
 	static final URI VALUE = factory.createURI(NAMESPACE, "value");
 	static final URI DEFINITION = factory.createURI(NAMESPACE, "definition");
 	static final URI EXAMPLE = factory.createURI(NAMESPACE, "example");
 	static final URI CANONICAL_FORM = factory.createURI(NAMESPACE, "canonicalForm");
 	static final URI WRITTEN_REP = factory.createURI(NAMESPACE, "writtenRep");
+	static final URI BROADER = factory.createURI(NAMESPACE, "broader");
 
 }

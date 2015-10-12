@@ -1,7 +1,12 @@
 package eu.fbk.dkm.pb2rdf;
 
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.vocabulary.RDFS;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by alessio on 09/10/15.
@@ -33,7 +38,17 @@ public class PB2RDF {
 	static final URI PB_EX_ARG = factory.createURI(NAMESPACE, "pbExampleArg");
 	static final URI PB_EX_REL = factory.createURI(NAMESPACE, "pbExampleRel");
 
+	static final URI SIMILAR = factory.createURI(NAMESPACE, "similar");
+
 	static final URI createRole(Object roleName) {
 		return factory.createURI(NAMESPACE, "role_" + roleName.toString());
+	}
+
+	static final List<Statement> createOntologyStatements() {
+		List<Statement> statements = new ArrayList<Statement>();
+
+		statements.add(factory.createStatement(SIMILAR, RDFS.SUBPROPERTYOF, LEMON.SENSE_RELATION));
+
+		return statements;
 	}
 }

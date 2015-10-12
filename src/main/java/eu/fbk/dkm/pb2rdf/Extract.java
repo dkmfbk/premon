@@ -1,14 +1,21 @@
 package eu.fbk.dkm.pb2rdf;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import eu.fbk.dkm.pb2rdf.frames.*;
 import eu.fbk.dkm.utils.CommandLine;
 import eu.fbk.rdfpro.*;
+import eu.fbk.rdfpro.util.Algebra;
+import eu.fbk.rdfpro.util.QuadModel;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
@@ -26,7 +33,8 @@ public class Extract {
 	/*todo:
 
 	- Verificare output
-	- Allineare con WordNet, VerbNet (UbyLemon), FrameNet (UbyLemon)
+	- Allineare con FrameNet (UbyLemon)
+	- Modificare behavor WordNet (in modo che creiamo noi LexicalEntry(s) e LexicalForm(s) e ci siano i sameAs)
 
 	- Decidere per l'ontologia
 	- NomBank
@@ -103,13 +111,15 @@ public class Extract {
 					.withHeader("Transform a ProbBank instance into RDF")
 					.withOption("i", "input", "input folder", "FOLDER", CommandLine.Type.DIRECTORY_EXISTING, true, false, true)
 					.withOption("w", "output", "Output file", "FILE", CommandLine.Type.FILE, true, false, true)
-					.withOption("W", "wordnet", "WordNet RDF triple file", "FILE", CommandLine.Type.FILE_EXISTING, true, false, false)
 					.withOption("l", "lang", String.format("Default language for literals, default %s", DEFAULT_LANGUAGE), "ISO-CODE", CommandLine.Type.STRING, true, false, false)
 					.withOption("v", "non-verbs", "Extract also non-verbs (only for OntoNotes)")
 					.withOption("o", "ontonotes", "Specify that this is an OntoNotes version of ProbBank")
 					.withOption("e", "examples", "Extract examples")
 					.withOption("s", "single", "Extract single lemma", "LEMMA", CommandLine.Type.STRING, true, false, false)
 					.withOption(null, "namespace", String.format("Namespace, default %s", DEFAULT_NAMESPACE), "URI", CommandLine.Type.STRING, true, false, false)
+					.withOption(null, "wordnet", "WordNet RDF triple file", "FILE", CommandLine.Type.FILE_EXISTING, true, false, false)
+					.withOption(null, "framenet", "FrameNet RDF triple file", "FILE", CommandLine.Type.FILE_EXISTING, true, false, false)
+					.withOption(null, "verbnet", "VerbNet RDF triple file", "FILE", CommandLine.Type.FILE_EXISTING, true, false, false)
 					.withLogger(LoggerFactory.getLogger("eu.fbk")).parse(args);
 
 			File folder = cmd.getOptionValue("input", File.class);
@@ -118,6 +128,14 @@ public class Extract {
 			File wnRDF = null;
 			if (cmd.hasOption("wordnet")) {
 				wnRDF = cmd.getOptionValue("wordnet", File.class);
+			}
+			File fnRDF = null;
+			if (cmd.hasOption("framenet")) {
+				fnRDF = cmd.getOptionValue("framenet", File.class);
+			}
+			File vnRDF = null;
+			if (cmd.hasOption("verbnet")) {
+				vnRDF = cmd.getOptionValue("verbnet", File.class);
 			}
 
 			String language = DEFAULT_LANGUAGE;
@@ -146,6 +164,8 @@ public class Extract {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 
 			HashSet<Statement> statements = new HashSet<Statement>();
+			Statement statement;
+			statements.addAll(PB2RDF.createOntologyStatements());
 
 			HashSet<String> roleNs = new HashSet<String>();
 			HashSet<String> roleFs = new HashSet<String>();
@@ -154,6 +174,7 @@ public class Extract {
 
 			final HashSet<URI> wnURIs = new HashSet<URI>();
 			if (wnRDF != null) {
+				LOGGER.info("Loading WordNet");
 				RDFSource source = RDFSources.read(true, true, null, null, wnRDF.getAbsolutePath());
 				source.emit(new AbstractRDFHandler() {
 					@Override
@@ -168,6 +189,72 @@ public class Extract {
 					}
 				}, 1);
 			}
+
+			Multimap<String, URI> vnFrames = HashMultimap.create();
+			final QuadModel model = QuadModel.create();
+			if (vnRDF != null) {
+				LOGGER.info("Loading VerbNet");
+				RDFSource source = RDFSources.read(true, true, null, null, vnRDF.getAbsolutePath());
+				source.emit(new AbstractRDFHandler() {
+					@Override
+					public void handleStatement(Statement statement) throws RDFHandlerException {
+						if (statement.getObject().equals(LEMON.LEXICAL_SENSE) && statement.getPredicate().equals(RDF.TYPE)) {
+							synchronized (model) {
+								model.add(statement);
+							}
+						}
+						if (statement.getPredicate().equals(PURL.LABEL)) {
+							synchronized (model) {
+								model.add(statement);
+							}
+						}
+						if (statement.getPredicate().equals(PURL.SEMANTIC_LABEL)) {
+							synchronized (model) {
+								model.add(statement);
+							}
+						}
+					}
+				}, 1);
+				TupleExpr query = Algebra.parseTupleExpr(
+						"SELECT ?l ?s WHERE {\n" +
+								"\t?s a <http://lemon-model.net/lemon#LexicalSense> .\n" +
+								"\t?s <http://purl.org/olia/ubyCat.owl#semanticLabel> ?b .\n" +
+								"\t?b <http://purl.org/olia/ubyCat.owl#label> ?l\n" +
+								"}",
+						null, null);
+				Iterator<BindingSet> bindingSetIterator = model.evaluate(query, null, null);
+				while (bindingSetIterator.hasNext()) {
+					BindingSet bindings = bindingSetIterator.next();
+					Value vnFrame = bindings.getValue("l");
+					Value vnSense = bindings.getValue("s");
+					if (vnSense instanceof URI) {
+						String stringValue = vnFrame.stringValue();
+						stringValue = stringValue.replaceAll("^[^0-9]+-", "");
+						vnFrames.put(stringValue, (URI) vnSense);
+					}
+				}
+			}
+			for (String vnSense : vnFrames.keySet()) {
+				String vnID = "vn_" + vnSense;
+				URI vnSenseURI = factory.createURI(namespace, vnID);
+
+				statement = factory.createStatement(vnSenseURI, RDF.TYPE, LEMON.LEXICAL_SENSE);
+				statements.add(statement);
+
+				for (URI sense : vnFrames.get(vnSense)) {
+					statement = factory.createStatement(sense, LEMON.BROADER, vnSenseURI);
+					statements.add(statement);
+				}
+			}
+
+
+//			for (String value : vnFrames.keySet()) {
+//				System.out.println(value);
+//				System.out.println(vnFrames.get(value));
+//			}
+//
+//
+//			System.exit(1);
 
 			// First tour
 			LOGGER.info("Getting list of roles");
@@ -290,7 +377,6 @@ public class Extract {
 
 				for (Object predicate : noteOrPredicate) {
 					if (predicate instanceof Predicate) {
-						Statement statement;
 
 						String lemma = ((Predicate) predicate).getLemma().replace('_', '+').replace(' ', '+');
 
@@ -321,6 +407,10 @@ public class Extract {
 						for (Object roleset : noteOrRoleset) {
 							if (roleset instanceof Roleset) {
 								String rolesetID = ((Roleset) roleset).getId();
+								String[] vnClasses = new String[0];
+								if (((Roleset) roleset).getVncls() != null) {
+									vnClasses = ((Roleset) roleset).getVncls().trim().split("\\s+");
+								}
 
 								if (roleSetsToIgnore.contains(rolesetID)) {
 									continue;
@@ -337,6 +427,20 @@ public class Extract {
 								statements.add(statement);
 								statement = factory.createStatement(predicateURI, LEMON.SENSE, senseURI);
 								statements.add(statement);
+
+								for (String vnSense : vnClasses) {
+
+									if (!vnFrames.containsKey(vnSense)) {
+										continue;
+									}
+
+									String vnID = "vn_" + vnSense;
+									URI vnSenseURI = factory.createURI(namespace, vnID);
+
+									statement = factory.createStatement(senseURI, LEMON.BROADER, vnSenseURI);
+									statements.add(statement);
+								}
+
 
 								if (name != null && name.length() > 0) {
 									URI definitionURI = factory.createURI(namespace, rolesetID + "_def");
