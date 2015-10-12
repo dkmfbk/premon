@@ -3,16 +3,13 @@ package eu.fbk.dkm.pb2rdf;
 import com.google.common.io.Files;
 import eu.fbk.dkm.pb2rdf.frames.*;
 import eu.fbk.dkm.utils.CommandLine;
-import eu.fbk.rdfpro.AbstractRDFHandler;
-import eu.fbk.rdfpro.RDFSource;
-import eu.fbk.rdfpro.RDFSources;
-import eu.fbk.rdfpro.util.Namespaces;
-import eu.fbk.rdfpro.util.Statements;
+import eu.fbk.rdfpro.*;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +25,6 @@ public class Extract {
 
 	/*todo:
 
-	- Mettere CommandLine
 	- Verificare output
 	- Allineare con WordNet, VerbNet (UbyLemon), FrameNet (UbyLemon)
 
@@ -106,6 +102,7 @@ public class Extract {
 					.withName("probbank-extractor")
 					.withHeader("Transform a ProbBank instance into RDF")
 					.withOption("i", "input", "input folder", "FOLDER", CommandLine.Type.DIRECTORY_EXISTING, true, false, true)
+					.withOption("w", "output", "Output file", "FILE", CommandLine.Type.FILE, true, false, true)
 					.withOption("W", "wordnet", "WordNet RDF triple file", "FILE", CommandLine.Type.FILE_EXISTING, true, false, false)
 					.withOption("l", "lang", String.format("Default language for literals, default %s", DEFAULT_LANGUAGE), "ISO-CODE", CommandLine.Type.STRING, true, false, false)
 					.withOption("v", "non-verbs", "Extract also non-verbs (only for OntoNotes)")
@@ -113,11 +110,10 @@ public class Extract {
 					.withOption("e", "examples", "Extract examples")
 					.withOption("s", "single", "Extract single lemma", "LEMMA", CommandLine.Type.STRING, true, false, false)
 					.withOption(null, "namespace", String.format("Namespace, default %s", DEFAULT_NAMESPACE), "URI", CommandLine.Type.STRING, true, false, false)
-
-//					.withOption("o", "output", "output file", "FILE", CommandLine.Type.FILE, true, false, true)
 					.withLogger(LoggerFactory.getLogger("eu.fbk")).parse(args);
 
 			File folder = cmd.getOptionValue("input", File.class);
+			File outputFile = cmd.getOptionValue("output", File.class);
 
 			File wnRDF = null;
 			if (cmd.hasOption("wordnet")) {
@@ -145,13 +141,6 @@ public class Extract {
 
 			// Fix due to XML library
 			System.setProperty("javax.xml.accessExternalDTD", "file");
-
-//			folder = new File("/Users/alessio/Documents/scripts/pb2rdf/data/propbank-1.7");
-//			File wnRDF = new File("/Users/alessio/Documents/scripts/pb2rdf/data/wn31.nt");
-
-//			folder = new File("/Users/alessio/Documents/scripts/pb2rdf/data/frames");
-//			isOntoNotes = true;
-//			extractExamples = true;
 
 			JAXBContext jaxbContext = JAXBContext.newInstance(Frameset.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -294,7 +283,7 @@ public class Extract {
 					continue;
 				}
 
-				LOGGER.info("{} ({})", fileName, lemmaType);
+				LOGGER.debug("{} ({})", fileName, lemmaType);
 
 				Frameset frameset = (Frameset) jaxbUnmarshaller.unmarshal(file);
 				List<Object> noteOrPredicate = frameset.getNoteOrPredicate();
@@ -379,8 +368,12 @@ public class Extract {
 
 												statement = factory.createStatement(roleURI, RDF.TYPE, LEMON.ARGUMENT);
 												statements.add(statement);
-												statement = factory.createStatement(roleURI, PB2RDF.PB_THETA_ROLE, roleStatements.get(nf.getArgName()).getSubject());
-												statements.add(statement);
+												try {
+													statement = factory.createStatement(roleURI, PB2RDF.PB_THETA_ROLE, roleStatements.get(nf.getArgName()).getSubject());
+													statements.add(statement);
+												} catch (Exception e) {
+													LOGGER.error(nf.getArgName() + " " + fileName);
+												}
 
 												if (descr != null && descr.length() > 0) {
 													URI definitionURI = factory.createURI(namespace, roleText + "_def");
@@ -548,17 +541,28 @@ public class Extract {
 						}
 					}
 				}
-
-				break;
 			}
 
-			for (Statement statement : statements) {
-				System.out.println(
-						Statements.formatValue(statement.getSubject(), Namespaces.DEFAULT) + " " +
-								Statements.formatValue(statement.getPredicate(), Namespaces.DEFAULT) + " " +
-								Statements.formatValue(statement.getObject(), Namespaces.DEFAULT)
-				);
+			RDFSource source = RDFSources.wrap(statements);
+			try {
+				RDFHandler rdfHandler = RDFHandlers.write(null, 1000, outputFile.getAbsolutePath());
+				RDFProcessors
+						.sequence(RDFProcessors.prefix(null), RDFProcessors.unique(false))
+						.apply(source, rdfHandler, 1);
+			} catch (Exception e) {
+				LOGGER.error("Input/output error, the file {} has not been saved ({})", outputFile.getAbsolutePath(), e.getMessage());
+				throw new RDFHandlerException(e);
 			}
+
+			LOGGER.info("File {} saved", outputFile.getAbsolutePath());
+
+//			for (Statement statement : statements) {
+//				System.out.println(
+//						Statements.formatValue(statement.getSubject(), Namespaces.DEFAULT) + " " +
+//								Statements.formatValue(statement.getPredicate(), Namespaces.DEFAULT) + " " +
+//								Statements.formatValue(statement.getObject(), Namespaces.DEFAULT)
+//				);
+//			}
 
 		} catch (Throwable ex) {
 			CommandLine.fail(ex);
