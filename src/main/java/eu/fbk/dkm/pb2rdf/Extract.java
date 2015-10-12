@@ -2,6 +2,7 @@ package eu.fbk.dkm.pb2rdf;
 
 import com.google.common.io.Files;
 import eu.fbk.dkm.pb2rdf.frames.*;
+import eu.fbk.dkm.utils.CommandLine;
 import eu.fbk.rdfpro.AbstractRDFHandler;
 import eu.fbk.rdfpro.RDFSource;
 import eu.fbk.rdfpro.RDFSources;
@@ -36,16 +37,15 @@ public class Extract {
 
 	*/
 
-	static final String NAMESPACE = "http://pb2rdf.org/";
+	private static final Logger LOGGER = LoggerFactory.getLogger(Extract.class);
+
 	static final String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
-	static final Pattern ONTONOTES_FILENAME = Pattern.compile("(.*)-([a-z]+)\\.xml");
+	static final Pattern ONTONOTES_FILENAME_PATTERN = Pattern.compile("(.*)-([a-z]+)\\.xml");
 
 	static final ValueFactoryImpl factory = ValueFactoryImpl.getInstance();
-	static final boolean ONLY_VERBS_DEFAULT = true;
-	static final boolean IS_ONTONOTES_DEFAULT = false;
-	static final boolean EXTRACT_EXAMPLES_DEFAULT = false;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Extract.class);
+	static final String DEFAULT_LANGUAGE = "en";
+	static final String DEFAULT_NAMESPACE = "http://pb2rdf.org/";
 
 	// Bugs!
 	private static HashMap<String, String> bugMap = new HashMap<String, String>();
@@ -101,17 +101,54 @@ public class Extract {
 	public static void main(String[] args) {
 
 		try {
-			File folder = new File("/Users/alessio/Documents/scripts/pb2rdf/data/propbank-1.7");
-			File wnRDF = new File("/Users/alessio/Documents/scripts/pb2rdf/data/wn31.nt");
-			String language = "en";
-			boolean onlyVerbs = ONLY_VERBS_DEFAULT;
-			boolean isOntoNotes = IS_ONTONOTES_DEFAULT;
-			boolean extractExamples = EXTRACT_EXAMPLES_DEFAULT;
-			String onlyOne = "gondola";
+			final CommandLine cmd = CommandLine
+					.parser()
+					.withName("probbank-extractor")
+					.withHeader("Transform a ProbBank instance into RDF")
+					.withOption("i", "input", "input folder", "FOLDER", CommandLine.Type.DIRECTORY_EXISTING, true, false, true)
+					.withOption("W", "wordnet", "WordNet RDF triple file", "FILE", CommandLine.Type.FILE_EXISTING, true, false, false)
+					.withOption("l", "lang", String.format("Default language for literals, default %s", DEFAULT_LANGUAGE), "ISO-CODE", CommandLine.Type.STRING, true, false, false)
+					.withOption("v", "non-verbs", "Extract also non-verbs (only for OntoNotes)")
+					.withOption("o", "ontonotes", "Specify that this is an OntoNotes version of ProbBank")
+					.withOption("e", "examples", "Extract examples")
+					.withOption("s", "single", "Extract single lemma", "LEMMA", CommandLine.Type.STRING, true, false, false)
+					.withOption(null, "namespace", String.format("Namespace, default %s", DEFAULT_NAMESPACE), "URI", CommandLine.Type.STRING, true, false, false)
 
-			folder = new File("/Users/alessio/Documents/scripts/pb2rdf/data/frames");
-			isOntoNotes = true;
-			extractExamples = true;
+//					.withOption("o", "output", "output file", "FILE", CommandLine.Type.FILE, true, false, true)
+					.withLogger(LoggerFactory.getLogger("eu.fbk")).parse(args);
+
+			File folder = cmd.getOptionValue("input", File.class);
+
+			File wnRDF = null;
+			if (cmd.hasOption("wordnet")) {
+				wnRDF = cmd.getOptionValue("wordnet", File.class);
+			}
+
+			String language = DEFAULT_LANGUAGE;
+			if (cmd.hasOption("lang")) {
+				language = cmd.getOptionValue("lang", String.class);
+			}
+
+			boolean onlyVerbs = !cmd.hasOption("non-verbs");
+			boolean isOntoNotes = cmd.hasOption("ontonotes");
+			boolean extractExamples = cmd.hasOption("examples");
+
+			String onlyOne = null;
+			if (cmd.hasOption("single")) {
+				onlyOne = cmd.getOptionValue("single", String.class);
+			}
+
+			String namespace = DEFAULT_NAMESPACE;
+			if (cmd.hasOption("namespace")) {
+				namespace = cmd.getOptionValue("namespace", String.class);
+			}
+
+			folder = new File("/Users/alessio/Documents/scripts/pb2rdf/data/propbank-1.7");
+//			File wnRDF = new File("/Users/alessio/Documents/scripts/pb2rdf/data/wn31.nt");
+
+//			folder = new File("/Users/alessio/Documents/scripts/pb2rdf/data/frames");
+//			isOntoNotes = true;
+//			extractExamples = true;
 
 			JAXBContext jaxbContext = JAXBContext.newInstance(Frameset.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -124,19 +161,21 @@ public class Extract {
 			HashSet<String> roleSetsToIgnore = new HashSet<String>();
 
 			final HashSet<URI> wnURIs = new HashSet<URI>();
-			RDFSource source = RDFSources.read(true, true, null, null, wnRDF.getAbsolutePath());
-			source.emit(new AbstractRDFHandler() {
-				@Override
-				public void handleStatement(Statement statement) throws RDFHandlerException {
-					if (statement.getPredicate().equals(RDF.TYPE) && statement.getObject().equals(LEMON.LEXICAL_ENTRY)) {
-						if (statement.getSubject() instanceof URI) {
-							synchronized (wnURIs) {
-								wnURIs.add((URI) statement.getSubject());
+			if (wnRDF != null) {
+				RDFSource source = RDFSources.read(true, true, null, null, wnRDF.getAbsolutePath());
+				source.emit(new AbstractRDFHandler() {
+					@Override
+					public void handleStatement(Statement statement) throws RDFHandlerException {
+						if (statement.getPredicate().equals(RDF.TYPE) && statement.getObject().equals(LEMON.LEXICAL_ENTRY)) {
+							if (statement.getSubject() instanceof URI) {
+								synchronized (wnURIs) {
+									wnURIs.add((URI) statement.getSubject());
+								}
 							}
 						}
 					}
-				}
-			}, 1);
+				}, 1);
+			}
 
 			// First tour
 			LOGGER.info("Getting list of roles");
@@ -238,7 +277,7 @@ public class Extract {
 				String lemmaFileName = fileName.replaceAll("\\.xml", "");
 
 				if (isOntoNotes) {
-					Matcher matcher = ONTONOTES_FILENAME.matcher(file.getName());
+					Matcher matcher = ONTONOTES_FILENAME_PATTERN.matcher(file.getName());
 					if (matcher.matches()) {
 						lemmaType = matcher.group(2);
 						lemmaFileName = matcher.group(1);
@@ -271,12 +310,12 @@ public class Extract {
 						else {
 							LOGGER.debug("Missing frame {}", lemma);
 
-							predicateURI = factory.createURI(NAMESPACE, lemma);
+							predicateURI = factory.createURI(namespace, lemma);
 							statement = factory.createStatement(predicateURI, RDF.TYPE, LEMON.LEXICAL_ENTRY);
 							statements.add(statement);
 
 							// Using this paradigm, there is only one form
-							URI formURI = factory.createURI(NAMESPACE, lemma + "_form");
+							URI formURI = factory.createURI(namespace, lemma + "_form");
 							statement = factory.createStatement(predicateURI, LEMON.CANONICAL_FORM, formURI);
 							statements.add(statement);
 							statement = factory.createStatement(formURI, RDF.TYPE, LEMON.FORM);
@@ -297,7 +336,7 @@ public class Extract {
 
 								String name = ((Roleset) roleset).getName();
 
-								URI senseURI = factory.createURI(NAMESPACE, rolesetID);
+								URI senseURI = factory.createURI(namespace, rolesetID);
 
 								//todo: add roleset as a property?
 								statement = factory.createStatement(senseURI, RDF.TYPE, LEMON.LEXICAL_SENSE);
@@ -308,7 +347,7 @@ public class Extract {
 								statements.add(statement);
 
 								if (name != null && name.length() > 0) {
-									URI definitionURI = factory.createURI(NAMESPACE, rolesetID + "_def");
+									URI definitionURI = factory.createURI(namespace, rolesetID + "_def");
 									addDefinition(statements, senseURI, definitionURI, name, language);
 								}
 
@@ -333,7 +372,7 @@ public class Extract {
 												}
 
 												String roleText = rolesetID + "_role-" + nf.getArgName();
-												URI roleURI = factory.createURI(NAMESPACE, roleText);
+												URI roleURI = factory.createURI(namespace, roleText);
 
 												statement = factory.createStatement(roleURI, RDF.TYPE, LEMON.ARGUMENT);
 												statements.add(statement);
@@ -341,7 +380,7 @@ public class Extract {
 												statements.add(statement);
 
 												if (descr != null && descr.length() > 0) {
-													URI definitionURI = factory.createURI(NAMESPACE, roleText + "_def");
+													URI definitionURI = factory.createURI(namespace, roleText + "_def");
 													addDefinition(statements, roleURI, definitionURI, descr, language);
 												}
 											}
@@ -391,7 +430,7 @@ public class Extract {
 									if (text != null && text.length() > 0) {
 
 										String exampleStr = rolesetID + "_ex" + (examples.size() > 1 ? example++ : "");
-										URI exampleURI = factory.createURI(NAMESPACE, exampleStr);
+										URI exampleURI = factory.createURI(namespace, exampleStr);
 
 										statement = factory.createStatement(exampleURI, RDF.TYPE, LEMON.USAGE_EXAMPLE);
 										statements.add(statement);
@@ -440,7 +479,7 @@ public class Extract {
 													addendum = "_" + (i + 1);
 												}
 
-												URI argURI = factory.createURI(NAMESPACE, exampleStr + "_arg-" + argName + addendum);
+												URI argURI = factory.createURI(namespace, exampleStr + "_arg-" + argName + addendum);
 
 												statement = factory.createStatement(argURI, RDF.TYPE, PB2RDF.EX_ARG);
 												statements.add(statement);
@@ -469,7 +508,7 @@ public class Extract {
 												throw new Exception("argValue is null");
 											}
 
-											URI relURI = factory.createURI(NAMESPACE, exampleStr + "_rel" + addendum);
+											URI relURI = factory.createURI(namespace, exampleStr + "_rel" + addendum);
 
 											statement = factory.createStatement(relURI, RDF.TYPE, PB2RDF.EX_REL);
 											statements.add(statement);
@@ -484,7 +523,7 @@ public class Extract {
 										}
 
 										if (inflection != null) {
-											URI inflectionURI = factory.createURI(NAMESPACE, exampleStr + "_inflection");
+											URI inflectionURI = factory.createURI(namespace, exampleStr + "_inflection");
 
 											statement = factory.createStatement(inflectionURI, RDF.TYPE, PB2RDF.INFLECTION);
 											statements.add(statement);
@@ -518,8 +557,8 @@ public class Extract {
 				);
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Throwable ex) {
+			CommandLine.fail(ex);
 		}
 
 
