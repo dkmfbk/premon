@@ -13,6 +13,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.algebra.TupleExpr;
@@ -33,9 +34,6 @@ public class Extract {
 	/*todo:
 
 	- Verificare output
-	- Allineare con FrameNet (UbyLemon)
-	- Modificare behavor WordNet (in modo che creiamo noi LexicalEntry(s) e LexicalForm(s) e ci siano i sameAs)
-
 	- Decidere per l'ontologia
 	- NomBank
 
@@ -45,6 +43,9 @@ public class Extract {
 
 	static final String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
 	static final Pattern ONTONOTES_FILENAME_PATTERN = Pattern.compile("(.*)-([a-z]+)\\.xml");
+	static final Pattern THETA_NAME_PATTERN = Pattern.compile("^([^0-9]+)([0-9]+)$");
+	static final String VN_NAME_REGEXP = "^[^0-9]+-";
+	static final Pattern VN_CODE_PATTERN = Pattern.compile("^[0-9]+(\\.[0-9]+)*(-[0-9]+)*$");
 
 	static final ValueFactoryImpl factory = ValueFactoryImpl.getInstance();
 
@@ -60,6 +61,8 @@ public class Extract {
 		bugMap.put("ds", "dis"); // assume-v.xml
 		bugMap.put("a", "agent"); // evolve-v.xml
 		bugMap.put("pred", "prd"); // flatten-v.xml
+		bugMap.put("o", "0"); // be.xml (be.04)
+		bugMap.put("emitter of hoot", "0"); // hoot.xml
 	}
 
 	private static HashSet<String> functionTags = new HashSet<String>();
@@ -115,6 +118,7 @@ public class Extract {
 					.withOption("v", "non-verbs", "Extract also non-verbs (only for OntoNotes)")
 					.withOption("o", "ontonotes", "Specify that this is an OntoNotes version of ProbBank")
 					.withOption("e", "examples", "Extract examples")
+					.withOption(null, "use-wn-lex", "Use WordNet LexicalEntries when available")
 					.withOption("s", "single", "Extract single lemma", "LEMMA", CommandLine.Type.STRING, true, false, false)
 					.withOption(null, "namespace", String.format("Namespace, default %s", DEFAULT_NAMESPACE), "URI", CommandLine.Type.STRING, true, false, false)
 					.withOption(null, "wordnet", "WordNet RDF triple file", "FILE", CommandLine.Type.FILE_EXISTING, true, false, false)
@@ -146,6 +150,7 @@ public class Extract {
 			boolean onlyVerbs = !cmd.hasOption("non-verbs");
 			boolean isOntoNotes = cmd.hasOption("ontonotes");
 			boolean extractExamples = cmd.hasOption("examples");
+			boolean useWordNetLEs = cmd.hasOption("use-wn-lex");
 
 			String onlyOne = null;
 			if (cmd.hasOption("single")) {
@@ -190,10 +195,51 @@ public class Extract {
 				}, 1);
 			}
 
+			Multimap<String, URI> fnFrames = HashMultimap.create();
+			if (fnRDF != null) {
+				LOGGER.info("Loading FrameNet");
+				final QuadModel model = QuadModel.create();
+				RDFSource source = RDFSources.read(true, true, null, null, fnRDF.getAbsolutePath());
+				source.emit(new AbstractRDFHandler() {
+					@Override
+					public void handleStatement(Statement statement) throws RDFHandlerException {
+						if (statement.getObject().equals(LEMON.LEXICAL_SENSE) && statement.getPredicate().equals(RDF.TYPE)) {
+							synchronized (model) {
+								model.add(statement);
+							}
+						}
+						if (statement.getPredicate().equals(PURL.LABEL)) {
+							synchronized (model) {
+								model.add(statement);
+							}
+						}
+					}
+				}, 1);
+				TupleExpr query = Algebra.parseTupleExpr(
+						"SELECT ?s ?l\n" +
+								"WHERE {\n" +
+								"\t?s a <http://lemon-model.net/lemon#LexicalSense> .\n" +
+								"\t?s <http://purl.org/olia/ubyCat.owl#label> ?l\n" +
+								"}",
+						null, null);
+				Iterator<BindingSet> bindingSetIterator = model.evaluate(query, null, null);
+				while (bindingSetIterator.hasNext()) {
+					BindingSet bindings = bindingSetIterator.next();
+					Value fnFrame = bindings.getValue("l");
+					Value fnSense = bindings.getValue("s");
+					if (fnSense instanceof URI) {
+						String stringValue = fnFrame.stringValue().toLowerCase();
+						fnFrames.put(stringValue, (URI) fnSense);
+					}
+				}
+			}
+
 			Multimap<String, URI> vnFrames = HashMultimap.create();
-			final QuadModel model = QuadModel.create();
+//			Map<URI, Multimap<String, URI>> vnRoles = new HashMap<URI, Multimap<String, URI>>();
+
 			if (vnRDF != null) {
 				LOGGER.info("Loading VerbNet");
+				final QuadModel model = QuadModel.create();
 				RDFSource source = RDFSources.read(true, true, null, null, vnRDF.getAbsolutePath());
 				source.emit(new AbstractRDFHandler() {
 					@Override
@@ -208,6 +254,21 @@ public class Extract {
 								model.add(statement);
 							}
 						}
+//						if (statement.getPredicate().equals(LEMON.BROADER)) {
+//							synchronized (model) {
+//								model.add(statement);
+//							}
+//						}
+//						if (statement.getPredicate().equals(LEMON.SEM_ARG)) {
+//							synchronized (model) {
+//								model.add(statement);
+//							}
+//						}
+//						if (statement.getPredicate().equals(PURL.SEMANTIC_ROLE)) {
+//							synchronized (model) {
+//								model.add(statement);
+//							}
+//						}
 						if (statement.getPredicate().equals(PURL.SEMANTIC_LABEL)) {
 							synchronized (model) {
 								model.add(statement);
@@ -215,29 +276,57 @@ public class Extract {
 						}
 					}
 				}, 1);
-				TupleExpr query = Algebra.parseTupleExpr(
+
+				TupleExpr query;
+				Iterator<BindingSet> bindingSetIterator;
+
+				// Frames
+				query = Algebra.parseTupleExpr(
 						"SELECT ?l ?s WHERE {\n" +
 								"\t?s a <http://lemon-model.net/lemon#LexicalSense> .\n" +
 								"\t?s <http://purl.org/olia/ubyCat.owl#semanticLabel> ?b .\n" +
 								"\t?b <http://purl.org/olia/ubyCat.owl#label> ?l\n" +
 								"}",
 						null, null);
-				Iterator<BindingSet> bindingSetIterator = model.evaluate(query, null, null);
+				bindingSetIterator = model.evaluate(query, null, null);
 				while (bindingSetIterator.hasNext()) {
 					BindingSet bindings = bindingSetIterator.next();
 					Value vnFrame = bindings.getValue("l");
 					Value vnSense = bindings.getValue("s");
 					if (vnSense instanceof URI) {
 						String stringValue = vnFrame.stringValue();
-						stringValue = stringValue.replaceAll("^[^0-9]+-", "");
+						stringValue = getSenseNumberOnly(stringValue);
 						vnFrames.put(stringValue, (URI) vnSense);
 					}
 				}
+
+				// Roles
+//				query = Algebra.parseTupleExpr("SELECT ?l ?s ?a WHERE {\n" +
+//						"\t?s a <http://lemon-model.net/lemon#LexicalSense> .\n" +
+//						"\t?s <http://lemon-model.net/lemon#broader> ?p .\n" +
+//						"\t?p a <http://lemon-model.net/lemon#LexicalSense> .\n" +
+//						"\t?p <http://lemon-model.net/lemon#semArg> ?a .\n" +
+//						"\t?a <http://purl.org/olia/ubyCat.owl#semanticRole> ?l\n" +
+//						"}", null, null);
+//				bindingSetIterator = model.evaluate(query, null, null);
+//				while (bindingSetIterator.hasNext()) {
+//					BindingSet bindings = bindingSetIterator.next();
+//					Value vnRole = bindings.getValue("l");
+//					Value vnSense = bindings.getValue("s");
+//					Value vnArgument = bindings.getValue("a");
+//
+//					String vnRoleString = vnRole.stringValue().toLowerCase().replaceAll("\\[.*\\]", "");
+//					if (vnSense instanceof URI && vnArgument instanceof URI) {
+//						if (!vnRoles.containsKey(vnSense)) {
+//							vnRoles.put((URI) vnSense, HashMultimap.<String, URI>create());
+//						}
+//						vnRoles.get(vnSense).put(vnRoleString, (URI) vnArgument);
+//					}
+//				}
 			}
 			for (String vnSense : vnFrames.keySet()) {
-				String vnID = "vn_" + vnSense;
-				URI vnSenseURI = factory.createURI(namespace, vnID);
 
+				URI vnSenseURI = createVerbNetURIForSense(vnSense, namespace);
 				statement = factory.createStatement(vnSenseURI, RDF.TYPE, LEMON.LEXICAL_SENSE);
 				statements.add(statement);
 
@@ -248,20 +337,35 @@ public class Extract {
 			}
 
 
-//			for (String value : vnFrames.keySet()) {
-//				System.out.println(value);
-//				System.out.println(vnFrames.get(value));
-//			}
-//
-//
-//			System.exit(1);
-
 			// First tour
 			LOGGER.info("Getting list of roles");
+			HashSet<String> thetaRoles = new HashSet<String>();
+			Multimap<String, String> rolesForSense = HashMultimap.create();
+
 			for (File file : Files.fileTreeTraverser().preOrderTraversal(folder)) {
 
 				if (discardFile(file, onlyVerbs, isOntoNotes)) {
 					continue;
+				}
+
+				if (onlyOne != null) {
+					String fileName = file.getName();
+
+					String lemmaFileName = fileName.replaceAll("\\.xml", "");
+
+					if (isOntoNotes) {
+						Matcher matcher = ONTONOTES_FILENAME_PATTERN.matcher(file.getName());
+						if (matcher.matches()) {
+							lemmaFileName = matcher.group(1);
+						}
+						else {
+							throw new Exception("File " + file.getName() + " does not appear to be a good OntoNotes frame file");
+						}
+					}
+
+					if (!onlyOne.equals(lemmaFileName)) {
+						continue;
+					}
 				}
 
 				Frameset frameset = (Frameset) jaxbUnmarshaller.unmarshal(file);
@@ -287,12 +391,36 @@ public class Extract {
 												String f = ((Role) role).getF();
 
 												NF nf = new NF(n, f);
+
+												// Remove bugs
+												String argName = nf.getArgName();
+												if (argName == null) {
+													continue;
+												}
+												if (bugMap.containsKey(argName)) {
+													continue;
+												}
+
 												if (nf.getN() != null) {
 													roleNs.add(nf.getN());
 													okRoles++;
 												}
 												if (nf.getF() != null) {
 													roleFs.add(nf.getF());
+												}
+
+												List<Vnrole> vnroleList = ((Role) role).getVnrole();
+												for (Vnrole vnrole : vnroleList) {
+													if (vnrole.getVntheta() != null && vnrole.getVntheta().trim().length() > 0) {
+														String okRole = getThetaName(vnrole.getVntheta().toLowerCase());
+														thetaRoles.add(okRole);
+
+														String vnSenseString = vnrole.getVncls();
+														HashSet<String> senses = getGoodSensesOnly(vnSenseString);
+														for (String sense : senses) {
+															rolesForSense.put(sense, okRole);
+														}
+													}
 												}
 
 											}
@@ -309,6 +437,30 @@ public class Extract {
 				}
 			}
 
+			for (String thetaRole : thetaRoles) {
+				URI vnRoleURI = createVerbNetURIForRole(thetaRole, namespace);
+				statement = factory.createStatement(vnRoleURI, RDF.TYPE, PB2RDF.VN_THETA_ROLE_C);
+				statements.add(statement);
+			}
+
+			for (String vnSense : rolesForSense.keySet()) {
+
+				URI vnSenseURI = createVerbNetURIForSense(vnSense, namespace);
+
+				// It should already exist from parsing of the VerbNet dataset
+				statement = factory.createStatement(vnSenseURI, RDF.TYPE, LEMON.LEXICAL_SENSE);
+				statements.add(statement);
+
+				for (String role : rolesForSense.get(vnSense)) {
+					URI vnSenseRoleURI = createVerbNetURIForSenseRole(vnSense, role, namespace);
+
+					statement = factory.createStatement(vnSenseRoleURI, RDF.TYPE, LEMON.ARGUMENT);
+					statements.add(statement);
+					statement = factory.createStatement(vnSenseRoleURI, LEMON.SEM_ARG, vnSenseURI);
+					statements.add(statement);
+				}
+			}
+
 			// Create dictionary
 			//todo: distinguish between different types of roles (numeric and generic)?
 
@@ -318,23 +470,23 @@ public class Extract {
 			for (String n : roleNs) {
 				try {
 					Integer number = Integer.parseInt(n);
-					roleStatements.put(number.toString(), factory.createStatement(PB2RDF.createRole(number), RDF.TYPE, PB2RDF.THETA_ROLE));
+					roleStatements.put(number.toString(), factory.createStatement(PB2RDF.createRole(number), RDF.TYPE, PB2RDF.PB_THETA_ROLE_C));
 				} catch (Exception ignored) {
 					// ignored
 				}
 			}
 
 			// Adding agent
-			roleStatements.put(NF.AGENT, factory.createStatement(PB2RDF.createRole(NF.AGENT), RDF.TYPE, PB2RDF.THETA_ROLE));
-			roleStatements.put(NF.MOD, factory.createStatement(PB2RDF.createRole(NF.MOD), RDF.TYPE, PB2RDF.THETA_ROLE)); //todo: see NF class
+			roleStatements.put(NF.AGENT, factory.createStatement(PB2RDF.createRole(NF.AGENT), RDF.TYPE, PB2RDF.PB_THETA_ROLE_C));
+			roleStatements.put(NF.MOD, factory.createStatement(PB2RDF.createRole(NF.MOD), RDF.TYPE, PB2RDF.PB_THETA_ROLE_C)); //todo: see NF class
 
 			for (String functionTag : functionTags) {
-				roleStatements.put(functionTag, factory.createStatement(PB2RDF.createRole(functionTag), RDF.TYPE, PB2RDF.THETA_ROLE));
+				roleStatements.put(functionTag, factory.createStatement(PB2RDF.createRole(functionTag), RDF.TYPE, PB2RDF.PB_THETA_ROLE_C));
 			}
 
 
 			for (String f : roleFs) {
-				roleStatements.put(f, factory.createStatement(PB2RDF.createRole(f), RDF.TYPE, PB2RDF.THETA_ROLE));
+				roleStatements.put(f, factory.createStatement(PB2RDF.createRole(f), RDF.TYPE, PB2RDF.PB_THETA_ROLE_C));
 			}
 
 			for (String key : roleStatements.keySet()) {
@@ -382,15 +534,17 @@ public class Extract {
 
 						URI wnURI = factory.createURI(WN_NAMESPACE, lemma + "-" + lemmaType);
 						URI predicateURI;
-						if (wnURIs.contains(wnURI)) {
+						if (wnURIs.contains(wnURI) && useWordNetLEs) {
 							predicateURI = wnURI;
 						}
 						else {
-							LOGGER.debug("Missing frame {}", lemma);
-
 							predicateURI = factory.createURI(namespace, lemma);
 							statement = factory.createStatement(predicateURI, RDF.TYPE, LEMON.LEXICAL_ENTRY);
 							statements.add(statement);
+							if (wnURIs.contains(wnURI)) {
+								statement = factory.createStatement(predicateURI, OWL.SAMEAS, wnURI);
+								statements.add(statement);
+							}
 
 							// Using this paradigm, there is only one form
 							URI formURI = factory.createURI(namespace, lemma + "_form");
@@ -407,9 +561,15 @@ public class Extract {
 						for (Object roleset : noteOrRoleset) {
 							if (roleset instanceof Roleset) {
 								String rolesetID = ((Roleset) roleset).getId();
+
 								String[] vnClasses = new String[0];
 								if (((Roleset) roleset).getVncls() != null) {
 									vnClasses = ((Roleset) roleset).getVncls().trim().split("\\s+");
+								}
+
+								String[] fnPredicates = new String[0];
+								if (((Roleset) roleset).getFramnet() != null) {
+									fnPredicates = ((Roleset) roleset).getFramnet().trim().toLowerCase().split("\\s+");
 								}
 
 								if (roleSetsToIgnore.contains(rolesetID)) {
@@ -434,11 +594,21 @@ public class Extract {
 										continue;
 									}
 
-									String vnID = "vn_" + vnSense;
-									URI vnSenseURI = factory.createURI(namespace, vnID);
+									URI vnSenseURI = createVerbNetURIForSense(vnSense, namespace);
 
 									statement = factory.createStatement(senseURI, LEMON.BROADER, vnSenseURI);
 									statements.add(statement);
+								}
+
+								for (String fnPredicate : fnPredicates) {
+									if (!fnFrames.containsKey(fnPredicate)) {
+										continue;
+									}
+
+									for (URI fnSenseURI : fnFrames.get(fnPredicate)) {
+										statement = factory.createStatement(senseURI, PB2RDF.SIMILAR, fnSenseURI);
+										statements.add(statement);
+									}
 								}
 
 
@@ -459,6 +629,7 @@ public class Extract {
 												String n = ((Role) role).getN();
 												String f = ((Role) role).getF();
 												String descr = ((Role) role).getDescr();
+												List<Vnrole> vnroleList = ((Role) role).getVnrole();
 
 												NF nf = new NF(n, f);
 												String argName = nf.getArgName();
@@ -467,21 +638,41 @@ public class Extract {
 													continue;
 												}
 
+												// Bugs!
+												if (bugMap.containsKey(argName)) {
+													argName = bugMap.get(argName);
+												}
+
 												String roleText = rolesetID + "_role-" + nf.getArgName();
 												URI roleURI = factory.createURI(namespace, roleText);
 
 												statement = factory.createStatement(roleURI, RDF.TYPE, LEMON.ARGUMENT);
 												statements.add(statement);
 												try {
-													statement = factory.createStatement(roleURI, PB2RDF.PB_THETA_ROLE, roleStatements.get(nf.getArgName()).getSubject());
+													statement = factory.createStatement(roleURI, PB2RDF.PB_THETA_ROLE, roleStatements.get(argName).getSubject());
 													statements.add(statement);
 												} catch (Exception e) {
-													LOGGER.error(nf.getArgName() + " " + fileName);
+													LOGGER.error(argName + " " + roleText + " " + fileName);
 												}
 
 												if (descr != null && descr.length() > 0) {
 													URI definitionURI = factory.createURI(namespace, roleText + "_def");
 													addDefinition(statements, roleURI, definitionURI, descr, language);
+												}
+
+												for (Vnrole vnrole : vnroleList) {
+													String vnSenseString = vnrole.getVncls();
+													String vnTheta = vnrole.getVntheta();
+
+													HashSet<String> senses = getGoodSensesOnly(vnSenseString);
+
+													if (vnTheta != null && vnTheta.trim().length() > 0) {
+														for (String sense : senses) {
+															URI uri = createVerbNetURIForSenseRole(sense, vnTheta, namespace);
+															statement = factory.createStatement(uri, PB2RDF.ARG_SIMILAR, roleURI);
+															statements.add(statement);
+														}
+													}
 												}
 											}
 										}
@@ -553,6 +744,7 @@ public class Extract {
 												//todo: this should not happen, but it happens
 												continue;
 											}
+
 											// Bugs!
 											if (bugMap.containsKey(argName)) {
 												argName = bugMap.get(argName);
@@ -581,7 +773,7 @@ public class Extract {
 
 												URI argURI = factory.createURI(namespace, exampleStr + "_arg-" + argName + addendum);
 
-												statement = factory.createStatement(argURI, RDF.TYPE, PB2RDF.EX_ARG);
+												statement = factory.createStatement(argURI, RDF.TYPE, PB2RDF.EX_ARG_C);
 												statements.add(statement);
 												statement = factory.createStatement(exampleURI, PB2RDF.PB_EX_ARG, argURI);
 												statements.add(statement);
@@ -610,7 +802,7 @@ public class Extract {
 
 											URI relURI = factory.createURI(namespace, exampleStr + "_rel" + addendum);
 
-											statement = factory.createStatement(relURI, RDF.TYPE, PB2RDF.EX_REL);
+											statement = factory.createStatement(relURI, RDF.TYPE, PB2RDF.EX_REL_C);
 											statements.add(statement);
 											statement = factory.createStatement(exampleURI, PB2RDF.PB_EX_REL, relURI);
 											statements.add(statement);
@@ -625,7 +817,7 @@ public class Extract {
 										if (inflection != null) {
 											URI inflectionURI = factory.createURI(namespace, exampleStr + "_inflection");
 
-											statement = factory.createStatement(inflectionURI, RDF.TYPE, PB2RDF.INFLECTION);
+											statement = factory.createStatement(inflectionURI, RDF.TYPE, PB2RDF.INFLECTION_C);
 											statements.add(statement);
 											statement = factory.createStatement(exampleURI, PB2RDF.PB_EX_INFLECTION, inflectionURI);
 											statements.add(statement);
@@ -660,19 +852,99 @@ public class Extract {
 
 			LOGGER.info("File {} saved", outputFile.getAbsolutePath());
 
-//			for (Statement statement : statements) {
-//				System.out.println(
-//						Statements.formatValue(statement.getSubject(), Namespaces.DEFAULT) + " " +
-//								Statements.formatValue(statement.getPredicate(), Namespaces.DEFAULT) + " " +
-//								Statements.formatValue(statement.getObject(), Namespaces.DEFAULT)
-//				);
-//			}
-
 		} catch (Throwable ex) {
 			CommandLine.fail(ex);
 		}
 
 
+	}
+
+	private static URI createVerbNetURIForRole(String role, String namespace) {
+		String vnID = "vn_role_" + role;
+		return factory.createURI(namespace, vnID);
+	}
+
+	private static URI createVerbNetURIForSense(String sense, String namespace) {
+		String vnID = "vn_" + sense;
+		return factory.createURI(namespace, vnID);
+	}
+
+	private static URI createVerbNetURIForSenseRole(String sense, String role, String namespace) {
+		String vnRoleID = "vn_role_" + sense + "_" + role;
+		return factory.createURI(namespace, vnRoleID);
+	}
+
+	private static String isGoodSense(String sense) {
+		sense = getSenseNumberOnly(sense);
+		Matcher matcher = VN_CODE_PATTERN.matcher(sense);
+		if (!matcher.matches()) {
+			LOGGER.trace("{} does not pass the match test", sense);
+			return null;
+		}
+
+		return sense;
+	}
+
+	private static HashSet<String> getGoodSensesOnly(String vnSenseString) {
+		HashSet<String> ret = new HashSet<String>();
+
+		if (vnSenseString != null && vnSenseString.trim().length() > 0) {
+
+			// Fix: attest-v.xml
+			if (vnSenseString.equals("29. 5")) {
+				vnSenseString = "29.5";
+			}
+
+			String[] vnSenses = vnSenseString.split("[\\s,]+");
+
+			for (String sense : vnSenses) {
+				String okSense = isGoodSense(sense);
+				if (okSense != null) {
+					ret.add(okSense);
+				}
+			}
+		}
+
+		return ret;
+	}
+
+	private static String getSenseNumberOnly(String senseName) {
+
+		// Fix: conflict-v.xml
+		if (senseName.equals("36.4-136.")) {
+			senseName = "36.4-1";
+		}
+
+		// Fix: cram-v.xml
+		if (senseName.equals("14-1S")) {
+			senseName = "14-1";
+		}
+
+		// Fix: plan-v.xml
+		if (senseName.equals("62t")) {
+			senseName = "62";
+		}
+
+		// Fix: plot-v.xml
+		if (senseName.equals("25.2t")) {
+			senseName = "25.2";
+		}
+
+		return senseName.replaceAll(VN_NAME_REGEXP, "");
+	}
+
+	private static String getThetaName(String name) {
+		Matcher matcher = THETA_NAME_PATTERN.matcher(name);
+		if (matcher.matches()) {
+			String num = matcher.group(2);
+			if (num.equals("1")) {
+				return matcher.group(1);
+			}
+			else {
+				return "co-" + matcher.group(1);
+			}
+		}
+		return name;
 	}
 
 	private static boolean discardFile(File file, boolean onlyVerbs, boolean isOntoNotes) {

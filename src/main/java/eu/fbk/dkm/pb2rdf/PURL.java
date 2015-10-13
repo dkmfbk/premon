@@ -14,6 +14,6 @@ public class PURL {
 	static final String NAMESPACE = "http://purl.org/olia/ubyCat.owl#";
 	static final URI LABEL = factory.createURI(NAMESPACE, "label");
 	static final URI SEMANTIC_LABEL = factory.createURI(NAMESPACE, "semanticLabel");
-
+	static final URI SEMANTIC_ROLE = factory.createURI(NAMESPACE, "semanticRole");
 
 }

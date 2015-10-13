@@ -20,10 +20,12 @@ public class PB2RDF {
 //	static final URI LEMMA = factory.createURI(NAMESPACE, "property/lemma");
 //	static final URI ROLESET = factory.createURI(NAMESPACE, "property/roleset");
 
-	static final URI THETA_ROLE = factory.createURI(NAMESPACE, "thetaRole");
-	static final URI INFLECTION = factory.createURI(NAMESPACE, "inflection");
-	static final URI EX_ARG = factory.createURI(NAMESPACE, "exampleArg");
-	static final URI EX_REL = factory.createURI(NAMESPACE, "exampleRel");
+	static final URI PB_THETA_ROLE_C = factory.createURI(NAMESPACE, "PBThetaRole");
+	static final URI VN_THETA_ROLE_C = factory.createURI(NAMESPACE, "VNThetaRole");
+
+	static final URI INFLECTION_C = factory.createURI(NAMESPACE, "Inflection");
+	static final URI EX_ARG_C = factory.createURI(NAMESPACE, "ExampleArg");
+	static final URI EX_REL_C = factory.createURI(NAMESPACE, "ExampleRel");
 
 	static final URI PB_THETA_ROLE = factory.createURI(NAMESPACE, "pbThetaRole");
 	static final URI PB_EX_TYPE = factory.createURI(NAMESPACE, "pbType");
@@ -39,6 +41,7 @@ public class PB2RDF {
 	static final URI PB_EX_REL = factory.createURI(NAMESPACE, "pbExampleRel");
 
 	static final URI SIMILAR = factory.createURI(NAMESPACE, "similar");
+	static final URI ARG_SIMILAR = factory.createURI(NAMESPACE, "argSimilar");
 
 	static final URI createRole(Object roleName) {
 		return factory.createURI(NAMESPACE, "role_" + roleName.toString());

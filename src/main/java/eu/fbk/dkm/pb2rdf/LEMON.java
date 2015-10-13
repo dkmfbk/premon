@@ -27,5 +27,6 @@ public class LEMON {
 	static final URI CANONICAL_FORM = factory.createURI(NAMESPACE, "canonicalForm");
 	static final URI WRITTEN_REP = factory.createURI(NAMESPACE, "writtenRep");
 	static final URI BROADER = factory.createURI(NAMESPACE, "broader");
+	static final URI SEM_ARG = factory.createURI(NAMESPACE, "semArg");
 
 }
