@@ -15,8 +15,77 @@
     <packaging>jar</packaging>
     <name>proplem</name>
     <description>PropLem is an RDFization of PropBank using the Lemon model</description>
+    <inceptionYear>2015</inceptionYear>
 
-    <!-- Add license stuff -->
+    <developers>
+        <developer>
+            <id>aprosio</id>
+            <name>Alessio Palmero Aprosio</name>
+            <email>aprosio@fbk.eu</email>
+            <url>https://dkm.fbk.eu/people/profile/aprosio</url>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+            <properties>
+                <picUrl>http://rdfpro.fbk.eu/images/team/aprosio.jpg</picUrl>
+            </properties>
+        </developer>
+        <developer>
+            <id>corcoglio</id>
+            <name>Francesco Corcoglioniti</name>
+            <email>corcoglio@fbk.eu</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+            <properties>
+                <picUrl>http://rdfpro.fbk.eu/images/team/corcoglio.jpg</picUrl>
+            </properties>
+        </developer>
+        <developer>
+            <id>rospocher</id>
+            <name>Marco Rospocher</name>
+            <email>rospocher@fbk.eu</email>
+            <url>https://dkm.fbk.eu/index.php/Marco_Rospocher</url>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+            <properties>
+                <picUrl>http://rdfpro.fbk.eu/images/team/rospocher.jpg</picUrl>
+            </properties>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/dkmfbk/proplem.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/dkmfbk/proplem.git</developerConnection>
+        <url>https://github.com/dkmfbk/proplem</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <configuration>
+                        <licenseName>apache_v2</licenseName>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <dependencies>
         <dependency>
