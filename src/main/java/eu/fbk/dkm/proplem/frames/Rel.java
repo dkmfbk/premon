@@ -6,7 +6,7 @@
 //
 
 
-package eu.fbk.dkm.pb2rdf.frames;
+package eu.fbk.dkm.proplem.frames;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
@@ -20,37 +20,37 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlType(name = "", propOrder = {
     "value"
 })
-@XmlRootElement(name = "text")
-public class Text {
+@XmlRootElement(name = "rel")
+public class Rel {
 
-    @XmlAttribute(name = "src")
+    @XmlAttribute(name = "f")
     @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String src;
+    protected String f;
     @XmlValue
     protected String value;
 
     /**
-     * Recupera il valore della proprietà src.
+     * Recupera il valore della proprietà f.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getSrc() {
-        return src;
+    public String getF() {
+        return f;
     }
 
     /**
-     * Imposta il valore della proprietà src.
+     * Imposta il valore della proprietà f.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setSrc(String value) {
-        this.src = value;
+    public void setF(String value) {
+        this.f = value;
     }
 
     /**

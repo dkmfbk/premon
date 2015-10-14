@@ -1,4 +1,4 @@
-package eu.fbk.dkm.pb2rdf;
+package eu.fbk.dkm.proplem;
 
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;

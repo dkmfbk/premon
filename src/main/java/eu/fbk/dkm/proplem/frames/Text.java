@@ -6,10 +6,9 @@
 //
 
 
-package eu.fbk.dkm.pb2rdf.frames;
+package eu.fbk.dkm.proplem.frames;
 
 import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -18,63 +17,64 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
-@XmlRootElement(name = "vnrole")
-public class Vnrole {
+@XmlType(name = "", propOrder = {
+    "value"
+})
+@XmlRootElement(name = "text")
+public class Text {
 
-    @XmlAttribute(name = "vncls", required = true)
+    @XmlAttribute(name = "src")
     @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String vncls;
-    @XmlAttribute(name = "vntheta", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    protected String vntheta;
+    protected String src;
+    @XmlValue
+    protected String value;
 
     /**
-     * Recupera il valore della proprietà vncls.
+     * Recupera il valore della proprietà src.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getVncls() {
-        return vncls;
+    public String getSrc() {
+        return src;
     }
 
     /**
-     * Imposta il valore della proprietà vncls.
+     * Imposta il valore della proprietà src.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setVncls(String value) {
-        this.vncls = value;
+    public void setSrc(String value) {
+        this.src = value;
     }
 
     /**
-     * Recupera il valore della proprietà vntheta.
+     * Recupera il valore della proprietà value.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getVntheta() {
-        return vntheta;
+    public String getvalue() {
+        return value;
     }
 
     /**
-     * Imposta il valore della proprietà vntheta.
+     * Imposta il valore della proprietà value.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setVntheta(String value) {
-        this.vntheta = value;
+    public void setvalue(String value) {
+        this.value = value;
     }
 
 }

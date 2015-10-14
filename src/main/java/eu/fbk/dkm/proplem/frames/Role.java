@@ -6,10 +6,9 @@
 //
 
 
-package eu.fbk.dkm.pb2rdf.frames;
+package eu.fbk.dkm.proplem.frames;
 
 import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
@@ -21,128 +20,95 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "noteOrRolesOrExample"
+    "vnrole"
 })
-@XmlRootElement(name = "roleset")
-public class Roleset {
+@XmlRootElement(name = "role")
+public class Role {
 
-    @XmlAttribute(name = "id", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlID
-    protected String id;
-    @XmlAttribute(name = "name")
+    @XmlAttribute(name = "n", required = true)
     @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String name;
-    @XmlAttribute(name = "vncls")
+    protected String n;
+    @XmlAttribute(name = "f")
     @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String vncls;
-    @XmlAttribute(name = "framnet")
+    protected String f;
+    @XmlAttribute(name = "descr", required = true)
     @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String framnet;
+    protected String descr;
     @XmlAttribute(name = "source")
     @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
     protected String source;
-    @XmlElements({
-        @XmlElement(name = "note", type = Note.class),
-        @XmlElement(name = "roles", type = Roles.class),
-        @XmlElement(name = "example", type = Example.class)
-    })
-    protected List<Object> noteOrRolesOrExample;
+    protected List<Vnrole> vnrole;
 
     /**
-     * Recupera il valore della proprietà id.
+     * Recupera il valore della proprietà n.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getId() {
-        return id;
+    public String getN() {
+        return n;
     }
 
     /**
-     * Imposta il valore della proprietà id.
+     * Imposta il valore della proprietà n.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(String value) {
-        this.id = value;
+    public void setN(String value) {
+        this.n = value;
     }
 
     /**
-     * Recupera il valore della proprietà name.
+     * Recupera il valore della proprietà f.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getName() {
-        return name;
+    public String getF() {
+        return f;
     }
 
     /**
-     * Imposta il valore della proprietà name.
+     * Imposta il valore della proprietà f.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setF(String value) {
+        this.f = value;
     }
 
     /**
-     * Recupera il valore della proprietà vncls.
+     * Recupera il valore della proprietà descr.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getVncls() {
-        return vncls;
+    public String getDescr() {
+        return descr;
     }
 
     /**
-     * Imposta il valore della proprietà vncls.
+     * Imposta il valore della proprietà descr.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setVncls(String value) {
-        this.vncls = value;
-    }
-
-    /**
-     * Recupera il valore della proprietà framnet.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFramnet() {
-        return framnet;
-    }
-
-    /**
-     * Imposta il valore della proprietà framnet.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFramnet(String value) {
-        this.framnet = value;
+    public void setDescr(String value) {
+        this.descr = value;
     }
 
     /**
@@ -170,34 +136,32 @@ public class Roleset {
     }
 
     /**
-     * Gets the value of the noteOrRolesOrExample property.
+     * Gets the value of the vnrole property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the noteOrRolesOrExample property.
+     * This is why there is not a <CODE>set</CODE> method for the vnrole property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getNoteOrRolesOrExample().add(newItem);
+     *    getVnrole().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Note }
-     * {@link Roles }
-     * {@link Example }
+     * {@link Vnrole }
      * 
      * 
      */
-    public List<Object> getNoteOrRolesOrExample() {
-        if (noteOrRolesOrExample == null) {
-            noteOrRolesOrExample = new ArrayList<Object>();
+    public List<Vnrole> getVnrole() {
+        if (vnrole == null) {
+            vnrole = new ArrayList<Vnrole>();
         }
-        return this.noteOrRolesOrExample;
+        return this.vnrole;
     }
 
 }

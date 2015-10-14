@@ -6,7 +6,7 @@
 //
 
 
-package eu.fbk.dkm.pb2rdf.frames;
+package eu.fbk.dkm.proplem.frames;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -18,45 +18,45 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "noteOrRole"
+    "noteOrPredicate"
 })
-@XmlRootElement(name = "roles")
-public class Roles {
+@XmlRootElement(name = "frameset")
+public class Frameset {
 
     @XmlElements({
         @XmlElement(name = "note", type = Note.class),
-        @XmlElement(name = "role", type = Role.class)
+        @XmlElement(name = "predicate", type = Predicate.class)
     })
-    protected List<Object> noteOrRole;
+    protected List<Object> noteOrPredicate;
 
     /**
-     * Gets the value of the noteOrRole property.
+     * Gets the value of the noteOrPredicate property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the noteOrRole property.
+     * This is why there is not a <CODE>set</CODE> method for the noteOrPredicate property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getNoteOrRole().add(newItem);
+     *    getNoteOrPredicate().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link Note }
-     * {@link Role }
+     * {@link Predicate }
      * 
      * 
      */
-    public List<Object> getNoteOrRole() {
-        if (noteOrRole == null) {
-            noteOrRole = new ArrayList<Object>();
+    public List<Object> getNoteOrPredicate() {
+        if (noteOrPredicate == null) {
+            noteOrPredicate = new ArrayList<Object>();
         }
-        return this.noteOrRole;
+        return this.noteOrPredicate;
     }
 
 }

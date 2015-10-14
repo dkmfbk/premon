@@ -1,9 +1,9 @@
-package eu.fbk.dkm.pb2rdf;
+package eu.fbk.dkm.proplem;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
-import eu.fbk.dkm.pb2rdf.frames.*;
+import eu.fbk.dkm.proplem.frames.*;
 import eu.fbk.dkm.utils.CommandLine;
 import eu.fbk.rdfpro.*;
 import eu.fbk.rdfpro.util.Algebra;

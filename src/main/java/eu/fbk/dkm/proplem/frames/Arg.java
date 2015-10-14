@@ -6,7 +6,7 @@
 //
 
 
-package eu.fbk.dkm.pb2rdf.frames;
+package eu.fbk.dkm.proplem.frames;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
@@ -20,14 +20,41 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlType(name = "", propOrder = {
     "value"
 })
-@XmlRootElement(name = "rel")
-public class Rel {
+@XmlRootElement(name = "arg")
+public class Arg {
 
+    @XmlAttribute(name = "n", required = true)
+    @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
+    protected String n;
     @XmlAttribute(name = "f")
     @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
     protected String f;
     @XmlValue
     protected String value;
+
+    /**
+     * Recupera il valore della proprietà n.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getN() {
+        return n;
+    }
+
+    /**
+     * Imposta il valore della proprietà n.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setN(String value) {
+        this.n = value;
+    }
 
     /**
      * Recupera il valore della proprietà f.
