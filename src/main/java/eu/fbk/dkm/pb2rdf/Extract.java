@@ -110,11 +110,11 @@ public class Extract {
 		try {
 			final CommandLine cmd = CommandLine
 					.parser()
-					.withName("probbank-extractor")
+					.withName("./proplem")
 					.withHeader("Transform a ProbBank instance into RDF")
 					.withOption("i", "input", "input folder", "FOLDER", CommandLine.Type.DIRECTORY_EXISTING, true, false, true)
 					.withOption("w", "output", "Output file", "FILE", CommandLine.Type.FILE, true, false, true)
-					.withOption("l", "lang", String.format("Default language for literals, default %s", DEFAULT_LANGUAGE), "ISO-CODE", CommandLine.Type.STRING, true, false, false)
+					.withOption("l", "lang", String.format("Language for literals, default %s", DEFAULT_LANGUAGE), "ISO-CODE", CommandLine.Type.STRING, true, false, false)
 					.withOption("v", "non-verbs", "Extract also non-verbs (only for OntoNotes)")
 					.withOption("o", "ontonotes", "Specify that this is an OntoNotes version of ProbBank")
 					.withOption("e", "examples", "Extract examples")
