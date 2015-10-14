@@ -2,6 +2,20 @@
 
 PropLem is a tool to convert PropBank-style resources to RDF, using the [Lemon model](http://lemon-model.net/index.php).
 
+## Installation
+
+PropLem is released using the Maven paradigm. To install it, just type into the shell:
+* `git clone https://github.com/dkmfbk/proplem.git`
+* `cd proplem`
+* `mvn clean package -DskipTests -Prelease`
+* `cd target`
+* `tar xzf proplem-1.0-SNAPSHOT-bin.tar.gz`
+* `cd proplem`
+
+Now you can start the tool by simply use the `./proplem` command.
+
+## Usage
+
 ```
 usage: ./proplem [-D] [-e] [--framenet <FILE>] [-h] [-i <FOLDER>] [-l
        <ISO-CODE>] [--namespace <URI>] [-o] [-s <LEMMA>] [--use-wn-lex] [-v]
