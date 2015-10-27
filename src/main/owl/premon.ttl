@@ -1,5 +1,6 @@
 @prefix : <http://premon.fbk.eu/ns/premon#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
@@ -233,6 +234,12 @@ ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf :evokingEntry
 #################################################################
 
 
+###  http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context
+
+nif:Context rdf:type owl:Class .
+
+
+
 ###  http://premon.fbk.eu/ns/premon#EntryConcept
 
 :EntryConcept rdf:type owl:Class ;
@@ -288,6 +295,16 @@ ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf :evokingEntry
               rdfs:label "semantic type"@en ;
               
               rdfs:subClassOf ontolex:LexicalConcept .
+
+
+
+###  http://premon.fbk.eu/ns/premon#UsageExample
+
+:UsageExample rdf:type owl:Class ;
+              
+              rdfs:label "usage example" ;
+              
+              rdfs:subClassOf nif:Context .
 
 
 
