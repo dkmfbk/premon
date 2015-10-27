@@ -16,18 +16,21 @@ public class PB2RDF {
 
 	static final ValueFactoryImpl factory = ValueFactoryImpl.getInstance();
 	static final String NAMESPACE = "http://pb2rdf.org/ontology/";
+	static final String VN_NAMESPACE = "http://pb2rdf.org/vn-ontology/";
 
 //	static final URI LEMMA = factory.createURI(NAMESPACE, "property/lemma");
 //	static final URI ROLESET = factory.createURI(NAMESPACE, "property/roleset");
 
 	static final URI PB_THETA_ROLE_C = factory.createURI(NAMESPACE, "PBThetaRole");
-	static final URI VN_THETA_ROLE_C = factory.createURI(NAMESPACE, "VNThetaRole");
+	static final URI VN_THETA_ROLE_C = factory.createURI(VN_NAMESPACE, "VNThetaRole");
 
 	static final URI INFLECTION_C = factory.createURI(NAMESPACE, "Inflection");
 	static final URI EX_ARG_C = factory.createURI(NAMESPACE, "ExampleArg");
 	static final URI EX_REL_C = factory.createURI(NAMESPACE, "ExampleRel");
 
 	static final URI PB_THETA_ROLE = factory.createURI(NAMESPACE, "pbThetaRole");
+	static final URI VN_THETA_ROLE = factory.createURI(VN_NAMESPACE, "vnThetaRole");
+
 	static final URI PB_EX_TYPE = factory.createURI(NAMESPACE, "pbType");
 	static final URI PB_EX_NAME = factory.createURI(NAMESPACE, "pbName");
 	static final URI PB_EX_SRC = factory.createURI(NAMESPACE, "pbSrc");
@@ -47,6 +50,7 @@ public class PB2RDF {
 		return factory.createURI(NAMESPACE, "role_" + roleName.toString());
 	}
 
+	//todo: capire dove mettere 'sta roba
 	static final List<Statement> createOntologyStatements() {
 		List<Statement> statements = new ArrayList<Statement>();
 

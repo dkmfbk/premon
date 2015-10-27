@@ -31,9 +31,47 @@ import java.util.regex.Pattern;
 
 public class Extract {
 
+	static class PBfinfo {
+		private String fileName;
+		private String type;
+		private String lemma;
+
+		public String getFileName() {
+			return fileName;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public String getLemma() {
+			return lemma;
+		}
+
+		public PBfinfo(String fileName, boolean isOntoNotes) throws Exception {
+			this.fileName = fileName;
+			this.type = "v";
+			this.lemma = fileName.replaceAll("\\.xml", "");
+
+			if (isOntoNotes) {
+				Matcher matcher = ONTONOTES_FILENAME_PATTERN.matcher(fileName);
+				if (matcher.matches()) {
+					this.type = matcher.group(2);
+					this.lemma = matcher.group(1);
+				}
+				else {
+					throw new Exception("File " + fileName + " does not appear to be a good OntoNotes frame file");
+				}
+			}
+
+		}
+	}
+
 	/*todo:
 
-	- Verificare output
+	- aggiungere component
+	- aggiungere sameAs dei component
+
 	- Decidere per l'ontologia
 	- NomBank
 
@@ -65,6 +103,18 @@ public class Extract {
 		bugMap.put("emitter of hoot", "0"); // hoot.xml
 	}
 
+	private static HashMap<String, String> lemmaToTransform = new HashMap();
+
+	static {
+		lemmaToTransform.put("cry+down(e)", "cry+down");
+	}
+
+	private static HashSet<String> fileToDiscard = new HashSet<>();
+
+	static {
+		fileToDiscard.add("except-v.xml");
+	}
+
 	private static HashSet<String> functionTags = new HashSet<String>();
 
 	static {
@@ -92,6 +142,50 @@ public class Extract {
 		functionTags.add("slc");
 		functionTags.add("vsp");
 		functionTags.add("lvb");
+	}
+
+	private static HashMap<String, String> additionalWords = new HashMap<>();
+
+	static {
+		additionalWords.put("through", "prep");
+		additionalWords.put("vent", "n");
+		additionalWords.put("away", "r");
+		additionalWords.put("about", "r");
+		additionalWords.put("back", "r");
+		additionalWords.put("upon", "prep");
+		additionalWords.put("aback", "r");
+		additionalWords.put("down", "r");
+		additionalWords.put("around", "r");
+		additionalWords.put("out", "r");
+		additionalWords.put("hold", "n");
+		additionalWords.put("across", "r");
+		additionalWords.put("along", "r");
+		additionalWords.put("by", "prep");
+		additionalWords.put("rubber", "n");
+		additionalWords.put("up", "prep");
+		additionalWords.put("after", "r");
+		additionalWords.put("hard", "r");
+		additionalWords.put("together", "r");
+		additionalWords.put("on", "r");
+		additionalWords.put("apart", "r");
+		additionalWords.put("over", "r");
+		additionalWords.put("in", "r");
+		additionalWords.put("like", "prep");
+		additionalWords.put("forward", "r");
+		additionalWords.put("tree", "n");
+		additionalWords.put("clear", "s");
+		additionalWords.put("birth", "n");
+		additionalWords.put("it", "pron");
+		additionalWords.put("forth", "r");
+		additionalWords.put("off", "r");
+		additionalWords.put("wrong", "s");
+		additionalWords.put("the", "art");
+		additionalWords.put("aside", "r");
+		additionalWords.put("even", "r");
+		additionalWords.put("loose", "r");
+		additionalWords.put("suit", "n");
+		additionalWords.put("to", "prep");
+		additionalWords.put("rise", "n");
 	}
 
 	private static void addDefinition(Collection<Statement> statements, URI uri, URI definitionURI, String value, String language) {
@@ -170,7 +264,53 @@ public class Extract {
 
 			HashSet<Statement> statements = new HashSet<Statement>();
 			Statement statement;
-			statements.addAll(PB2RDF.createOntologyStatements());
+
+//			String toTokenize = "a_beautiful_mind";
+//			String[] tokens = toTokenize.split("_");
+//			Resource base = factory.createURI("http://pb2rdf.org/look+up");
+//
+//			if (!(base instanceof URI)) {
+//				throw new Exception("Input value must be a URI");
+//			}
+//
+//			for (int i = 0; i < tokens.length; i++) {
+//				String token = tokens[i];
+//				BNode thisBNode = factory.createBNode();
+//
+//				URI componentURI = factory.createURI(base.toString() + "_c" + (i + 1));
+//				statement = factory.createStatement(componentURI, RDF.TYPE, LEMON.COMPONENT);
+//				statements.add(statement);
+//
+//				URI prev = RDF.REST;
+//				if (i == 0) {
+//					prev = LEMON.DECOMPOSITION;
+//				}
+//
+//				statement = factory.createStatement(base, prev, thisBNode);
+//				statements.add(statement);
+//				statement = factory.createStatement(thisBNode, RDF.FIRST, componentURI);
+//				statements.add(statement);
+//
+//				base = thisBNode;
+//
+//				if (i == tokens.length - 1) {
+//					statement = factory.createStatement(thisBNode, RDF.REST, RDF.NIL);
+//					statements.add(statement);
+//				}
+//			}
+//
+//
+//			System.exit(1);
+
+			// Ontology
+//			statements.addAll(PB2RDF.createOntologyStatements());
+
+			// Lexicon
+			URI lexiconURI = factory.createURI(namespace, "lexicon");
+			statement = factory.createStatement(lexiconURI, RDF.TYPE, LEMON.LEXICON);
+			statements.add(statement);
+			statement = factory.createStatement(lexiconURI, LEMON.LANGUAGE, factory.createLiteral("en"));
+			statements.add(statement);
 
 			HashSet<String> roleNs = new HashSet<String>();
 			HashSet<String> roleFs = new HashSet<String>();
@@ -193,6 +333,7 @@ public class Extract {
 						}
 					}
 				}, 1);
+				LOGGER.info("Loaded {} URIs", wnURIs.size());
 			}
 
 			Multimap<String, URI> fnFrames = HashMultimap.create();
@@ -235,7 +376,6 @@ public class Extract {
 			}
 
 			Multimap<String, URI> vnFrames = HashMultimap.create();
-//			Map<URI, Multimap<String, URI>> vnRoles = new HashMap<URI, Multimap<String, URI>>();
 
 			if (vnRDF != null) {
 				LOGGER.info("Loading VerbNet");
@@ -254,21 +394,6 @@ public class Extract {
 								model.add(statement);
 							}
 						}
-//						if (statement.getPredicate().equals(LEMON.BROADER)) {
-//							synchronized (model) {
-//								model.add(statement);
-//							}
-//						}
-//						if (statement.getPredicate().equals(LEMON.SEM_ARG)) {
-//							synchronized (model) {
-//								model.add(statement);
-//							}
-//						}
-//						if (statement.getPredicate().equals(PURL.SEMANTIC_ROLE)) {
-//							synchronized (model) {
-//								model.add(statement);
-//							}
-//						}
 						if (statement.getPredicate().equals(PURL.SEMANTIC_LABEL)) {
 							synchronized (model) {
 								model.add(statement);
@@ -299,30 +424,6 @@ public class Extract {
 						vnFrames.put(stringValue, (URI) vnSense);
 					}
 				}
-
-				// Roles
-//				query = Algebra.parseTupleExpr("SELECT ?l ?s ?a WHERE {\n" +
-//						"\t?s a <http://lemon-model.net/lemon#LexicalSense> .\n" +
-//						"\t?s <http://lemon-model.net/lemon#broader> ?p .\n" +
-//						"\t?p a <http://lemon-model.net/lemon#LexicalSense> .\n" +
-//						"\t?p <http://lemon-model.net/lemon#semArg> ?a .\n" +
-//						"\t?a <http://purl.org/olia/ubyCat.owl#semanticRole> ?l\n" +
-//						"}", null, null);
-//				bindingSetIterator = model.evaluate(query, null, null);
-//				while (bindingSetIterator.hasNext()) {
-//					BindingSet bindings = bindingSetIterator.next();
-//					Value vnRole = bindings.getValue("l");
-//					Value vnSense = bindings.getValue("s");
-//					Value vnArgument = bindings.getValue("a");
-//
-//					String vnRoleString = vnRole.stringValue().toLowerCase().replaceAll("\\[.*\\]", "");
-//					if (vnSense instanceof URI && vnArgument instanceof URI) {
-//						if (!vnRoles.containsKey(vnSense)) {
-//							vnRoles.put((URI) vnSense, HashMultimap.<String, URI>create());
-//						}
-//						vnRoles.get(vnSense).put(vnRoleString, (URI) vnArgument);
-//					}
-//				}
 			}
 			for (String vnSense : vnFrames.keySet()) {
 
@@ -342,30 +443,31 @@ public class Extract {
 			HashSet<String> thetaRoles = new HashSet<String>();
 			Multimap<String, String> rolesForSense = HashMultimap.create();
 
+			HashSet<String> allExternalTokens = new HashSet<>();
+
 			for (File file : Files.fileTreeTraverser().preOrderTraversal(folder)) {
 
 				if (discardFile(file, onlyVerbs, isOntoNotes)) {
 					continue;
 				}
 
-				if (onlyOne != null) {
-					String fileName = file.getName();
+				PBfinfo fileInfo;
+				try {
+					fileInfo = new PBfinfo(file.getName(), isOntoNotes);
+				} catch (Exception e) {
+					throw e;
+				}
 
-					String lemmaFileName = fileName.replaceAll("\\.xml", "");
+				String fileName = fileInfo.getFileName();
+				String type = fileInfo.getType();
+				String lemmaFromName = fileInfo.getLemma();
 
-					if (isOntoNotes) {
-						Matcher matcher = ONTONOTES_FILENAME_PATTERN.matcher(file.getName());
-						if (matcher.matches()) {
-							lemmaFileName = matcher.group(1);
-						}
-						else {
-							throw new Exception("File " + file.getName() + " does not appear to be a good OntoNotes frame file");
-						}
-					}
+				if (fileToDiscard.contains(fileName)) {
+					continue;
+				}
 
-					if (!onlyOne.equals(lemmaFileName)) {
-						continue;
-					}
+				if (onlyOne != null && !onlyOne.equals(fileInfo.getLemma())) {
+					continue;
 				}
 
 				Frameset frameset = (Frameset) jaxbUnmarshaller.unmarshal(file);
@@ -373,6 +475,20 @@ public class Extract {
 
 				for (Object predicate : noteOrPredicate) {
 					if (predicate instanceof Predicate) {
+
+						String lemma = ((Predicate) predicate).getLemma().replace('_', '+').replace(' ', '+');
+						if (lemmaToTransform.keySet().contains(lemma)) {
+							lemma = lemmaToTransform.get(lemma);
+						}
+						String[] tokens = lemma.split("\\+");
+
+						for (String token : tokens) {
+							if (token.equals(lemmaFromName)) {
+								continue;
+							}
+							allExternalTokens.add(token);
+						}
+
 
 						List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
 						for (Object roleset : noteOrRoleset) {
@@ -437,6 +553,10 @@ public class Extract {
 				}
 			}
 
+//			System.out.println(allExternalTokens.size());
+//			System.out.println(allExternalTokens);
+//			System.exit(1);
+
 			for (String thetaRole : thetaRoles) {
 				URI vnRoleURI = createVerbNetURIForRole(thetaRole, namespace);
 				statement = factory.createStatement(vnRoleURI, RDF.TYPE, PB2RDF.VN_THETA_ROLE_C);
@@ -453,10 +573,13 @@ public class Extract {
 
 				for (String role : rolesForSense.get(vnSense)) {
 					URI vnSenseRoleURI = createVerbNetURIForSenseRole(vnSense, role, namespace);
+					URI vnRoleURI = createVerbNetURIForRole(role, namespace);
 
 					statement = factory.createStatement(vnSenseRoleURI, RDF.TYPE, LEMON.ARGUMENT);
 					statements.add(statement);
 					statement = factory.createStatement(vnSenseRoleURI, LEMON.SEM_ARG, vnSenseURI);
+					statements.add(statement);
+					statement = factory.createStatement(vnSenseRoleURI, PB2RDF.VN_THETA_ROLE, vnRoleURI);
 					statements.add(statement);
 				}
 			}
@@ -502,27 +625,26 @@ public class Extract {
 					continue;
 				}
 
-				String fileName = file.getName();
-				String lemmaType = "v";
-
-				String lemmaFileName = fileName.replaceAll("\\.xml", "");
-
-				if (isOntoNotes) {
-					Matcher matcher = ONTONOTES_FILENAME_PATTERN.matcher(file.getName());
-					if (matcher.matches()) {
-						lemmaType = matcher.group(2);
-						lemmaFileName = matcher.group(1);
-					}
-					else {
-						throw new Exception("File " + file.getName() + " does not appear to be a good OntoNotes frame file");
-					}
+				PBfinfo fileInfo;
+				try {
+					fileInfo = new PBfinfo(file.getName(), isOntoNotes);
+				} catch (Exception e) {
+					throw e;
 				}
 
-				if (onlyOne != null && !onlyOne.equals(lemmaFileName)) {
+				String fileName = fileInfo.getFileName();
+				String type = fileInfo.getType();
+				String lemmaFromName = fileInfo.getLemma();
+
+				if (fileToDiscard.contains(fileName)) {
 					continue;
 				}
 
-				LOGGER.debug("{} ({})", fileName, lemmaType);
+				if (onlyOne != null && !onlyOne.equals(lemmaFromName)) {
+					continue;
+				}
+
+				LOGGER.debug("{} ({})", fileName, type);
 
 				Frameset frameset = (Frameset) jaxbUnmarshaller.unmarshal(file);
 				List<Object> noteOrPredicate = frameset.getNoteOrPredicate();
@@ -531,31 +653,13 @@ public class Extract {
 					if (predicate instanceof Predicate) {
 
 						String lemma = ((Predicate) predicate).getLemma().replace('_', '+').replace(' ', '+');
-
-						URI wnURI = factory.createURI(WN_NAMESPACE, lemma + "-" + lemmaType);
-						URI predicateURI;
-						if (wnURIs.contains(wnURI) && useWordNetLEs) {
-							predicateURI = wnURI;
-						}
-						else {
-							predicateURI = factory.createURI(namespace, lemma);
-							statement = factory.createStatement(predicateURI, RDF.TYPE, LEMON.LEXICAL_ENTRY);
-							statements.add(statement);
-							if (wnURIs.contains(wnURI)) {
-								statement = factory.createStatement(predicateURI, OWL.SAMEAS, wnURI);
-								statements.add(statement);
-							}
-
-							// Using this paradigm, there is only one form
-							URI formURI = factory.createURI(namespace, lemma + "_form");
-							statement = factory.createStatement(predicateURI, LEMON.CANONICAL_FORM, formURI);
-							statements.add(statement);
-							statement = factory.createStatement(formURI, RDF.TYPE, LEMON.FORM);
-							statements.add(statement);
-							statement = factory.createStatement(formURI, LEMON.WRITTEN_REP, factory.createLiteral(lemma, language));
-							statements.add(statement);
+						if (lemmaToTransform.keySet().contains(lemma)) {
+							lemma = lemmaToTransform.get(lemma);
 						}
 
+						String wnLemma = lemma + "-" + type;
+
+						URI predicateURI = addLexicalEntry(useWordNetLEs, namespace, wnLemma, statements, lexiconURI, language, wnURIs);
 
 						List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
 						for (Object roleset : noteOrRoleset) {
@@ -648,6 +752,8 @@ public class Extract {
 
 												statement = factory.createStatement(roleURI, RDF.TYPE, LEMON.ARGUMENT);
 												statements.add(statement);
+												statement = factory.createStatement(senseURI, LEMON.SEM_ARG, roleURI);
+												statements.add(statement);
 												try {
 													statement = factory.createStatement(roleURI, PB2RDF.PB_THETA_ROLE, roleStatements.get(argName).getSubject());
 													statements.add(statement);
@@ -669,7 +775,7 @@ public class Extract {
 													if (vnTheta != null && vnTheta.trim().length() > 0) {
 														for (String sense : senses) {
 															URI uri = createVerbNetURIForSenseRole(sense, vnTheta, namespace);
-															statement = factory.createStatement(uri, PB2RDF.ARG_SIMILAR, roleURI);
+															statement = factory.createStatement(roleURI, PB2RDF.ARG_SIMILAR, uri);
 															statements.add(statement);
 														}
 													}
@@ -857,6 +963,52 @@ public class Extract {
 		}
 
 
+	}
+
+	private static URI addLexicalEntry(boolean useWordNetLEs, String namespace, String lemma, Collection<Statement> statements, URI lexiconURI, String language, HashSet<URI> wnURIs) {
+		Statement statement;
+		URI wnURI = factory.createURI(WN_NAMESPACE, lemma);
+
+		URI predicateURI;
+		if (wnURIs.contains(wnURI) && useWordNetLEs) {
+			predicateURI = wnURI;
+		}
+		else {
+			LOGGER.info("Word {} is not in WordNet", lemma);
+			LOGGER.info(wnURI.toString());
+
+			// Tokenize
+			String[] tokens = lemma.replaceAll("-[a-z]+$", "").split("\\+");
+			if (tokens.length > 1) {
+
+			}
+
+			predicateURI = factory.createURI(namespace, lemma);
+			statement = factory.createStatement(predicateURI, RDF.TYPE, LEMON.LEXICAL_ENTRY);
+			statements.add(statement);
+			statement = factory.createStatement(lexiconURI, LEMON.ENTRY, predicateURI);
+			statements.add(statement);
+
+			// todo: aggiungere component
+
+			if (wnURIs.contains(wnURI)) {
+				statement = factory.createStatement(predicateURI, OWL.SAMEAS, wnURI);
+				statements.add(statement);
+
+				// todo: aggiungere sameas dei component
+			}
+
+			// Using this paradigm, there is only one form
+			URI formURI = factory.createURI(namespace, lemma + "_form");
+			statement = factory.createStatement(predicateURI, LEMON.CANONICAL_FORM, formURI);
+			statements.add(statement);
+			statement = factory.createStatement(formURI, RDF.TYPE, LEMON.FORM);
+			statements.add(statement);
+			statement = factory.createStatement(formURI, LEMON.WRITTEN_REP, factory.createLiteral(lemma, language));
+			statements.add(statement);
+		}
+
+		return predicateURI;
 	}
 
 	private static URI createVerbNetURIForRole(String role, String namespace) {

@@ -18,6 +18,8 @@ public class LEMON {
 	static final URI SENSE_DEFINITION = factory.createURI(NAMESPACE, "SenseDefinition");
 	static final URI USAGE_EXAMPLE = factory.createURI(NAMESPACE, "UsageExample");
 	static final URI FORM = factory.createURI(NAMESPACE, "Form");
+	static final URI LEXICON = factory.createURI(NAMESPACE, "Lexicon");
+	static final URI COMPONENT = factory.createURI(NAMESPACE, "Component");
 
 	static final URI SENSE = factory.createURI(NAMESPACE, "sense");
 	static final URI SENSE_RELATION = factory.createURI(NAMESPACE, "senseRelation");
@@ -28,5 +30,9 @@ public class LEMON {
 	static final URI WRITTEN_REP = factory.createURI(NAMESPACE, "writtenRep");
 	static final URI BROADER = factory.createURI(NAMESPACE, "broader");
 	static final URI SEM_ARG = factory.createURI(NAMESPACE, "semArg");
+	static final URI LANGUAGE = factory.createURI(NAMESPACE, "language");
+	static final URI ENTRY = factory.createURI(NAMESPACE, "entry");
+	static final URI DECOMPOSITION = factory.createURI(NAMESPACE, "decomposition");
+	static final URI ELEMENT = factory.createURI(NAMESPACE, "element");
 
 }
