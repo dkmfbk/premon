@@ -1,0 +1,296 @@
+@prefix : <http://premon.fbk.eu/ns/premon#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix lime: <http://www.w3.org/ns/lemon/lime#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix premon: <http://premon.fbk.eu/ns/premon#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
+@base <http://premon.fbk.eu/ns/premon> .
+
+<http://premon.fbk.eu/ns/premon> rdf:type owl:Ontology ;
+                                 
+                                 dc:creator "Marco Rospocher" ,
+                                            "Alessio Palmero Aprosio" ;
+                                 
+                                 dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+                                 
+                                 vann:preferredNamespacePrefix "premon" ;
+                                 
+                                 dc:creator "Francesco Corcoglioniti" ;
+                                 
+                                 vann:preferredNamespaceUri "http://premon.fbk.eu/ns/premon#" ;
+                                 
+                                 dcterms:title "PREMON - Predicate Model for Ontologies"@en ;
+                                 
+                                 dc:description "TODO: ADD A DESCRIPTION"@en ;
+                                 
+                                 dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en ;
+                                 
+                                 dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;
+                                 
+                                 rdfs:isDefinedBy <http://premon.fbk.eu/ns/premon.ttl> ;
+                                 
+                                 owl:imports <http://www.w3.org/ns/lemon/ontolex> ;
+                                 
+                                 dc:description <https://knowledgestore.fbk.eu/ontologies/knowledgestore.png> .
+
+
+#################################################################
+#
+#    Annotation properties
+#
+#################################################################
+
+
+###  http://purl.org/dc/elements/1.1/creator
+
+dc:creator rdf:type owl:AnnotationProperty .
+
+
+
+###  http://purl.org/dc/elements/1.1/description
+
+dc:description rdf:type owl:AnnotationProperty .
+
+
+
+###  http://purl.org/dc/elements/1.1/publisher
+
+dc:publisher rdf:type owl:AnnotationProperty .
+
+
+
+###  http://purl.org/dc/elements/1.1/rights
+
+dc:rights rdf:type owl:AnnotationProperty .
+
+
+
+###  http://purl.org/dc/terms/license
+
+dcterms:license rdf:type owl:AnnotationProperty .
+
+
+
+###  http://purl.org/dc/terms/title
+
+dcterms:title rdf:type owl:AnnotationProperty .
+
+
+
+###  http://purl.org/vocab/vann/preferredNamespacePrefix
+
+vann:preferredNamespacePrefix rdf:type owl:AnnotationProperty .
+
+
+
+###  http://purl.org/vocab/vann/preferredNamespaceUri
+
+vann:preferredNamespaceUri rdf:type owl:AnnotationProperty .
+
+
+
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://premon.fbk.eu/ns/premon#argumentRel
+
+:argumentRel rdf:type owl:ObjectProperty ;
+             
+             rdfs:label "semantic argument relation"@en ;
+             
+             rdfs:range :SemanticArgument ;
+             
+             rdfs:domain :SemanticArgument .
+
+
+
+###  http://premon.fbk.eu/ns/premon#evokedConcept
+
+:evokedConcept rdf:type owl:FunctionalProperty ,
+                        owl:ObjectProperty ;
+               
+               rdfs:domain :EntryConcept ;
+               
+               rdfs:subPropertyOf skos:broader ;
+               
+               rdfs:range ontolex:LexicalConcept .
+
+
+
+###  http://premon.fbk.eu/ns/premon#evokingEntry
+
+:evokingEntry rdf:type owl:FunctionalProperty ,
+                       owl:ObjectProperty ;
+              
+              rdfs:label "meaning of"@en ;
+              
+              rdfs:domain :EntryConcept ;
+              
+              rdfs:range ontolex:LexicalEntry .
+
+
+
+###  http://premon.fbk.eu/ns/premon#predicateRel
+
+:predicateRel rdf:type owl:ObjectProperty ;
+              
+              rdfs:label "semantic frame relation"@en ;
+              
+              rdfs:domain :Predicate ;
+              
+              rdfs:range :Predicate .
+
+
+
+###  http://premon.fbk.eu/ns/premon#role
+
+:role rdf:type owl:FunctionalProperty ,
+               owl:ObjectProperty ;
+      
+      rdfs:label "role"@en ;
+      
+      rdfs:domain :SemanticArgument ;
+      
+      rdfs:range :SemanticRole .
+
+
+
+###  http://premon.fbk.eu/ns/premon#semArg
+
+:semArg rdf:type owl:ObjectProperty ;
+        
+        rdfs:label "semantic argument"@en ;
+        
+        rdfs:domain :Predicate ;
+        
+        rdfs:range :SemanticArgument .
+
+
+
+###  http://premon.fbk.eu/ns/premon#semType
+
+:semType rdf:type owl:ObjectProperty ;
+         
+         rdfs:label "semantic type"@en ;
+         
+         rdfs:range :SemanticType ;
+         
+         rdfs:domain [ rdf:type owl:Class ;
+                       owl:unionOf ( :Predicate
+                                     :SemanticArgument
+                                   )
+                     ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon#typeRel
+
+:typeRel rdf:type owl:ObjectProperty ;
+         
+         rdfs:label "semantic type relation"@en ;
+         
+         rdfs:domain :SemanticType ;
+         
+         rdfs:range :SemanticType .
+
+
+
+###  http://www.w3.org/2004/02/skos/core#broader
+
+skos:broader rdf:type owl:ObjectProperty .
+
+
+
+###  http://www.w3.org/ns/lemon/ontolex#evokes
+
+ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf :evokingEntry
+                                        ]
+                                        :evokedConcept
+                                      ) .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://premon.fbk.eu/ns/premon#EntryConcept
+
+:EntryConcept rdf:type owl:Class ;
+              
+              rdfs:label "entry concept"@en ;
+              
+              rdfs:subClassOf skos:Concept ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :evokedConcept ;
+                                owl:onClass ontolex:LexicalConcept ;
+                                owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :evokingEntry ;
+                                owl:onClass ontolex:LexicalEntry ;
+                                owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                              ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon#Predicate
+
+:Predicate rdf:type owl:Class ;
+           
+           rdfs:label "semantic frame"@en ;
+           
+           rdfs:subClassOf ontolex:LexicalConcept .
+
+
+
+###  http://premon.fbk.eu/ns/premon#SemanticArgument
+
+:SemanticArgument rdf:type owl:Class ;
+                  
+                  rdfs:label "semantic argument"@en ;
+                  
+                  rdfs:subClassOf ontolex:LexicalConcept .
+
+
+
+###  http://premon.fbk.eu/ns/premon#SemanticRole
+
+:SemanticRole rdf:type owl:Class ;
+              
+              rdfs:label "semantic role"@en .
+
+
+
+###  http://premon.fbk.eu/ns/premon#SemanticType
+
+:SemanticType rdf:type owl:Class ;
+              
+              rdfs:label "semantic type"@en ;
+              
+              rdfs:subClassOf ontolex:LexicalConcept .
+
+
+
+
+###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
+
