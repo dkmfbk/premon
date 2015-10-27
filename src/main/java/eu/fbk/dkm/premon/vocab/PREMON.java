@@ -36,6 +36,9 @@ public class PREMON {
     /** Class premon:SemanticType. */
     public static final URI SEMANTIC_TYPE = createURI("SemanticType");
 
+    /** Class premon:UsageExample. */
+    public static final URI USAGE_EXAMPLE = createURI("UsageExample");
+
     // Object properties
 
     /** Object property premon:argumentRel. */
