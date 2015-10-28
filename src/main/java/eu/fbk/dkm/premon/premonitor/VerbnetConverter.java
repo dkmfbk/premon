@@ -1,14 +1,6 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import com.google.common.io.Files;
-
 import org.joox.JOOX;
 import org.joox.Match;
 import org.openrdf.rio.RDFHandler;
@@ -17,12 +9,18 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
 public class VerbnetConverter extends Converter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VerbnetConverter.class);
 
-    public VerbnetConverter(final File path, final RDFHandler sink, final Properties properties) {
-        super(path, "vn", sink, properties);
+    public VerbnetConverter(File path, RDFHandler sink, Properties properties, String language) {
+        super(path, "vn", sink, properties, language);
     }
 
     @Override
