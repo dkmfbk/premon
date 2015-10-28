@@ -1,4 +1,4 @@
-@prefix : <http://premon.fbk.eu/ns/premon-all#> .
+@prefix : <http://premon.fbk.eu/ns/premon-pb#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -45,6 +45,680 @@
                                     rdfs:isDefinedBy <http://premon.fbk.eu/ns/premon-pb.ttl> ;
                                     
                                     owl:imports <http://www.w3.org/ns/lemon/ontolex> .
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://premon.fbk.eu/ns/premon-pb#aspect
+
+:aspect rdf:type owl:ObjectProperty ;
+        
+        rdfs:label "aspect" ;
+        
+        rdfs:range :Aspect ;
+        
+        rdfs:domain :Inflection .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#form
+
+:form rdf:type owl:FunctionalProperty ,
+               owl:ObjectProperty ;
+      
+      rdfs:label "form" ;
+      
+      rdfs:range :Form ;
+      
+      rdfs:domain :Inflection .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#functionTag
+
+:functionTag rdf:type owl:FunctionalProperty ,
+                      owl:ObjectProperty ;
+             
+             rdfs:label "function tag" ;
+             
+             rdfs:range :FunctionTag .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#inflection
+
+:inflection rdf:type owl:ObjectProperty ;
+            
+            rdfs:label "inflection" ;
+            
+            rdfs:range :Inflection .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#person
+
+:person rdf:type owl:FunctionalProperty ,
+                 owl:ObjectProperty ;
+        
+        rdfs:label "person" ;
+        
+        rdfs:domain :Inflection ;
+        
+        rdfs:range :Person .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#tense
+
+:tense rdf:type owl:FunctionalProperty ,
+                owl:ObjectProperty ;
+       
+       rdfs:label "tense" ;
+       
+       rdfs:domain :Inflection ;
+       
+       rdfs:range :Tense .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#voice
+
+:voice rdf:type owl:FunctionalProperty ,
+                owl:ObjectProperty ;
+       
+       rdfs:label "voice" ;
+       
+       rdfs:domain :Inflection ;
+       
+       rdfs:range :Voice .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Aspect
+
+:Aspect rdf:type owl:Class ;
+        
+        rdfs:label "aspect" ;
+        
+        rdfs:subClassOf [ rdf:type owl:Class ;
+                          owl:oneOf ( :perfect
+                                      :progressive
+                                    )
+                        ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Example
+
+:Example rdf:type owl:Class ;
+         
+         rdfs:label "PropBank example" ;
+         
+         rdfs:subClassOf premon:Example ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :inflection ;
+                           owl:maxCardinality "1"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty [ owl:inverseOf nif:referenceContext
+                                          ] ;
+                           owl:allValuesFrom :Markable
+                         ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Form
+
+:Form rdf:type owl:Class ;
+      
+      rdfs:label "form" ;
+      
+      rdfs:subClassOf [ rdf:type owl:Class ;
+                        owl:oneOf ( :participle
+                                    :infinitive
+                                    :gerund
+                                    :full
+                                  )
+                      ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#FunctionTag
+
+:FunctionTag rdf:type owl:Class ;
+             
+             rdfs:label "PropBank function tag" .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Inflection
+
+:Inflection rdf:type owl:Class ;
+            
+            rdfs:label "inflection" .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Markable
+
+:Markable rdf:type owl:Class ;
+          
+          rdfs:subClassOf premon:Markable ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty nif:annotation ;
+                            owl:someValuesFrom [ rdf:type owl:Class ;
+                                                 owl:unionOf ( :Predicate
+                                                               :SemanticArgument
+                                                             )
+                                               ]
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty nif:referenceContext ;
+                            owl:allValuesFrom :Example
+                          ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#ModifierRole
+
+:ModifierRole rdf:type owl:Class ;
+              
+              rdfs:label "PropBank modifier role" ;
+              
+              rdfs:subClassOf :FunctionTag ,
+                              :SemanticRole ,
+                              [ rdf:type owl:Class ;
+                                owl:oneOf ( :argm-rcl
+                                            :argm-loc
+                                            :argm-ext
+                                            :argm-dsp
+                                            :argm-com
+                                            :argm-gol
+                                            :argm-prd
+                                            :argm-mod
+                                            :argm-pnc
+                                            :argm-adj
+                                            :argm-slc
+                                            :argm-dis
+                                            :argm-dir
+                                            :argm-rec
+                                            :argm-neg
+                                            :argm-prp
+                                            :argm-mnr
+                                            :argm-str
+                                            :argm-adv
+                                            :argm-tmp
+                                            :argm-lvb
+                                            :argm-cau
+                                          )
+                              ] ;
+              
+              owl:disjointWith :NumberedRole ,
+                               :Preposition .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#NumberedRole
+
+:NumberedRole rdf:type owl:Class ;
+              
+              rdfs:label "PropBank numbered role" ;
+              
+              rdfs:subClassOf :SemanticRole ,
+                              [ rdf:type owl:Class ;
+                                owl:oneOf ( :arg5
+                                            :arg3
+                                            :arg4
+                                            :arg1
+                                            :arg2
+                                            :arg0
+                                          )
+                              ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Person
+
+:Person rdf:type owl:Class ;
+        
+        rdfs:label "person" ;
+        
+        rdfs:subClassOf [ rdf:type owl:Class ;
+                          owl:oneOf ( :third
+                                      :other
+                                    )
+                        ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Predicate
+
+:Predicate rdf:type owl:Class ;
+           
+           rdfs:label "PropBank predicate" ;
+           
+           rdfs:subClassOf premon:Predicate ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty premon:semArg ;
+                             owl:allValuesFrom :SemanticArgument
+                           ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Preposition
+
+:Preposition rdf:type owl:Class ;
+             
+             rdfs:label "preposition" ;
+             
+             rdfs:subClassOf :FunctionTag .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#SemanticArgument
+
+:SemanticArgument rdf:type owl:Class ;
+                  
+                  rdfs:label "PropBank semantic argument" ;
+                  
+                  rdfs:subClassOf premon:SemanticArgument ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty [ owl:inverseOf premon:semArg
+                                                   ] ;
+                                    owl:allValuesFrom :Predicate
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty premon:role ;
+                                    owl:cardinality "1"^^xsd:nonNegativeInteger
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty premon:role ;
+                                    owl:allValuesFrom :SemanticRole
+                                  ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#SemanticRole
+
+:SemanticRole rdf:type owl:Class ;
+              
+              rdfs:label "PropBank semantic role" ;
+              
+              owl:equivalentClass [ rdf:type owl:Class ;
+                                    owl:unionOf ( :ModifierRole
+                                                  :NumberedRole
+                                                )
+                                  ] ;
+              
+              rdfs:subClassOf premon:SemanticRole ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty [ owl:inverseOf premon:role
+                                               ] ;
+                                owl:allValuesFrom :SemanticArgument
+                              ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Tense
+
+:Tense rdf:type owl:Class ;
+       
+       rdfs:label "tense" ;
+       
+       rdfs:subClassOf [ rdf:type owl:Class ;
+                         owl:oneOf ( :future
+                                     :past
+                                     :present
+                                   )
+                       ] .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#Voice
+
+:Voice rdf:type owl:Class ;
+       
+       rdfs:label "voice" ;
+       
+       rdfs:subClassOf [ rdf:type owl:Class ;
+                         owl:oneOf ( :active
+                                     :passive
+                                   )
+                       ] .
+
+
+
+
+
+#################################################################
+#
+#    Individuals
+#
+#################################################################
+
+
+###  http://premon.fbk.eu/ns/premon-pb#active
+
+:active rdf:type :Voice ,
+                 owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#arg0
+
+:arg0 rdf:type :NumberedRole ,
+               owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#arg1
+
+:arg1 rdf:type :NumberedRole ,
+               owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#arg2
+
+:arg2 rdf:type :NumberedRole ,
+               owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#arg3
+
+:arg3 rdf:type :NumberedRole ,
+               owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#arg4
+
+:arg4 rdf:type :NumberedRole ,
+               owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#arg5
+
+:arg5 rdf:type :NumberedRole ,
+               owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-adj
+
+:argm-adj rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-adv
+
+:argm-adv rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-cau
+
+:argm-cau rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-com
+
+:argm-com rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-dir
+
+:argm-dir rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-dis
+
+:argm-dis rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-dsp
+
+:argm-dsp rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-ext
+
+:argm-ext rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-gol
+
+:argm-gol rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-loc
+
+:argm-loc rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-lvb
+
+:argm-lvb rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-mnr
+
+:argm-mnr rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-mod
+
+:argm-mod rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-neg
+
+:argm-neg rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-pnc
+
+:argm-pnc rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-prd
+
+:argm-prd rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-prp
+
+:argm-prp rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-rcl
+
+:argm-rcl rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-rec
+
+:argm-rec rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-slc
+
+:argm-slc rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-str
+
+:argm-str rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#argm-tmp
+
+:argm-tmp rdf:type :ModifierRole ,
+                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#full
+
+:full rdf:type :Form ,
+               owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#future
+
+:future rdf:type :Tense ,
+                 owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#gerund
+
+:gerund rdf:type :Form ,
+                 owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#infinitive
+
+:infinitive rdf:type :Form ,
+                     owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#other
+
+:other rdf:type :Person ,
+                owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#participle
+
+:participle rdf:type :Form ,
+                     owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#passive
+
+:passive rdf:type :Voice ,
+                  owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#past
+
+:past rdf:type :Tense ,
+               owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#perfect
+
+:perfect rdf:type :Aspect ,
+                  owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#present
+
+:present rdf:type :Tense ,
+                  owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#progressive
+
+:progressive rdf:type :Aspect ,
+                      owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#tag-pag
+
+:tag-pag rdf:type :FunctionTag ,
+                  owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#tag-ppt
+
+:tag-ppt rdf:type :FunctionTag ,
+                  owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#tag-vsp
+
+:tag-vsp rdf:type :FunctionTag ,
+                  owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ns/premon-pb#third
+
+:third rdf:type :Person ,
+                owl:NamedIndividual .
+
+
+
 
 ###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
 
