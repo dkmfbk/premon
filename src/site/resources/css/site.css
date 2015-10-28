@@ -1,0 +1,29 @@
+.brand span {
+    padding-left: 40px;
+}
+
+.brand img {
+    position: absolute;
+    top: 6px;
+}
+
+#well-home {
+    text-align: center;
+    margin-top: 30px;
+}
+
+#well-home h1 {
+    font-size: 400%;
+}
+
+#well-home .title2 {
+    font-size: 150%;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+/* Reflow bugfix */
+
+h1[id]:before, h2[id]:before, h3[id]:before, h4[id]:before, h5[id]:before, h6[id]:before, a[name]:before {
+    display: none !important;
+}

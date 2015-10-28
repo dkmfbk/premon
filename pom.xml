@@ -8,7 +8,7 @@
     <parent>
         <groupId>eu.fbk.dkm</groupId>
         <artifactId>parent</artifactId>
-        <version>1.2</version>
+        <version>1.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>premon</artifactId>
@@ -18,20 +18,20 @@
     <description>Predicate model for ontologies</description>
     <inceptionYear>2015</inceptionYear>
 
+    <scm>
+        <connection>scm:git:https://github.com/dkmfbk/premon.git</connection>
+        <developerConnection>scm:git:https://github.com/dkmfbk/premon.git</developerConnection>
+        <url>https://github.com/dkmfbk/premon</url>
+    </scm>
+
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <url>${site-path}/</url>
+        </site>
+    </distributionManagement>
+
     <developers>
-        <developer>
-            <id>aprosio</id>
-            <name>Alessio Palmero Aprosio</name>
-            <email>aprosio@fbk.eu</email>
-            <url>https://dkm.fbk.eu/people/profile/aprosio</url>
-            <roles>
-                <role>Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-            <properties>
-                <picUrl>http://rdfpro.fbk.eu/images/team/aprosio.jpg</picUrl>
-            </properties>
-        </developer>
         <developer>
             <id>corcoglio</id>
             <name>Francesco Corcoglioniti</name>
@@ -57,6 +57,19 @@
                 <picUrl>http://rdfpro.fbk.eu/images/team/rospocher.jpg</picUrl>
             </properties>
         </developer>
+        <developer>
+            <id>aprosio</id>
+            <name>Alessio Palmero Aprosio</name>
+            <email>aprosio@fbk.eu</email>
+            <url>https://dkm.fbk.eu/people/profile/aprosio</url>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+            <properties>
+                <picUrl>http://rdfpro.fbk.eu/images/team/aprosio.jpg</picUrl>
+            </properties>
+        </developer>
     </developers>
 
     <licenses>
@@ -66,13 +79,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
-    <scm>
-        <connection>scm:git:ssh://git@github.com/dkmfbk/proplem.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/dkmfbk/proplem.git</developerConnection>
-        <url>https://github.com/dkmfbk/proplem</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <build>
         <pluginManagement>
