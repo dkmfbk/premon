@@ -1,4 +1,4 @@
-package eu.fbk.dkm.premon.premonitor;
+package eu.fbk.dkm.premon.util;
 
 import javax.annotation.Nullable;
 
@@ -20,7 +20,7 @@ public class NF {
 				/*
 				Property 'n' should be a number, 'm' or 'a'
 				- number: is the arg-N (usually arg-0 is the agent)
-				- 'a': arg-0 is not the agent, this is
+				- 'a': arg-0 is not the agent
 				- 'm': see property 'f'
 
 				Note: when n='a' => f=''

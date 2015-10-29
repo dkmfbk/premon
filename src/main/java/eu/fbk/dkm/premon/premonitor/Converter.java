@@ -22,6 +22,16 @@ public abstract class Converter {
 
 	protected static HashSet<String> fileToDiscard = new HashSet<>();
 
+	protected String onlyOne = null;
+
+	public String getOnlyOne() {
+		return onlyOne;
+	}
+
+	public void setOnlyOne(String onlyOne) {
+		this.onlyOne = onlyOne;
+	}
+
 	protected Converter(final File path, final String resource, final RDFHandler sink,
 						final Properties properties, final String language) {
 
