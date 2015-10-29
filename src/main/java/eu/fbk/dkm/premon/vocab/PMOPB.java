@@ -39,6 +39,9 @@ public class PMOPB {
     /** Class pmobp:ModifierRole. */
     public static final URI MODIFIER_ROLE = createURI("ModifierRole");
 
+    /** Class pmobp:AgentiveRole. */
+    public static final URI AGENTIVE_ROLE = createURI("AgentiveRole");
+
     /** Class pmobp:NumberedRole. */
     public static final URI NUMBERED_ROLE = createURI("NumberedRole");
 
@@ -109,6 +112,9 @@ public class PMOPB {
     /** Individual pmopb:arg5 (a pmopb:NumberedRole). */
     public static final URI ARG5 = createURI("arg5");
 
+    /** Individual pmopb:arga (a pmopb:AgentiveRole). */
+    public static final URI ARGA = createURI("arga");
+
     /** Individual pmopb:argm-adj (a pmopb:ModifierRole). */
     public static final URI ARGM_ADJ = createURI("argm-adj");
 
@@ -168,9 +174,6 @@ public class PMOPB {
 
     /** Individual pmopb:argm-slc (a pmopb:ModifierRole). */
     public static final URI ARGM_SLC = createURI("argm-slc");
-
-    /** Individual pmopb:argm-str (a pmopb:ModifierRole). */
-    public static final URI ARGM_STR = createURI("argm-str");
 
     /** Individual pmopb:argm-tmp (a pmopb:ModifierRole). */
     public static final URI ARGM_TMP = createURI("argm-tmp");
