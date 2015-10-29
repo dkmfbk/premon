@@ -226,6 +226,36 @@ public class PMOPB {
     /** Individual pmopb:progressive (a pmopb:Aspect). */
     public static final URI PROGRESSIVE = createURI("progressive");
 
+    /** Individual pmopb:from (a pmopb:Preposition). */
+    public static final URI FROM = createURI("from");
+
+    /** Individual pmopb:on (a pmopb:Preposition). */
+    public static final URI ON = createURI("on");
+
+    /** Individual pmopb:to (a pmopb:Preposition). */
+    public static final URI TO = createURI("to");
+
+    /** Individual pmopb:as (a pmopb:Preposition). */
+    public static final URI AS = createURI("as");
+
+    /** Individual pmopb:at (a pmopb:Preposition). */
+    public static final URI AT = createURI("at");
+
+    /** Individual pmopb:by (a pmopb:Preposition). */
+    public static final URI BY = createURI("by");
+
+    /** Individual pmopb:for (a pmopb:Preposition). */
+    public static final URI FOR = createURI("for");
+
+    /** Individual pmopb:in (a pmopb:Preposition). */
+    public static final URI IN = createURI("in");
+
+    /** Individual pmopb:of (a pmopb:Preposition). */
+    public static final URI OF = createURI("of");
+
+    /** Individual pmopb:with (a pmopb:Preposition). */
+    public static final URI WITH = createURI("with");
+
     // Utility methods
 
     private static URI createURI(final String localName) {
