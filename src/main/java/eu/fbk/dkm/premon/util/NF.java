@@ -1,5 +1,7 @@
 package eu.fbk.dkm.premon.util;
 
+import com.sun.xml.internal.messaging.saaj.soap.ver1_1.Fault1_1Impl;
+
 import javax.annotation.Nullable;
 
 /**
@@ -14,6 +16,8 @@ public class NF {
 	public static final String MOD = "mod";
 
 	public NF(@Nullable String n, @Nullable String f) {
+
+		// This is about n
 
 		if (n != null && n.length() > 0) {
 
@@ -42,16 +46,21 @@ public class NF {
 			n = null;
 		}
 
+		if (n != null) {
+			n = n.toLowerCase();
+		}
+
+		// This is about f
+
 		if (f == null || f.length() <= 0) {
 			f = null;
 		}
 
 		if (f != null) {
 			f = f.toLowerCase();
-		}
-
-		if (n != null) {
-			n = n.toLowerCase();
+			if (f.equals("str")) {
+				f = null;
+			}
 		}
 
 		this.n = n;

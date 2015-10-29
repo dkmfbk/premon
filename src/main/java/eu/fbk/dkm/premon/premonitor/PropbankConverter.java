@@ -30,7 +30,8 @@ public class PropbankConverter extends Converter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropbankConverter.class);
 
-	protected static final String NAMESPACE = "http://my-namespace/";
+	public static final String NAMESPACE = "http://premon.fbk.eu/resource/";
+
 	static final Pattern THETA_NAME_PATTERN = Pattern.compile("^([^0-9]+)([0-9]+)$");
 	static final String VN_NAME_REGEXP = "^[^0-9]+-";
 	static final Pattern VN_CODE_PATTERN = Pattern.compile("^[0-9]+(\\.[0-9]+)*(-[0-9]+)*$");
@@ -391,7 +392,22 @@ public class PropbankConverter extends Converter {
 				resources.add(resource);
 			}
 
-			System.out.println(prepositions);
+			for (PropBankResource resource : resources) {
+				Frameset frameset = resource.getMain();
+
+				List<Object> noteOrPredicate = frameset.getNoteOrPredicate();
+
+				for (Object predicate : noteOrPredicate) {
+					if (predicate instanceof Predicate) {
+
+					}
+				}
+
+				System.out.println(resource);
+			}
+
+
+			System.out.println(roleSetsToIgnore);
 
 			/*
 			for (String thetaRole : thetaRoles) {

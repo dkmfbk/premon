@@ -19,7 +19,7 @@ public class Premonitor {
 
 	public static void main(String[] args) {
 
-		File pbFolder = new File("data/frames/");
+		File pbFolder = new File("data/ontonotes/");
 		List<Statement> statements = new ArrayList<>();
 		RDFHandler handler = RDFHandlers.wrap(statements);
 

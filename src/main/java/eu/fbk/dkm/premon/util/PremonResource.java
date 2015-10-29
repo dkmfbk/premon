@@ -23,4 +23,13 @@ public abstract class PremonResource {
 		return lemma;
 	}
 
+	@Override
+	public String toString() {
+		return "PremonResource{" +
+				"fileName='" + fileName + '\'' +
+				", type='" + type + '\'' +
+				", lemma='" + lemma + '\'' +
+				", main=" + main +
+				'}';
+	}
 }

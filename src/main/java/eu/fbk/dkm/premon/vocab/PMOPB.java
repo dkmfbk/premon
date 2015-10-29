@@ -89,6 +89,9 @@ public class PMOPB {
     /** Object property pmopb:voice. */
     public static final URI VOICE_P = createURI("voice");
 
+    /** Object property pmopb:core. */
+    public static final URI CORE_P = createURI("core");
+
     // Individuals
 
     /** Individual pmopb:arg0 (a pmopb:NumberedRole). */
