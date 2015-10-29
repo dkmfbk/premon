@@ -6,23 +6,29 @@ import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
- * Constants for the PREMON vocabulary, core module of PREMON.
+ * Vocabulary constants for the PREMON Ontology - core module (PMO).
  */
-public class PREMON {
+public class PMO {
 
-    /** Recommended prefix for the vocabulary namespace: "premon". */
-    public static final String PREFIX = "premon";
+    /** Recommended prefix for the vocabulary namespace: "pmo". */
+    public static final String PREFIX = "PMO";
 
-    /** Vocabulary namespace: "http://premon.fbk.eu/ns/premon#". */
-    public static final String NAMESPACE = "http://premon.fbk.eu/ns/premon#";
+    /** Vocabulary namespace: "http://premon.fbk.eu/ontology/core#". */
+    public static final String NAMESPACE = "http://premon.fbk.eu/ontology/core#";
 
     /** Immutable {@link Namespace} constant for the vocabulary namespace. */
     public static final Namespace NS = new NamespaceImpl(PREFIX, NAMESPACE);
 
     // Classes
 
-    /** Class premon:EntryConcept. */
-    public static final URI ENTRY_CONCEPT = createURI("EntryConcept");
+    /** Class premon:Conceptualization. */
+    public static final URI CONCEPTUALIZATION = createURI("Conceptualization");
+
+    /** Class premon:Example. */
+    public static final URI EXAMPLE = createURI("Example");
+
+    /** Class premon:Markable. */
+    public static final URI MARKABLE = createURI("Markable");
 
     /** Class premon:Predicate. */
     public static final URI PREDICATE = createURI("Predicate");
@@ -35,9 +41,6 @@ public class PREMON {
 
     /** Class premon:SemanticType. */
     public static final URI SEMANTIC_TYPE = createURI("SemanticType");
-
-    /** Class premon:UsageExample. */
-    public static final URI USAGE_EXAMPLE = createURI("UsageExample");
 
     // Object properties
 
@@ -71,7 +74,7 @@ public class PREMON {
         return ValueFactoryImpl.getInstance().createURI(NAMESPACE, localName);
     }
 
-    private PREMON() {
+    private PMO() {
     }
 
 }

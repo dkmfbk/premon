@@ -1,4 +1,4 @@
-@prefix : <http://premon.fbk.eu/ns/premon-pb#> .
+@prefix : <http://premon.fbk.eu/ontology/pb#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -10,40 +10,40 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix void: <http://rdfs.org/ns/void#> .
-@prefix premon: <http://premon.fbk.eu/ns/premon#> .
+@prefix pmo: <http://premon.fbk.eu/ontology/core#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
-@prefix premonpb: <http://premon.fbk.eu/ns/premon-pb#> .
-@base <http://premon.fbk.eu/ns/premon-pb> .
+@prefix pmopb: <http://premon.fbk.eu/ontology/pb#> .
+@base <http://premon.fbk.eu/ontology/pb> .
 
-<http://premon.fbk.eu/ns/premon-pb> rdf:type owl:Ontology ;
-                                    
+<http://premon.fbk.eu/ontology/pb> rdf:type owl:Ontology ;
+
                                     dc:creator "Marco Rospocher" ;
-                                    
+
                                     dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
-                                    
+
                                     dc:creator "Alessio Palmero Aprosio" ;
-                                    
-                                    vann:preferredNamespaceUri "http://premon.fbk.eu/ns/premon-pb#" ;
-                                    
-                                    vann:preferredNamespacePrefix "premonpb" ;
-                                    
+
+                                    vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/pb#" ;
+
+                                    vann:preferredNamespacePrefix "pmopb" ;
+
                                     dc:creator "Francesco Corcoglioniti" ;
-                                    
-                                    dcterms:title "Predicate Model for Ontologies (premon) - PropBank Module"@en ;
-                                    
+
+                                    dcterms:title "Predicate Model for Ontologies (premon) - PropBank ontology module"@en ;
+
                                     dc:description "TODO: ADD A DESCRIPTION"@en ;
-                                    
+
                                     dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en ;
-                                    
+
                                     dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;
-                                    
-                                    dc:description <http://premon.fbk.eu/images/premon-pb.svg> ;
-                                    
-                                    owl:imports <http://premon.fbk.eu/ns/premon> ;
-                                    
-                                    rdfs:isDefinedBy <http://premon.fbk.eu/ns/premon-pb.ttl> ;
-                                    
+
+                                    dc:description <http://premon.fbk.eu/images/pb.svg> ;
+
+                                    owl:imports <http://premon.fbk.eu/ontology/core> ;
+
+                                    rdfs:isDefinedBy <http://premon.fbk.eu/ontology/pb.ttl> ;
+
                                     owl:imports <http://www.w3.org/ns/lemon/ontolex> .
 
 
@@ -57,11 +57,11 @@
 ###  http://premon.fbk.eu/ns/premon-pb#aspect
 
 :aspect rdf:type owl:ObjectProperty ;
-        
+
         rdfs:label "aspect" ;
-        
+
         rdfs:range :Aspect ;
-        
+
         rdfs:domain :Inflection .
 
 
@@ -70,11 +70,11 @@
 
 :form rdf:type owl:FunctionalProperty ,
                owl:ObjectProperty ;
-      
+
       rdfs:label "form" ;
-      
+
       rdfs:range :Form ;
-      
+
       rdfs:domain :Inflection .
 
 
@@ -83,19 +83,24 @@
 
 :functionTag rdf:type owl:FunctionalProperty ,
                       owl:ObjectProperty ;
-             
+
              rdfs:label "function tag" ;
-             
-             rdfs:range :FunctionTag .
+
+             rdfs:range [ rdf:type owl:Class ;
+                          owl:unionOf ( :ModifierRole
+                                        :Preposition
+                                        :Tag
+                                      )
+                        ] .
 
 
 
 ###  http://premon.fbk.eu/ns/premon-pb#inflection
 
 :inflection rdf:type owl:ObjectProperty ;
-            
+
             rdfs:label "inflection" ;
-            
+
             rdfs:range :Inflection .
 
 
@@ -104,11 +109,11 @@
 
 :person rdf:type owl:FunctionalProperty ,
                  owl:ObjectProperty ;
-        
+
         rdfs:label "person" ;
-        
+
         rdfs:domain :Inflection ;
-        
+
         rdfs:range :Person .
 
 
@@ -117,11 +122,11 @@
 
 :tense rdf:type owl:FunctionalProperty ,
                 owl:ObjectProperty ;
-       
+
        rdfs:label "tense" ;
-       
+
        rdfs:domain :Inflection ;
-       
+
        rdfs:range :Tense .
 
 
@@ -130,11 +135,11 @@
 
 :voice rdf:type owl:FunctionalProperty ,
                 owl:ObjectProperty ;
-       
+
        rdfs:label "voice" ;
-       
+
        rdfs:domain :Inflection ;
-       
+
        rdfs:range :Voice .
 
 
@@ -151,9 +156,9 @@
 ###  http://premon.fbk.eu/ns/premon-pb#Aspect
 
 :Aspect rdf:type owl:Class ;
-        
+
         rdfs:label "aspect" ;
-        
+
         rdfs:subClassOf [ rdf:type owl:Class ;
                           owl:oneOf ( :perfect
                                       :progressive
@@ -165,18 +170,18 @@
 ###  http://premon.fbk.eu/ns/premon-pb#Example
 
 :Example rdf:type owl:Class ;
-         
+
          rdfs:label "PropBank example" ;
-         
-         rdfs:subClassOf premon:Example ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :inflection ;
-                           owl:maxCardinality "1"^^xsd:nonNegativeInteger
-                         ] ,
+
+         rdfs:subClassOf pmo:Example ,
                          [ rdf:type owl:Restriction ;
                            owl:onProperty [ owl:inverseOf nif:referenceContext
                                           ] ;
                            owl:allValuesFrom :Markable
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :inflection ;
+                           owl:maxCardinality "1"^^xsd:nonNegativeInteger
                          ] .
 
 
@@ -184,9 +189,9 @@
 ###  http://premon.fbk.eu/ns/premon-pb#Form
 
 :Form rdf:type owl:Class ;
-      
+
       rdfs:label "form" ;
-      
+
       rdfs:subClassOf [ rdf:type owl:Class ;
                         owl:oneOf ( :participle
                                     :infinitive
@@ -197,18 +202,10 @@
 
 
 
-###  http://premon.fbk.eu/ns/premon-pb#FunctionTag
-
-:FunctionTag rdf:type owl:Class ;
-             
-             rdfs:label "PropBank function tag" .
-
-
-
 ###  http://premon.fbk.eu/ns/premon-pb#Inflection
 
 :Inflection rdf:type owl:Class ;
-            
+
             rdfs:label "inflection" .
 
 
@@ -216,8 +213,8 @@
 ###  http://premon.fbk.eu/ns/premon-pb#Markable
 
 :Markable rdf:type owl:Class ;
-          
-          rdfs:subClassOf premon:Markable ,
+
+          rdfs:subClassOf pmo:Markable ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty nif:annotation ;
                             owl:someValuesFrom [ rdf:type owl:Class ;
@@ -236,11 +233,10 @@
 ###  http://premon.fbk.eu/ns/premon-pb#ModifierRole
 
 :ModifierRole rdf:type owl:Class ;
-              
+
               rdfs:label "PropBank modifier role" ;
-              
-              rdfs:subClassOf :FunctionTag ,
-                              :SemanticRole ,
+
+              rdfs:subClassOf :SemanticRole ,
                               [ rdf:type owl:Class ;
                                 owl:oneOf ( :argm-rcl
                                             :argm-loc
@@ -266,7 +262,7 @@
                                             :argm-cau
                                           )
                               ] ;
-              
+
               owl:disjointWith :NumberedRole ,
                                :Preposition .
 
@@ -275,9 +271,9 @@
 ###  http://premon.fbk.eu/ns/premon-pb#NumberedRole
 
 :NumberedRole rdf:type owl:Class ;
-              
+
               rdfs:label "PropBank numbered role" ;
-              
+
               rdfs:subClassOf :SemanticRole ,
                               [ rdf:type owl:Class ;
                                 owl:oneOf ( :arg5
@@ -294,9 +290,9 @@
 ###  http://premon.fbk.eu/ns/premon-pb#Person
 
 :Person rdf:type owl:Class ;
-        
+
         rdfs:label "person" ;
-        
+
         rdfs:subClassOf [ rdf:type owl:Class ;
                           owl:oneOf ( :third
                                       :other
@@ -308,12 +304,12 @@
 ###  http://premon.fbk.eu/ns/premon-pb#Predicate
 
 :Predicate rdf:type owl:Class ;
-           
+
            rdfs:label "PropBank predicate" ;
-           
-           rdfs:subClassOf premon:Predicate ,
+
+           rdfs:subClassOf pmo:Predicate ,
                            [ rdf:type owl:Restriction ;
-                             owl:onProperty premon:semArg ;
+                             owl:onProperty pmo:semArg ;
                              owl:allValuesFrom :SemanticArgument
                            ] .
 
@@ -322,32 +318,30 @@
 ###  http://premon.fbk.eu/ns/premon-pb#Preposition
 
 :Preposition rdf:type owl:Class ;
-             
-             rdfs:label "preposition" ;
-             
-             rdfs:subClassOf :FunctionTag .
+
+             rdfs:label "preposition" .
 
 
 
 ###  http://premon.fbk.eu/ns/premon-pb#SemanticArgument
 
 :SemanticArgument rdf:type owl:Class ;
-                  
+
                   rdfs:label "PropBank semantic argument" ;
-                  
-                  rdfs:subClassOf premon:SemanticArgument ,
+
+                  rdfs:subClassOf pmo:SemanticArgument ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty [ owl:inverseOf premon:semArg
-                                                   ] ;
-                                    owl:allValuesFrom :Predicate
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty premon:role ;
+                                    owl:onProperty pmo:role ;
                                     owl:cardinality "1"^^xsd:nonNegativeInteger
                                   ] ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty premon:role ;
+                                    owl:onProperty pmo:role ;
                                     owl:allValuesFrom :SemanticRole
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty [ owl:inverseOf pmo:semArg
+                                                   ] ;
+                                    owl:allValuesFrom :Predicate
                                   ] .
 
 
@@ -355,30 +349,38 @@
 ###  http://premon.fbk.eu/ns/premon-pb#SemanticRole
 
 :SemanticRole rdf:type owl:Class ;
-              
+
               rdfs:label "PropBank semantic role" ;
-              
+
               owl:equivalentClass [ rdf:type owl:Class ;
                                     owl:unionOf ( :ModifierRole
                                                   :NumberedRole
                                                 )
                                   ] ;
-              
-              rdfs:subClassOf premon:SemanticRole ,
+
+              rdfs:subClassOf pmo:SemanticRole ,
                               [ rdf:type owl:Restriction ;
-                                owl:onProperty [ owl:inverseOf premon:role
+                                owl:onProperty [ owl:inverseOf pmo:role
                                                ] ;
                                 owl:allValuesFrom :SemanticArgument
                               ] .
 
 
 
+###  http://premon.fbk.eu/ns/premon-pb#Tag
+
+:Tag rdf:type owl:Class ;
+
+     rdfs:label "PropBank function tag" .
+
+
+
 ###  http://premon.fbk.eu/ns/premon-pb#Tense
 
 :Tense rdf:type owl:Class ;
-       
+
        rdfs:label "tense" ;
-       
+
        rdfs:subClassOf [ rdf:type owl:Class ;
                          owl:oneOf ( :future
                                      :past
@@ -391,9 +393,9 @@
 ###  http://premon.fbk.eu/ns/premon-pb#Voice
 
 :Voice rdf:type owl:Class ;
-       
+
        rdfs:label "voice" ;
-       
+
        rdfs:subClassOf [ rdf:type owl:Class ;
                          owl:oneOf ( :active
                                      :passive
@@ -693,21 +695,21 @@
 
 ###  http://premon.fbk.eu/ns/premon-pb#tag-pag
 
-:tag-pag rdf:type :FunctionTag ,
+:tag-pag rdf:type :Tag ,
                   owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ns/premon-pb#tag-ppt
 
-:tag-ppt rdf:type :FunctionTag ,
+:tag-ppt rdf:type :Tag ,
                   owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ns/premon-pb#tag-vsp
 
-:tag-vsp rdf:type :FunctionTag ,
+:tag-vsp rdf:type :Tag ,
                   owl:NamedIndividual .
 
 
@@ -721,4 +723,3 @@
 
 
 ###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
-
