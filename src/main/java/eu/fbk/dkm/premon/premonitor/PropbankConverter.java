@@ -6,9 +6,17 @@ import com.google.common.io.Files;
 import eu.fbk.dkm.premon.premonitor.propbank.*;
 import eu.fbk.dkm.premon.util.NF;
 import eu.fbk.dkm.premon.util.PropBankResource;
+import eu.fbk.dkm.premon.vocab.DECOMP;
+import eu.fbk.dkm.premon.vocab.ONTOLEX;
+import eu.fbk.dkm.premon.vocab.PMO;
+import eu.fbk.dkm.premon.vocab.PMOPB;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
@@ -31,21 +39,22 @@ public class PropbankConverter extends Converter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropbankConverter.class);
 
 	public static final String NAMESPACE = "http://premon.fbk.eu/resource/";
+	public static final String SEPARATOR = "-";
+	public static final String FORM_PREFIX = "form";
+	public static final String CONCEPTUALIZATION_PREFIX = "conceptualization";
+	public static final String ROLESET_PREFIX = "pb";
 
 	static final Pattern THETA_NAME_PATTERN = Pattern.compile("^([^0-9]+)([0-9]+)$");
 	static final String VN_NAME_REGEXP = "^[^0-9]+-";
 	static final Pattern VN_CODE_PATTERN = Pattern.compile("^[0-9]+(\\.[0-9]+)*(-[0-9]+)*$");
-	static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[0-9]+$");
+	static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
 
 	// Bugs!
 	private static HashMap<String, String> bugMap = new HashMap<String, String>();
 	private static HashMap<String, String> lemmaToTransform = new HashMap();
 
-	private static HashSet<String> functionTags = new HashSet<String>();
-	private static HashSet<String> additionalTags = new HashSet<String>();
-
 	private enum Type {
-		FUNCTION, ADDITIONAL, PREPOSITION, NULL
+		FUNCTION, ADDITIONAL, PREPOSITION, NUMERIC, AGENT, NULL
 	}
 
 	static {
@@ -60,32 +69,6 @@ public class PropbankConverter extends Converter {
 		lemmaToTransform.put("cry+down(e)", "cry+down");
 
 		fileToDiscard.add("except-v.xml");
-
-		functionTags.add("ext");
-		functionTags.add("loc");
-		functionTags.add("dir");
-		functionTags.add("neg");
-		functionTags.add("mod");
-		functionTags.add("adv");
-		functionTags.add("mnr");
-		functionTags.add("prd");
-		functionTags.add("rec");
-		functionTags.add("tmp");
-		functionTags.add("prp");
-		functionTags.add("pnc");
-		functionTags.add("cau");
-		functionTags.add("adj");
-		functionTags.add("com");
-		functionTags.add("dis");
-		functionTags.add("dsp");
-		functionTags.add("gol");
-		functionTags.add("rcl");
-		functionTags.add("slc");
-		functionTags.add("lvb");
-
-		additionalTags.add("pag");
-		additionalTags.add("ppt");
-		additionalTags.add("vsp");
 	}
 
 	public PropbankConverter(File path, RDFHandler sink, Properties properties, String language) {
@@ -188,12 +171,22 @@ public class PropbankConverter extends Converter {
 
 	private Type getType(String code) {
 		if (code != null) {
-			if (functionTags.contains(code)) {
+			if (PMOPB.mapM.containsKey(code)) {
 				return Type.FUNCTION;
 			}
-			if (additionalTags.contains(code)) {
+			if (PMOPB.mapP.containsKey(code)) {
 				return Type.ADDITIONAL;
 			}
+
+			Matcher matcher = ARG_NUM_PATTERN.matcher(code);
+			if (matcher.find()) {
+				return Type.NUMERIC;
+			}
+
+			if (code.equals("a")) {
+				return Type.AGENT;
+			}
+
 			return Type.PREPOSITION;
 		}
 		return Type.NULL;
@@ -392,22 +385,135 @@ public class PropbankConverter extends Converter {
 				resources.add(resource);
 			}
 
+
 			for (PropBankResource resource : resources) {
 				Frameset frameset = resource.getMain();
+				String type = resource.getType();
+				String origLemma = resource.getLemma();
 
 				List<Object> noteOrPredicate = frameset.getNoteOrPredicate();
 
 				for (Object predicate : noteOrPredicate) {
 					if (predicate instanceof Predicate) {
+						String lemma = ((Predicate) predicate).getLemma().replace('_', '+').replace(' ', '+');
+						if (lemmaToTransform.keySet().contains(lemma)) {
+							lemma = lemmaToTransform.get(lemma);
+						}
+
+//						String wnLemma = lemma + "-" + type;
+
+						URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, type);
+
+						List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
+						for (Object roleset : noteOrRoleset) {
+							if (roleset instanceof Roleset) {
+								String rolesetID = ((Roleset) roleset).getId();
+
+								URI rolesetURI = uriForRoleset(rolesetID);
+								addStatementToSink(rolesetURI, RDF.TYPE, PMOPB.PREDICATE);
+								addStatementToSink(rolesetURI, SKOS.DEFINITION, ((Roleset) roleset).getName());
+								addStatementToSink(rolesetURI, RDFS.LABEL, rolesetID, false);
+								addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, rolesetURI);
+
+								URI conceptualizationURI = uriForConceptualization(lemma, type, rolesetID);
+								addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
+								addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, rolesetURI);
+
+								String[] vnClasses = new String[0];
+								if (((Roleset) roleset).getVncls() != null) {
+									vnClasses = ((Roleset) roleset).getVncls().trim().split("\\s+");
+								}
+
+								String[] fnPredicates = new String[0];
+								if (((Roleset) roleset).getFramnet() != null) {
+									fnPredicates = ((Roleset) roleset).getFramnet().trim().toLowerCase().split("\\s+");
+								}
+
+								//todo: do stuff with VN and FN
+
+								if (roleSetsToIgnore.contains(rolesetID)) {
+									continue;
+								}
+
+								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExample();
+								HashMap<URI, URI> argumentURIs = new HashMap<>();
+
+								for (String key : PMOPB.mapM.keySet()) {
+									URI argumentURI = uriForArgument(rolesetID, key);
+									argumentURIs.put(PMOPB.mapM.get(key), argumentURI);
+								}
+
+								rolesOrExample.stream().filter(rOrE -> rOrE instanceof Roles).forEach(rOrE -> {
+									List<Object> noteOrRole = ((Roles) rOrE).getNoteOrRole();
+									for (Object role : noteOrRole) {
+										if (role instanceof Role) {
+											String n = ((Role) role).getN();
+											String f = ((Role) role).getF();
+											String descr = ((Role) role).getDescr();
+
+											List<Vnrole> vnroleList = ((Role) role).getVnrole();
+
+											NF nf = new NF(n, f);
+											String argName = nf.getArgName();
+
+											if (argName == null) {
+												//todo: this should never happen; however it happens
+												continue;
+											}
+
+											// Bugs!
+											if (bugMap.containsKey(argName)) {
+												argName = bugMap.get(argName);
+											}
+
+											Type argType = getType(argName);
+
+											URI argumentURI = uriForArgument(rolesetID, argName);
+
+											switch (argType) {
+												case NUMERIC:
+													argumentURIs.put(PMOPB.mapF.get(argName), argumentURI);
+													Type secondType = getType(nf.getF());
+													switch (secondType) {
+														case FUNCTION:
+															// add function
+															break;
+														case ADDITIONAL:
+															// add additional
+															break;
+														case PREPOSITION:
+															// add preposition
+															break;
+													}
+													break;
+												case FUNCTION:
+													argumentURIs.put(PMOPB.mapM.get(argName), argumentURI);
+													break;
+												case AGENT:
+													argumentURIs.put(PMOPB.ARGA, argumentURI);
+													break;
+												default:
+													//todo: should never happen, but it happens
+											}
+										}
+									}
+								});
+
+								for (URI key: argumentURIs.keySet()) {
+									System.out.println(key);
+									System.out.println(argumentURIs.get(key));
+								}
+							}
+						}
 
 					}
 				}
 
-				System.out.println(resource);
+//				System.out.println(resource);
 			}
 
 
-			System.out.println(roleSetsToIgnore);
+//			System.out.println(roleSetsToIgnore);
 
 			/*
 			for (String thetaRole : thetaRoles) {
@@ -472,5 +578,115 @@ public class PropbankConverter extends Converter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private URI addLexicalEntry(String origLemma, String lemma, String type) throws RDFHandlerException {
+		if (!origLemma.equals(lemma)) {
+			URI lemmaURI = uriForLexicalEntry(lemma, type);
+			URI oLemmaURI = uriForLexicalEntry(origLemma, type);
+
+			addStatementToSink(oLemmaURI, DECOMP.SUBTERM, lemmaURI);
+		}
+
+		String goodLemma = lemma.replaceAll("\\+", " ");
+
+		URI leURI = uriForLexicalEntry(lemma, type);
+		URI formURI = uriForForm(lemma, type);
+
+		addStatementToSink(leURI, RDF.TYPE, ONTOLEX.LEXICAL_ENTRY);
+		addStatementToSink(formURI, RDF.TYPE, ONTOLEX.FORM);
+		addStatementToSink(leURI, ONTOLEX.CANONICAL_FORM, formURI);
+		addStatementToSink(formURI, ONTOLEX.WRITTEN_REP, goodLemma);
+		addStatementToSink(leURI, RDFS.LABEL, goodLemma);
+		addStatementToSink(leURI, ONTOLEX.LANGUAGE, language, false);
+
+		return leURI;
+	}
+
+	private URI uriForForm(String lemma, String type) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(NAMESPACE);
+		builder.append(FORM_PREFIX);
+		builder.append(SEPARATOR);
+		builder.append(lemmaPart(lemma, type));
+		return factory.createURI(builder.toString());
+	}
+
+	private URI uriForLexicalEntry(String lemma, String type) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(NAMESPACE);
+		builder.append(lemmaPart(lemma, type));
+		return factory.createURI(builder.toString());
+	}
+
+	private URI uriForRoleset(String rolesetID) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(NAMESPACE);
+		builder.append(rolesetPart(rolesetID));
+		return factory.createURI(builder.toString());
+	}
+
+	private URI uriForConceptualization(String lemma, String type, String rolesetID) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(NAMESPACE);
+		builder.append(CONCEPTUALIZATION_PREFIX);
+		builder.append(SEPARATOR);
+		builder.append(lemmaPart(lemma, type));
+		builder.append(SEPARATOR);
+		builder.append(rolesetPart(rolesetID));
+		return factory.createURI(builder.toString());
+	}
+
+	private URI uriForArgument(String rolesetID, String argName) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(NAMESPACE);
+		builder.append(rolesetPart(rolesetID));
+		builder.append(SEPARATOR);
+		builder.append("arg");
+		builder.append(argName);
+		return factory.createURI(builder.toString());
+
+	}
+
+	private String lemmaPart(String lemma, String type) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(type);
+		builder.append(SEPARATOR);
+		builder.append(lemma);
+		return builder.toString();
+	}
+
+	private String rolesetPart(String rolesetID) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(ROLESET_PREFIX);
+		builder.append(SEPARATOR);
+		builder.append(rolesetID);
+		return builder.toString();
+	}
+
+	private void addStatementToSink(Resource subject, URI predicate, Value object) throws RDFHandlerException {
+		Statement statement = factory.createStatement(subject, predicate, object);
+		sink.handleStatement(statement);
+	}
+
+	private void addStatementToSink(Resource subject, URI predicate, String objectValue) throws RDFHandlerException {
+		addStatementToSink(subject, predicate, objectValue, true);
+	}
+
+	private void addStatementToSink(Resource subject, URI predicate, String objectValue, boolean useLanguage) throws RDFHandlerException {
+
+		// Return on null or empty string
+		if (objectValue == null || objectValue.length() == 0) {
+			return;
+		}
+
+		Value object;
+		if (useLanguage) {
+			object = factory.createLiteral(objectValue, language);
+		}
+		else {
+			object = factory.createLiteral(objectValue);
+		}
+		addStatementToSink(subject, predicate, object);
 	}
 }

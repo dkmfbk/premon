@@ -4,6 +4,9 @@ import org.openrdf.model.Namespace;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.query.algebra.Str;
+
+import java.util.HashMap;
 
 /**
  * Vocabulary constants for the PREMON Ontology - PropBank module (PMOPB).
@@ -228,6 +231,45 @@ public class PMOPB {
 
     /** Individual pmopb:progressive (a pmopb:Aspect). */
     public static final URI PROGRESSIVE = createURI("progressive");
+
+    public static HashMap<String, URI> mapM = new HashMap<>();
+    public static HashMap<String, URI> mapF = new HashMap<>();
+    public static HashMap<String, URI> mapP = new HashMap<>();
+
+    static {
+        mapM.put("ext", ARGM_EXT);
+        mapM.put("loc", ARGM_LOC);
+        mapM.put("dir", ARGM_DIR);
+        mapM.put("neg", ARGM_NEG);
+        mapM.put("mod", ARGM_MOD);
+        mapM.put("adv", ARGM_ADV);
+        mapM.put("mnr", ARGM_MNR);
+        mapM.put("prd", ARGM_PRD);
+        mapM.put("rec", ARGM_REC);
+        mapM.put("tmp", ARGM_TMP);
+        mapM.put("prp", ARGM_PRP);
+        mapM.put("pnc", ARGM_PNC);
+        mapM.put("cau", ARGM_CAU);
+        mapM.put("adj", ARGM_ADJ);
+        mapM.put("com", ARGM_COM);
+        mapM.put("dis", ARGM_DIS);
+        mapM.put("dsp", ARGM_DSP);
+        mapM.put("gol", ARGM_GOL);
+        mapM.put("rcl", ARGM_RCL);
+        mapM.put("slc", ARGM_SLC);
+        mapM.put("lvb", ARGM_LVB);
+
+        mapP.put("pag", PAG);
+        mapP.put("ppt", PPT);
+        mapP.put("vsp", VSP);
+
+        mapF.put("0", ARG0);
+        mapF.put("1", ARG1);
+        mapF.put("2", ARG2);
+        mapF.put("3", ARG3);
+        mapF.put("4", ARG4);
+        mapF.put("5", ARG5);
+    }
 
     // Utility methods
 

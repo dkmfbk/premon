@@ -34,9 +34,9 @@ public class Premonitor {
 			e.printStackTrace();
 		}
 
-		for (Statement statement : statements) {
-			System.out.println(statement);
-		}
+//		for (Statement statement : statements) {
+//			System.out.println(statement);
+//		}
 
 	}
 
