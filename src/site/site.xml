@@ -20,7 +20,7 @@
 
         <menu name="About">
             <item name="Home" href="index.html"/>
-            <item name="PreMOn in a nutshell" href="overview.html"/>
+            <item name="Description" href="description.html"/>
             <item name="Team" href="team-list.html"/>
             <!-- <item name="Publications" href="publications.html"/> -->
             <item name="License" href="license.html"/>
@@ -52,6 +52,21 @@
             <item name="Issue tracker" href="https://github.com/dkmfbk/premon/issues"/>
             <item name="Contact authors" href="mailto:premonATfbkDOTeu"/>
         </menu>
+
+        <!-- Menus used only in the footer -->
+        
+        <menu name="Main">
+            <item name="Home" href="index.html"/>
+            <item name="Description" href="description.html"/>
+            <item name="Software" href="premonitor.html"/>
+        </menu>
+
+        <menu name="Credits">
+            <item name="PropBank" href="https://verbs.colorado.edu/~mpalmer/projects/ace.html"/>
+            <item name="NomBank" href="http://nlp.cs.nyu.edu/meyers/NomBank.html"/>
+            <item name="VerbNet" href="https://verbs.colorado.edu/~mpalmer/projects/verbnet.html"/>
+            <item name="FrameNet" href="https://framenet.icsi.berkeley.edu/fndrupal/"/>
+        </menu>
     </body>
 
     <custom>
@@ -60,6 +75,7 @@
 
             <endContent>
                 ${site.topbar}
+                <script src="js/custom.js"></script>
             </endContent>
 
             <highlightJs>true</highlightJs>
@@ -70,9 +86,10 @@
             <bootstrapIcons>true</bootstrapIcons>
             <html5Anchor>true</html5Anchor>
             <markPageHeader>true</markPageHeader>
+             
             <absoluteResourceURL>${site-root}</absoluteResourceURL>
-
             <protocolRelativeURLs>true</protocolRelativeURLs>
+            
             <skinAttribution>true</skinAttribution>
             <brand>
                 <name>
@@ -93,20 +110,30 @@
             <topNav>About|Ontology|Data|Software|Maven Reports|Links</topNav>
 
             <bottomNav maxSpan="8">
-                <column>About</column>
-                <!--<column>Tool</column>-->
-                <!--<column>Libraries</column>-->
-                <column>Links</column>
+                <column>Main</column>
+                <column>Ontology</column>
+                <column>Data</column>
+                <column>Credits</column>
             </bottomNav>
 
             <breadcrumbs>false</breadcrumbs>
-            <bottomDescription quote="false">
-                <![CDATA[
+                <!-- 
                 PreMOn means PREdicate Model for ONtologies and is developed within:<br/><br/>
                 <a href="http://dkm.fbk.eu/"><img src="https://premon.fbk.eu/images/fbkdkm.png"/></a>&nbsp;&nbsp;
                 <a href="http://www.newsreader-project.eu/"><img src="https://premon.fbk.eu/images/newsreader.png"/></a><br/>
-
+                -->
                 <!-- Insert here Google Analytics -->
+            <bottomDescription quote="false">
+                <![CDATA[
+                <div style="width: 60%; float: left">
+                    <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+                    <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">PreMOn ontology, datasets and web site </span>
+                    are licensed under the <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+                    PreMOn software is licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>
+                </div>
+                <div style="float: right">
+                    <a href="http://dkm.fbk.eu/"><img src="https://premon.fbk.eu/images/fbkdkm.png"/></a>&nbsp;&nbsp;
+                </div>
                 ]]>
             </bottomDescription>
             <!--<shortTitle>generate</shortTitle>-->
