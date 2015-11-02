@@ -1,7 +1,5 @@
 package eu.fbk.dkm.premon.util;
 
-import com.sun.xml.internal.messaging.saaj.soap.ver1_1.Fault1_1Impl;
-
 import javax.annotation.Nullable;
 
 /**
@@ -12,7 +10,7 @@ public class NF {
 	private String n;
 	private String f;
 
-	public static final String AGENT = "agent";
+	public static final String AGENT = "a";
 	public static final String MOD = "mod";
 
 	public NF(@Nullable String n, @Nullable String f) {

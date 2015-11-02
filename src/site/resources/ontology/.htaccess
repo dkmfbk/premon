@@ -1,0 +1,21 @@
+# In order to enforce HTTP access (vs HTTPS access) the following
+# directives should be added to the main Apache configuration file
+#
+# <VirtualHost *:80>
+#     RewriteEngine   on
+#     RewriteCond %{REQUEST_URI} !^/ontology
+#     RewriteRule (.*) https://premon.fbk.eu$1 [R=301,L]
+# </VirtualHost>
+#
+# <VirtualHost *:443>
+#     RewriteEngine   on
+#     RewriteCond %{REQUEST_URI} ^/ontology
+#     RewriteRule (.*) http://premon.fbk.eu$1 [R=301,L]
+# </VirtualHost>
+
+Options MultiViews
+AddType application/rdf+xml .owl
+AddType application/n-triples .nt
+AddType text/turtle .ttl
+AddType application/ld+json .jsonld
+

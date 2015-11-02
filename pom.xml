@@ -33,18 +33,6 @@
 
     <developers>
         <developer>
-            <id>corcoglio</id>
-            <name>Francesco Corcoglioniti</name>
-            <email>corcoglio@fbk.eu</email>
-            <roles>
-                <role>Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-            <properties>
-                <picUrl>http://rdfpro.fbk.eu/images/team/corcoglio.jpg</picUrl>
-            </properties>
-        </developer>
-        <developer>
             <id>rospocher</id>
             <name>Marco Rospocher</name>
             <email>rospocher@fbk.eu</email>
@@ -68,6 +56,18 @@
             <timezone>+1</timezone>
             <properties>
                 <picUrl>http://rdfpro.fbk.eu/images/team/aprosio.jpg</picUrl>
+            </properties>
+        </developer>
+        <developer>
+            <id>corcoglio</id>
+            <name>Francesco Corcoglioniti</name>
+            <email>corcoglio@fbk.eu</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+            <properties>
+                <picUrl>http://rdfpro.fbk.eu/images/team/corcoglio.jpg</picUrl>
             </properties>
         </developer>
     </developers>
@@ -176,6 +176,16 @@
             <artifactId>sesame-queryrender</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>eu.fbk.rdfpro</groupId>
+            <artifactId>rdfpro-tql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.fbk.rdfpro</groupId>
+            <artifactId>rdfpro-jsonld</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -230,4 +240,9 @@
             </build>
         </profile>
     </profiles>
+
+    <properties>
+        <site.root>https://premon.fbk.eu/</site.root>
+    </properties>
+
 </project>

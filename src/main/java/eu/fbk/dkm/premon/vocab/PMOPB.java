@@ -4,7 +4,6 @@ import org.openrdf.model.Namespace;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
-import org.openrdf.query.algebra.Str;
 
 import java.util.HashMap;
 
@@ -232,9 +231,48 @@ public class PMOPB {
     /** Individual pmopb:progressive (a pmopb:Aspect). */
     public static final URI PROGRESSIVE = createURI("progressive");
 
+    /** Individual pmopb:from (a pmopb:Preposition). */
+    public static final URI FROM = createURI("from");
+
+    /** Individual pmopb:on (a pmopb:Preposition). */
+    public static final URI ON = createURI("on");
+
+    /** Individual pmopb:to (a pmopb:Preposition). */
+    public static final URI TO = createURI("to");
+
+    /** Individual pmopb:as (a pmopb:Preposition). */
+    public static final URI AS = createURI("as");
+
+    /** Individual pmopb:at (a pmopb:Preposition). */
+    public static final URI AT = createURI("at");
+
+    /** Individual pmopb:by (a pmopb:Preposition). */
+    public static final URI BY = createURI("by");
+
+    /** Individual pmopb:for (a pmopb:Preposition). */
+    public static final URI FOR = createURI("for");
+
+    /** Individual pmopb:in (a pmopb:Preposition). */
+    public static final URI IN = createURI("in");
+
+    /** Individual pmopb:of (a pmopb:Preposition). */
+    public static final URI OF = createURI("of");
+
+    /** Individual pmopb:with (a pmopb:Preposition). */
+    public static final URI WITH = createURI("with");
+
+    // Maps
+
     public static HashMap<String, URI> mapM = new HashMap<>();
     public static HashMap<String, URI> mapF = new HashMap<>();
+    public static HashMap<String, URI> mapO = new HashMap<>();
     public static HashMap<String, URI> mapP = new HashMap<>();
+
+    public static HashMap<String, URI> mapAspect = new HashMap<>();
+    public static HashMap<String, URI> mapForm = new HashMap<>();
+    public static HashMap<String, URI> mapPerson = new HashMap<>();
+    public static HashMap<String, URI> mapTense = new HashMap<>();
+    public static HashMap<String, URI> mapVoice = new HashMap<>();
 
     static {
         mapM.put("ext", ARGM_EXT);
@@ -259,9 +297,9 @@ public class PMOPB {
         mapM.put("slc", ARGM_SLC);
         mapM.put("lvb", ARGM_LVB);
 
-        mapP.put("pag", PAG);
-        mapP.put("ppt", PPT);
-        mapP.put("vsp", VSP);
+        mapO.put("pag", PAG);
+        mapO.put("ppt", PPT);
+        mapO.put("vsp", VSP);
 
         mapF.put("0", ARG0);
         mapF.put("1", ARG1);
@@ -269,6 +307,31 @@ public class PMOPB {
         mapF.put("3", ARG3);
         mapF.put("4", ARG4);
         mapF.put("5", ARG5);
+
+        mapP.put("from", FROM);
+        mapP.put("on", ON);
+        mapP.put("to", TO);
+        mapP.put("as", AS);
+        mapP.put("at", AT);
+        mapP.put("by", BY);
+        mapP.put("for", FOR);
+        mapP.put("in", IN);
+        mapP.put("of", OF);
+        mapP.put("with", WITH);
+
+        mapAspect.put("perfect", PERFECT);
+        mapAspect.put("progressive", PROGRESSIVE);
+        mapForm.put("infinitive", INFINITIVE);
+        mapForm.put("gerund", GERUND);
+        mapForm.put("participle", PARTICIPLE);
+        mapForm.put("full", FULL);
+        mapPerson.put("third", THIRD);
+        mapPerson.put("other", OTHER);
+        mapTense.put("present", PRESENT);
+        mapTense.put("past", PAST);
+        mapTense.put("future", FUTURE);
+        mapVoice.put("active", ACTIVE);
+        mapVoice.put("passive", PASSIVE);
     }
 
     // Utility methods

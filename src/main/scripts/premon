@@ -38,4 +38,4 @@ for _JAR in `ls $_LIB/*.jar` ; do
 done
 
 # Execute the program
-$_JAVA $JAVA_OPTS -classpath $_CLASSPATH eu.fbk.dkm.proplem.Extract "$@"
+$_JAVA $JAVA_OPTS -classpath $_CLASSPATH eu.fbk.dkm.premon.premonitor.Premonitor "$@"
