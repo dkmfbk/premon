@@ -21,7 +21,7 @@
 **PreMOn** (Predicate Model for Ontologies) is a linguistic Linked Data resource representing **predicate** models such as PropBank, NomBank, VerbNet and FrameNet.
 PreMOn consists of an **OWL ontology** for modelling predicates with their arguments, selectional constraints, relations and alignments, based on **lemon** (Lexicon Model for Ontologies); and of a set of **RDF datasets** for the main predicate models described using this ontology.
 
-[learn more...](description.html)
+[learn more...](overview.html)
 
 
 ### Features

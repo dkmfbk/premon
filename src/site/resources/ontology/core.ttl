@@ -45,10 +45,24 @@ nif:Context a owl:Class .
 nif:RFC5147String a owl:Class .
 
 <http://premon.fbk.eu/ontology/core> a owl:Ontology ;
-	dc:creator "Alessio Palmero Aprosio" , "Francesco Corcoglioniti" , "Marco Rospocher" ;
+	dc:creator "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" , "Francesco Corcoglioniti <file:///dev/null>" , "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
 	dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
 	dcterms:title "Predicate Model for Ontologies (premon) - Core ontology module"@en ;
-	dc:description <http://premon.fbk.eu/images/core.svg> , "TODO: ADD A DESCRIPTION"@en ;
+	rdfs:comment "The core module of the PreMOn ontology extends lemon (Lexical Model for Ontologies) and defines the main abstractions for modelling predicates with their arguments, selectional constraints, predicate and argument relations and alignments between different predicate models."@en ;
+	dc:description <http://premon.fbk.eu/images/core.svg> , """The core module of the PreMOn ontology is an extension of lemon (Lexical Model for Ontologies) for representing predicate models. The following features of lemon are exploited:
+
+* modelling of lexical entries (class LexicalEntry) and their associated forms;
+* linking of lexical entries to the lexical concept (class LexicalConcept) denoting their intensional (informal) meaning;
+* representation of subcategorization frames (e.g., VerbNet frames) through classes SyntacticFrame and SyntacticArgument;
+* linking of lexical entries, lexical concepts and arguments of syntactic frames to corresponding ontology entities (classes, properties, individuals).
+
+The core module of the PreMOn ontology extends lemon with the following concepts:
+
+* classes Predicate, SemanticArgument and associated properties to model predicates with their semantic arguments, the latter being defined locally to a predicate;
+* class SemanticRole and associated properties to model the role an argument may play, defined globally (e.g., thematic roles of VerbNet, role enumeration of PropBank and NomBank);
+* class SemanticType and associated properties to model selectional constraints and other semantic restrictions in predicate models
+* class Conceptualization reifying the evokes relation, on top of which SKOS closeMatch and exactMatch alignment links between different predicate models can be defined;
+* classes Example and Markable and associated properties (taken from NIF) are used to represent predicate usage examples."""@en ;
 	dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en ;
 	vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/core#" ;
 	vann:preferredNamespacePrefix "pmo" ;
@@ -76,7 +90,7 @@ pmo:evokedConcept a owl:ObjectProperty , owl:FunctionalProperty ;
 
 pmo:Conceptualization a owl:Class ;
 	rdfs:label "entry concept"@en ;
-	rdfs:subClassOf skos:Concept , _:node1a2s6oepsx7 , _:node1a2s6oepsx8 .
+	rdfs:subClassOf skos:Concept , _:node1a34pltgox7 , _:node1a34pltgox8 .
 
 pmo:evokingEntry a owl:ObjectProperty , owl:FunctionalProperty ;
 	rdfs:label "meaning of"@en ;
@@ -108,7 +122,7 @@ pmo:semArg a owl:ObjectProperty ;
 pmo:semType a owl:ObjectProperty ;
 	rdfs:label "semantic type"@en ;
 	rdfs:range pmo:SemanticType ;
-	rdfs:domain _:node1a2s6oepsx1 .
+	rdfs:domain _:node1a34pltgox1 .
 
 pmo:SemanticType a owl:Class ;
 	rdfs:label "semantic type"@en ;
@@ -119,7 +133,7 @@ pmo:typeRel a owl:ObjectProperty ;
 	rdfs:range pmo:SemanticType ;
 	rdfs:domain pmo:SemanticType .
 
-ontolex:evokes owl:propertyChainAxiom _:node1a2s6oepsx4 .
+ontolex:evokes owl:propertyChainAxiom _:node1a34pltgox4 .
 
 pmo:Example a owl:Class ;
 	rdfs:label "example" ;
@@ -127,53 +141,53 @@ pmo:Example a owl:Class ;
 
 pmo:Markable a owl:Class ;
 	rdfs:label "markable" ;
-	rdfs:subClassOf nif:RFC5147String , _:node1a2s6oepsx13 , _:node1a2s6oepsx14 , _:node1a2s6oepsx9 .
+	rdfs:subClassOf nif:RFC5147String , _:node1a34pltgox10 , _:node1a34pltgox11 , _:node1a34pltgox9 .
 
-_:node1a2s6oepsx1 a owl:Class ;
-	owl:unionOf _:node1a2s6oepsx2 .
+_:node1a34pltgox1 a owl:Class ;
+	owl:unionOf _:node1a34pltgox2 .
 
-_:node1a2s6oepsx10 a owl:Class ;
-	owl:unionOf _:node1a2s6oepsx11 .
-
-_:node1a2s6oepsx11 rdf:first pmo:Predicate ;
-	rdf:rest _:node1a2s6oepsx12 .
-
-_:node1a2s6oepsx12 rdf:first pmo:SemanticArgument ;
-	rdf:rest rdf:nil .
-
-_:node1a2s6oepsx13 a owl:Restriction ;
+_:node1a34pltgox10 a owl:Restriction ;
 	owl:onProperty nif:referenceContext ;
 	owl:allValuesFrom pmo:Example .
 
-_:node1a2s6oepsx14 a owl:Restriction ;
-	owl:onProperty nif:referenceContext ;
-	owl:onClass pmo:Example ;
-	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+_:node1a34pltgox11 a owl:Restriction ;
+	owl:onProperty nif:annotation ;
+	owl:someValuesFrom _:node1a34pltgox12 .
 
-_:node1a2s6oepsx2 rdf:first pmo:Predicate ;
-	rdf:rest _:node1a2s6oepsx3 .
+_:node1a34pltgox12 a owl:Class ;
+	owl:unionOf _:node1a34pltgox13 .
 
-_:node1a2s6oepsx3 rdf:first pmo:SemanticArgument ;
+_:node1a34pltgox13 rdf:first pmo:Predicate ;
+	rdf:rest _:node1a34pltgox14 .
+
+_:node1a34pltgox14 rdf:first pmo:SemanticArgument ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oepsx4 rdf:first _:node1a2s6oepsx5 ;
-	rdf:rest _:node1a2s6oepsx6 .
+_:node1a34pltgox2 rdf:first pmo:Predicate ;
+	rdf:rest _:node1a34pltgox3 .
 
-_:node1a2s6oepsx5 owl:inverseOf pmo:evokingEntry .
-
-_:node1a2s6oepsx6 rdf:first pmo:evokedConcept ;
+_:node1a34pltgox3 rdf:first pmo:SemanticArgument ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oepsx7 a owl:Restriction ;
+_:node1a34pltgox4 rdf:first _:node1a34pltgox5 ;
+	rdf:rest _:node1a34pltgox6 .
+
+_:node1a34pltgox5 owl:inverseOf pmo:evokingEntry .
+
+_:node1a34pltgox6 rdf:first pmo:evokedConcept ;
+	rdf:rest rdf:nil .
+
+_:node1a34pltgox7 a owl:Restriction ;
 	owl:onProperty pmo:evokingEntry ;
 	owl:onClass ontolex:LexicalEntry ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1a2s6oepsx8 a owl:Restriction ;
+_:node1a34pltgox8 a owl:Restriction ;
 	owl:onProperty pmo:evokedConcept ;
 	owl:onClass ontolex:LexicalConcept ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1a2s6oepsx9 a owl:Restriction ;
-	owl:onProperty nif:annotation ;
-	owl:someValuesFrom _:node1a2s6oepsx10 .
+_:node1a34pltgox9 a owl:Restriction ;
+	owl:onProperty nif:referenceContext ;
+	owl:onClass pmo:Example ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
