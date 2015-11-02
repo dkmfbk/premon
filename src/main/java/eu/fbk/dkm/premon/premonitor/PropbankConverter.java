@@ -50,6 +50,9 @@ public class PropbankConverter extends Converter {
 	static final Pattern VN_CODE_PATTERN = Pattern.compile("^[0-9]+(\\.[0-9]+)*(-[0-9]+)*$");
 	static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
 
+	static final URI DEFAULT_GRAPH = factory.createURI(NAMESPACE, "graph-pb");
+	static final URI META_GRAPH = factory.createURI(NAMESPACE, "graph-meta");
+
 	// Bugs!
 	private static HashMap<String, String> bugMap = new HashMap<String, String>();
 	private static HashMap<String, String> rolesetBugMap = new HashMap<String, String>();
@@ -204,6 +207,7 @@ public class PropbankConverter extends Converter {
 
 		boolean nonVerbsToo = properties.getProperty("non-verbs", "0").equals("1");
 		boolean isOntoNotes = properties.getProperty("ontonotes", "0").equals("1");
+		String source = properties.getProperty("pb-source");
 		final boolean extractExamples = properties.getProperty("examples", "0").equals("1");
 		onlyOne = properties.getProperty("only-one");
 
@@ -216,6 +220,9 @@ public class PropbankConverter extends Converter {
 		URI lexiconURI = factory.createURI(NAMESPACE, "lexicon");
 		addStatementToSink(lexiconURI, RDF.TYPE, ONTOLEX.LEXICON);
 		addStatementToSink(lexiconURI, ONTOLEX.LANGUAGE, language, false);
+		addStatementToSink(lexiconURI, DCTERMS.LANGUAGE, Premonitor.LANGUAGE_CODES_TO_URIS.get(language));
+
+		addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, source, false, META_GRAPH);
 
 		//todo: the first tour is not necessary any more
 
@@ -428,6 +435,7 @@ public class PropbankConverter extends Converter {
 								addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, rolesetURI);
 
 								URI conceptualizationURI = uriForConceptualization(lemma, type, rolesetID);
+								addStatementToSink(conceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
 								addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
 								addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, rolesetURI);
 
@@ -483,23 +491,26 @@ public class PropbankConverter extends Converter {
 												Type argType = getType(argName);
 
 												URI argumentURI = uriForArgument(rolesetID, argName);
+												addStatementToSink(argumentURI, RDF.TYPE, PMO.SEMANTIC_ARGUMENT);
 												addStatementToSink(argumentURI, PMOPB.CORE_P, true);
 												addStatementToSink(argumentURI, SKOS.DEFINITION, descr);
+												addStatementToSink(lexicalEntryURI, PMO.SEM_ARG, argumentURI);
 
 												//todo: transform this double switch into an external class
 												switch (argType) {
 													case NUMERIC:
 														addArgumentToSink(argName, PMOPB.mapF.get(argName), argumentURI, lemma, type, rolesetID, lexicalEntryURI);
-														Type secondType = getType(nf.getF());
+														String argName2 = nf.getF();
+														Type secondType = getType(argName2);
 														switch (secondType) {
 															case M_FUNCTION:
-																addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName));
+																addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName2));
 																break;
 															case ADDITIONAL:
-																addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(argName));
+																addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(argName2));
 																break;
 															case PREPOSITION:
-																addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(argName));
+																addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(argName2));
 																break;
 														}
 														break;
@@ -558,6 +569,7 @@ public class PropbankConverter extends Converter {
 
 									if (text != null && text.length() > 0) {
 										URI exampleURI = uriForExample(rolesetID, exampleCount);
+										exampleCount++;
 										addStatementToSink(exampleURI, RDF.TYPE, PMOPB.EXAMPLE);
 										addStatementToSink(exampleURI, RDFS.COMMENT, exName);
 										if (exSrc != null && !exSrc.equals(exName)) {
@@ -640,16 +652,17 @@ public class PropbankConverter extends Converter {
 											switch (argType) {
 												case NUMERIC:
 													addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapF.get(argName));
-													Type secondType = getType(nf.getF());
+													String argName2 = nf.getF();
+													Type secondType = getType(argName2);
 													switch (secondType) {
 														case M_FUNCTION:
-															addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName));
+															addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName2));
 															break;
 														case ADDITIONAL:
-															addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(argName));
+															addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(argName2));
 															break;
 														case PREPOSITION:
-															addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(argName));
+															addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(argName2));
 															break;
 													}
 													break;
@@ -737,6 +750,7 @@ public class PropbankConverter extends Converter {
 			}
 
 			addStatementToSink(exampleURI, PMOPB.INFLECTION_P, inflectionURI);
+			addStatementToSink(inflectionURI, RDF.TYPE, PMOPB.INFLECTION_C);
 		}
 	}
 
@@ -753,7 +767,7 @@ public class PropbankConverter extends Converter {
 			URI lemmaURI = uriForLexicalEntry(lemma, type);
 			URI oLemmaURI = uriForLexicalEntry(origLemma, type);
 
-			addStatementToSink(oLemmaURI, DECOMP.SUBTERM, lemmaURI);
+			addStatementToSink(lemmaURI, DECOMP.SUBTERM, oLemmaURI);
 		}
 
 		String goodLemma = lemma.replaceAll("\\+", " ");
@@ -762,6 +776,7 @@ public class PropbankConverter extends Converter {
 		URI formURI = uriForForm(lemma, type);
 
 		addStatementToSink(leURI, RDF.TYPE, ONTOLEX.LEXICAL_ENTRY);
+		addStatementToSink(leURI, LEXINFO.PART_OF_SPEECH_P, LEXINFO.map.get(type));
 		addStatementToSink(lexiconURI, ONTOLEX.ENTRY, leURI);
 		addStatementToSink(formURI, RDF.TYPE, ONTOLEX.FORM);
 		addStatementToSink(leURI, ONTOLEX.CANONICAL_FORM, formURI);
@@ -867,6 +882,10 @@ public class PropbankConverter extends Converter {
 	}
 
 	private void addStatementToSink(Resource subject, URI predicate, Value object) {
+	    addStatementToSink(subject, predicate, object, DEFAULT_GRAPH);
+	}
+
+	private void addStatementToSink(Resource subject, URI predicate, Value object, URI graph) {
 
 		// Fix for missing object
 		// <http://premon.fbk.eu/resource/pb-accumulate.01-arg3> <http://premon.fbk.eu/ontology/pb#functionTag>  .
@@ -874,7 +893,7 @@ public class PropbankConverter extends Converter {
 			return;
 		}
 
-		Statement statement = factory.createStatement(subject, predicate, object);
+		Statement statement = factory.createStatement(subject, predicate, object, graph);
 		try {
 			sink.handleStatement(statement);
 		} catch (RDFHandlerException e) {
@@ -887,6 +906,10 @@ public class PropbankConverter extends Converter {
 	}
 
 	private void addStatementToSink(Resource subject, URI predicate, String objectValue, boolean useLanguage) {
+		addStatementToSink(subject, predicate, objectValue, useLanguage, DEFAULT_GRAPH);
+	}
+
+	private void addStatementToSink(Resource subject, URI predicate, String objectValue, boolean useLanguage, URI graph) {
 
 		// Return on null or empty string
 		if (objectValue == null || objectValue.length() == 0) {
@@ -901,7 +924,7 @@ public class PropbankConverter extends Converter {
 			object = factory.createLiteral(objectValue);
 		}
 
-		addStatementToSink(subject, predicate, object);
+		addStatementToSink(subject, predicate, object, graph);
 	}
 
 	private void addStatementToSink(Resource subject, URI predicate, boolean objectValue) {

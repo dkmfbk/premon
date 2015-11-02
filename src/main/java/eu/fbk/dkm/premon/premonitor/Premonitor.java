@@ -1,21 +1,25 @@
 package eu.fbk.dkm.premon.premonitor;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import eu.fbk.dkm.utils.CommandLine;
 import eu.fbk.rdfpro.RDFHandlers;
 import eu.fbk.rdfpro.RDFProcessors;
 import eu.fbk.rdfpro.RDFSource;
 import eu.fbk.rdfpro.RDFSources;
 import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.datatype.DatatypeFactory;
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by alessio on 29/10/15.
@@ -27,8 +31,24 @@ public class Premonitor {
 	private static final String DEFAULT_LANGUAGE = "en";
 
 	private static final String DEFAULT_PB_FOLDER = "pb";
+	private static final String DEFAULT_PB_SOURCE = "PropBank";
+	private static final String DEFAULT_PB_SOURCE_ON = "OntoNotes";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Premonitor.class);
+
+	private static final ValueFactory VALUE_FACTORY;
+	public static final Map<String, URI> LANGUAGE_CODES_TO_URIS;
+	static {
+		VALUE_FACTORY = ValueFactoryImpl.getInstance();
+		final Map<String, URI> codesToURIs = Maps.newHashMap();
+		for (final String language : Locale.getISOLanguages()) {
+			final Locale locale = new Locale(language);
+			final URI uri = VALUE_FACTORY.createURI("http://lexvo.org/id/iso639-3/",
+					locale.getISO3Language());
+			codesToURIs.put(language, uri);
+		}
+		LANGUAGE_CODES_TO_URIS = ImmutableMap.copyOf(codesToURIs);
+	}
 
 	public static void main(String[] args) {
 
@@ -46,8 +66,10 @@ public class Premonitor {
 					.withOption("v", "non-verbs", "Extract also non-verbs (only for OntoNotes)")
 					.withOption("o", "ontonotes", "Specify that this is an OntoNotes version of ProbBank")
 					.withOption("e", "examples", "Extract examples")
-					.withOption(null, "pb-folder", "PropBank frames folder", "FOLDER", CommandLine.Type.DIRECTORY_EXISTING, true, false, false)
 					.withOption("s", "single", "Extract single lemma", "LEMMA", CommandLine.Type.STRING, true, false, false)
+
+					.withOption(null, "pb-folder", "PropBank frames folder", "FOLDER", CommandLine.Type.DIRECTORY_EXISTING, true, false, false)
+					.withOption(null, "pb-source", String.format("PropBank source, default %s/%s", DEFAULT_PB_SOURCE, DEFAULT_PB_SOURCE_ON), "SOURCE", CommandLine.Type.STRING, true, false, false)
 
 //					.withOption(null, "use-wn-lex", "Use WordNet LexicalEntries when available")
 //					.withOption(null, "namespace", String.format("Namespace, default %s", DEFAULT_NAMESPACE), "URI", CommandLine.Type.STRING, true, false, false)
@@ -82,9 +104,16 @@ public class Premonitor {
 			if (cmd.hasOption("non-verbs")) {
 				properties.setProperty("non-verbs", "1");
 			}
+			String source = DEFAULT_PB_SOURCE;
 			if (cmd.hasOption("ontonotes")) {
 				properties.setProperty("ontonotes", "1");
+				source = DEFAULT_PB_SOURCE_ON;
 			}
+			if (cmd.hasOption("pb-source")) {
+				source = cmd.getOptionValue("pb-source", String.class);
+			}
+
+			properties.put("pb-source", source);
 			if (cmd.hasOption("examples")) {
 				properties.setProperty("examples", "1");
 			}
@@ -100,12 +129,12 @@ public class Premonitor {
 				e.printStackTrace();
 			}
 
-			RDFSource source = RDFSources.wrap(statements);
+			RDFSource rdfSource = RDFSources.wrap(statements);
 			try {
 				RDFHandler rdfHandler = RDFHandlers.write(null, 1000, outputFile.getAbsolutePath());
 				RDFProcessors
 						.sequence(RDFProcessors.prefix(null), RDFProcessors.unique(false))
-						.apply(source, rdfHandler, 1);
+						.apply(rdfSource, rdfHandler, 1);
 			} catch (Exception e) {
 				LOGGER.error("Input/output error, the file {} has not been saved ({})", outputFile.getAbsolutePath(), e.getMessage());
 				throw new RDFHandlerException(e);

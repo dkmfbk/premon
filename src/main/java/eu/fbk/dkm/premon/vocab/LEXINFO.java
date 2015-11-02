@@ -5,6 +5,8 @@ import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
+import java.util.HashMap;
+
 /**
  * Vocabulary constants for the LEXINFO Ontology (subset, work in progress).
  */
@@ -59,6 +61,12 @@ public class LEXINFO {
     public static final URI VERB = createURI("verb");
 
     // Utility methods
+
+    public static HashMap<String, URI> map = new HashMap<>();
+	static {
+		map.put("v", VERB);
+		map.put("n", NOUN);
+	}
 
     private static URI createURI(final String localName) {
         return ValueFactoryImpl.getInstance().createURI(NAMESPACE, localName);
