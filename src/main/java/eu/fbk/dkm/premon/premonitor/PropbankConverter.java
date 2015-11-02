@@ -214,10 +214,8 @@ public class PropbankConverter extends Converter {
 
 		// Lexicon
 		URI lexiconURI = factory.createURI(NAMESPACE, "lexicon");
-		statement = factory.createStatement(lexiconURI, RDF.TYPE, LEMON.LEXICON);
-		sink.handleStatement(statement);
-		statement = factory.createStatement(lexiconURI, LEMON.LANGUAGE, factory.createLiteral(language));
-		sink.handleStatement(statement);
+		addStatementToSink(lexiconURI, RDF.TYPE, ONTOLEX.LEXICON);
+		addStatementToSink(lexiconURI, ONTOLEX.LANGUAGE, language, false);
 
 		//todo: the first tour is not necessary any more
 
@@ -412,7 +410,7 @@ public class PropbankConverter extends Converter {
 
 //						String wnLemma = lemma + "-" + type;
 
-						URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, type);
+						URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, type, lexiconURI);
 
 						List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
 						for (Object roleset : noteOrRoleset) {
@@ -750,7 +748,7 @@ public class PropbankConverter extends Converter {
 		addStatementToSink(argConceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
 	}
 
-	private URI addLexicalEntry(String origLemma, String lemma, String type) throws RDFHandlerException {
+	private URI addLexicalEntry(String origLemma, String lemma, String type, Resource lexiconURI) throws RDFHandlerException {
 		if (!origLemma.equals(lemma)) {
 			URI lemmaURI = uriForLexicalEntry(lemma, type);
 			URI oLemmaURI = uriForLexicalEntry(origLemma, type);
@@ -764,6 +762,7 @@ public class PropbankConverter extends Converter {
 		URI formURI = uriForForm(lemma, type);
 
 		addStatementToSink(leURI, RDF.TYPE, ONTOLEX.LEXICAL_ENTRY);
+		addStatementToSink(lexiconURI, ONTOLEX.ENTRY, leURI);
 		addStatementToSink(formURI, RDF.TYPE, ONTOLEX.FORM);
 		addStatementToSink(leURI, ONTOLEX.CANONICAL_FORM, formURI);
 		addStatementToSink(formURI, ONTOLEX.WRITTEN_REP, goodLemma);

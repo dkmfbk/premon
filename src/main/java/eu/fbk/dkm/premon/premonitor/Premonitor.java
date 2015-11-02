@@ -41,7 +41,7 @@ public class Premonitor {
 					.withName("./premonitor")
 					.withHeader("Transform linguistic resources into RDF")
 					.withOption("i", "input", String.format("input folder (default %s)", DEFAULT_PATH), "FOLDER", CommandLine.Type.DIRECTORY_EXISTING, true, false, false)
-					.withOption("w", "output", "Output file", "FILE", CommandLine.Type.FILE, true, false, true)
+					.withOption("w", "output", "Output file (mandatory)", "FILE", CommandLine.Type.FILE, true, false, true)
 					.withOption("l", "language", String.format("Language for literals, default %s", DEFAULT_LANGUAGE), "ISO-CODE", CommandLine.Type.STRING, true, false, false)
 					.withOption("v", "non-verbs", "Extract also non-verbs (only for OntoNotes)")
 					.withOption("o", "ontonotes", "Specify that this is an OntoNotes version of ProbBank")
