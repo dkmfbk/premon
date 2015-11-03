@@ -13,17 +13,16 @@
 <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#RFC5147String> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/core> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .
 <http://premon.fbk.eu/ontology/core> <http://purl.org/dc/elements/1.1/creator> "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" .
-<http://premon.fbk.eu/ontology/core> <http://purl.org/dc/elements/1.1/creator> "Francesco Corcoglioniti <file:///dev/null>" .
 <http://premon.fbk.eu/ontology/core> <http://purl.org/dc/elements/1.1/creator> "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" .
 <http://premon.fbk.eu/ontology/core> <http://purl.org/dc/elements/1.1/publisher> "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" .
 <http://premon.fbk.eu/ontology/core> <http://purl.org/dc/terms/title> "Predicate Model for Ontologies (premon) - Core ontology module"@en .
 <http://premon.fbk.eu/ontology/core> <http://www.w3.org/2000/01/rdf-schema#comment> "The core module of the PreMOn ontology extends lemon (Lexical Model for Ontologies) and defines the main abstractions for modelling predicates with their arguments, selectional constraints, predicate and argument relations and alignments between different predicate models."@en .
 <http://premon.fbk.eu/ontology/core> <http://purl.org/dc/elements/1.1/description> <http://premon.fbk.eu/images/core.svg> .
 <http://premon.fbk.eu/ontology/core> <http://purl.org/dc/elements/1.1/description> "The core module of the PreMOn ontology is an extension of lemon (Lexical Model for Ontologies) for representing predicate models. The following features of lemon are exploited:\n\n* modelling of lexical entries (class LexicalEntry) and their associated forms;\n* linking of lexical entries to the lexical concept (class LexicalConcept) denoting their intensional (informal) meaning;\n* representation of subcategorization frames (e.g., VerbNet frames) through classes SyntacticFrame and SyntacticArgument;\n* linking of lexical entries, lexical concepts and arguments of syntactic frames to corresponding ontology entities (classes, properties, individuals).\n\nThe core module of the PreMOn ontology extends lemon with the following concepts:\n\n* classes Predicate, SemanticArgument and associated properties to model predicates with their semantic arguments, the latter being defined locally to a predicate;\n* class SemanticRole and associated properties to model the role an argument may play, defined globally (e.g., thematic roles of VerbNet, role enumeration of PropBank and NomBank);\n* class SemanticType and associated properties to model selectional constraints and other semantic restrictions in predicate models\n* class Conceptualization reifying the evokes relation, on top of which SKOS closeMatch and exactMatch alignment links between different predicate models can be defined;\n* classes Example and Markable and associated properties (taken from NIF) are used to represent predicate usage examples."@en .
-<http://premon.fbk.eu/ontology/core> <http://purl.org/dc/elements/1.1/rights> "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en .
+<http://premon.fbk.eu/ontology/core> <http://purl.org/dc/elements/1.1/rights> "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en .
 <http://premon.fbk.eu/ontology/core> <http://purl.org/vocab/vann/preferredNamespaceUri> "http://premon.fbk.eu/ontology/core#" .
 <http://premon.fbk.eu/ontology/core> <http://purl.org/vocab/vann/preferredNamespacePrefix> "pmo" .
-<http://premon.fbk.eu/ontology/core> <http://purl.org/dc/terms/license> <http://creativecommons.org/licenses/by/3.0/> .
+<http://premon.fbk.eu/ontology/core> <http://purl.org/dc/terms/license> <http://creativecommons.org/licenses/by/4.0/> .
 <http://premon.fbk.eu/ontology/core> <http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://premon.fbk.eu/ns/core.ttl> .
 <http://premon.fbk.eu/ontology/core> <http://www.w3.org/2002/07/owl#imports> <http://www.w3.org/ns/lemon/ontolex> .
 <http://premon.fbk.eu/ontology/core#core> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#FunctionalProperty> .
@@ -45,8 +44,8 @@
 <http://premon.fbk.eu/ontology/core#Conceptualization> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/core#Conceptualization> <http://www.w3.org/2000/01/rdf-schema#label> "entry concept"@en .
 <http://premon.fbk.eu/ontology/core#Conceptualization> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#Concept> .
-<http://premon.fbk.eu/ontology/core#Conceptualization> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1a34pltgox7 .
-<http://premon.fbk.eu/ontology/core#Conceptualization> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1a34pltgox8 .
+<http://premon.fbk.eu/ontology/core#Conceptualization> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1a36kcrd8x7 .
+<http://premon.fbk.eu/ontology/core#Conceptualization> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1a36kcrd8x8 .
 <http://premon.fbk.eu/ontology/core#evokingEntry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
 <http://premon.fbk.eu/ontology/core#evokingEntry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#FunctionalProperty> .
 <http://premon.fbk.eu/ontology/core#evokingEntry> <http://www.w3.org/2000/01/rdf-schema#label> "meaning of"@en .
@@ -73,7 +72,7 @@
 <http://premon.fbk.eu/ontology/core#semType> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
 <http://premon.fbk.eu/ontology/core#semType> <http://www.w3.org/2000/01/rdf-schema#label> "semantic type"@en .
 <http://premon.fbk.eu/ontology/core#semType> <http://www.w3.org/2000/01/rdf-schema#range> <http://premon.fbk.eu/ontology/core#SemanticType> .
-<http://premon.fbk.eu/ontology/core#semType> <http://www.w3.org/2000/01/rdf-schema#domain> _:node1a34pltgox1 .
+<http://premon.fbk.eu/ontology/core#semType> <http://www.w3.org/2000/01/rdf-schema#domain> _:node1a36kcrd8x1 .
 <http://premon.fbk.eu/ontology/core#SemanticType> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/core#SemanticType> <http://www.w3.org/2000/01/rdf-schema#label> "semantic type"@en .
 <http://premon.fbk.eu/ontology/core#SemanticType> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/ns/lemon/ontolex#LexicalConcept> .
@@ -81,48 +80,38 @@
 <http://premon.fbk.eu/ontology/core#typeRel> <http://www.w3.org/2000/01/rdf-schema#label> "semantic type relation"@en .
 <http://premon.fbk.eu/ontology/core#typeRel> <http://www.w3.org/2000/01/rdf-schema#range> <http://premon.fbk.eu/ontology/core#SemanticType> .
 <http://premon.fbk.eu/ontology/core#typeRel> <http://www.w3.org/2000/01/rdf-schema#domain> <http://premon.fbk.eu/ontology/core#SemanticType> .
-<http://www.w3.org/ns/lemon/ontolex#evokes> <http://www.w3.org/2002/07/owl#propertyChainAxiom> _:node1a34pltgox4 .
+<http://www.w3.org/ns/lemon/ontolex#evokes> <http://www.w3.org/2002/07/owl#propertyChainAxiom> _:node1a36kcrd8x4 .
 <http://premon.fbk.eu/ontology/core#Example> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/core#Example> <http://www.w3.org/2000/01/rdf-schema#label> "example" .
 <http://premon.fbk.eu/ontology/core#Example> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context> .
 <http://premon.fbk.eu/ontology/core#Markable> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/core#Markable> <http://www.w3.org/2000/01/rdf-schema#label> "markable" .
 <http://premon.fbk.eu/ontology/core#Markable> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#RFC5147String> .
-<http://premon.fbk.eu/ontology/core#Markable> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1a34pltgox10 .
-<http://premon.fbk.eu/ontology/core#Markable> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1a34pltgox11 .
-<http://premon.fbk.eu/ontology/core#Markable> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1a34pltgox9 .
-_:node1a34pltgox1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
-_:node1a34pltgox1 <http://www.w3.org/2002/07/owl#unionOf> _:node1a34pltgox2 .
-_:node1a34pltgox10 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
-_:node1a34pltgox10 <http://www.w3.org/2002/07/owl#onProperty> <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#referenceContext> .
-_:node1a34pltgox10 <http://www.w3.org/2002/07/owl#allValuesFrom> <http://premon.fbk.eu/ontology/core#Example> .
-_:node1a34pltgox11 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
-_:node1a34pltgox11 <http://www.w3.org/2002/07/owl#onProperty> <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#annotation> .
-_:node1a34pltgox11 <http://www.w3.org/2002/07/owl#someValuesFrom> _:node1a34pltgox12 .
-_:node1a34pltgox12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
-_:node1a34pltgox12 <http://www.w3.org/2002/07/owl#unionOf> _:node1a34pltgox13 .
-_:node1a34pltgox13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/core#Predicate> .
-_:node1a34pltgox13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1a34pltgox14 .
-_:node1a34pltgox14 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/core#SemanticArgument> .
-_:node1a34pltgox14 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
-_:node1a34pltgox2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/core#Predicate> .
-_:node1a34pltgox2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1a34pltgox3 .
-_:node1a34pltgox3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/core#SemanticArgument> .
-_:node1a34pltgox3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
-_:node1a34pltgox4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:node1a34pltgox5 .
-_:node1a34pltgox4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1a34pltgox6 .
-_:node1a34pltgox5 <http://www.w3.org/2002/07/owl#inverseOf> <http://premon.fbk.eu/ontology/core#evokingEntry> .
-_:node1a34pltgox6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/core#evokedConcept> .
-_:node1a34pltgox6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
-_:node1a34pltgox7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
-_:node1a34pltgox7 <http://www.w3.org/2002/07/owl#onProperty> <http://premon.fbk.eu/ontology/core#evokingEntry> .
-_:node1a34pltgox7 <http://www.w3.org/2002/07/owl#onClass> <http://www.w3.org/ns/lemon/ontolex#LexicalEntry> .
-_:node1a34pltgox7 <http://www.w3.org/2002/07/owl#qualifiedCardinality> "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
-_:node1a34pltgox8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
-_:node1a34pltgox8 <http://www.w3.org/2002/07/owl#onProperty> <http://premon.fbk.eu/ontology/core#evokedConcept> .
-_:node1a34pltgox8 <http://www.w3.org/2002/07/owl#onClass> <http://www.w3.org/ns/lemon/ontolex#LexicalConcept> .
-_:node1a34pltgox8 <http://www.w3.org/2002/07/owl#qualifiedCardinality> "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
-_:node1a34pltgox9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
-_:node1a34pltgox9 <http://www.w3.org/2002/07/owl#onProperty> <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#referenceContext> .
-_:node1a34pltgox9 <http://www.w3.org/2002/07/owl#onClass> <http://premon.fbk.eu/ontology/core#Example> .
-_:node1a34pltgox9 <http://www.w3.org/2002/07/owl#qualifiedCardinality> "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+<http://premon.fbk.eu/ontology/core#Markable> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1a36kcrd8x10 .
+<http://premon.fbk.eu/ontology/core#Markable> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1a36kcrd8x9 .
+_:node1a36kcrd8x1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+_:node1a36kcrd8x1 <http://www.w3.org/2002/07/owl#unionOf> _:node1a36kcrd8x2 .
+_:node1a36kcrd8x10 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
+_:node1a36kcrd8x10 <http://www.w3.org/2002/07/owl#onProperty> <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#referenceContext> .
+_:node1a36kcrd8x10 <http://www.w3.org/2002/07/owl#allValuesFrom> <http://premon.fbk.eu/ontology/core#Example> .
+_:node1a36kcrd8x2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/core#Predicate> .
+_:node1a36kcrd8x2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1a36kcrd8x3 .
+_:node1a36kcrd8x3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/core#SemanticArgument> .
+_:node1a36kcrd8x3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:node1a36kcrd8x4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> _:node1a36kcrd8x5 .
+_:node1a36kcrd8x4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1a36kcrd8x6 .
+_:node1a36kcrd8x5 <http://www.w3.org/2002/07/owl#inverseOf> <http://premon.fbk.eu/ontology/core#evokingEntry> .
+_:node1a36kcrd8x6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/core#evokedConcept> .
+_:node1a36kcrd8x6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:node1a36kcrd8x7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
+_:node1a36kcrd8x7 <http://www.w3.org/2002/07/owl#onProperty> <http://premon.fbk.eu/ontology/core#evokedConcept> .
+_:node1a36kcrd8x7 <http://www.w3.org/2002/07/owl#onClass> <http://www.w3.org/ns/lemon/ontolex#LexicalConcept> .
+_:node1a36kcrd8x7 <http://www.w3.org/2002/07/owl#qualifiedCardinality> "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+_:node1a36kcrd8x8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
+_:node1a36kcrd8x8 <http://www.w3.org/2002/07/owl#onProperty> <http://premon.fbk.eu/ontology/core#evokingEntry> .
+_:node1a36kcrd8x8 <http://www.w3.org/2002/07/owl#onClass> <http://www.w3.org/ns/lemon/ontolex#LexicalEntry> .
+_:node1a36kcrd8x8 <http://www.w3.org/2002/07/owl#qualifiedCardinality> "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .
+_:node1a36kcrd8x9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
+_:node1a36kcrd8x9 <http://www.w3.org/2002/07/owl#onProperty> <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#referenceContext> .
+_:node1a36kcrd8x9 <http://www.w3.org/2002/07/owl#onClass> <http://premon.fbk.eu/ontology/core#Example> .
+_:node1a36kcrd8x9 <http://www.w3.org/2002/07/owl#qualifiedCardinality> "1"^^<http://www.w3.org/2001/XMLSchema#nonNegativeInteger> .

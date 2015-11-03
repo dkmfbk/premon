@@ -17,8 +17,7 @@
 
 <http://premon.fbk.eu/ontology/core> rdf:type owl:Ontology ;
                                      
-                                     dc:creator "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" ,
-                                                "Francesco Corcoglioniti <file:///dev/null>" ;
+                                     dc:creator "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" ;
                                      
                                      dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                      
@@ -43,13 +42,13 @@ The core module of the PreMOn ontology extends lemon with the following concepts
 * class Conceptualization reifying the evokes relation, on top of which SKOS closeMatch and exactMatch alignment links between different predicate models can be defined;
 * classes Example and Markable and associated properties (taken from NIF) are used to represent predicate usage examples."""@en ;
                                      
-                                     dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en ;
+                                     dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
                                      
                                      vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/core#" ;
                                      
                                      vann:preferredNamespacePrefix "pmo" ;
                                      
-                                     dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;
+                                     dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
                                      
                                      dc:description <http://premon.fbk.eu/images/core.svg> ;
                                      
@@ -301,13 +300,13 @@ pmo:Conceptualization rdf:type owl:Class ;
                       
                       rdfs:subClassOf skos:Concept ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokingEntry ;
-                                        owl:onClass ontolex:LexicalEntry ;
+                                        owl:onProperty pmo:evokedConcept ;
+                                        owl:onClass ontolex:LexicalConcept ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokedConcept ;
-                                        owl:onClass ontolex:LexicalConcept ;
+                                        owl:onProperty pmo:evokingEntry ;
+                                        owl:onClass ontolex:LexicalEntry ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] .
 
@@ -338,14 +337,6 @@ pmo:Markable rdf:type owl:Class ;
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
                                owl:allValuesFrom pmo:Example
-                             ] ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty nif:annotation ;
-                               owl:someValuesFrom [ rdf:type owl:Class ;
-                                                    owl:unionOf ( pmo:Predicate
-                                                                  pmo:SemanticArgument
-                                                                )
-                                                  ]
                              ] .
 
 
