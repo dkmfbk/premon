@@ -4,7 +4,7 @@ PreMOn overview
 
 ### What is PreMOn?
 
-PreMOn (Predicate Model for Ontologies) provides an [OWL ontology](ontology/core.html) for modelling predicates with their arguments, selectional constraints, predicate and argument relations and the alignments between predicates and arguments in different resources. This ontology extends [lemon](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification) (Lexicon Model for Ontologies) in its latest version proposed by the [Ontology-Lexica Community Group at W3C](https://www.w3.org/community/ontolex/), which provides the backbone for relating predicates to the lexical entries evoking them (as well to their subcategorization frames).
+PreMOn (Predicate Model for Ontologies) provides an [OWL ontology](ontology.html) for modelling predicates with their arguments, selectional constraints, predicate and argument relations and the alignments between predicates and arguments in different resources. This ontology extends [lemon](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification) (Lexicon Model for Ontologies) in its latest version proposed by the [Ontology-Lexica Community Group at W3C](https://www.w3.org/community/ontolex/), which provides the backbone for relating predicates to the lexical entries evoking them (as well to their subcategorization frames).
 
 PreMON provides also a number of freely-available, interlinked [RDF datasets](download.html) for [PropBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) and [NomBank](http://nlp.cs.nyu.edu/meyers/NomBank.html) ([VerbNet](https://verbs.colorado.edu/~mpalmer/projects/verbnet.html) and [FrameNet](https://framenet.icsi.berkeley.edu/fndrupal/) under construction) predicates described according to the PreMOn ontology, which are published online as Linked Open Data.
 
@@ -47,7 +47,7 @@ Conceptualization can be seen as a generic extension of lemon.
 An example of predicate modelling according to PreMOn, including an example of alignments, is shown below.
 
 <div style="text-align: center; padding-top: 20px; padding-bottom: 20px">
-<img src="images/example.svg" alt="PreMOn ontology, core module" style="width: 70%"/>
+<img src="images/example.svg" alt="Example of predicates representation using the PreMOn ontology" style="width: 70%"/>
 </div>
 
 
@@ -86,3 +86,12 @@ WHERE {
   ?p  skos:inScheme :framenet .            # predicates ?p must belong to FrameNet
 }
 ```
+
+
+### What's next?
+
+  * explore the [PreMOn ontology](ontology.html);
+  * download [PreMOn datasets](download.html) for various predicate models;
+  * query datasets using the [PreMOn SPARQL endpoint](query.html);
+  * check out the [URI dereferencing](browse.html) facilities offered by PreMOn;
+  * download and use yourself the [premonitor](premonitor.html) conversion tool.
