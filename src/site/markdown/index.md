@@ -8,7 +8,7 @@
     </p>
 
     <p class='title2'>
-        <a class="btn btn-primary btn-large" href="ontology/core.html">Ontology reference</a>
+        <a class="btn btn-primary btn-large" href="ontology.html">Ontology reference</a>
         <a class="btn btn-primary btn-large" href="download.html">Data download</a>
         <a class="btn btn-primary btn-large" href="query.html">SPARQL endpoint</a>
     </p>
@@ -26,12 +26,13 @@ PreMOn consists of an **OWL ontology** for modelling predicates with their argum
 
 ### Features
 
-- modular [OWL ontology](ontology/core.html) (core module with extension for each predicate model)
+- modular [OWL ontology](ontology.html) (core module with extension for each predicate model)
 - based on [lemon](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification) by the [Ontology-Lexica Community Group](https://www.w3.org/community/ontolex/) at W3C
 - datasets available for [PropBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) and [NomBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html)
 - download of [dataset dumps](download.html) with [VOID](http://www.w3.org/TR/void/) statistics
 - SPARQL [endpoint](query.html) with web interface
-- URI dereferencing and navigation
+- URI dereferencing and navigation using [lodview](https://github.com/dvcama/LodView)
+- [premonitor](premonitor.html) software for converting original resources
 
 
 ### News
