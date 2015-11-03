@@ -22,16 +22,22 @@
                                    
                                    dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                    
+                                   rdfs:comment "The NomBank module of the PreMOn ontology extends the core module for representing concepts specific to NomBank: numbered/modifier roles, function tags, examples." ;
+                                   
                                    dc:creator "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" ,
                                               "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
                                    
                                    dcterms:title "Predicate Model for Ontologies (premon) - NomBank ontology module"@en ;
                                    
+                                   dc:description """The NomBank module of the PreMOn ontology extends the core module with classes and properties specific to the NomBank predicate model. The modelling is based on the specification at <http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf>.
+
+Subclasses of Predicate, SemanticArgument and SemanticRole of the core module are defined for representing elements specific to NomBank. Semantic roles are differentiated in two disjoint classes: NumberedRoles for arg0 to arg5; ModifierRole for the 11 modifier roles defined in NomBank (e.g., argm-tmp, 'ref' excluded).
+
+Subclasses of Example and Markable are introduced to model the specificities of NomBank examples. Attribute name of frame file examples is mapped to property rdfs:comment. Support verbs in the examples are represented with a Markable tagged (property pmonb:tag) as pmonb:support. Numbered arguments tagged as REF or PRD are represented with Markables tagged (property pmonb:tag), respectively, with pmonb:ref and pmonb:prd."""@en ;
+                                   
                                    dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
                                    
                                    vann:preferredNamespacePrefix "pmonb" ;
-                                   
-                                   dc:description "TODO: ADD A DESCRIPTION"@en ;
                                    
                                    dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
                                    
