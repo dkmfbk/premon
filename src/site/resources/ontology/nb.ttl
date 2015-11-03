@@ -1,0 +1,204 @@
+@prefix : <http://premon.fbk.eu/ontology/all#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix lime: <http://www.w3.org/ns/lemon/lime#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix pmo: <http://premon.fbk.eu/ontology/core#> .
+@prefix pmopb: <http://premon.fbk.eu/ontology/pb#> .
+@prefix pmonb: <http://premon.fbk.eu/ontology/nb#> .
+@prefix pmovn: <http://premon.fbk.eu/ontology/vn#> .
+@prefix pmofn: <http://premon.fbk.eu/ontology/fn#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
+
+<http://premon.fbk.eu/ontology/nb> a owl:Ontology ;
+	vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/nb#" ;
+	dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+	dc:creator "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" , "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
+	dcterms:title "Predicate Model for Ontologies (premon) - NomBank ontology module"@en ;
+	dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
+	vann:preferredNamespacePrefix "pmonb" ;
+	dc:description <http://premon.fbk.eu/images/nb.svg> , "TODO: ADD A DESCRIPTION"@en ;
+	dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
+	owl:imports <http://premon.fbk.eu/ontology/core> , <http://www.w3.org/ns/lemon/ontolex> ;
+	rdfs:isDefinedBy <http://premon.fbk.eu/ontology/nb.ttl> .
+
+pmonb:tag a owl:ObjectProperty ;
+	rdfs:label "tag" ;
+	rdfs:range pmonb:Tag .
+
+pmonb:Tag a owl:Class ;
+	rdfs:label "tag" .
+
+pmonb:Example a owl:Class ;
+	rdfs:label "NomBank example" ;
+	rdfs:subClassOf pmo:Example , _:node1a36kd06tx1 .
+
+pmonb:Markable a owl:Class ;
+	rdfs:label "NomBank markable" ;
+	rdfs:subClassOf pmo:Markable , _:node1a36kd06tx3 .
+
+pmonb:ModifierRole a owl:Class ;
+	rdfs:label "NomBank modifier role" ;
+	rdfs:subClassOf pmonb:SemanticRole , _:node1a36kd06tx4 ;
+	owl:disjointWith pmonb:NumberedRole .
+
+pmonb:SemanticRole a owl:Class ;
+	rdfs:label "NomBank semantic role" ;
+	rdfs:subClassOf pmo:SemanticRole , _:node1a36kd06tx30 ;
+	owl:equivalentClass _:node1a36kd06tx27 .
+
+pmonb:argm-cau a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-tmp a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-dis a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-dir a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-prd a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-ext a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-mnr a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-loc a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-neg a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-pnc a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:argm-adv a owl:NamedIndividual , pmonb:ModifierRole .
+
+pmonb:NumberedRole a owl:Class ;
+	rdfs:label "NomBank numbered role" ;
+	rdfs:subClassOf pmonb:SemanticRole , _:node1a36kd06tx16 .
+
+pmonb:arg5 a owl:NamedIndividual , pmonb:NumberedRole .
+
+pmonb:arg4 a owl:NamedIndividual , pmonb:NumberedRole .
+
+pmonb:arg3 a owl:NamedIndividual , pmonb:NumberedRole .
+
+pmonb:arg2 a owl:NamedIndividual , pmonb:NumberedRole .
+
+pmonb:arg1 a owl:NamedIndividual , pmonb:NumberedRole .
+
+pmonb:arg0 a owl:NamedIndividual , pmonb:NumberedRole .
+
+pmonb:Predicate a owl:Class ;
+	rdfs:label "NomBank predicate" ;
+	rdfs:subClassOf pmo:Predicate , _:node1a36kd06tx23 .
+
+pmonb:SemanticArgument a owl:Class ;
+	rdfs:label "NomBank semantic argument" ;
+	rdfs:subClassOf pmo:SemanticArgument , _:node1a36kd06tx24 , _:node1a36kd06tx26 .
+
+pmonb:prd a owl:NamedIndividual , pmonb:Tag .
+
+pmonb:ref a owl:NamedIndividual , pmonb:Tag .
+
+pmonb:support a owl:NamedIndividual , pmonb:Tag .
+
+_:node1a36kd06tx1 a owl:Restriction ;
+	owl:onProperty _:node1a36kd06tx2 ;
+	owl:allValuesFrom pmonb:Markable .
+
+_:node1a36kd06tx10 rdf:first pmonb:argm-ext ;
+	rdf:rest _:node1a36kd06tx11 .
+
+_:node1a36kd06tx11 rdf:first pmonb:argm-mnr ;
+	rdf:rest _:node1a36kd06tx12 .
+
+_:node1a36kd06tx12 rdf:first pmonb:argm-loc ;
+	rdf:rest _:node1a36kd06tx13 .
+
+_:node1a36kd06tx13 rdf:first pmonb:argm-neg ;
+	rdf:rest _:node1a36kd06tx14 .
+
+_:node1a36kd06tx14 rdf:first pmonb:argm-pnc ;
+	rdf:rest _:node1a36kd06tx15 .
+
+_:node1a36kd06tx15 rdf:first pmonb:argm-adv ;
+	rdf:rest rdf:nil .
+
+_:node1a36kd06tx16 a owl:Class ;
+	owl:oneOf _:node1a36kd06tx17 .
+
+_:node1a36kd06tx17 rdf:first pmonb:arg5 ;
+	rdf:rest _:node1a36kd06tx18 .
+
+_:node1a36kd06tx18 rdf:first pmonb:arg4 ;
+	rdf:rest _:node1a36kd06tx19 .
+
+_:node1a36kd06tx19 rdf:first pmonb:arg3 ;
+	rdf:rest _:node1a36kd06tx20 .
+
+_:node1a36kd06tx2 owl:inverseOf nif:referenceContext .
+
+_:node1a36kd06tx20 rdf:first pmonb:arg2 ;
+	rdf:rest _:node1a36kd06tx21 .
+
+_:node1a36kd06tx21 rdf:first pmonb:arg1 ;
+	rdf:rest _:node1a36kd06tx22 .
+
+_:node1a36kd06tx22 rdf:first pmonb:arg0 ;
+	rdf:rest rdf:nil .
+
+_:node1a36kd06tx23 a owl:Restriction ;
+	owl:onProperty pmo:semArg ;
+	owl:allValuesFrom pmonb:SemanticArgument .
+
+_:node1a36kd06tx24 a owl:Restriction ;
+	owl:onProperty _:node1a36kd06tx25 ;
+	owl:allValuesFrom pmonb:Predicate .
+
+_:node1a36kd06tx25 owl:inverseOf pmo:semArg .
+
+_:node1a36kd06tx26 a owl:Restriction ;
+	owl:onProperty pmo:role ;
+	owl:allValuesFrom pmonb:SemanticRole .
+
+_:node1a36kd06tx27 a owl:Class ;
+	owl:unionOf _:node1a36kd06tx28 .
+
+_:node1a36kd06tx28 rdf:first pmonb:ModifierRole ;
+	rdf:rest _:node1a36kd06tx29 .
+
+_:node1a36kd06tx29 rdf:first pmonb:NumberedRole ;
+	rdf:rest rdf:nil .
+
+_:node1a36kd06tx3 a owl:Restriction ;
+	owl:onProperty nif:referenceContext ;
+	owl:allValuesFrom pmonb:Example .
+
+_:node1a36kd06tx30 a owl:Restriction ;
+	owl:onProperty _:node1a36kd06tx31 ;
+	owl:allValuesFrom pmonb:SemanticArgument .
+
+_:node1a36kd06tx31 owl:inverseOf pmo:role .
+
+_:node1a36kd06tx4 a owl:Class ;
+	owl:oneOf _:node1a36kd06tx5 .
+
+_:node1a36kd06tx5 rdf:first pmonb:argm-cau ;
+	rdf:rest _:node1a36kd06tx6 .
+
+_:node1a36kd06tx6 rdf:first pmonb:argm-tmp ;
+	rdf:rest _:node1a36kd06tx7 .
+
+_:node1a36kd06tx7 rdf:first pmonb:argm-dis ;
+	rdf:rest _:node1a36kd06tx8 .
+
+_:node1a36kd06tx8 rdf:first pmonb:argm-dir ;
+	rdf:rest _:node1a36kd06tx9 .
+
+_:node1a36kd06tx9 rdf:first pmonb:argm-prd ;
+	rdf:rest _:node1a36kd06tx10 .

@@ -18,8 +18,7 @@
 
 <http://premon.fbk.eu/ontology/pb> rdf:type owl:Ontology ;
                                    
-                                   dc:creator "Francesco Corcoglioniti <file:///dev/null>" ,
-                                              "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ,
+                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ,
                                               "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" ;
                                    
                                    dcterms:title "Predicate Model for Ontologies (premon) - PropBank ontology module"@en ;
@@ -38,9 +37,9 @@ Subclasses of Predicate, SemanticArgument and SemanticRole of the core module ar
 
 Subclasses of Example and Markable are introduced to model the specificities of PropBank examples. Attributes name and src of frame file examples are mapped to properties rdfs:comment and dct:source. Inflections are modelled with a specific class, with dedicated properties to model the person, tense, voice, aspect and form of the verb inflection."""@en ;
                                    
-                                   dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en ;
+                                   dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
                                    
-                                   dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;
+                                   dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
                                    
                                    dc:description <http://premon.fbk.eu/images/pb.svg> ;
                                    
@@ -161,6 +160,8 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :AgentiveRole rdf:type owl:Class ;
               
+              rdfs:label "PropBank agentive role" ;
+              
               rdfs:subClassOf :SemanticRole ;
               
               owl:disjointWith :ModifierRole ,
@@ -190,13 +191,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
          
          rdfs:subClassOf pmo:Example ,
                          [ rdf:type owl:Restriction ;
-                           owl:onProperty :inflection ;
-                           owl:maxCardinality "1"^^xsd:nonNegativeInteger
-                         ] ,
-                         [ rdf:type owl:Restriction ;
                            owl:onProperty [ owl:inverseOf nif:referenceContext
                                           ] ;
                            owl:allValuesFrom :Markable
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :inflection ;
+                           owl:maxCardinality "1"^^xsd:nonNegativeInteger
                          ] .
 
 
@@ -229,15 +230,9 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Markable rdf:type owl:Class ;
           
+          rdfs:label "PropBank markable" ;
+          
           rdfs:subClassOf pmo:Markable ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty nif:annotation ;
-                            owl:someValuesFrom [ rdf:type owl:Class ;
-                                                 owl:unionOf ( :Predicate
-                                                               :SemanticArgument
-                                                             )
-                                               ]
-                          ] ,
                           [ rdf:type owl:Restriction ;
                             owl:onProperty nif:referenceContext ;
                             owl:allValuesFrom :Example
@@ -251,7 +246,31 @@ Subclasses of Example and Markable are introduced to model the specificities of 
               
               rdfs:label "PropBank modifier role" ;
               
-              rdfs:subClassOf :SemanticRole ;
+              rdfs:subClassOf :SemanticRole ,
+                              [ rdf:type owl:Class ;
+                                owl:oneOf ( :argm-lvb
+                                            :argm-cau
+                                            :argm-tmp
+                                            :argm-rcl
+                                            :argm-loc
+                                            :argm-gol
+                                            :argm-mod
+                                            :argm-prd
+                                            :argm-com
+                                            :argm-dsp
+                                            :argm-ext
+                                            :argm-adj
+                                            :argm-pnc
+                                            :argm-slc
+                                            :argm-neg
+                                            :argm-rec
+                                            :argm-dis
+                                            :argm-prp
+                                            :argm-dir
+                                            :argm-adv
+                                            :argm-mnr
+                                          )
+                              ] ;
               
               owl:disjointWith :NumberedRole .
 
@@ -320,17 +339,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
                   
                   rdfs:subClassOf pmo:SemanticArgument ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmo:role ;
-                                    owl:allValuesFrom :SemanticRole
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
                                     owl:onProperty [ owl:inverseOf pmo:semArg
                                                    ] ;
                                     owl:allValuesFrom :Predicate
                                   ] ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty pmo:role ;
-                                    owl:cardinality "1"^^xsd:nonNegativeInteger
+                                    owl:allValuesFrom :SemanticRole
                                   ] .
 
 

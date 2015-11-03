@@ -2,6 +2,7 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pmo: <http://premon.fbk.eu/ontology/core#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -10,51 +11,46 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix void: <http://rdfs.org/ns/void#> .
-@prefix pmo: <http://premon.fbk.eu/ontology/core#> .
-@prefix pmopb: <http://premon.fbk.eu/ontology/pb#> .
-@prefix pmonb: <http://premon.fbk.eu/ontology/nb#> .
-@prefix pmovn: <http://premon.fbk.eu/ontology/vn#> .
 @prefix pmofn: <http://premon.fbk.eu/ontology/fn#> .
+@prefix pmonb: <http://premon.fbk.eu/ontology/nb#> .
+@prefix pmopb: <http://premon.fbk.eu/ontology/pb#> .
+@prefix pmovn: <http://premon.fbk.eu/ontology/vn#> .
 @prefix pmoall: <http://premon.fbk.eu/ontology/all#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
 @base <http://premon.fbk.eu/ontology/all> .
 
 <http://premon.fbk.eu/ontology/all> rdf:type owl:Ontology ;
-
-                                     owl:imports <http://premon.fbk.eu/ontology/core> ;
-
-                                     rdfs:isDefinedBy <http://premon.fbk.eu/ns/premon-all.ttl> ;
-
-                                     owl:imports <http://premon.fbk.eu/ontology/fn> ,
-                                                 <http://premon.fbk.eu/ontology/nb> ,
-                                                 <http://premon.fbk.eu/ontology/pb> ,
-                                                 <http://premon.fbk.eu/ontology/vn> ;
-
-
-                                 dc:creator "Marco Rospocher" ,
-                                            "Francesco Corcoglioniti" ,
-                                            "Alessio Palmero Aprosio" ;
-
-                                 dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
-
-                                 vann:preferredNamespacePrefix "pmoall" ;
-
-                                 vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/all#" ;
-
-                                 dcterms:title "Predicate Model for Ontologies (premon) - All modules"@en ;
-
-                                 dc:description "TODO: ADD A DESCRIPTION"@en ;
-
-                                 dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en ;
-
-                                 dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;
-
-                                 dc:description <http://premon.fbk.eu/images/all.svg> ;
-
-                                 rdfs:isDefinedBy <http://premon.fbk.eu/ontology/all.ttl> ;
-
-                                 owl:imports <http://www.w3.org/ns/lemon/ontolex> .
-
+                                    
+                                    dc:creator "Alessio Palmero Aprosio" ;
+                                    
+                                    vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/all#" ;
+                                    
+                                    dc:creator "Marco Rospocher" ;
+                                    
+                                    dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+                                    
+                                    dcterms:title "Predicate Model for Ontologies (premon) - All modules"@en ;
+                                    
+                                    dc:description "TODO: ADD A DESCRIPTION"@en ;
+                                    
+                                    dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
+                                    
+                                    vann:preferredNamespacePrefix "pmoall" ;
+                                    
+                                    dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
+                                    
+                                    dc:description <http://premon.fbk.eu/images/all.svg> ;
+                                    
+                                    rdfs:isDefinedBy <http://premon.fbk.eu/ns/premon-all.ttl> ,
+                                                     <http://premon.fbk.eu/ontology/all.ttl> ;
+                                    
+                                    owl:imports <http://premon.fbk.eu/ontology/core> ,
+                                                <http://premon.fbk.eu/ontology/fn> ,
+                                                <http://premon.fbk.eu/ontology/nb> ,
+                                                <http://premon.fbk.eu/ontology/pb> ,
+                                                <http://premon.fbk.eu/ontology/vn> ,
+                                                <http://www.w3.org/ns/lemon/ontolex> .
 
 ###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
+
