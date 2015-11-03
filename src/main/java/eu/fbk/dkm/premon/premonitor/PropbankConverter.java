@@ -11,10 +11,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.vocabulary.DCTERMS;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
-import org.openrdf.model.vocabulary.SKOS;
+import org.openrdf.model.vocabulary.*;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
@@ -45,9 +42,16 @@ public class PropbankConverter extends Converter {
 	public static final String EXAMPLE_PREFIX = "example";
 	public static final String INFLECTION_PREFIX = "inflection";
 
-	static final Pattern THETA_NAME_PATTERN = Pattern.compile("^([^0-9]+)([0-9]+)$");
-	static final String VN_NAME_REGEXP = "^[^0-9]+-";
-	static final Pattern VN_CODE_PATTERN = Pattern.compile("^[0-9]+(\\.[0-9]+)*(-[0-9]+)*$");
+	boolean nonVerbsToo = false;
+	boolean isOntoNotes = false;
+	boolean noDef = false;
+	boolean extractExamples = false;
+	String source;
+	String defaultType;
+
+	//	static final Pattern THETA_NAME_PATTERN = Pattern.compile("^([^0-9]+)([0-9]+)$");
+//	static final String VN_NAME_REGEXP = "^[^0-9]+-";
+//	static final Pattern VN_CODE_PATTERN = Pattern.compile("^[0-9]+(\\.[0-9]+)*(-[0-9]+)*$");
 	static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
 
 	static final URI DEFAULT_GRAPH = factory.createURI(NAMESPACE, "graph-pb");
@@ -71,6 +75,9 @@ public class PropbankConverter extends Converter {
 		bugMap.put("o", "0"); // be.xml (be.04)
 		bugMap.put("emitter of hoot", "0"); // hoot.xml
 
+		bugMap.put("8", "tmp"); // NomBank: date, meeting
+		bugMap.put("9", "loc"); // NomBank: date, meeting, option
+
 		rolesetBugMap.put("transfuse.101", "transfuse.01");
 
 		lemmaToTransform.put("cry+down(e)", "cry+down");
@@ -78,8 +85,15 @@ public class PropbankConverter extends Converter {
 		fileToDiscard.add("except-v.xml");
 	}
 
-	public PropbankConverter(File path, RDFHandler sink, Properties properties, String language) {
-		super(path, "pb", sink, properties, language);
+	public PropbankConverter(File path, RDFHandler sink, Properties properties, String language, HashSet<URI> wnURIs) {
+		super(path, "pb", sink, properties, language, wnURIs);
+
+		this.nonVerbsToo = properties.getProperty("pb-non-verbs", "0").equals("1");
+		this.isOntoNotes = properties.getProperty("pb-ontonotes", "0").equals("1");
+		this.noDef = properties.getProperty("pb-no-def", "0").equals("1");
+		this.source = properties.getProperty("pb-source");
+		this.extractExamples = properties.getProperty("pb-examples", "0").equals("1");
+		this.defaultType = "v";
 	}
 
 	private static boolean discardFile(File file, boolean onlyVerbs, boolean isOntoNotes) {
@@ -103,78 +117,78 @@ public class PropbankConverter extends Converter {
 		return false;
 	}
 
-	private static String getThetaName(String name) {
-		Matcher matcher = THETA_NAME_PATTERN.matcher(name);
-		if (matcher.matches()) {
-			String num = matcher.group(2);
-			if (num.equals("1")) {
-				return matcher.group(1);
-			}
-			else {
-				return "co-" + matcher.group(1);
-			}
-		}
-		return name;
-	}
-
-	private static String getSenseNumberOnly(String senseName) {
-
-		// Fix: conflict-v.xml
-		if (senseName.equals("36.4-136.")) {
-			senseName = "36.4-1";
-		}
-
-		// Fix: cram-v.xml
-		if (senseName.equals("14-1S")) {
-			senseName = "14-1";
-		}
-
-		// Fix: plan-v.xml
-		if (senseName.equals("62t")) {
-			senseName = "62";
-		}
-
-		// Fix: plot-v.xml
-		if (senseName.equals("25.2t")) {
-			senseName = "25.2";
-		}
-
-		return senseName.replaceAll(VN_NAME_REGEXP, "");
-	}
-
-	private static String isGoodSense(String sense) {
-		sense = getSenseNumberOnly(sense);
-		Matcher matcher = VN_CODE_PATTERN.matcher(sense);
-		if (!matcher.matches()) {
-			LOGGER.trace("{} does not pass the match test", sense);
-			return null;
-		}
-
-		return sense;
-	}
-
-	private static HashSet<String> getGoodSensesOnly(String vnSenseString) {
-		HashSet<String> ret = new HashSet<String>();
-
-		if (vnSenseString != null && vnSenseString.trim().length() > 0) {
-
-			// Fix: attest-v.xml
-			if (vnSenseString.equals("29. 5")) {
-				vnSenseString = "29.5";
-			}
-
-			String[] vnSenses = vnSenseString.split("[\\s,]+");
-
-			for (String sense : vnSenses) {
-				String okSense = isGoodSense(sense);
-				if (okSense != null) {
-					ret.add(okSense);
-				}
-			}
-		}
-
-		return ret;
-	}
+//	private static String getThetaName(String name) {
+//		Matcher matcher = THETA_NAME_PATTERN.matcher(name);
+//		if (matcher.matches()) {
+//			String num = matcher.group(2);
+//			if (num.equals("1")) {
+//				return matcher.group(1);
+//			}
+//			else {
+//				return "co-" + matcher.group(1);
+//			}
+//		}
+//		return name;
+//	}
+//
+//	private static String getSenseNumberOnly(String senseName) {
+//
+//		// Fix: conflict-v.xml
+//		if (senseName.equals("36.4-136.")) {
+//			senseName = "36.4-1";
+//		}
+//
+//		// Fix: cram-v.xml
+//		if (senseName.equals("14-1S")) {
+//			senseName = "14-1";
+//		}
+//
+//		// Fix: plan-v.xml
+//		if (senseName.equals("62t")) {
+//			senseName = "62";
+//		}
+//
+//		// Fix: plot-v.xml
+//		if (senseName.equals("25.2t")) {
+//			senseName = "25.2";
+//		}
+//
+//		return senseName.replaceAll(VN_NAME_REGEXP, "");
+//	}
+//
+//	private static String isGoodSense(String sense) {
+//		sense = getSenseNumberOnly(sense);
+//		Matcher matcher = VN_CODE_PATTERN.matcher(sense);
+//		if (!matcher.matches()) {
+//			LOGGER.trace("{} does not pass the match test", sense);
+//			return null;
+//		}
+//
+//		return sense;
+//	}
+//
+//	private static HashSet<String> getGoodSensesOnly(String vnSenseString) {
+//		HashSet<String> ret = new HashSet<String>();
+//
+//		if (vnSenseString != null && vnSenseString.trim().length() > 0) {
+//
+//			// Fix: attest-v.xml
+//			if (vnSenseString.equals("29. 5")) {
+//				vnSenseString = "29.5";
+//			}
+//
+//			String[] vnSenses = vnSenseString.split("[\\s,]+");
+//
+//			for (String sense : vnSenses) {
+//				String okSense = isGoodSense(sense);
+//				if (okSense != null) {
+//					ret.add(okSense);
+//				}
+//			}
+//		}
+//
+//		return ret;
+//	}
 
 	private Type getType(String code) {
 		if (code != null) {
@@ -205,14 +219,6 @@ public class PropbankConverter extends Converter {
 	@Override
 	public void convert() throws IOException, RDFHandlerException {
 
-		boolean nonVerbsToo = properties.getProperty("non-verbs", "0").equals("1");
-		boolean isOntoNotes = properties.getProperty("ontonotes", "0").equals("1");
-		String source = properties.getProperty("pb-source");
-		final boolean extractExamples = properties.getProperty("examples", "0").equals("1");
-		onlyOne = properties.getProperty("only-one");
-
-		Statement statement;
-
 		// Fix due to XML library
 		System.setProperty("javax.xml.accessExternalDTD", "file");
 
@@ -226,44 +232,175 @@ public class PropbankConverter extends Converter {
 
 		//todo: the first tour is not necessary any more
 
-		/*
-		This is the list of the VerbNet theta roles
-		(including co-* roles)
-		 */
-		HashSet<String> thetaRoles = new HashSet<>();
-
-		/*
-		List of VerbNet roles, divided by VerbNet code
-		 */
-		Multimap<String, String> rolesForSense = HashMultimap.create();
-
-		/*
-		This is the list of tokens used in multiwords, excluding the predicate lemma
-		 */
-		HashSet<String> allExternalTokens = new HashSet<>();
-
-		/*
-		These are the lists of Ns and Fs from the roles
-		 */
-		HashSet<String> roleNs = new HashSet<>();
-		HashSet<String> roleFs = new HashSet<>();
-
-		/*
-		This is the list of roleset that do not have good roles
-		 */
-		HashSet<String> roleSetsToIgnore = new HashSet<>();
-
-		/*
-		List of predicates (loaded in RAM to avoid a second run)
-		 */
-		List<PropBankResource> resources = new ArrayList<>();
-
-		/*
-		List of prepositions in the 'f' attribute of roles
-		 */
-		HashSet<String> prepositions = new HashSet<>();
-
+//		/*
+//		This is the list of the VerbNet theta roles
+//		(including co-* roles)
+//		 */
+//		HashSet<String> thetaRoles = new HashSet<>();
+//
+//		/*
+//		List of VerbNet roles, divided by VerbNet code
+//		 */
+//		Multimap<String, String> rolesForSense = HashMultimap.create();
+//
+//		/*
+//		This is the list of tokens used in multiwords, excluding the predicate lemma
+//		 */
+//		HashSet<String> allExternalTokens = new HashSet<>();
+//
+//		/*
+//		These are the lists of Ns and Fs from the roles
+//		 */
+//		HashSet<String> roleNs = new HashSet<>();
+//		HashSet<String> roleFs = new HashSet<>();
+//
+//		/*
+//		This is the list of roleset that do not have good roles
+//		 */
+//		HashSet<String> roleSetsToIgnore = new HashSet<>();
+//
+//		/*
+//		List of predicates (loaded in RAM to avoid a second run)
+//		 */
+//		List<PropBankResource> resources = new ArrayList<>();
+//
+//		/*
+//		List of prepositions in the 'f' attribute of roles
+//		 */
+//		HashSet<String> prepositions = new HashSet<>();
+//
 		try {
+//
+//			JAXBContext jaxbContext = JAXBContext.newInstance(Frameset.class);
+//			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+//
+//			for (File file : Files.fileTreeTraverser().preOrderTraversal(path)) {
+//
+//				if (discardFile(file, !nonVerbsToo, isOntoNotes)) {
+//					continue;
+//				}
+//
+//				PropBankResource resource;
+//				try {
+//					resource = new PropBankResource(file.getName(), isOntoNotes);
+//				} catch (Exception e) {
+//					throw new IOException(e);
+//				}
+//
+//				if (fileToDiscard.contains(resource.getFileName())) {
+//					continue;
+//				}
+//
+//				if (onlyOne != null && !onlyOne.equals(resource.getLemma())) {
+//					continue;
+//				}
+//
+//				Frameset frameset = (Frameset) jaxbUnmarshaller.unmarshal(file);
+//				resource.setMain(frameset);
+//
+//				// Collect aggregated data
+//
+//				List<Object> noteOrPredicate = frameset.getNoteOrPredicate();
+//
+//				for (Object predicate : noteOrPredicate) {
+//					if (predicate instanceof Predicate) {
+//
+//						String lemma = ((Predicate) predicate).getLemma().replace('_', '+').replace(' ', '+');
+//						if (lemmaToTransform.keySet().contains(lemma)) {
+//							lemma = lemmaToTransform.get(lemma);
+//						}
+//						String[] tokens = lemma.split("\\+");
+//
+//						for (String token : tokens) {
+//							if (token.equals(resource.getLemma())) {
+//								continue;
+//							}
+//							allExternalTokens.add(token);
+//						}
+//
+//
+//						List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
+//						for (Object roleset : noteOrRoleset) {
+//							if (roleset instanceof Roleset) {
+//
+//								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExample();
+//								for (Object roles : rolesOrExample) {
+//									if (roles instanceof Roles) {
+//
+//										int okRoles = 0;
+//
+//										List<Object> noteOrRole = ((Roles) roles).getNoteOrRole();
+//										for (Object role : noteOrRole) {
+//											if (role instanceof Role) {
+//												String n = ((Role) role).getN();
+//												String f = ((Role) role).getF();
+//
+//												NF nf = new NF(n, f);
+//
+//												// Remove bugs
+//												String argName = nf.getArgName();
+//												if (argName == null) {
+//													continue;
+//												}
+//
+//												String f2 = nf.getF();
+//												Type type = getType(f2);
+//												if (type == Type.PREPOSITION) {
+//													prepositions.add(f2);
+//												}
+//
+////												Matcher matcher = ARG_NUM_PATTERN.matcher(argName);
+////												if (matcher.find()) {
+////													String f2 = nf.getF();
+////													Type type = getType(f2);
+////
+////													System.out.println(argName);
+////													System.out.println(f2);
+////													System.out.println(type);
+////													System.out.println();
+////												}
+//
+//												if (bugMap.containsKey(argName)) {
+//													continue;
+//												}
+//
+//												if (nf.getN() != null) {
+//													roleNs.add(nf.getN());
+//													okRoles++;
+//												}
+//												if (nf.getF() != null) {
+//													roleFs.add(nf.getF());
+//												}
+//
+//												List<Vnrole> vnroleList = ((Role) role).getVnrole();
+//												for (Vnrole vnrole : vnroleList) {
+//													if (vnrole.getVntheta() != null && vnrole.getVntheta().trim().length() > 0) {
+//														String okRole = getThetaName(vnrole.getVntheta().toLowerCase());
+//														thetaRoles.add(okRole);
+//
+//														String vnSenseString = vnrole.getVncls();
+//														HashSet<String> senses = getGoodSensesOnly(vnSenseString);
+//														for (String sense : senses) {
+//															rolesForSense.put(sense, okRole);
+//														}
+//													}
+//												}
+//
+//											}
+//										}
+//
+//										if (okRoles == 0) {
+//											roleSetsToIgnore.add(((Roleset) roleset).getId());
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//
+//				resources.add(resource);
+//			}
 
 			JAXBContext jaxbContext = JAXBContext.newInstance(Frameset.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -276,15 +413,10 @@ public class PropbankConverter extends Converter {
 
 				PropBankResource resource;
 				try {
-					resource = new PropBankResource(file.getName(), isOntoNotes);
+					resource = new PropBankResource(file.getName(), isOntoNotes, defaultType);
 				} catch (Exception e) {
 					throw new IOException(e);
 				}
-
-//				String fileName = resource.getFileName();
-//				String type = resource.getType();
-//				String lemmaFromName = resource.getLemma();
-
 				if (fileToDiscard.contains(resource.getFileName())) {
 					continue;
 				}
@@ -293,116 +425,25 @@ public class PropbankConverter extends Converter {
 					continue;
 				}
 
-				Frameset frameset = (Frameset) jaxbUnmarshaller.unmarshal(file);
-				resource.setMain(frameset);
+				Frameset frameset;
 
-				// Collect aggregated data
-
-				List<Object> noteOrPredicate = frameset.getNoteOrPredicate();
-
-				for (Object predicate : noteOrPredicate) {
-					if (predicate instanceof Predicate) {
-
-						String lemma = ((Predicate) predicate).getLemma().replace('_', '+').replace(' ', '+');
-						if (lemmaToTransform.keySet().contains(lemma)) {
-							lemma = lemmaToTransform.get(lemma);
-						}
-						String[] tokens = lemma.split("\\+");
-
-						for (String token : tokens) {
-							if (token.equals(resource.getLemma())) {
-								continue;
-							}
-							allExternalTokens.add(token);
-						}
-
-
-						List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
-						for (Object roleset : noteOrRoleset) {
-							if (roleset instanceof Roleset) {
-
-								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExample();
-								for (Object roles : rolesOrExample) {
-									if (roles instanceof Roles) {
-
-										int okRoles = 0;
-
-										List<Object> noteOrRole = ((Roles) roles).getNoteOrRole();
-										for (Object role : noteOrRole) {
-											if (role instanceof Role) {
-												String n = ((Role) role).getN();
-												String f = ((Role) role).getF();
-
-												NF nf = new NF(n, f);
-
-												// Remove bugs
-												String argName = nf.getArgName();
-												if (argName == null) {
-													continue;
-												}
-
-												String f2 = nf.getF();
-												Type type = getType(f2);
-												if (type == Type.PREPOSITION) {
-													prepositions.add(f2);
-												}
-
-//												Matcher matcher = ARG_NUM_PATTERN.matcher(argName);
-//												if (matcher.find()) {
-//													String f2 = nf.getF();
-//													Type type = getType(f2);
-//
-//													System.out.println(argName);
-//													System.out.println(f2);
-//													System.out.println(type);
-//													System.out.println();
-//												}
-
-												if (bugMap.containsKey(argName)) {
-													continue;
-												}
-
-												if (nf.getN() != null) {
-													roleNs.add(nf.getN());
-													okRoles++;
-												}
-												if (nf.getF() != null) {
-													roleFs.add(nf.getF());
-												}
-
-												List<Vnrole> vnroleList = ((Role) role).getVnrole();
-												for (Vnrole vnrole : vnroleList) {
-													if (vnrole.getVntheta() != null && vnrole.getVntheta().trim().length() > 0) {
-														String okRole = getThetaName(vnrole.getVntheta().toLowerCase());
-														thetaRoles.add(okRole);
-
-														String vnSenseString = vnrole.getVncls();
-														HashSet<String> senses = getGoodSensesOnly(vnSenseString);
-														for (String sense : senses) {
-															rolesForSense.put(sense, okRole);
-														}
-													}
-												}
-
-											}
-										}
-
-										if (okRoles == 0) {
-											roleSetsToIgnore.add(((Roleset) roleset).getId());
-										}
-									}
-								}
-							}
-						}
-					}
+				try {
+					frameset = (Frameset) jaxbUnmarshaller.unmarshal(file);
+					resource.setMain(frameset);
+				}
+				catch (Throwable e) {
+					LOGGER.error("Skipping {}", file.getAbsolutePath());
+					continue;
 				}
 
-				resources.add(resource);
-			}
+				LOGGER.debug("Processing {}", file.getAbsolutePath());
 
-
-			for (PropBankResource resource : resources) {
-				Frameset frameset = resource.getMain();
+//
+//
+//			}
+//
+//			for (PropBankResource resource : resources) {
+//				Frameset frameset = resource.getMain();
 				String type = resource.getType();
 				String origLemma = resource.getLemma();
 
@@ -430,7 +471,9 @@ public class PropbankConverter extends Converter {
 
 								URI rolesetURI = uriForRoleset(rolesetID);
 								addStatementToSink(rolesetURI, RDF.TYPE, PMOPB.PREDICATE);
-								addStatementToSink(rolesetURI, SKOS.DEFINITION, ((Roleset) roleset).getName());
+								if (!noDef) {
+									addStatementToSink(rolesetURI, SKOS.DEFINITION, ((Roleset) roleset).getName());
+								}
 								addStatementToSink(rolesetURI, RDFS.LABEL, rolesetID, false);
 								addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, rolesetURI);
 
@@ -439,21 +482,21 @@ public class PropbankConverter extends Converter {
 								addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
 								addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, rolesetURI);
 
-								String[] vnClasses = new String[0];
-								if (((Roleset) roleset).getVncls() != null) {
-									vnClasses = ((Roleset) roleset).getVncls().trim().split("\\s+");
-								}
-
-								String[] fnPredicates = new String[0];
-								if (((Roleset) roleset).getFramnet() != null) {
-									fnPredicates = ((Roleset) roleset).getFramnet().trim().toLowerCase().split("\\s+");
-								}
+//								String[] vnClasses = new String[0];
+//								if (((Roleset) roleset).getVncls() != null) {
+//									vnClasses = ((Roleset) roleset).getVncls().trim().split("\\s+");
+//								}
+//
+//								String[] fnPredicates = new String[0];
+//								if (((Roleset) roleset).getFramnet() != null) {
+//									fnPredicates = ((Roleset) roleset).getFramnet().trim().toLowerCase().split("\\s+");
+//								}
 
 								//todo: do stuff with VN and FN
 
-								if (roleSetsToIgnore.contains(rolesetID)) {
-									continue;
-								}
+//								if (roleSetsToIgnore.contains(rolesetID)) {
+//									continue;
+//								}
 
 								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExample();
 
@@ -488,12 +531,21 @@ public class PropbankConverter extends Converter {
 													argName = bugMap.get(argName);
 												}
 
-												Type argType = getType(argName);
+												Type argType;
+												try {
+													argType = getType(argName);
+												} catch (Exception e) {
+													LOGGER.info(lemma);
+													LOGGER.error(e.getMessage());
+													continue;
+												}
 
 												URI argumentURI = uriForArgument(rolesetID, argName);
 												addStatementToSink(argumentURI, RDF.TYPE, PMO.SEMANTIC_ARGUMENT);
 												addStatementToSink(argumentURI, PMOPB.CORE_P, true);
-												addStatementToSink(argumentURI, SKOS.DEFINITION, descr);
+												if (!noDef) {
+													addStatementToSink(argumentURI, SKOS.DEFINITION, descr);
+												}
 												addStatementToSink(lexicalEntryURI, PMO.SEM_ARG, argumentURI);
 
 												//todo: transform this double switch into an external class
@@ -584,7 +636,8 @@ public class PropbankConverter extends Converter {
 
 										for (Rel rel : myRels) {
 
-											String value = rel.getvalue().toLowerCase().replaceAll("\\s+", " ").trim();
+											String origValue = rel.getvalue().replaceAll("\\s+", " ").trim();
+											String value = origValue.toLowerCase();
 
 											int start = text.indexOf(value);
 											if (start == -1) {
@@ -599,7 +652,7 @@ public class PropbankConverter extends Converter {
 											addStatementToSink(markableURI, RDF.TYPE, PMOPB.MARKABLE);
 											addStatementToSink(markableURI, NIF.BEGIN_INDEX, start);
 											addStatementToSink(markableURI, NIF.END_INDEX, end);
-											addStatementToSink(markableURI, NIF.ANCHOR_OF, value);
+											addStatementToSink(markableURI, NIF.ANCHOR_OF, origValue);
 											addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI);
 											addStatementToSink(markableURI, NIF.ANNOTATION_P, rolesetURI);
 
@@ -689,10 +742,7 @@ public class PropbankConverter extends Converter {
 	}
 
 	private boolean usableInflectionPart(String part) {
-		if (part != null && part.length() > 0 && !part.equals("ns")) {
-			return true;
-		}
-		return false;
+		return part != null && part.length() > 0 && !part.equals("ns");
 	}
 
 	private void addInflectionToSink(URI exampleURI, Inflection inflection) {
@@ -783,6 +833,17 @@ public class PropbankConverter extends Converter {
 		addStatementToSink(formURI, ONTOLEX.WRITTEN_REP, goodLemma);
 		addStatementToSink(leURI, RDFS.LABEL, goodLemma);
 		addStatementToSink(leURI, ONTOLEX.LANGUAGE, language, false);
+
+		if (wnURIs.size() > 0) {
+			String wnLemma = lemma + "-" + on2wnMap.get(type);
+			URI wnURI = factory.createURI(WN_NAMESPACE, wnLemma);
+			if (wnURIs.contains(wnURI)) {
+				addStatementToSink(leURI, OWL.SAMEAS, wnURI);
+			}
+			else {
+				LOGGER.debug("Word not found: {}", wnLemma);
+			}
+		}
 
 		return leURI;
 	}
@@ -882,7 +943,7 @@ public class PropbankConverter extends Converter {
 	}
 
 	private void addStatementToSink(Resource subject, URI predicate, Value object) {
-	    addStatementToSink(subject, predicate, object, DEFAULT_GRAPH);
+		addStatementToSink(subject, predicate, object, DEFAULT_GRAPH);
 	}
 
 	private void addStatementToSink(Resource subject, URI predicate, Value object, URI graph) {

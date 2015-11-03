@@ -3,6 +3,7 @@ package eu.fbk.dkm.premon.premonitor;
 import com.google.common.io.Files;
 import org.joox.JOOX;
 import org.joox.Match;
+import org.openrdf.model.URI;
 import org.openrdf.rio.RDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +14,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Properties;
 
 public class VerbnetConverter extends Converter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VerbnetConverter.class);
 
-    public VerbnetConverter(File path, RDFHandler sink, Properties properties, String language) {
-        super(path, "vn", sink, properties, language);
+    public VerbnetConverter(File path, RDFHandler sink, Properties properties, String language, HashSet<URI> wnURIs) {
+        super(path, "vn", sink, properties, language, wnURIs);
     }
 
     @Override

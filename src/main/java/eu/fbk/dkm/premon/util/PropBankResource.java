@@ -13,9 +13,9 @@ public class PropBankResource extends PremonResource {
 
 	static final Pattern ONTONOTES_FILENAME_PATTERN = Pattern.compile("(.*)-([a-z]+)\\.xml");
 
-	public PropBankResource(String fileName, boolean isOntoNotes) throws Exception {
+	public PropBankResource(String fileName, boolean isOntoNotes, String defaultType) throws Exception {
 		this.fileName = fileName;
-		this.type = "v";
+		this.type = defaultType;
 		this.lemma = fileName.replaceAll("\\.xml", "");
 
 		if (isOntoNotes) {
