@@ -18,20 +18,25 @@
 
 <http://premon.fbk.eu/ontology/pb> rdf:type owl:Ontology ;
                                    
-                                   dc:creator "Marco Rospocher" ;
-                                   
-                                   vann:preferredNamespacePrefix "pmopb" ;
-                                   
-                                   dc:creator "Francesco Corcoglioniti" ,
-                                              "Alessio Palmero Aprosio" ;
-                                   
-                                   vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/pb#" ;
-                                   
-                                   dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+                                   dc:creator "Francesco Corcoglioniti <file:///dev/null>" ,
+                                              "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ,
+                                              "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" ;
                                    
                                    dcterms:title "Predicate Model for Ontologies (premon) - PropBank ontology module"@en ;
                                    
-                                   dc:description "TODO: ADD A DESCRIPTION"@en ;
+                                   vann:preferredNamespacePrefix "pmopb" ;
+                                   
+                                   vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/pb#" ;
+                                   
+                                   rdfs:comment "The PropBank module of the PreMOn ontology extends the core module for representing concepts specific to PropBank: numbered/modifier/agentive roles, function tags, examples." ;
+                                   
+                                   dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+                                   
+                                   dc:description """The PropBank module of the PreMOn ontology extends the core module with classes and properties specific to the PropBank predicate model. The modelling is based on the specification at <http://clear.colorado.edu/compsem/documents/propbank_guidelines.pdf>.
+
+Subclasses of Predicate, SemanticArgument and SemanticRole of the core module are defined for representing elements specific of PropBank. Semantic roles are differentiated in three disjoint classes: NumberedRoles for arg0 to arg5; ModifierRole for the 21 modifier roles defined in PropBank (e.g., argm-tmp) and a singleton AgentiveRole for role 'a'. Property functionTag is introduced for modelling the attribute 'f' of semantic arguments in PropBank frame files when their main interpretation (attribute 'n') is a numbered role. Function tags can be Prepositions, ModifierRoles (e.g., arg0 with role argm-cau) or specific Tags (pag, ppt, vsp).
+
+Subclasses of Example and Markable are introduced to model the specificities of PropBank examples. Attributes name and src of frame file examples are mapped to properties rdfs:comment and dct:source. Inflections are modelled with a specific class, with dedicated properties to model the person, tense, voice, aspect and form of the verb inflection."""@en ;
                                    
                                    dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en ;
                                    
@@ -226,16 +231,16 @@
           
           rdfs:subClassOf pmo:Markable ,
                           [ rdf:type owl:Restriction ;
-                            owl:onProperty nif:referenceContext ;
-                            owl:allValuesFrom :Example
-                          ] ,
-                          [ rdf:type owl:Restriction ;
                             owl:onProperty nif:annotation ;
                             owl:someValuesFrom [ rdf:type owl:Class ;
                                                  owl:unionOf ( :Predicate
                                                                :SemanticArgument
                                                              )
                                                ]
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty nif:referenceContext ;
+                            owl:allValuesFrom :Example
                           ] .
 
 
@@ -316,7 +321,7 @@
                   rdfs:subClassOf pmo:SemanticArgument ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty pmo:role ;
-                                    owl:cardinality "1"^^xsd:nonNegativeInteger
+                                    owl:allValuesFrom :SemanticRole
                                   ] ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty [ owl:inverseOf pmo:semArg
@@ -325,7 +330,7 @@
                                   ] ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty pmo:role ;
-                                    owl:allValuesFrom :SemanticRole
+                                    owl:cardinality "1"^^xsd:nonNegativeInteger
                                   ] .
 
 

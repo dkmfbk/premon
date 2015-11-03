@@ -17,16 +17,31 @@
 
 <http://premon.fbk.eu/ontology/core> rdf:type owl:Ontology ;
                                      
-                                     dc:creator "Alessio Palmero Aprosio" ,
-                                                "Francesco Corcoglioniti" ;
+                                     dc:creator "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" ,
+                                                "Francesco Corcoglioniti <file:///dev/null>" ;
                                      
                                      dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                      
-                                     dc:creator "Marco Rospocher" ;
+                                     dc:creator "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
                                      
                                      dcterms:title "Predicate Model for Ontologies (premon) - Core ontology module"@en ;
                                      
-                                     dc:description "TODO: ADD A DESCRIPTION"@en ;
+                                     rdfs:comment "The core module of the PreMOn ontology extends lemon (Lexical Model for Ontologies) and defines the main abstractions for modelling predicates with their arguments, selectional constraints, predicate and argument relations and alignments between different predicate models."@en ;
+                                     
+                                     dc:description """The core module of the PreMOn ontology is an extension of lemon (Lexical Model for Ontologies) for representing predicate models. The following features of lemon are exploited:
+
+* modelling of lexical entries (class LexicalEntry) and their associated forms;
+* linking of lexical entries to the lexical concept (class LexicalConcept) denoting their intensional (informal) meaning;
+* representation of subcategorization frames (e.g., VerbNet frames) through classes SyntacticFrame and SyntacticArgument;
+* linking of lexical entries, lexical concepts and arguments of syntactic frames to corresponding ontology entities (classes, properties, individuals).
+
+The core module of the PreMOn ontology extends lemon with the following concepts:
+
+* classes Predicate, SemanticArgument and associated properties to model predicates with their semantic arguments, the latter being defined locally to a predicate;
+* class SemanticRole and associated properties to model the role an argument may play, defined globally (e.g., thematic roles of VerbNet, role enumeration of PropBank and NomBank);
+* class SemanticType and associated properties to model selectional constraints and other semantic restrictions in predicate models
+* class Conceptualization reifying the evokes relation, on top of which SKOS closeMatch and exactMatch alignment links between different predicate models can be defined;
+* classes Example and Markable and associated properties (taken from NIF) are used to represent predicate usage examples."""@en ;
                                      
                                      dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en ;
                                      
@@ -316,21 +331,21 @@ pmo:Markable rdf:type owl:Class ;
              
              rdfs:subClassOf nif:RFC5147String ,
                              [ rdf:type owl:Restriction ;
-                               owl:onProperty nif:annotation ;
-                               owl:someValuesFrom [ rdf:type owl:Class ;
-                                                    owl:unionOf ( pmo:Predicate
-                                                                  pmo:SemanticArgument
-                                                                )
-                                                  ]
+                               owl:onProperty nif:referenceContext ;
+                               owl:onClass pmo:Example ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
                                owl:allValuesFrom pmo:Example
                              ] ,
                              [ rdf:type owl:Restriction ;
-                               owl:onProperty nif:referenceContext ;
-                               owl:onClass pmo:Example ;
-                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               owl:onProperty nif:annotation ;
+                               owl:someValuesFrom [ rdf:type owl:Class ;
+                                                    owl:unionOf ( pmo:Predicate
+                                                                  pmo:SemanticArgument
+                                                                )
+                                                  ]
                              ] .
 
 

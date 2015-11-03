@@ -19,12 +19,17 @@
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
 
 <http://premon.fbk.eu/ontology/pb> a owl:Ontology ;
-	dc:creator "Alessio Palmero Aprosio" , "Francesco Corcoglioniti" , "Marco Rospocher" ;
+	dc:creator "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" , "Francesco Corcoglioniti <file:///dev/null>" , "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
+	dcterms:title "Predicate Model for Ontologies (premon) - PropBank ontology module"@en ;
 	vann:preferredNamespacePrefix "pmopb" ;
 	vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/pb#" ;
+	rdfs:comment "The PropBank module of the PreMOn ontology extends the core module for representing concepts specific to PropBank: numbered/modifier/agentive roles, function tags, examples." ;
 	dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
-	dcterms:title "Predicate Model for Ontologies (premon) - PropBank ontology module"@en ;
-	dc:description <http://premon.fbk.eu/images/pb.svg> , "TODO: ADD A DESCRIPTION"@en ;
+	dc:description <http://premon.fbk.eu/images/pb.svg> , """The PropBank module of the PreMOn ontology extends the core module with classes and properties specific to the PropBank predicate model. The modelling is based on the specification at <http://clear.colorado.edu/compsem/documents/propbank_guidelines.pdf>.
+
+Subclasses of Predicate, SemanticArgument and SemanticRole of the core module are defined for representing elements specific of PropBank. Semantic roles are differentiated in three disjoint classes: NumberedRoles for arg0 to arg5; ModifierRole for the 21 modifier roles defined in PropBank (e.g., argm-tmp) and a singleton AgentiveRole for role 'a'. Property functionTag is introduced for modelling the attribute 'f' of semantic arguments in PropBank frame files when their main interpretation (attribute 'n') is a numbered role. Function tags can be Prepositions, ModifierRoles (e.g., arg0 with role argm-cau) or specific Tags (pag, ppt, vsp).
+
+Subclasses of Example and Markable are introduced to model the specificities of PropBank examples. Attributes name and src of frame file examples are mapped to properties rdfs:comment and dct:source. Inflections are modelled with a specific class, with dedicated properties to model the person, tense, voice, aspect and form of the verb inflection."""@en ;
 	dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/3.0/>"@en ;
 	dcterms:license <http://creativecommons.org/licenses/by/3.0/> ;
 	owl:imports <http://premon.fbk.eu/ontology/core> , <http://www.w3.org/ns/lemon/ontolex> ;
@@ -37,7 +42,7 @@ pmopb:aspect a owl:ObjectProperty ;
 
 pmopb:Aspect a owl:Class ;
 	rdfs:label "aspect" ;
-	rdfs:subClassOf _:node1a2s6oh2ax5 .
+	rdfs:subClassOf _:node1a34pm0p5x5 .
 
 pmopb:Inflection a owl:Class ;
 	rdfs:label "inflection" .
@@ -49,11 +54,11 @@ pmopb:form a owl:ObjectProperty , owl:FunctionalProperty ;
 
 pmopb:Form a owl:Class ;
 	rdfs:label "form" ;
-	rdfs:subClassOf _:node1a2s6oh2ax11 .
+	rdfs:subClassOf _:node1a34pm0p5x11 .
 
 pmopb:functionTag a owl:ObjectProperty , owl:FunctionalProperty ;
 	rdfs:label "function tag" ;
-	rdfs:range _:node1a2s6oh2ax1 .
+	rdfs:range _:node1a34pm0p5x1 .
 
 pmopb:ModifierRole a owl:Class ;
 	rdfs:label "PropBank modifier role" ;
@@ -77,7 +82,7 @@ pmopb:person a owl:ObjectProperty , owl:FunctionalProperty ;
 
 pmopb:Person a owl:Class ;
 	rdfs:label "person" ;
-	rdfs:subClassOf _:node1a2s6oh2ax28 .
+	rdfs:subClassOf _:node1a34pm0p5x28 .
 
 pmopb:tense a owl:ObjectProperty , owl:FunctionalProperty ;
 	rdfs:label "tense" ;
@@ -86,7 +91,7 @@ pmopb:tense a owl:ObjectProperty , owl:FunctionalProperty ;
 
 pmopb:Tense a owl:Class ;
 	rdfs:label "tense" ;
-	rdfs:subClassOf _:node1a2s6oh2ax42 .
+	rdfs:subClassOf _:node1a34pm0p5x42 .
 
 pmopb:voice a owl:ObjectProperty , owl:FunctionalProperty ;
 	rdfs:label "voice" ;
@@ -95,7 +100,7 @@ pmopb:voice a owl:ObjectProperty , owl:FunctionalProperty ;
 
 pmopb:Voice a owl:Class ;
 	rdfs:label "voice" ;
-	rdfs:subClassOf _:node1a2s6oh2ax46 .
+	rdfs:subClassOf _:node1a34pm0p5x46 .
 
 pmopb:AgentiveRole a owl:Class ;
 	rdfs:subClassOf pmopb:SemanticRole ;
@@ -103,12 +108,12 @@ pmopb:AgentiveRole a owl:Class ;
 
 pmopb:SemanticRole a owl:Class ;
 	rdfs:label "PropBank semantic role" ;
-	rdfs:subClassOf pmo:SemanticRole , _:node1a2s6oh2ax40 ;
-	owl:equivalentClass _:node1a2s6oh2ax36 .
+	rdfs:subClassOf pmo:SemanticRole , _:node1a34pm0p5x40 ;
+	owl:equivalentClass _:node1a34pm0p5x36 .
 
 pmopb:NumberedRole a owl:Class ;
 	rdfs:label "PropBank numbered role" ;
-	rdfs:subClassOf pmopb:SemanticRole , _:node1a2s6oh2ax21 .
+	rdfs:subClassOf pmopb:SemanticRole , _:node1a34pm0p5x21 .
 
 pmopb:perfect a owl:NamedIndividual , pmopb:Aspect .
 
@@ -116,10 +121,10 @@ pmopb:progressive a owl:NamedIndividual , pmopb:Aspect .
 
 pmopb:Example a owl:Class ;
 	rdfs:label "PropBank example" ;
-	rdfs:subClassOf pmo:Example , _:node1a2s6oh2ax8 , _:node1a2s6oh2ax9 .
+	rdfs:subClassOf pmo:Example , _:node1a34pm0p5x8 , _:node1a34pm0p5x9 .
 
 pmopb:Markable a owl:Class ;
-	rdfs:subClassOf pmo:Markable , _:node1a2s6oh2ax16 , _:node1a2s6oh2ax17 .
+	rdfs:subClassOf pmo:Markable , _:node1a34pm0p5x16 , _:node1a34pm0p5x20 .
 
 pmopb:gerund a owl:NamedIndividual , pmopb:Form .
 
@@ -131,11 +136,11 @@ pmopb:infinitive a owl:NamedIndividual , pmopb:Form .
 
 pmopb:Predicate a owl:Class ;
 	rdfs:label "PropBank predicate" ;
-	rdfs:subClassOf pmo:Predicate , _:node1a2s6oh2ax31 .
+	rdfs:subClassOf pmo:Predicate , _:node1a34pm0p5x31 .
 
 pmopb:SemanticArgument a owl:Class ;
 	rdfs:label "PropBank semantic argument" ;
-	rdfs:subClassOf pmo:SemanticArgument , _:node1a2s6oh2ax32 , _:node1a2s6oh2ax33 , _:node1a2s6oh2ax35 .
+	rdfs:subClassOf pmo:SemanticArgument , _:node1a34pm0p5x32 , _:node1a34pm0p5x33 , _:node1a34pm0p5x35 .
 
 pmopb:arg4 a owl:NamedIndividual , pmopb:NumberedRole .
 
@@ -233,152 +238,152 @@ pmopb:to a owl:NamedIndividual , pmopb:Preposition .
 
 pmopb:with a owl:NamedIndividual , pmopb:Preposition .
 
-_:node1a2s6oh2ax1 a owl:Class ;
-	owl:unionOf _:node1a2s6oh2ax2 .
+_:node1a34pm0p5x1 a owl:Class ;
+	owl:unionOf _:node1a34pm0p5x2 .
 
-_:node1a2s6oh2ax10 owl:inverseOf nif:referenceContext .
+_:node1a34pm0p5x10 owl:inverseOf nif:referenceContext .
 
-_:node1a2s6oh2ax11 a owl:Class ;
-	owl:oneOf _:node1a2s6oh2ax12 .
+_:node1a34pm0p5x11 a owl:Class ;
+	owl:oneOf _:node1a34pm0p5x12 .
 
-_:node1a2s6oh2ax12 rdf:first pmopb:gerund ;
-	rdf:rest _:node1a2s6oh2ax13 .
+_:node1a34pm0p5x12 rdf:first pmopb:gerund ;
+	rdf:rest _:node1a34pm0p5x13 .
 
-_:node1a2s6oh2ax13 rdf:first pmopb:full ;
-	rdf:rest _:node1a2s6oh2ax14 .
+_:node1a34pm0p5x13 rdf:first pmopb:full ;
+	rdf:rest _:node1a34pm0p5x14 .
 
-_:node1a2s6oh2ax14 rdf:first pmopb:participle ;
-	rdf:rest _:node1a2s6oh2ax15 .
+_:node1a34pm0p5x14 rdf:first pmopb:participle ;
+	rdf:rest _:node1a34pm0p5x15 .
 
-_:node1a2s6oh2ax15 rdf:first pmopb:infinitive ;
+_:node1a34pm0p5x15 rdf:first pmopb:infinitive ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oh2ax16 a owl:Restriction ;
+_:node1a34pm0p5x16 a owl:Restriction ;
+	owl:onProperty nif:annotation ;
+	owl:someValuesFrom _:node1a34pm0p5x17 .
+
+_:node1a34pm0p5x17 a owl:Class ;
+	owl:unionOf _:node1a34pm0p5x18 .
+
+_:node1a34pm0p5x18 rdf:first pmopb:Predicate ;
+	rdf:rest _:node1a34pm0p5x19 .
+
+_:node1a34pm0p5x19 rdf:first pmopb:SemanticArgument ;
+	rdf:rest rdf:nil .
+
+_:node1a34pm0p5x2 rdf:first pmopb:ModifierRole ;
+	rdf:rest _:node1a34pm0p5x3 .
+
+_:node1a34pm0p5x20 a owl:Restriction ;
 	owl:onProperty nif:referenceContext ;
 	owl:allValuesFrom pmopb:Example .
 
-_:node1a2s6oh2ax17 a owl:Restriction ;
-	owl:onProperty nif:annotation ;
-	owl:someValuesFrom _:node1a2s6oh2ax18 .
+_:node1a34pm0p5x21 a owl:Class ;
+	owl:oneOf _:node1a34pm0p5x22 .
 
-_:node1a2s6oh2ax18 a owl:Class ;
-	owl:unionOf _:node1a2s6oh2ax19 .
+_:node1a34pm0p5x22 rdf:first pmopb:arg4 ;
+	rdf:rest _:node1a34pm0p5x23 .
 
-_:node1a2s6oh2ax19 rdf:first pmopb:Predicate ;
-	rdf:rest _:node1a2s6oh2ax20 .
+_:node1a34pm0p5x23 rdf:first pmopb:arg3 ;
+	rdf:rest _:node1a34pm0p5x24 .
 
-_:node1a2s6oh2ax2 rdf:first pmopb:ModifierRole ;
-	rdf:rest _:node1a2s6oh2ax3 .
+_:node1a34pm0p5x24 rdf:first pmopb:arg2 ;
+	rdf:rest _:node1a34pm0p5x25 .
 
-_:node1a2s6oh2ax20 rdf:first pmopb:SemanticArgument ;
+_:node1a34pm0p5x25 rdf:first pmopb:arg1 ;
+	rdf:rest _:node1a34pm0p5x26 .
+
+_:node1a34pm0p5x26 rdf:first pmopb:arg0 ;
+	rdf:rest _:node1a34pm0p5x27 .
+
+_:node1a34pm0p5x27 rdf:first pmopb:arg5 ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oh2ax21 a owl:Class ;
-	owl:oneOf _:node1a2s6oh2ax22 .
+_:node1a34pm0p5x28 a owl:Class ;
+	owl:oneOf _:node1a34pm0p5x29 .
 
-_:node1a2s6oh2ax22 rdf:first pmopb:arg4 ;
-	rdf:rest _:node1a2s6oh2ax23 .
+_:node1a34pm0p5x29 rdf:first pmopb:other ;
+	rdf:rest _:node1a34pm0p5x30 .
 
-_:node1a2s6oh2ax23 rdf:first pmopb:arg3 ;
-	rdf:rest _:node1a2s6oh2ax24 .
+_:node1a34pm0p5x3 rdf:first pmopb:Preposition ;
+	rdf:rest _:node1a34pm0p5x4 .
 
-_:node1a2s6oh2ax24 rdf:first pmopb:arg2 ;
-	rdf:rest _:node1a2s6oh2ax25 .
-
-_:node1a2s6oh2ax25 rdf:first pmopb:arg1 ;
-	rdf:rest _:node1a2s6oh2ax26 .
-
-_:node1a2s6oh2ax26 rdf:first pmopb:arg0 ;
-	rdf:rest _:node1a2s6oh2ax27 .
-
-_:node1a2s6oh2ax27 rdf:first pmopb:arg5 ;
+_:node1a34pm0p5x30 rdf:first pmopb:third ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oh2ax28 a owl:Class ;
-	owl:oneOf _:node1a2s6oh2ax29 .
-
-_:node1a2s6oh2ax29 rdf:first pmopb:other ;
-	rdf:rest _:node1a2s6oh2ax30 .
-
-_:node1a2s6oh2ax3 rdf:first pmopb:Preposition ;
-	rdf:rest _:node1a2s6oh2ax4 .
-
-_:node1a2s6oh2ax30 rdf:first pmopb:third ;
-	rdf:rest rdf:nil .
-
-_:node1a2s6oh2ax31 a owl:Restriction ;
+_:node1a34pm0p5x31 a owl:Restriction ;
 	owl:onProperty pmo:semArg ;
 	owl:allValuesFrom pmopb:SemanticArgument .
 
-_:node1a2s6oh2ax32 a owl:Restriction ;
-	owl:onProperty pmo:role ;
-	owl:cardinality "1"^^xsd:nonNegativeInteger .
-
-_:node1a2s6oh2ax33 a owl:Restriction ;
-	owl:onProperty _:node1a2s6oh2ax34 ;
-	owl:allValuesFrom pmopb:Predicate .
-
-_:node1a2s6oh2ax34 owl:inverseOf pmo:semArg .
-
-_:node1a2s6oh2ax35 a owl:Restriction ;
+_:node1a34pm0p5x32 a owl:Restriction ;
 	owl:onProperty pmo:role ;
 	owl:allValuesFrom pmopb:SemanticRole .
 
-_:node1a2s6oh2ax36 a owl:Class ;
-	owl:unionOf _:node1a2s6oh2ax37 .
+_:node1a34pm0p5x33 a owl:Restriction ;
+	owl:onProperty _:node1a34pm0p5x34 ;
+	owl:allValuesFrom pmopb:Predicate .
 
-_:node1a2s6oh2ax37 rdf:first pmopb:AgentiveRole ;
-	rdf:rest _:node1a2s6oh2ax38 .
+_:node1a34pm0p5x34 owl:inverseOf pmo:semArg .
 
-_:node1a2s6oh2ax38 rdf:first pmopb:ModifierRole ;
-	rdf:rest _:node1a2s6oh2ax39 .
+_:node1a34pm0p5x35 a owl:Restriction ;
+	owl:onProperty pmo:role ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1a2s6oh2ax39 rdf:first pmopb:NumberedRole ;
+_:node1a34pm0p5x36 a owl:Class ;
+	owl:unionOf _:node1a34pm0p5x37 .
+
+_:node1a34pm0p5x37 rdf:first pmopb:AgentiveRole ;
+	rdf:rest _:node1a34pm0p5x38 .
+
+_:node1a34pm0p5x38 rdf:first pmopb:ModifierRole ;
+	rdf:rest _:node1a34pm0p5x39 .
+
+_:node1a34pm0p5x39 rdf:first pmopb:NumberedRole ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oh2ax4 rdf:first pmopb:Tag ;
+_:node1a34pm0p5x4 rdf:first pmopb:Tag ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oh2ax40 a owl:Restriction ;
-	owl:onProperty _:node1a2s6oh2ax41 ;
+_:node1a34pm0p5x40 a owl:Restriction ;
+	owl:onProperty _:node1a34pm0p5x41 ;
 	owl:allValuesFrom pmopb:SemanticArgument .
 
-_:node1a2s6oh2ax41 owl:inverseOf pmo:role .
+_:node1a34pm0p5x41 owl:inverseOf pmo:role .
 
-_:node1a2s6oh2ax42 a owl:Class ;
-	owl:oneOf _:node1a2s6oh2ax43 .
+_:node1a34pm0p5x42 a owl:Class ;
+	owl:oneOf _:node1a34pm0p5x43 .
 
-_:node1a2s6oh2ax43 rdf:first pmopb:future ;
-	rdf:rest _:node1a2s6oh2ax44 .
+_:node1a34pm0p5x43 rdf:first pmopb:future ;
+	rdf:rest _:node1a34pm0p5x44 .
 
-_:node1a2s6oh2ax44 rdf:first pmopb:past ;
-	rdf:rest _:node1a2s6oh2ax45 .
+_:node1a34pm0p5x44 rdf:first pmopb:past ;
+	rdf:rest _:node1a34pm0p5x45 .
 
-_:node1a2s6oh2ax45 rdf:first pmopb:present ;
+_:node1a34pm0p5x45 rdf:first pmopb:present ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oh2ax46 a owl:Class ;
-	owl:oneOf _:node1a2s6oh2ax47 .
+_:node1a34pm0p5x46 a owl:Class ;
+	owl:oneOf _:node1a34pm0p5x47 .
 
-_:node1a2s6oh2ax47 rdf:first pmopb:passive ;
-	rdf:rest _:node1a2s6oh2ax48 .
+_:node1a34pm0p5x47 rdf:first pmopb:passive ;
+	rdf:rest _:node1a34pm0p5x48 .
 
-_:node1a2s6oh2ax48 rdf:first pmopb:active ;
+_:node1a34pm0p5x48 rdf:first pmopb:active ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oh2ax5 a owl:Class ;
-	owl:oneOf _:node1a2s6oh2ax6 .
+_:node1a34pm0p5x5 a owl:Class ;
+	owl:oneOf _:node1a34pm0p5x6 .
 
-_:node1a2s6oh2ax6 rdf:first pmopb:perfect ;
-	rdf:rest _:node1a2s6oh2ax7 .
+_:node1a34pm0p5x6 rdf:first pmopb:perfect ;
+	rdf:rest _:node1a34pm0p5x7 .
 
-_:node1a2s6oh2ax7 rdf:first pmopb:progressive ;
+_:node1a34pm0p5x7 rdf:first pmopb:progressive ;
 	rdf:rest rdf:nil .
 
-_:node1a2s6oh2ax8 a owl:Restriction ;
+_:node1a34pm0p5x8 a owl:Restriction ;
 	owl:onProperty pmopb:inflection ;
 	owl:maxCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1a2s6oh2ax9 a owl:Restriction ;
-	owl:onProperty _:node1a2s6oh2ax10 ;
+_:node1a34pm0p5x9 a owl:Restriction ;
+	owl:onProperty _:node1a34pm0p5x10 ;
 	owl:allValuesFrom pmopb:Markable .

@@ -1,0 +1,77 @@
+Datasets download
+===
+
+PreMOn datasets can be downloaded using the links in the table below.
+For each dataset, we provide three dumps in different RDF formats (trig.gz, tql.gz, ttl.gz):
+
+  * the **base version** of the dataset, complete but without inferred RDF triples;
+  * the **closed version** of the dataset, which includes also triples derived by applying OWL 2 RL inference (recommended download);
+  * the **VOID statistics** associated to the dataset, including TBox annotations that can be browsed using a tool like Protégé
+
+All IRIs are placed in namespace `http://premon.fbk.eu/resource/`.
+Triples are placed in different named graphs (only for `trig.gz` and `tql.gz`) based on the resource(s) they have been extracted from.
+Each graph is annotated with `dct:source` triples pointing to the URLs of those resource(s).
+
+<table>
+<thead>
+<tr>
+<th rowspan="2" style="width: 25%">Dataset</th>
+<th colspan="2" style="width: 25%">Base version</th>
+<th colspan="2" style="width: 25%">Closed version</th>
+<th colspan="2" style="width: 25%">VOID statistics</th>
+</tr>
+<tr>
+<th># Triples</th>
+<th>Files</th>
+<th># Triples</th>
+<th>Files</th>
+<th># Triples</th>
+<th>Files</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PropBank 1.7 (from <a href="http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz">here</a>)</td>
+<td>TBC</td>
+<td>
+<a href="${site-download}latest/pb-dataset.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/pb-dataset.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/pb-dataset.ttl.gz">ttl.gz</a>
+</td>
+<td>TBC</td>
+<td>
+<a href="${site-download}latest/pb-dataset-closed.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/pb-dataset-closed.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/pb-dataset-closed.ttl.gz">ttl.gz</a>
+</td>
+<td>TBC</td>
+<td>
+<a href="${site-download}latest/pb-dataset-stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/pb-dataset.stats.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/pb-dataset.stats.gz">ttl.gz</a>
+</td>
+</tr>
+<tr>
+<td>NomBank 1.0 (from <a href="http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz">here</a>)</td>
+<td>TBC</td>
+<td>
+<a href="${site-download}latest/nb-dataset.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/nb-dataset.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/nb-dataset.ttl.gz">ttl.gz</a>
+</td>
+<td>TBC</td>
+<td>
+<a href="${site-download}latest/nb-dataset-closed.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/nb-dataset-closed.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/nb-dataset-closed.ttl.gz">ttl.gz</a>
+</td>
+<td>TBC</td>
+<td>
+<a href="${site-download}latest/nb-dataset-stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/nb-dataset-stats.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/nb-dataset-stats.ttl.gz">ttl.gz</a>
+</td>
+</tr>
+</tbody>
+</table>
+<a style="display: block; width: 100%; text-align: right;" href="${site-download}">[browse old versions]</a>
