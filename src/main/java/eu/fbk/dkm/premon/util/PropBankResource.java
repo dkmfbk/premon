@@ -28,7 +28,6 @@ public class PropBankResource extends PremonResource {
 				throw new Exception("File " + fileName + " does not appear to be a good OntoNotes frame file");
 			}
 		}
-
 	}
 
 	public Frameset getMain() {

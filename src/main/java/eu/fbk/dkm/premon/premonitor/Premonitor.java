@@ -133,6 +133,8 @@ public class Premonitor {
 			}
 
 			if (pbFolder.exists()) {
+				LOGGER.info("Starting PropBank extraction");
+
 				if (cmd.hasOption("pb-non-verbs")) {
 					properties.setProperty("pb-non-verbs", "1");
 				}
@@ -175,6 +177,8 @@ public class Premonitor {
 			}
 
 			if (nbFolder.exists()) {
+				LOGGER.info("Starting NomBank extraction");
+
 				if (cmd.hasOption("nb-no-def")) {
 					properties.setProperty("nb-no-def", "1");
 				}

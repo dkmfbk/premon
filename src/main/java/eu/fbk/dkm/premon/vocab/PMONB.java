@@ -5,13 +5,15 @@ import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
+import java.util.HashMap;
+
 /**
  * Vocabulary constants for the PREMON Ontology - NomBank module (PMONB).
  */
 public class PMONB {
 
     /** Recommended prefix for the vocabulary namespace: "pmonb". */
-    public static final String PREFIX = "pmopb";
+    public static final String PREFIX = "pmonb";
 
     /** Vocabulary namespace: "http://premon.fbk.eu/ontology/nb#. */
     public static final String NAMESPACE = "http://premon.fbk.eu/ontology/nb#";
@@ -70,6 +72,9 @@ public class PMONB {
     /** Individual pmonb:arg5 (a pmonb:NumberedRole). */
     public static final URI ARG5 = createURI("arg5");
 
+    /** Individual pmonb:arga (a pmonb:AgentiveRole). */
+    public static final URI ARGA = createURI("arga");
+
     /** Individual pmonb:argm-adv (a pmonb:ModifierRole). */
     public static final URI ARGM_ADV = createURI("argm-adv");
 
@@ -111,6 +116,37 @@ public class PMONB {
 
     /** Individual pmonb:support (a pmonb:Tag). */
     public static final URI SUPPORT = createURI("support");
+
+    // Map
+
+    public static HashMap<String, URI> mapM = new HashMap<>();
+    public static HashMap<String, URI> mapO = new HashMap<>();
+    public static HashMap<String, URI> mapF = new HashMap<>();
+
+    static {
+        mapM.put("adv", ARGM_ADV);
+        mapM.put("cau", ARGM_CAU);
+        mapM.put("dir", ARGM_DIR);
+        mapM.put("dis", ARGM_DIS);
+        mapM.put("ext", ARGM_EXT);
+        mapM.put("loc", ARGM_LOC);
+        mapM.put("mnr", ARGM_MNR);
+        mapM.put("neg", ARGM_NEG);
+        mapM.put("pnc", ARGM_PNC);
+        mapM.put("prd", ARGM_PRD);
+        mapM.put("tmp", ARGM_TMP);
+
+        mapO.put("prd", PRD);
+        mapO.put("ref", REF);
+        mapO.put("support", SUPPORT);
+
+        mapF.put("0", ARG0);
+        mapF.put("1", ARG1);
+        mapF.put("2", ARG2);
+        mapF.put("3", ARG3);
+        mapF.put("4", ARG4);
+        mapF.put("5", ARG5);
+    }
 
     // Utility methods
 

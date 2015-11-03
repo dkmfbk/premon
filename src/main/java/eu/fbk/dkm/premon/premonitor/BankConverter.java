@@ -1,7 +1,5 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import eu.fbk.dkm.premon.premonitor.propbank.*;
 import eu.fbk.dkm.premon.util.NF;
@@ -22,7 +20,6 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -31,7 +28,7 @@ import java.util.regex.Pattern;
 
 public abstract class BankConverter extends Converter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(BankConverter.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(BankConverter.class);
 
 	public static final String NAMESPACE = "http://premon.fbk.eu/resource/";
 	public static final String SEPARATOR = "-";
@@ -49,8 +46,6 @@ public abstract class BankConverter extends Converter {
 	String source;
 	String defaultType;
 
-	protected PMOPB PMORES;
-
 	static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
 
 	URI DEFAULT_GRAPH;
@@ -61,7 +56,7 @@ public abstract class BankConverter extends Converter {
 	private static HashMap<String, String> rolesetBugMap = new HashMap<String, String>();
 	private static HashMap<String, String> lemmaToTransform = new HashMap();
 
-	private enum Type {
+	public enum Type {
 		M_FUNCTION, ADDITIONAL, PREPOSITION, NUMERIC, AGENT, NULL
 	}
 
@@ -87,7 +82,6 @@ public abstract class BankConverter extends Converter {
 	public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language, HashSet<URI> wnURIs) {
 		super(path, resource, sink, properties, language, wnURIs);
 
-		this.PMORES = new PMOPB(resource);
 		this.ROLESET_PREFIX = resource;
 		this.DEFAULT_GRAPH = factory.createURI(NAMESPACE, "graph-" + resource);
 	}
@@ -186,32 +180,6 @@ public abstract class BankConverter extends Converter {
 //		return ret;
 //	}
 
-	private Type getType(String code) {
-		if (code != null) {
-			if (PMORES.mapM.containsKey(code)) {
-				return Type.M_FUNCTION;
-			}
-			if (PMORES.mapO.containsKey(code)) {
-				return Type.ADDITIONAL;
-			}
-			if (PMORES.mapP.containsKey(code)) {
-				return Type.PREPOSITION;
-			}
-
-			Matcher matcher = ARG_NUM_PATTERN.matcher(code);
-			if (matcher.find()) {
-				return Type.NUMERIC;
-			}
-
-			if (code.equals("a")) {
-				return Type.AGENT;
-			}
-
-			throw new IllegalArgumentException(String.format("String %s not found", code));
-		}
-		return Type.NULL;
-	}
-
 	@Override
 	public void convert() throws IOException, RDFHandlerException {
 
@@ -228,176 +196,7 @@ public abstract class BankConverter extends Converter {
 
 		//todo: the first tour is not necessary any more
 
-//		/*
-//		This is the list of the VerbNet theta roles
-//		(including co-* roles)
-//		 */
-//		HashSet<String> thetaRoles = new HashSet<>();
-//
-//		/*
-//		List of VerbNet roles, divided by VerbNet code
-//		 */
-//		Multimap<String, String> rolesForSense = HashMultimap.create();
-//
-//		/*
-//		This is the list of tokens used in multiwords, excluding the predicate lemma
-//		 */
-//		HashSet<String> allExternalTokens = new HashSet<>();
-//
-//		/*
-//		These are the lists of Ns and Fs from the roles
-//		 */
-//		HashSet<String> roleNs = new HashSet<>();
-//		HashSet<String> roleFs = new HashSet<>();
-//
-//		/*
-//		This is the list of roleset that do not have good roles
-//		 */
-//		HashSet<String> roleSetsToIgnore = new HashSet<>();
-//
-//		/*
-//		List of predicates (loaded in RAM to avoid a second run)
-//		 */
-//		List<PropBankResource> resources = new ArrayList<>();
-//
-//		/*
-//		List of prepositions in the 'f' attribute of roles
-//		 */
-//		HashSet<String> prepositions = new HashSet<>();
-//
 		try {
-//
-//			JAXBContext jaxbContext = JAXBContext.newInstance(Frameset.class);
-//			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-//
-//			for (File file : Files.fileTreeTraverser().preOrderTraversal(path)) {
-//
-//				if (discardFile(file, !nonVerbsToo, isOntoNotes)) {
-//					continue;
-//				}
-//
-//				PropBankResource resource;
-//				try {
-//					resource = new PropBankResource(file.getName(), isOntoNotes);
-//				} catch (Exception e) {
-//					throw new IOException(e);
-//				}
-//
-//				if (fileToDiscard.contains(resource.getFileName())) {
-//					continue;
-//				}
-//
-//				if (onlyOne != null && !onlyOne.equals(resource.getLemma())) {
-//					continue;
-//				}
-//
-//				Frameset frameset = (Frameset) jaxbUnmarshaller.unmarshal(file);
-//				resource.setMain(frameset);
-//
-//				// Collect aggregated data
-//
-//				List<Object> noteOrPredicate = frameset.getNoteOrPredicate();
-//
-//				for (Object predicate : noteOrPredicate) {
-//					if (predicate instanceof Predicate) {
-//
-//						String lemma = ((Predicate) predicate).getLemma().replace('_', '+').replace(' ', '+');
-//						if (lemmaToTransform.keySet().contains(lemma)) {
-//							lemma = lemmaToTransform.get(lemma);
-//						}
-//						String[] tokens = lemma.split("\\+");
-//
-//						for (String token : tokens) {
-//							if (token.equals(resource.getLemma())) {
-//								continue;
-//							}
-//							allExternalTokens.add(token);
-//						}
-//
-//
-//						List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
-//						for (Object roleset : noteOrRoleset) {
-//							if (roleset instanceof Roleset) {
-//
-//								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExample();
-//								for (Object roles : rolesOrExample) {
-//									if (roles instanceof Roles) {
-//
-//										int okRoles = 0;
-//
-//										List<Object> noteOrRole = ((Roles) roles).getNoteOrRole();
-//										for (Object role : noteOrRole) {
-//											if (role instanceof Role) {
-//												String n = ((Role) role).getN();
-//												String f = ((Role) role).getF();
-//
-//												NF nf = new NF(n, f);
-//
-//												// Remove bugs
-//												String argName = nf.getArgName();
-//												if (argName == null) {
-//													continue;
-//												}
-//
-//												String f2 = nf.getF();
-//												Type type = getType(f2);
-//												if (type == Type.PREPOSITION) {
-//													prepositions.add(f2);
-//												}
-//
-////												Matcher matcher = ARG_NUM_PATTERN.matcher(argName);
-////												if (matcher.find()) {
-////													String f2 = nf.getF();
-////													Type type = getType(f2);
-////
-////													System.out.println(argName);
-////													System.out.println(f2);
-////													System.out.println(type);
-////													System.out.println();
-////												}
-//
-//												if (bugMap.containsKey(argName)) {
-//													continue;
-//												}
-//
-//												if (nf.getN() != null) {
-//													roleNs.add(nf.getN());
-//													okRoles++;
-//												}
-//												if (nf.getF() != null) {
-//													roleFs.add(nf.getF());
-//												}
-//
-//												List<Vnrole> vnroleList = ((Role) role).getVnrole();
-//												for (Vnrole vnrole : vnroleList) {
-//													if (vnrole.getVntheta() != null && vnrole.getVntheta().trim().length() > 0) {
-//														String okRole = getThetaName(vnrole.getVntheta().toLowerCase());
-//														thetaRoles.add(okRole);
-//
-//														String vnSenseString = vnrole.getVncls();
-//														HashSet<String> senses = getGoodSensesOnly(vnSenseString);
-//														for (String sense : senses) {
-//															rolesForSense.put(sense, okRole);
-//														}
-//													}
-//												}
-//
-//											}
-//										}
-//
-//										if (okRoles == 0) {
-//											roleSetsToIgnore.add(((Roleset) roleset).getId());
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//
-//				resources.add(resource);
-//			}
-
 			JAXBContext jaxbContext = JAXBContext.newInstance(Frameset.class);
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 
@@ -433,12 +232,6 @@ public abstract class BankConverter extends Converter {
 
 				LOGGER.debug("Processing {}", file.getAbsolutePath());
 
-//
-//
-//			}
-//
-//			for (PropBankResource resource : resources) {
-//				Frameset frameset = resource.getMain();
 				String type = resource.getType();
 				String origLemma = resource.getLemma();
 
@@ -450,8 +243,6 @@ public abstract class BankConverter extends Converter {
 						if (lemmaToTransform.keySet().contains(lemma)) {
 							lemma = lemmaToTransform.get(lemma);
 						}
-
-//						String wnLemma = lemma + "-" + type;
 
 						URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, type, lexiconURI);
 
@@ -465,7 +256,7 @@ public abstract class BankConverter extends Converter {
 								}
 
 								URI rolesetURI = uriForRoleset(rolesetID);
-								addStatementToSink(rolesetURI, RDF.TYPE, PMORES.PREDICATE);
+								addStatementToSink(rolesetURI, RDF.TYPE, getPredicate());
 								if (!noDef) {
 									addStatementToSink(rolesetURI, SKOS.DEFINITION, ((Roleset) roleset).getName());
 								}
@@ -495,9 +286,10 @@ public abstract class BankConverter extends Converter {
 
 								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExample();
 
-								for (String key : PMORES.mapM.keySet()) {
+								HashMap<String, URI> functionMap = getFunctionMap();
+								for (String key : functionMap.keySet()) {
 									URI argumentURI = uriForArgument(rolesetID, key);
-									addArgumentToSink(key, PMORES.mapM.get(key), argumentURI, lemma, type, rolesetID, lexicalEntryURI);
+									addArgumentToSink(key, functionMap.get(key), argumentURI, lemma, type, rolesetID, lexicalEntryURI);
 								}
 
 								List<Example> examples = new ArrayList<Example>();
@@ -511,7 +303,8 @@ public abstract class BankConverter extends Converter {
 												String f = ((Role) role).getF();
 												String descr = ((Role) role).getDescr();
 
-												List<Vnrole> vnroleList = ((Role) role).getVnrole();
+												//todo: do stuff with VN
+//												List<Vnrole> vnroleList = ((Role) role).getVnrole();
 
 												NF nf = new NF(n, f);
 												String argName = nf.getArgName();
@@ -530,47 +323,19 @@ public abstract class BankConverter extends Converter {
 												try {
 													argType = getType(argName);
 												} catch (Exception e) {
-													LOGGER.info(lemma);
 													LOGGER.error(e.getMessage());
 													continue;
 												}
 
 												URI argumentURI = uriForArgument(rolesetID, argName);
 												addStatementToSink(argumentURI, RDF.TYPE, PMO.SEMANTIC_ARGUMENT);
-												addStatementToSink(argumentURI, PMORES.CORE_P, true);
+												addStatementToSink(argumentURI, PMO.CORE, true);
 												if (!noDef) {
 													addStatementToSink(argumentURI, SKOS.DEFINITION, descr);
 												}
 												addStatementToSink(lexicalEntryURI, PMO.SEM_ARG, argumentURI);
 
-												//todo: transform this double switch into an external class
-												switch (argType) {
-													case NUMERIC:
-														addArgumentToSink(argName, PMORES.mapF.get(argName), argumentURI, lemma, type, rolesetID, lexicalEntryURI);
-														String argName2 = nf.getF();
-														Type secondType = getType(argName2);
-														switch (secondType) {
-															case M_FUNCTION:
-																addStatementToSink(argumentURI, PMORES.FUNCTION_TAG, PMORES.mapM.get(argName2));
-																break;
-															case ADDITIONAL:
-																addStatementToSink(argumentURI, PMORES.FUNCTION_TAG, PMORES.mapO.get(argName2));
-																break;
-															case PREPOSITION:
-																addStatementToSink(argumentURI, PMORES.FUNCTION_TAG, PMORES.mapP.get(argName2));
-																break;
-														}
-														break;
-													case M_FUNCTION:
-														// Should be already there...
-														addArgumentToSink(argName, PMORES.mapM.get(argName), argumentURI, lemma, type, rolesetID, lexicalEntryURI);
-														break;
-													case AGENT:
-														addArgumentToSink("a", PMORES.ARGA, argumentURI, lemma, type, rolesetID, lexicalEntryURI);
-														break;
-													default:
-														//todo: should never happen, but it happens
-												}
+												addArgumentToSink(argumentURI, argName, nf.getF(), argType, lemma, type, rolesetID, lexicalEntryURI);
 											}
 										}
 									}
@@ -617,7 +382,7 @@ public abstract class BankConverter extends Converter {
 									if (text != null && text.length() > 0) {
 										URI exampleURI = uriForExample(rolesetID, exampleCount);
 										exampleCount++;
-										addStatementToSink(exampleURI, RDF.TYPE, PMORES.EXAMPLE);
+										addStatementToSink(exampleURI, RDF.TYPE, getExample());
 										addStatementToSink(exampleURI, RDFS.COMMENT, exName);
 										if (exSrc != null && !exSrc.equals(exName)) {
 											addStatementToSink(exampleURI, DCTERMS.SOURCE, exSrc);
@@ -644,7 +409,7 @@ public abstract class BankConverter extends Converter {
 
 											URI markableURI = factory.createURI(String.format("%s#char=%d,%d", exampleURI.toString(), start, end));
 
-											addStatementToSink(markableURI, RDF.TYPE, PMORES.MARKABLE);
+											addStatementToSink(markableURI, RDF.TYPE, getMarkable());
 											addStatementToSink(markableURI, NIF.BEGIN_INDEX, start);
 											addStatementToSink(markableURI, NIF.END_INDEX, end);
 											addStatementToSink(markableURI, NIF.ANCHOR_OF, origValue);
@@ -652,14 +417,10 @@ public abstract class BankConverter extends Converter {
 											addStatementToSink(markableURI, NIF.ANNOTATION_P, rolesetURI);
 
 											NF nf = new NF(null, rel.getF());
-											Type argType = getType(nf.getArgName());
-											switch (argType) {
-												case M_FUNCTION:
-													addStatementToSink(markableURI, PMORES.FUNCTION_TAG, PMORES.mapM.get(nf.getArgName()));
-													break;
-												default:
-													//todo: should never happen (and strangely it really never happens)
-											}
+											String argName = nf.getArgName();
+											Type argType = getType(argName);
+
+											addRelToSink(argType, argName, markableURI);
 										}
 
 										for (Arg arg : myArgs) {
@@ -675,12 +436,12 @@ public abstract class BankConverter extends Converter {
 
 											URI markableURI = factory.createURI(String.format("%s#char=%d,%d", exampleURI.toString(), start, end));
 
-											addStatementToSink(markableURI, RDF.TYPE, PMORES.MARKABLE);
+											addStatementToSink(markableURI, RDF.TYPE, getMarkable());
 											addStatementToSink(markableURI, NIF.BEGIN_INDEX, start);
 											addStatementToSink(markableURI, NIF.END_INDEX, end);
 											addStatementToSink(markableURI, NIF.ANCHOR_OF, value);
 											addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI);
-											addStatementToSink(markableURI, NIF.ANNOTATION_P, rolesetURI);
+//											addStatementToSink(markableURI, NIF.ANNOTATION_P, rolesetURI);
 
 											NF nf = new NF(arg.getN(), arg.getF());
 											String argName = nf.getArgName();
@@ -703,38 +464,7 @@ public abstract class BankConverter extends Converter {
 												continue;
 											}
 
-											switch (argType) {
-												case NUMERIC:
-													addStatementToSink(markableURI, PMORES.FUNCTION_TAG, PMORES.mapF.get(argName));
-													String argName2 = nf.getF();
-													Type secondType;
-													try {
-														secondType = getType(argName2);
-													} catch (Exception e) {
-														LOGGER.error("Error in lemma {}: " + e.getMessage(), lemma);
-														break;
-													}
-													switch (secondType) {
-														case M_FUNCTION:
-															addStatementToSink(markableURI, PMORES.FUNCTION_TAG, PMORES.mapM.get(argName2));
-															break;
-														case ADDITIONAL:
-															addStatementToSink(markableURI, PMORES.FUNCTION_TAG, PMORES.mapO.get(argName2));
-															break;
-														case PREPOSITION:
-															addStatementToSink(markableURI, PMORES.FUNCTION_TAG, PMORES.mapP.get(argName2));
-															break;
-													}
-													break;
-												case M_FUNCTION:
-													addStatementToSink(markableURI, PMORES.FUNCTION_TAG, PMORES.mapM.get(argName));
-													break;
-												case AGENT:
-													addStatementToSink(markableURI, PMORES.FUNCTION_TAG, PMORES.ARGA);
-													break;
-												default:
-													//todo: should never happen, but it happens
-											}
+											addExampleArgToSink(argType, argName, markableURI, nf.getF(), rolesetID);
 										}
 									}
 								}
@@ -748,70 +478,7 @@ public abstract class BankConverter extends Converter {
 		}
 	}
 
-	private boolean usableInflectionPart(String part) {
-		return part != null && part.length() > 0 && !part.equals("ns");
-	}
-
-	private void addInflectionToSink(URI exampleURI, Inflection inflection) {
-
-		if (inflection == null) {
-			return;
-		}
-
-		ArrayList<String> inflectionParts = new ArrayList<>();
-		Multimap<URI, URI> inflections = HashMultimap.create();
-
-		if (usableInflectionPart(inflection.getAspect())) {
-			inflectionParts.add(inflection.getAspect());
-			if (inflection.getAspect().equals("both")) {
-				inflections.put(PMORES.ASPECT_P, PMORES.PROGRESSIVE);
-				inflections.put(PMORES.ASPECT_P, PMORES.PERFECT);
-			}
-			else {
-				inflections.put(PMORES.ASPECT_P, PMORES.mapAspect.get(inflection.getAspect()));
-			}
-		}
-		if (usableInflectionPart(inflection.getForm())) {
-			inflectionParts.add(inflection.getForm());
-			inflections.put(PMORES.FORM_P, PMORES.mapForm.get(inflection.getForm()));
-		}
-		if (usableInflectionPart(inflection.getPerson())) {
-			inflectionParts.add(inflection.getPerson());
-			inflections.put(PMORES.PERSON_P, PMORES.mapPerson.get(inflection.getPerson()));
-		}
-		if (usableInflectionPart(inflection.getTense())) {
-			inflectionParts.add(inflection.getTense());
-			inflections.put(PMORES.TENSE_P, PMORES.mapTense.get(inflection.getTense()));
-		}
-		if (usableInflectionPart(inflection.getVoice())) {
-			inflectionParts.add(inflection.getVoice());
-			inflections.put(PMORES.VOICE_P, PMORES.mapVoice.get(inflection.getVoice()));
-		}
-
-		if (inflectionParts.size() > 0) {
-
-			// Build inflection URI
-			StringBuilder builder = new StringBuilder();
-			builder.append(NAMESPACE);
-			builder.append(INFLECTION_PREFIX);
-			for (String part : inflectionParts) {
-				builder.append(SEPARATOR);
-				builder.append(part);
-			}
-			URI inflectionURI = factory.createURI(builder.toString());
-
-			for (URI key : inflections.keySet()) {
-				for (URI uri : inflections.get(key)) {
-					addStatementToSink(inflectionURI, key, uri);
-				}
-			}
-
-			addStatementToSink(exampleURI, PMORES.INFLECTION_P, inflectionURI);
-			addStatementToSink(inflectionURI, RDF.TYPE, PMORES.INFLECTION_C);
-		}
-	}
-
-	private void addArgumentToSink(String key, URI keyURI, URI argumentURI, String lemma, String type, String rolesetID, URI lexicalEntryURI) {
+	protected void addArgumentToSink(String key, URI keyURI, URI argumentURI, String lemma, String type, String rolesetID, URI lexicalEntryURI) {
 		addStatementToSink(argumentURI, PMO.ROLE, keyURI);
 
 		URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
@@ -899,7 +566,7 @@ public abstract class BankConverter extends Converter {
 		return factory.createURI(builder.toString());
 	}
 
-	private URI uriForArgument(String rolesetID, String argName) {
+	protected URI uriForArgument(String rolesetID, String argName) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(NAMESPACE);
 		builder.append(argPart(rolesetID, argName));
@@ -949,11 +616,13 @@ public abstract class BankConverter extends Converter {
 		return builder.toString();
 	}
 
-	private void addStatementToSink(Resource subject, URI predicate, Value object) {
+	// Methods to add statement
+
+	protected void addStatementToSink(Resource subject, URI predicate, Value object) {
 		addStatementToSink(subject, predicate, object, DEFAULT_GRAPH);
 	}
 
-	private void addStatementToSink(Resource subject, URI predicate, Value object, URI graph) {
+	protected void addStatementToSink(Resource subject, URI predicate, Value object, URI graph) {
 
 		// Fix for missing object
 		// <http://premon.fbk.eu/resource/pb-accumulate.01-arg3> <http://premon.fbk.eu/ontology/pb#functionTag>  .
@@ -969,15 +638,15 @@ public abstract class BankConverter extends Converter {
 		}
 	}
 
-	private void addStatementToSink(Resource subject, URI predicate, String objectValue) {
+	protected void addStatementToSink(Resource subject, URI predicate, String objectValue) {
 		addStatementToSink(subject, predicate, objectValue, true);
 	}
 
-	private void addStatementToSink(Resource subject, URI predicate, String objectValue, boolean useLanguage) {
+	protected void addStatementToSink(Resource subject, URI predicate, String objectValue, boolean useLanguage) {
 		addStatementToSink(subject, predicate, objectValue, useLanguage, DEFAULT_GRAPH);
 	}
 
-	private void addStatementToSink(Resource subject, URI predicate, String objectValue, boolean useLanguage, URI graph) {
+	protected void addStatementToSink(Resource subject, URI predicate, String objectValue, boolean useLanguage, URI graph) {
 
 		// Return on null or empty string
 		if (objectValue == null || objectValue.length() == 0) {
@@ -995,13 +664,34 @@ public abstract class BankConverter extends Converter {
 		addStatementToSink(subject, predicate, object, graph);
 	}
 
-	private void addStatementToSink(Resource subject, URI predicate, boolean objectValue) {
+	protected void addStatementToSink(Resource subject, URI predicate, boolean objectValue) {
 		Value object = factory.createLiteral(objectValue);
 		addStatementToSink(subject, predicate, object);
 	}
 
-	private void addStatementToSink(Resource subject, URI predicate, int objectValue) {
+	protected void addStatementToSink(Resource subject, URI predicate, int objectValue) {
 		Value object = factory.createLiteral(objectValue);
 		addStatementToSink(subject, predicate, object);
 	}
+
+	// Abstract methods
+
+	abstract URI getPredicate();
+
+	abstract URI getMarkable();
+
+	abstract URI getExample();
+
+	abstract HashMap<String, URI> getFunctionMap();
+
+	abstract void addInflectionToSink(URI exampleURI, Inflection inflection);
+
+	abstract void addArgumentToSink(URI argumentURI, String argName, String f, Type argType, String lemma, String type, String rolesetID, URI lexicalEntryURI);
+
+	abstract Type getType(String code);
+
+	protected abstract void addExampleArgToSink(Type argType, String argName, URI markableURI, String f, String rolesetID);
+
+	protected abstract void addRelToSink(Type argType, String argName, URI markableURI);
+
 }
