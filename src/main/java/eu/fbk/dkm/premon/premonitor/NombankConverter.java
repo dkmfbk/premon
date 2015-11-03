@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 public class NombankConverter extends BankConverter {
 
 	public NombankConverter(File path, RDFHandler sink, Properties properties, String language, HashSet<URI> wnURIs) {
-		super(path, "nb", sink, properties, language, wnURIs);
+		super(path, properties.getProperty("nb-source"), sink, properties, language, wnURIs);
 
 		this.nonVerbsToo = true;
 		this.isOntoNotes = false;

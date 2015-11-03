@@ -192,7 +192,7 @@ public abstract class BankConverter extends Converter {
 		addStatementToSink(lexiconURI, ONTOLEX.LANGUAGE, language, false);
 		addStatementToSink(lexiconURI, DCTERMS.LANGUAGE, Premonitor.LANGUAGE_CODES_TO_URIS.get(language));
 
-		addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, source, false, META_GRAPH);
+		addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, source), META_GRAPH);
 
 		//todo: the first tour is not necessary any more
 

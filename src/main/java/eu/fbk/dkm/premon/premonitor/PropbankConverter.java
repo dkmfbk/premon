@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 public class PropbankConverter extends BankConverter {
 
 	public PropbankConverter(File path, RDFHandler sink, Properties properties, String language, HashSet<URI> wnURIs) {
-		super(path, "pb", sink, properties, language, wnURIs);
+		super(path, properties.getProperty("pb-source"), sink, properties, language, wnURIs);
 
 		this.nonVerbsToo = properties.getProperty("pb-non-verbs", "0").equals("1");
 		this.isOntoNotes = properties.getProperty("pb-ontonotes", "0").equals("1");
