@@ -11,8 +11,8 @@ No quad format is currently supported (e.g., TriG, TQL).
 Here are some URIs you can retrieve with your browser or client (e.g., `wget`) to try the URI dereferencing mechanism:
 
   * [http://premon.fbk.eu/resource/v-look](http://premon.fbk.eu/resource/v-look) - a lexical entry
-  * [http://premon.fbk.eu/resource/pb-look.01](http://premon.fbk.eu/resource/pb-look.01) - a predicate
-  * [http://premon.fbk.eu/resource/pb-look.01-arg0](http://premon.fbk.eu/resource/pb-look.01-arg0) - a semantic argument
-  * [http://premon.fbk.eu/resource/pb-look.01-example0](http://premon.fbk.eu/resource/pb-look.01-example0) - a predicate usage example
+  * [http://premon.fbk.eu/resource/pb17-look.01](http://premon.fbk.eu/resource/pb17-look.01) - a predicate
+  * [http://premon.fbk.eu/resource/pb17-look.01-arg0](http://premon.fbk.eu/resource/pb17-look.01-arg0) - a semantic argument
+  * [http://premon.fbk.eu/resource/pb17-look.01-example0](http://premon.fbk.eu/resource/pb17-look.01-example0) - a predicate usage example
 
 This feature is powered by [OpenLink Virtuoso](https://github.com/openlink/virtuoso-opensource) and [LodView](https://github.com/dvcama/LodView).

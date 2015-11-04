@@ -72,16 +72,16 @@ Inside PreMOn datasets, named graphs are used to track provenance at a coarse-gr
 ```
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX ol:   <http://www.w3.org/ns/lemon/ontolex#>
-PREFIX :     <http://knowledgestore.fbk.eu/premon/ns/>
+PREFIX :     <http://premon.fbk.eu/ontology/core#>
 
 SELECT ?p
 FROM :verbnet                              # we include VerbNet and FrameNet data
 FROM :framenet                             # (as we are mapping between them),
 FROM :semlink                              # with alignments only from SemLink
 WHERE {
-  ?ec rdf:type :EntryConcept ;             # from the EntryConcept that reifies
+  ?ec rdf:type :Conceptualization ;        # from the Conceptualization that reifies
       :evokingEntry :sell-v ;              # the relation between entry :sell-v
-      skos:broader :vn.13.1-1 ;            # and predicate :vn.13.1-1 we look for
+      :evokedConcept :vn.13.1-1 ;          # and predicate :vn.13.1-1 we look for
       skos:closeMatch*/:evokedConcept ?p . # predicates ?p aligned to it;
   ?p  skos:inScheme :framenet .            # predicates ?p must belong to FrameNet
 }

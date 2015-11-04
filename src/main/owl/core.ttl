@@ -152,7 +152,7 @@ pmo:evokedConcept rdf:type owl:FunctionalProperty ,
                   
                   rdfs:domain pmo:Conceptualization ;
                   
-                  rdfs:subPropertyOf skos:broader ;
+                  rdfs:subPropertyOf owl:topObjectProperty ;
                   
                   rdfs:range ontolex:LexicalConcept .
 
@@ -236,12 +236,6 @@ pmo:typeRel rdf:type owl:ObjectProperty ;
 
 
 
-###  http://www.w3.org/2004/02/skos/core#broader
-
-skos:broader rdf:type owl:ObjectProperty .
-
-
-
 ###  http://www.w3.org/ns/lemon/ontolex#evokes
 
 ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf pmo:evokingEntry
@@ -300,13 +294,13 @@ pmo:Conceptualization rdf:type owl:Class ;
                       
                       rdfs:subClassOf skos:Concept ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokedConcept ;
-                                        owl:onClass ontolex:LexicalConcept ;
+                                        owl:onProperty pmo:evokingEntry ;
+                                        owl:onClass ontolex:LexicalEntry ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokingEntry ;
-                                        owl:onClass ontolex:LexicalEntry ;
+                                        owl:onProperty pmo:evokedConcept ;
+                                        owl:onClass ontolex:LexicalConcept ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] .
 
