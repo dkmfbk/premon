@@ -48,11 +48,11 @@ public class Premonitor {
     private static final String DEFAULT_LANGUAGE = "en";
 
     private static final String DEFAULT_PB_FOLDER = "pb";
-    private static final String DEFAULT_PB_SOURCE = "pb-17";
-    private static final String DEFAULT_PB_SOURCE_ON = "pb-ontonotes-5";
+    private static final String DEFAULT_PB_SOURCE = "pb17";
+    private static final String DEFAULT_PB_SOURCE_ON = "pbon5";
 
     private static final String DEFAULT_NB_FOLDER = "nb";
-    private static final String DEFAULT_NB_SOURCE = "nb-10";
+    private static final String DEFAULT_NB_SOURCE = "nb10";
 
     private static final URI META_GRAPH = Statements.VALUE_FACTORY
             .createURI("http://premon.fbk.eu/resource/graph-meta");
@@ -325,7 +325,7 @@ public class Premonitor {
                         .getLocalName() : entry.getKey().stringValue()).toLowerCase();
 
                 // Delegate
-                emit(new File(outputBase + "_" + str + outputExt), dataset, false, false, false,
+                emit(new File(outputBase + "-" + str + outputExt), dataset, false, false, false,
                         emitStatistics);
             }
 
@@ -337,7 +337,7 @@ public class Premonitor {
 
             // Emit statistics, if requested
             if (emitStatistics) {
-                final String name = outputBase + "_stats" + outputExt;
+                final String name = outputBase + ".stats" + outputExt;
                 LOGGER.info("Writing statistics to {}", name);
                 RDFProcessors.stats(null, null, null, null, false).apply(RDFSources.wrap(stmts),
                         RDFHandlers.write(null, 1000, name), 1);
