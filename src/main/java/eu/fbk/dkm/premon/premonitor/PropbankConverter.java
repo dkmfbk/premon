@@ -10,10 +10,7 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFHandler;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -22,15 +19,14 @@ import java.util.regex.Matcher;
 
 public class PropbankConverter extends BankConverter {
 
-    public PropbankConverter(File path, RDFHandler sink, Properties properties, String language,
-            HashSet<URI> wnURIs) {
-        super(path, properties.getProperty("pb-source"), sink, properties, language, wnURIs);
+    public PropbankConverter(File path, RDFHandler sink, Properties properties, Set<URI> wnURIs) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnURIs);
 
-        this.nonVerbsToo = properties.getProperty("pb-non-verbs", "0").equals("1");
-        this.isOntoNotes = properties.getProperty("pb-ontonotes", "0").equals("1");
-        this.noDef = properties.getProperty("pb-no-def", "0").equals("1");
-        this.source = properties.getProperty("pb-source");
-        this.extractExamples = properties.getProperty("pb-examples", "0").equals("1");
+        this.nonVerbsToo = properties.getProperty("extractnonverbs", "0").equals("1");
+        this.isOntoNotes = properties.getProperty("ontonotes", "0").equals("1");
+        this.noDef = ! properties.getProperty("extractdefinitions", "0").equals("1");
+        this.source = properties.getProperty("source");
+        this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
         this.defaultType = "v";
     }
 

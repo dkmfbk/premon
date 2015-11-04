@@ -80,7 +80,7 @@ public abstract class BankConverter extends Converter {
     }
 
     public BankConverter(File path, String resource, RDFHandler sink, Properties properties,
-            String language, HashSet<URI> wnURIs) {
+            String language, Set<URI> wnURIs) {
         super(path, resource, sink, properties, language, wnURIs);
 
         this.ROLESET_PREFIX = resource;

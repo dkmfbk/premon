@@ -7,10 +7,7 @@ import org.openrdf.rio.RDFHandlerException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 public abstract class Converter {
 
@@ -25,7 +22,7 @@ public abstract class Converter {
 
     protected static HashSet<String> fileToDiscard = new HashSet<>();
 
-    protected final HashSet<URI> wnURIs;
+    protected final Set<URI> wnURIs;
     static protected final String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
 
     protected String onlyOne = null;
@@ -51,7 +48,7 @@ public abstract class Converter {
     }
 
     protected Converter(final File path, final String resource, final RDFHandler sink,
-            final Properties properties, final String language, HashSet<URI> wnURIs) {
+            final Properties properties, final String language, Set<URI> wnURIs) {
 
         this.path = Objects.requireNonNull(path);
         this.resource = Objects.requireNonNull(resource);
