@@ -84,7 +84,7 @@ public abstract class BankConverter extends Converter {
         super(path, resource, sink, properties, language, wnURIs);
 
         this.ROLESET_PREFIX = resource;
-        this.DEFAULT_GRAPH = factory.createURI(NAMESPACE, "graph-" + resource);
+        this.DEFAULT_GRAPH = factory.createURI(NAMESPACE, resource);
     }
 
     private static boolean discardFile(File file, boolean onlyVerbs, boolean isOntoNotes) {
@@ -342,7 +342,7 @@ public abstract class BankConverter extends Converter {
                                                 URI argumentURI = uriForArgument(rolesetID,
                                                         argName);
                                                 addStatementToSink(argumentURI, RDF.TYPE,
-                                                        PMO.SEMANTIC_ARGUMENT);
+                                                        getSemanticArgument());
                                                 addStatementToSink(argumentURI, PMO.CORE, true);
                                                 if (!noDef) {
                                                     addStatementToSink(argumentURI,
@@ -724,6 +724,8 @@ public abstract class BankConverter extends Converter {
 
     abstract URI getPredicate();
 
+    abstract URI getSemanticArgument();
+    
     abstract URI getMarkable();
 
     abstract URI getExample();

@@ -1,4 +1,19 @@
 #!/bin/bash
+
+# generate tbox.ttl resource used for reasoning
+rdfpro @read src/main/owl/core.ttl \
+             src/main/owl/pb.ttl \
+             src/main/owl/nb.ttl \
+             src/main/owl/ontolex.owl \
+             src/main/owl/decomp.owl \
+             src/main/owl/nif-core.owl \
+             src/main/owl/semiotics.owl \
+       @tbox \
+       @transform '-o owl:Thing owl:topDataProperty owl:topObjectProperty' \
+       @unique \
+       @write src/main/resources/eu/fbk/dkm/premon/premonitor/tbox.ttl
+
+# generate multiple tbox RDF and HTML representations
 rm src/site/resources/ontology/*.nt src/site/resources/ontology/*.ttl src/site/resources/ontology/*.owl
 for f in {core,pb,nb}; do
     rdfpro @read src/main/owl/$f.ttl @unique @write src/site/resources/ontology/${f}.nt

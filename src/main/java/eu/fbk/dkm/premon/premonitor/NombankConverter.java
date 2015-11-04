@@ -74,6 +74,10 @@ public class NombankConverter extends BankConverter {
         return PMONB.PREDICATE;
     }
 
+    @Override URI getSemanticArgument() {
+        return PMONB.SEMANTIC_ARGUMENT;
+    }
+    
     @Override URI getMarkable() {
         return PMONB.MARKABLE;
     }

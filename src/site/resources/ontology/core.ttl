@@ -38,8 +38,6 @@ nif:annotation a owl:ObjectProperty .
 
 nif:referenceContext a owl:ObjectProperty .
 
-skos:broader a owl:ObjectProperty .
-
 nif:Context a owl:Class .
 
 nif:RFC5147String a owl:Class .
@@ -86,11 +84,11 @@ pmo:SemanticArgument a owl:Class ;
 pmo:evokedConcept a owl:ObjectProperty , owl:FunctionalProperty ;
 	rdfs:range ontolex:LexicalConcept ;
 	rdfs:domain pmo:Conceptualization ;
-	rdfs:subPropertyOf skos:broader .
+	rdfs:subPropertyOf owl:topObjectProperty .
 
 pmo:Conceptualization a owl:Class ;
 	rdfs:label "entry concept"@en ;
-	rdfs:subClassOf skos:Concept , _:node1a38lhbqcx7 , _:node1a38lhbqcx8 .
+	rdfs:subClassOf skos:Concept , _:node1a3988h3ix7 , _:node1a3988h3ix8 .
 
 pmo:evokingEntry a owl:ObjectProperty , owl:FunctionalProperty ;
 	rdfs:label "meaning of"@en ;
@@ -122,7 +120,7 @@ pmo:semArg a owl:ObjectProperty ;
 pmo:semType a owl:ObjectProperty ;
 	rdfs:label "semantic type"@en ;
 	rdfs:range pmo:SemanticType ;
-	rdfs:domain _:node1a38lhbqcx1 .
+	rdfs:domain _:node1a3988h3ix1 .
 
 pmo:SemanticType a owl:Class ;
 	rdfs:label "semantic type"@en ;
@@ -133,7 +131,7 @@ pmo:typeRel a owl:ObjectProperty ;
 	rdfs:range pmo:SemanticType ;
 	rdfs:domain pmo:SemanticType .
 
-ontolex:evokes owl:propertyChainAxiom _:node1a38lhbqcx4 .
+ontolex:evokes owl:propertyChainAxiom _:node1a3988h3ix4 .
 
 pmo:Example a owl:Class ;
 	rdfs:label "example" ;
@@ -141,40 +139,40 @@ pmo:Example a owl:Class ;
 
 pmo:Markable a owl:Class ;
 	rdfs:label "markable" ;
-	rdfs:subClassOf nif:RFC5147String , _:node1a38lhbqcx10 , _:node1a38lhbqcx9 .
+	rdfs:subClassOf nif:RFC5147String , _:node1a3988h3ix10 , _:node1a3988h3ix9 .
 
-_:node1a38lhbqcx1 a owl:Class ;
-	owl:unionOf _:node1a38lhbqcx2 .
+_:node1a3988h3ix1 a owl:Class ;
+	owl:unionOf _:node1a3988h3ix2 .
 
-_:node1a38lhbqcx10 a owl:Restriction ;
+_:node1a3988h3ix10 a owl:Restriction ;
 	owl:onProperty nif:referenceContext ;
 	owl:allValuesFrom pmo:Example .
 
-_:node1a38lhbqcx2 rdf:first pmo:Predicate ;
-	rdf:rest _:node1a38lhbqcx3 .
+_:node1a3988h3ix2 rdf:first pmo:Predicate ;
+	rdf:rest _:node1a3988h3ix3 .
 
-_:node1a38lhbqcx3 rdf:first pmo:SemanticArgument ;
+_:node1a3988h3ix3 rdf:first pmo:SemanticArgument ;
 	rdf:rest rdf:nil .
 
-_:node1a38lhbqcx4 rdf:first _:node1a38lhbqcx5 ;
-	rdf:rest _:node1a38lhbqcx6 .
+_:node1a3988h3ix4 rdf:first _:node1a3988h3ix5 ;
+	rdf:rest _:node1a3988h3ix6 .
 
-_:node1a38lhbqcx5 owl:inverseOf pmo:evokingEntry .
+_:node1a3988h3ix5 owl:inverseOf pmo:evokingEntry .
 
-_:node1a38lhbqcx6 rdf:first pmo:evokedConcept ;
+_:node1a3988h3ix6 rdf:first pmo:evokedConcept ;
 	rdf:rest rdf:nil .
 
-_:node1a38lhbqcx7 a owl:Restriction ;
-	owl:onProperty pmo:evokedConcept ;
-	owl:onClass ontolex:LexicalConcept ;
-	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
-
-_:node1a38lhbqcx8 a owl:Restriction ;
+_:node1a3988h3ix7 a owl:Restriction ;
 	owl:onProperty pmo:evokingEntry ;
 	owl:onClass ontolex:LexicalEntry ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1a38lhbqcx9 a owl:Restriction ;
+_:node1a3988h3ix8 a owl:Restriction ;
+	owl:onProperty pmo:evokedConcept ;
+	owl:onClass ontolex:LexicalConcept ;
+	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+
+_:node1a3988h3ix9 a owl:Restriction ;
 	owl:onProperty nif:referenceContext ;
 	owl:onClass pmo:Example ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .

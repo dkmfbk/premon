@@ -2,9 +2,12 @@ package eu.fbk.dkm.premon.premonitor;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+
 import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
 import eu.fbk.dkm.premon.vocab.NIF;
+import eu.fbk.dkm.premon.vocab.PMONB;
 import eu.fbk.dkm.premon.vocab.PMOPB;
+
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFHandler;
@@ -125,7 +128,11 @@ public class PropbankConverter extends BankConverter {
     @Override URI getPredicate() {
         return PMOPB.PREDICATE;
     }
-
+    
+    @Override URI getSemanticArgument() {
+        return PMOPB.SEMANTIC_ARGUMENT;
+    }
+    
     @Override URI getMarkable() {
         return PMOPB.MARKABLE;
     }

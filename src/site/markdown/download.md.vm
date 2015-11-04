@@ -5,12 +5,16 @@ PreMOn datasets can be downloaded using the links in the table below.
 For each dataset, we provide three dumps in different RDF formats (trig.gz, tql.gz, ttl.gz):
 
   * the **base version** of the dataset, complete but without inferred RDF triples;
-  * the **closed version** of the dataset, which includes also triples derived by applying OWL 2 RL inference (recommended download);
-  * the **VOID statistics** associated to the dataset, including TBox annotations that can be browsed using a tool like Protégé
+  * the **closed version** of the dataset, which includes also triples derived by applying RDFS inference using PreMOn, lemon ontolex and NIF TBox definitions (recommended download);
+  * the **VOID statistics** associated to the dataset;
 
-All IRIs are placed in namespace `http://premon.fbk.eu/resource/`.
-Triples are placed in different named graphs (only for `trig.gz` and `tql.gz`) based on the resource(s) they have been extracted from.
-Each graph is annotated with `dct:source` triples pointing to the URLs of those resource(s).
+All IRIs are placed in namespace `http://premon.fbk.eu/resource/` (prefix `pm`).
+Triples are placed in different named graphs (only for `trig.gz` and `tql.gz`) that can be used when querying (e.g., in SPARQL FROM clauses):
+
+  * **`pm:entries`** contains lexical entries, lexical forms and the `owl:sameAs` links to lexical entries in WordNet 3.1
+  * **`pm:nb10`** contains predicates, arguments and examples specific to [NomBank 1.0](http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz)
+  * **`pm:pb17`** contains predicates, arguments and examples specific to [PropBank 1.7](http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz)
+  * **`pm:pbon5`** contains predicates, arguments and examples specific to [PropBank Ontonote 5](http://verbs.colorado.edu/propbank/frame_downloads/Ontonote5frames.tar.gz)
 
 <table>
 <thead>
@@ -30,48 +34,73 @@ Each graph is annotated with `dct:source` triples pointing to the URLs of those 
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>PropBank 1.7 (from <a href="http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz">here</a>)</td>
-<td>TBC</td>
-<td>
-<a href="${site-download}latest/pb-dataset.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/pb-dataset.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/pb-dataset.ttl.gz">ttl.gz</a>
-</td>
-<td>TBC</td>
-<td>
-<a href="${site-download}latest/pb-dataset-closed.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/pb-dataset-closed.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/pb-dataset-closed.ttl.gz">ttl.gz</a>
-</td>
-<td>TBC</td>
-<td>
-<a href="${site-download}latest/pb-dataset-stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/pb-dataset.stats.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/pb-dataset.stats.gz">ttl.gz</a>
-</td>
-</tr>
+
 <tr>
 <td>NomBank 1.0 (from <a href="http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz">here</a>)</td>
-<td>TBC</td>
+<td>553582</td>
 <td>
-<a href="${site-download}latest/nb-dataset.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/nb-dataset.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/nb-dataset.ttl.gz">ttl.gz</a>
+<a href="${site-download}latest/premon-noinf-nb10.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-noinf-nb10.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-noinf-nb10.ttl.gz">ttl.gz</a>
 </td>
-<td>TBC</td>
+<td>804475</td>
 <td>
-<a href="${site-download}latest/nb-dataset-closed.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/nb-dataset-closed.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/nb-dataset-closed.ttl.gz">ttl.gz</a>
+<a href="${site-download}latest/premon-inf-nb10.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-nb10.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-nb10.ttl.gz">ttl.gz</a>
 </td>
-<td>TBC</td>
+<td>805</td>
 <td>
-<a href="${site-download}latest/nb-dataset-stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/nb-dataset-stats.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/nb-dataset-stats.ttl.gz">ttl.gz</a>
+<a href="${site-download}latest/premon-inf-nb10.stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-nb10.stats.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-nb10.stats.gz">ttl.gz</a>
 </td>
 </tr>
+
+<tr>
+<td>PropBank 1.7 (from <a href="http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz">here</a>)</td>
+<td>853533</td>
+<td>
+<a href="${site-download}latest/premon-noinf-pb17.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-noinf-pb17.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-noinf-pb17.ttl.gz">ttl.gz</a>
+</td>
+<td>1155231</td>
+<td>
+<a href="${site-download}latest/premon-inf-pb17.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-pb17.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-pb17.ttl.gz">ttl.gz</a>
+</td>
+<td>898</td>
+<td>
+<a href="${site-download}latest/premon-inf-pb17.stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-pb17.stats.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-pb17.stats.ttl.gz">ttl.gz</a>
+</td>
+</tr>
+
+<tr>
+<td>PropBank Ontonote 5 (from <a href="http://verbs.colorado.edu/propbank/frame_downloads/Ontonote5frames.tar.gz">here</a>)</td>
+<td>1266638</td>
+<td>
+<a href="${site-download}latest/premon-noinf-pbon5.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-noinf-pbon5.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-noinf-pbon5.ttl.gz">ttl.gz</a>
+</td>
+<td>1716571</td>
+<td>
+<a href="${site-download}latest/premon-inf-pbon5.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-pbon5.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-pbon5.ttl.gz">ttl.gz</a>
+</td>
+<td>894</td>
+<td>
+<a href="${site-download}latest/premon-inf-pbon5.stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-pbon5.stats.tql.gz">tql.gz</a>&nbsp;&nbsp;
+<a href="${site-download}latest/premon-inf-pbon5.stats.ttl.gz">ttl.gz</a>
+</td>
+</tr>
+
 </tbody>
 </table>
 <a style="display: block; width: 100%; text-align: right;" href="${site-download}">[browse old versions]</a>
