@@ -5,45 +5,28 @@
 // Generato il: 2015.05.07 alle 12:32:49 PM CEST 
 //
 
-
 package eu.fbk.dkm.premon.premonitor.propbank;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
- * 
+ *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
-@XmlRootElement(name = "inflection")
-public class Inflection {
+@XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "") @XmlRootElement(name = "inflection") public class Inflection {
 
-    @XmlAttribute(name = "person")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    protected String person;
-    @XmlAttribute(name = "tense")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    protected String tense;
-    @XmlAttribute(name = "aspect")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    protected String aspect;
-    @XmlAttribute(name = "voice")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    protected String voice;
-    @XmlAttribute(name = "form")
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    protected String form;
+    @XmlAttribute(name = "person") @XmlJavaTypeAdapter(CollapsedStringAdapter.class) protected String person;
+    @XmlAttribute(name = "tense") @XmlJavaTypeAdapter(CollapsedStringAdapter.class) protected String tense;
+    @XmlAttribute(name = "aspect") @XmlJavaTypeAdapter(CollapsedStringAdapter.class) protected String aspect;
+    @XmlAttribute(name = "voice") @XmlJavaTypeAdapter(CollapsedStringAdapter.class) protected String voice;
+    @XmlAttribute(name = "form") @XmlJavaTypeAdapter(CollapsedStringAdapter.class) protected String form;
 
     /**
      * Recupera il valore della proprietà person.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPerson() {
         if (person == null) {
@@ -55,11 +38,9 @@ public class Inflection {
 
     /**
      * Imposta il valore della proprietà person.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPerson(String value) {
         this.person = value;
@@ -67,11 +48,9 @@ public class Inflection {
 
     /**
      * Recupera il valore della proprietà tense.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getTense() {
         if (tense == null) {
@@ -83,11 +62,9 @@ public class Inflection {
 
     /**
      * Imposta il valore della proprietà tense.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setTense(String value) {
         this.tense = value;
@@ -95,11 +72,9 @@ public class Inflection {
 
     /**
      * Recupera il valore della proprietà aspect.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getAspect() {
         if (aspect == null) {
@@ -111,11 +86,9 @@ public class Inflection {
 
     /**
      * Imposta il valore della proprietà aspect.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setAspect(String value) {
         this.aspect = value;
@@ -123,11 +96,9 @@ public class Inflection {
 
     /**
      * Recupera il valore della proprietà voice.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getVoice() {
         if (voice == null) {
@@ -139,11 +110,9 @@ public class Inflection {
 
     /**
      * Imposta il valore della proprietà voice.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setVoice(String value) {
         this.voice = value;
@@ -151,11 +120,9 @@ public class Inflection {
 
     /**
      * Recupera il valore della proprietà form.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getForm() {
         if (form == null) {
@@ -167,11 +134,9 @@ public class Inflection {
 
     /**
      * Imposta il valore della proprietà form.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setForm(String value) {
         this.form = value;

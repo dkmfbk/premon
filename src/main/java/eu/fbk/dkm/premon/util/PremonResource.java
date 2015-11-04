@@ -5,31 +5,31 @@ package eu.fbk.dkm.premon.util;
  */
 
 public abstract class PremonResource {
-	protected String fileName;
-	protected String type;
-	protected String lemma;
 
-	protected Object main;
+    protected String fileName;
+    protected String type;
+    protected String lemma;
 
-	public String getFileName() {
-		return fileName;
-	}
+    protected Object main;
 
-	public String getType() {
-		return type;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public String getLemma() {
-		return lemma;
-	}
+    public String getType() {
+        return type;
+    }
 
-	@Override
-	public String toString() {
-		return "PremonResource{" +
-				"fileName='" + fileName + '\'' +
-				", type='" + type + '\'' +
-				", lemma='" + lemma + '\'' +
-				", main=" + main +
-				'}';
-	}
+    public String getLemma() {
+        return lemma;
+    }
+
+    @Override public String toString() {
+        return "PremonResource{" +
+                "fileName='" + fileName + '\'' +
+                ", type='" + type + '\'' +
+                ", lemma='" + lemma + '\'' +
+                ", main=" + main +
+                '}';
+    }
 }

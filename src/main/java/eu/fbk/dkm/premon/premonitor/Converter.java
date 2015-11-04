@@ -14,54 +14,55 @@ import java.util.Properties;
 
 public abstract class Converter {
 
-	protected final File path;
-	protected final RDFHandler sink;
-	protected final Properties properties;
-	protected final String language;
+    protected final File path;
+    protected final RDFHandler sink;
+    protected final Properties properties;
+    protected final String language;
 
-	protected String resource;
+    protected String resource;
 
-	static final ValueFactoryImpl factory = ValueFactoryImpl.getInstance();
+    static final ValueFactoryImpl factory = ValueFactoryImpl.getInstance();
 
-	protected static HashSet<String> fileToDiscard = new HashSet<>();
+    protected static HashSet<String> fileToDiscard = new HashSet<>();
 
-	protected final HashSet<URI> wnURIs;
-	static protected final String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
+    protected final HashSet<URI> wnURIs;
+    static protected final String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
 
-	protected String onlyOne = null;
+    protected String onlyOne = null;
 
-	public String getOnlyOne() {
-		return onlyOne;
-	}
+    public String getOnlyOne() {
+        return onlyOne;
+    }
 
-	public void setOnlyOne(String onlyOne) {
-		this.onlyOne = onlyOne;
-	}
+    public void setOnlyOne(String onlyOne) {
+        this.onlyOne = onlyOne;
+    }
 
-	protected static HashMap<String, String> on2wnMap = new HashMap<>();
-	static {
-		on2wnMap.put("n", "n");
-		on2wnMap.put("v", "v");
-		on2wnMap.put("j", "a");
-	}
+    protected static HashMap<String, String> on2wnMap = new HashMap<>();
 
-	public void setResource(String resource) {
-		this.resource = resource;
-	}
+    static {
+        on2wnMap.put("n", "n");
+        on2wnMap.put("v", "v");
+        on2wnMap.put("j", "a");
+    }
 
-	protected Converter(final File path, final String resource, final RDFHandler sink,
-						final Properties properties, final String language, HashSet<URI> wnURIs) {
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
 
-		this.path = Objects.requireNonNull(path);
-		this.resource = Objects.requireNonNull(resource);
-		this.sink = Objects.requireNonNull(sink);
-		this.properties = Objects.requireNonNull(properties);
-		this.language = language;
-		this.wnURIs = wnURIs;
+    protected Converter(final File path, final String resource, final RDFHandler sink,
+            final Properties properties, final String language, HashSet<URI> wnURIs) {
 
-		this.onlyOne = properties.getProperty("only-one");
-	}
+        this.path = Objects.requireNonNull(path);
+        this.resource = Objects.requireNonNull(resource);
+        this.sink = Objects.requireNonNull(sink);
+        this.properties = Objects.requireNonNull(properties);
+        this.language = language;
+        this.wnURIs = wnURIs;
 
-	public abstract void convert() throws IOException, RDFHandlerException;
+        this.onlyOne = properties.getProperty("only-one");
+    }
+
+    public abstract void convert() throws IOException, RDFHandlerException;
 
 }

@@ -5,40 +5,27 @@
 // Generato il: 2015.05.07 alle 12:32:49 PM CEST 
 //
 
-
 package eu.fbk.dkm.premon.premonitor.propbank;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
- * 
+ *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "value"
-})
-@XmlRootElement(name = "arg")
-public class Arg {
+@XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "", propOrder = {
+        "value" }) @XmlRootElement(name = "arg") public class Arg {
 
-    @XmlAttribute(name = "n", required = true)
-    @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String n;
-    @XmlAttribute(name = "f")
-    @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String f;
-    @XmlValue
-    protected String value;
+    @XmlAttribute(name = "n", required = true) @XmlJavaTypeAdapter(NormalizedStringAdapter.class) protected String n;
+    @XmlAttribute(name = "f") @XmlJavaTypeAdapter(NormalizedStringAdapter.class) protected String f;
+    @XmlValue protected String value;
 
     /**
      * Recupera il valore della proprietà n.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getN() {
         return n;
@@ -46,11 +33,9 @@ public class Arg {
 
     /**
      * Imposta il valore della proprietà n.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setN(String value) {
         this.n = value;
@@ -58,11 +43,9 @@ public class Arg {
 
     /**
      * Recupera il valore della proprietà f.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getF() {
         return f;
@@ -70,11 +53,9 @@ public class Arg {
 
     /**
      * Imposta il valore della proprietà f.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setF(String value) {
         this.f = value;
@@ -82,11 +63,9 @@ public class Arg {
 
     /**
      * Recupera il valore della proprietà value.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getvalue() {
         return value;
@@ -94,11 +73,9 @@ public class Arg {
 
     /**
      * Imposta il valore della proprietà value.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setvalue(String value) {
         this.value = value;

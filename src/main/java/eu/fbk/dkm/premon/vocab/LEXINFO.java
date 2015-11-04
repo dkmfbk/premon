@@ -63,10 +63,11 @@ public class LEXINFO {
     // Utility methods
 
     public static HashMap<String, URI> map = new HashMap<>();
-	static {
-		map.put("v", VERB);
-		map.put("n", NOUN);
-	}
+
+    static {
+        map.put("v", VERB);
+        map.put("n", NOUN);
+    }
 
     private static URI createURI(final String localName) {
         return ValueFactoryImpl.getInstance().createURI(NAMESPACE, localName);

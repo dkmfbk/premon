@@ -5,32 +5,23 @@
 // Generato il: 2015.05.07 alle 12:32:49 PM CEST 
 //
 
-
 package eu.fbk.dkm.premon.premonitor.propbank;
 
 import javax.xml.bind.annotation.*;
 
-
 /**
- * 
+ *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "value"
-})
-@XmlRootElement(name = "note")
-public class Note {
+@XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "", propOrder = {
+        "value" }) @XmlRootElement(name = "note") public class Note {
 
-    @XmlValue
-    protected String value;
+    @XmlValue protected String value;
 
     /**
      * Recupera il valore della proprietà value.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getvalue() {
         return value;
@@ -38,11 +29,9 @@ public class Note {
 
     /**
      * Imposta il valore della proprietà value.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setvalue(String value) {
         this.value = value;

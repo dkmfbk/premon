@@ -21,12 +21,12 @@ public class VerbnetConverter extends Converter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VerbnetConverter.class);
 
-    public VerbnetConverter(File path, RDFHandler sink, Properties properties, String language, HashSet<URI> wnURIs) {
+    public VerbnetConverter(File path, RDFHandler sink, Properties properties, String language,
+            HashSet<URI> wnURIs) {
         super(path, "vn", sink, properties, language, wnURIs);
     }
 
-    @Override
-    public void convert() throws IOException {
+    @Override public void convert() throws IOException {
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         for (final File file : Files.fileTreeTraverser().preOrderTraversal(this.path)) {
             if (!file.isDirectory() && file.getName().endsWith(".xml")) {
@@ -48,8 +48,9 @@ public class VerbnetConverter extends Converter {
         final String classID = vnClass.attr("ID");
 
         for (final Match member : vnClass.xpath("MEMBERS/MEMBER").each()) {
-            System.out.println(classID + " - " + member.attr("name") + " - " + member.attr("wn")
-                    + " - " + member.attr("grouping"));
+            System.out.println(
+                    classID + " - " + member.attr("name") + " - " + member.attr("wn") + " - "
+                            + member.attr("grouping"));
         }
 
         for (final Match role : vnClass.xpath("THEMROLES/THEMROLE").each()) {

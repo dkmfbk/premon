@@ -46,21 +46,37 @@ You can overwrite this behavior by setting the `pb-folder` and `input` options.
 This is the complete list of options (that the tool print when the `-h` option is set):
 
 ```
-usage: ./premonitor [-D] [-e] [-h] [-i <FOLDER>] [-l <ISO-CODE>] [-o]
-       [--pb-folder <FOLDER>] [-s <LEMMA>] [-v] [-V] [-w <FILE>]
+usage: ./premonitor [-c] [-d] [-D] [-h] [-i <FOLDER>] [-l <ISO-CODE>]
+       [--nb-examples] [--nb-folder <FOLDER>] [--nb-no-def] [--nb-source
+       <SOURCE>] [--pb-examples] [--pb-folder <FOLDER>] [--pb-no-def]
+       [--pb-non-verbs] [--pb-ontonotes] [--pb-source <SOURCE>] [-s <LEMMA>]
+       [-V] [-v] [-w <FILE>] [--wordnet <FILE>] [-x]
 
 Transform linguistic resources into RDF
 
+  -c,--closure              Emits the RDFS closure of generated RDF quads
+  -d,--divide               Divides the output in multiple files based on
+                            provenance
   -D,--verbose              enable verbose output
-  -e,--examples             Extract examples
   -h,--help                 display this help message and terminate
   -i,--input <FOLDER>       input folder (default .)
   -l,--language <ISO-CODE>  Language for literals, default en
-  -o,--ontonotes            Specify that this is an OntoNotes version of
-                            ProbBank
+     --nb-examples          Extract examples for NomBank
+     --nb-folder <FOLDER>   NomBank frames folder
+     --nb-no-def            Skip NomBank definitions
+     --nb-source <SOURCE>   NomBank source, default nb10
+     --pb-examples          Extract examples for PropBank
      --pb-folder <FOLDER>   PropBank frames folder
+     --pb-no-def            Skip PropBank definitions
+     --pb-non-verbs         Extract also non-verbs (only for OntoNotes)
+     --pb-ontonotes         Specify that this is an OntoNotes version of
+                            ProbBank
+     --pb-source <SOURCE>   PropBank source, default pb17/pbon5
   -s,--single <LEMMA>       Extract single lemma
-  -v,--version              display version information and terminate
   -V,--very verbose         enable very verbose output
+  -v,--version              display version information and terminate
   -w,--output <FILE>        Output file (mandatory)
+     --wordnet <FILE>       WordNet RDF triple file
+  -x,--stats                Generates also VOID statistics for produced RDF
+                            files
 ```

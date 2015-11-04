@@ -5,7 +5,6 @@
 // Generato il: 2015.05.07 alle 12:32:49 PM CEST 
 //
 
-
 package eu.fbk.dkm.premon.premonitor.propbank;
 
 import javax.xml.bind.annotation.*;
@@ -14,42 +13,26 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * 
+ *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "inflectionOrNoteOrTextOrArgOrRel"
-})
-@XmlRootElement(name = "example")
-public class Example {
+@XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "", propOrder = {
+        "inflectionOrNoteOrTextOrArgOrRel" }) @XmlRootElement(name = "example") public class Example {
 
-    @XmlAttribute(name = "name")
-    @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String name;
-    @XmlAttribute(name = "type")
-    @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String type;
-    @XmlAttribute(name = "src")
-    @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String src;
-    @XmlElements({
-        @XmlElement(name = "inflection", type = Inflection.class),
-        @XmlElement(name = "note", type = Note.class),
-        @XmlElement(name = "text", type = Text.class),
-        @XmlElement(name = "arg", type = Arg.class),
-        @XmlElement(name = "rel", type = Rel.class)
-    })
-    protected List<Object> inflectionOrNoteOrTextOrArgOrRel;
+    @XmlAttribute(name = "name") @XmlJavaTypeAdapter(NormalizedStringAdapter.class) protected String name;
+    @XmlAttribute(name = "type") @XmlJavaTypeAdapter(NormalizedStringAdapter.class) protected String type;
+    @XmlAttribute(name = "src") @XmlJavaTypeAdapter(NormalizedStringAdapter.class) protected String src;
+    @XmlElements({ @XmlElement(name = "inflection", type = Inflection.class),
+            @XmlElement(name = "note", type = Note.class),
+            @XmlElement(name = "text", type = Text.class),
+            @XmlElement(name = "arg", type = Arg.class),
+            @XmlElement(name = "rel", type = Rel.class) }) protected List<Object> inflectionOrNoteOrTextOrArgOrRel;
 
     /**
      * Recupera il valore della proprietà name.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getName() {
         return name;
@@ -57,11 +40,9 @@ public class Example {
 
     /**
      * Imposta il valore della proprietà name.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setName(String value) {
         this.name = value;
@@ -69,11 +50,9 @@ public class Example {
 
     /**
      * Recupera il valore della proprietà type.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getType() {
         return type;
@@ -81,11 +60,9 @@ public class Example {
 
     /**
      * Imposta il valore della proprietà type.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setType(String value) {
         this.type = value;
@@ -93,11 +70,9 @@ public class Example {
 
     /**
      * Recupera il valore della proprietà src.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getSrc() {
         return src;
@@ -105,11 +80,9 @@ public class Example {
 
     /**
      * Imposta il valore della proprietà src.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSrc(String value) {
         this.src = value;
@@ -117,20 +90,20 @@ public class Example {
 
     /**
      * Gets the value of the inflectionOrNoteOrTextOrArgOrRel property.
-     * 
+     * <p>
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the inflectionOrNoteOrTextOrArgOrRel property.
-     * 
+     * <p>
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getInflectionOrNoteOrTextOrArgOrRel().add(newItem);
      * </pre>
-     * 
-     * 
+     * <p>
+     * <p>
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link Inflection }
@@ -138,8 +111,6 @@ public class Example {
      * {@link Text }
      * {@link Arg }
      * {@link Rel }
-     * 
-     * 
      */
     public List<Object> getInflectionOrNoteOrTextOrArgOrRel() {
         if (inflectionOrNoteOrTextOrArgOrRel == null) {

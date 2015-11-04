@@ -5,7 +5,6 @@
 // Generato il: 2015.05.07 alle 12:32:49 PM CEST 
 //
 
-
 package eu.fbk.dkm.premon.premonitor.propbank;
 
 import javax.xml.bind.annotation.*;
@@ -13,29 +12,19 @@ import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
- * 
+ *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
-@XmlRootElement(name = "vnrole")
-public class Vnrole {
+@XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "") @XmlRootElement(name = "vnrole") public class Vnrole {
 
-    @XmlAttribute(name = "vncls", required = true)
-    @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String vncls;
-    @XmlAttribute(name = "vntheta", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    protected String vntheta;
+    @XmlAttribute(name = "vncls", required = true) @XmlJavaTypeAdapter(NormalizedStringAdapter.class) protected String vncls;
+    @XmlAttribute(name = "vntheta", required = true) @XmlJavaTypeAdapter(CollapsedStringAdapter.class) protected String vntheta;
 
     /**
      * Recupera il valore della proprietà vncls.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getVncls() {
         return vncls;
@@ -43,11 +32,9 @@ public class Vnrole {
 
     /**
      * Imposta il valore della proprietà vncls.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setVncls(String value) {
         this.vncls = value;
@@ -55,11 +42,9 @@ public class Vnrole {
 
     /**
      * Recupera il valore della proprietà vntheta.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getVntheta() {
         return vntheta;
@@ -67,11 +52,9 @@ public class Vnrole {
 
     /**
      * Imposta il valore della proprietà vntheta.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setVntheta(String value) {
         this.vntheta = value;

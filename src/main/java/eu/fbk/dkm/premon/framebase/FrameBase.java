@@ -1,17 +1,14 @@
 package eu.fbk.dkm.premon.framebase;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
-
+import eu.fbk.rdfpro.AbstractRDFHandler;
+import eu.fbk.rdfpro.RDFSource;
+import eu.fbk.rdfpro.RDFSources;
+import eu.fbk.rdfpro.util.Statements;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.OWL;
@@ -19,10 +16,11 @@ import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.fbk.rdfpro.AbstractRDFHandler;
-import eu.fbk.rdfpro.RDFSource;
-import eu.fbk.rdfpro.RDFSources;
-import eu.fbk.rdfpro.util.Statements;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FrameBase {
 
@@ -38,10 +36,10 @@ public class FrameBase {
             final RDFSource source = RDFSources.read(false, true, null, null, framebaseLocation);
             source.emit(new AbstractRDFHandler() {
 
-                @Override
-                public void handleStatement(final Statement stmt) throws RDFHandlerException {
-                    if (stmt.getSubject() instanceof URI && stmt.getObject() instanceof URI
-                            && stmt.getPredicate().equals(OWL.EQUIVALENTCLASS)) {
+                @Override public void handleStatement(final Statement stmt)
+                        throws RDFHandlerException {
+                    if (stmt.getSubject() instanceof URI && stmt.getObject() instanceof URI && stmt
+                            .getPredicate().equals(OWL.EQUIVALENTCLASS)) {
                         final List<URI> subjCluster = clusterFor((URI) stmt.getSubject());
                         final List<URI> objCluster = clusterFor((URI) stmt.getObject());
                         final Set<URI> set = Sets.newHashSet();
@@ -69,8 +67,7 @@ public class FrameBase {
                 if (filtered.size() > 1) {
                     final URI selected = new Ordering<URI>() {
 
-                        @Override
-                        public int compare(final URI left, final URI right) {
+                        @Override public int compare(final URI left, final URI right) {
                             final String s1 = left.stringValue();
                             final String s2 = right.stringValue();
                             final String t1 = s1.substring(s1.lastIndexOf('.') + 1);

@@ -5,52 +5,41 @@
 // Generato il: 2015.05.07 alle 12:32:49 PM CEST 
 //
 
-
 package eu.fbk.dkm.premon.premonitor.propbank;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * 
+ *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "noteOrPredicate"
-})
-@XmlRootElement(name = "frameset")
-public class Frameset {
+@XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "", propOrder = {
+        "noteOrPredicate" }) @XmlRootElement(name = "frameset") public class Frameset {
 
-    @XmlElements({
-        @XmlElement(name = "note", type = Note.class),
-        @XmlElement(name = "predicate", type = Predicate.class)
-    })
-    protected List<Object> noteOrPredicate;
+    @XmlElements({ @XmlElement(name = "note", type = Note.class),
+            @XmlElement(name = "predicate", type = Predicate.class) }) protected List<Object> noteOrPredicate;
 
     /**
      * Gets the value of the noteOrPredicate property.
-     * 
+     * <p>
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the noteOrPredicate property.
-     * 
+     * <p>
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getNoteOrPredicate().add(newItem);
      * </pre>
-     * 
-     * 
+     * <p>
+     * <p>
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link Note }
      * {@link Predicate }
-     * 
-     * 
      */
     public List<Object> getNoteOrPredicate() {
         if (noteOrPredicate == null) {

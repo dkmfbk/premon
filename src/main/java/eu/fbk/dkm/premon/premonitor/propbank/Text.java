@@ -5,37 +5,26 @@
 // Generato il: 2015.05.07 alle 12:32:49 PM CEST 
 //
 
-
 package eu.fbk.dkm.premon.premonitor.propbank;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
- * 
+ *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "value"
-})
-@XmlRootElement(name = "text")
-public class Text {
+@XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "", propOrder = {
+        "value" }) @XmlRootElement(name = "text") public class Text {
 
-    @XmlAttribute(name = "src")
-    @XmlJavaTypeAdapter(NormalizedStringAdapter.class)
-    protected String src;
-    @XmlValue
-    protected String value;
+    @XmlAttribute(name = "src") @XmlJavaTypeAdapter(NormalizedStringAdapter.class) protected String src;
+    @XmlValue protected String value;
 
     /**
      * Recupera il valore della proprietà src.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getSrc() {
         return src;
@@ -43,11 +32,9 @@ public class Text {
 
     /**
      * Imposta il valore della proprietà src.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSrc(String value) {
         this.src = value;
@@ -55,11 +42,9 @@ public class Text {
 
     /**
      * Recupera il valore della proprietà value.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getvalue() {
         return value;
@@ -67,11 +52,9 @@ public class Text {
 
     /**
      * Imposta il valore della proprietà value.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setvalue(String value) {
         this.value = value;
