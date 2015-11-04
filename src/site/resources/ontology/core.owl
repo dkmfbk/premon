@@ -135,8 +135,8 @@ The core module of the PreMOn ontology extends lemon with the following concepts
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label xml:lang="en">entry concept</rdfs:label>
 	<rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<rdfs:subClassOf rdf:nodeID="node1a36ud11ax7"/>
-	<rdfs:subClassOf rdf:nodeID="node1a36ud11ax8"/>
+	<rdfs:subClassOf rdf:nodeID="node1a38lhbqcx7"/>
+	<rdfs:subClassOf rdf:nodeID="node1a38lhbqcx8"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/core#evokingEntry">
@@ -184,7 +184,7 @@ The core module of the PreMOn ontology extends lemon with the following concepts
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
 	<rdfs:label xml:lang="en">semantic type</rdfs:label>
 	<rdfs:range rdf:resource="http://premon.fbk.eu/ontology/core#SemanticType"/>
-	<rdfs:domain rdf:nodeID="node1a36ud11ax1"/>
+	<rdfs:domain rdf:nodeID="node1a38lhbqcx1"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/core#SemanticType">
@@ -201,7 +201,7 @@ The core module of the PreMOn ontology extends lemon with the following concepts
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/ns/lemon/ontolex#evokes">
-	<owl:propertyChainAxiom rdf:nodeID="node1a36ud11ax4"/>
+	<owl:propertyChainAxiom rdf:nodeID="node1a38lhbqcx4"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/core#Example">
@@ -214,60 +214,60 @@ The core module of the PreMOn ontology extends lemon with the following concepts
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">markable</rdfs:label>
 	<rdfs:subClassOf rdf:resource="http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#RFC5147String"/>
-	<rdfs:subClassOf rdf:nodeID="node1a36ud11ax10"/>
-	<rdfs:subClassOf rdf:nodeID="node1a36ud11ax9"/>
+	<rdfs:subClassOf rdf:nodeID="node1a38lhbqcx10"/>
+	<rdfs:subClassOf rdf:nodeID="node1a38lhbqcx9"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax1">
+<rdf:Description rdf:nodeID="node1a38lhbqcx1">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:unionOf rdf:nodeID="node1a36ud11ax2"/>
+	<owl:unionOf rdf:nodeID="node1a38lhbqcx2"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax10">
+<rdf:Description rdf:nodeID="node1a38lhbqcx10">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#referenceContext"/>
 	<owl:allValuesFrom rdf:resource="http://premon.fbk.eu/ontology/core#Example"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax2">
+<rdf:Description rdf:nodeID="node1a38lhbqcx2">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/core#Predicate"/>
-	<rdf:rest rdf:nodeID="node1a36ud11ax3"/>
+	<rdf:rest rdf:nodeID="node1a38lhbqcx3"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax3">
+<rdf:Description rdf:nodeID="node1a38lhbqcx3">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/core#SemanticArgument"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax4">
-	<rdf:first rdf:nodeID="node1a36ud11ax5"/>
-	<rdf:rest rdf:nodeID="node1a36ud11ax6"/>
+<rdf:Description rdf:nodeID="node1a38lhbqcx4">
+	<rdf:first rdf:nodeID="node1a38lhbqcx5"/>
+	<rdf:rest rdf:nodeID="node1a38lhbqcx6"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax5">
+<rdf:Description rdf:nodeID="node1a38lhbqcx5">
 	<owl:inverseOf rdf:resource="http://premon.fbk.eu/ontology/core#evokingEntry"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax6">
+<rdf:Description rdf:nodeID="node1a38lhbqcx6">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/core#evokedConcept"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax7">
+<rdf:Description rdf:nodeID="node1a38lhbqcx7">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://premon.fbk.eu/ontology/core#evokedConcept"/>
 	<owl:onClass rdf:resource="http://www.w3.org/ns/lemon/ontolex#LexicalConcept"/>
 	<owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax8">
+<rdf:Description rdf:nodeID="node1a38lhbqcx8">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://premon.fbk.eu/ontology/core#evokingEntry"/>
 	<owl:onClass rdf:resource="http://www.w3.org/ns/lemon/ontolex#LexicalEntry"/>
 	<owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1a36ud11ax9">
+<rdf:Description rdf:nodeID="node1a38lhbqcx9">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#referenceContext"/>
 	<owl:onClass rdf:resource="http://premon.fbk.eu/ontology/core#Example"/>
