@@ -95,10 +95,10 @@ public class Premonitor {
 					.withOption(null, "pb-no-def", "Skip PropBank definitions")
 					.withOption(null, "pb-source", String.format("PropBank source, default %s/%s", DEFAULT_PB_SOURCE, DEFAULT_PB_SOURCE_ON), "SOURCE", CommandLine.Type.STRING, true, false, false)
 
-					.withOption(null, "nb-examples", "Extract examples for PropBank")
-					.withOption(null, "nb-folder", "PropBank frames folder", "FOLDER", CommandLine.Type.DIRECTORY_EXISTING, true, false, false)
-					.withOption(null, "nb-no-def", "Skip PropBank definitions")
-					.withOption(null, "nb-source", String.format("PropBank source, default %s/%s", DEFAULT_PB_SOURCE, DEFAULT_PB_SOURCE_ON), "SOURCE", CommandLine.Type.STRING, true, false, false)
+					.withOption(null, "nb-examples", "Extract examples for NomBank")
+					.withOption(null, "nb-folder", "NomBank frames folder", "FOLDER", CommandLine.Type.DIRECTORY_EXISTING, true, false, false)
+					.withOption(null, "nb-no-def", "Skip NomBank definitions")
+					.withOption(null, "nb-source", String.format("NomBank source, default %s", DEFAULT_NB_SOURCE), "SOURCE", CommandLine.Type.STRING, true, false, false)
 
 //					.withOption(null, "use-wn-lex", "Use WordNet LexicalEntries when available")
 //					.withOption(null, "namespace", String.format("Namespace, default %s", DEFAULT_NAMESPACE), "URI", CommandLine.Type.STRING, true, false, false)
