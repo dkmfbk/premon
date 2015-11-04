@@ -287,7 +287,7 @@ public class Premonitor {
                                 "rdfs8"));
             }
             if (mergeContexts) {
-                processor = RDFProcessors.sequence(processor, RDFProcessors.unique(true));
+                processor = RDFProcessors.sequence(processor, RDFProcessors.unique(false));
             }
             processor.apply(RDFSources.wrap(stmts),
                     RDFHandlers.synchronize(RDFHandlers.wrap(processedStmts)), 1);
