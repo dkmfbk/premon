@@ -40,8 +40,11 @@ Run the tool
 Starting from a downloaded or compiled version, you should use the `./premon` executable to run the tool.
 The output file location (where the tool would save the triples) is the only mandatory parameter.
 
-The programm will then look for the `pb` folder (containing the PropBank XMLs files).
+The programm will then look for the `pb`/`nb` folder (containing the PropBank/NomBank XMLs files).
 You can overwrite this behavior by setting the `pb-folder` and `input` options.
+The folder must contain the `frameset.dtd` file.
+If missing, you can use the one provided with this tool (in `src/main/resources/`):
+just copy it in the XMLs folder.
 
 This is the complete list of options (that the tool print when the `-h` option is set):
 
