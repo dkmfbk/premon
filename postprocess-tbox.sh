@@ -30,3 +30,15 @@ for f in {core,pb,nb}; do
         > src/site/resources/ontology/$f.html
 done
 rm src/site/resources/ontology/temp.html
+
+# generate a tql.gz file with all tbox definitions in their own graph
+rdfpro @read src/main/owl/core.ttl \
+             src/main/owl/pb.ttl \
+             src/main/owl/nb.ttl \
+             src/main/owl/ontolex.owl \
+             src/main/owl/decomp.owl \
+             src/main/owl/nif-core.owl \
+             src/main/owl/semiotics.owl \
+       @unique \
+       @transform '=c <http://premon.fbk.eu/resource/tbox>' \
+       @write tbox.tql.gz
