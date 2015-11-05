@@ -7,13 +7,26 @@ import org.openrdf.rio.RDFHandlerException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 public abstract class Converter {
 
+    static final Map<String, URI> LANGUAGE_CODES_TO_URIS;
+
+    static {
+        final Map<String, URI> codesToURIs = Maps.newHashMap();
+        for (final String language : Locale.getISOLanguages()) {
+            final Locale locale = new Locale(language);
+            final URI uri = ValueFactoryImpl.getInstance().createURI(
+                    "http://lexvo.org/id/iso639-3/", locale.getISO3Language());
+            codesToURIs.put(language, uri);
+        }
+        LANGUAGE_CODES_TO_URIS = ImmutableMap.copyOf(codesToURIs);
+    }
+    
     protected final File path;
     protected final RDFHandler sink;
     protected final Properties properties;
@@ -25,7 +38,7 @@ public abstract class Converter {
 
     protected static HashSet<String> fileToDiscard = new HashSet<>();
 
-    protected final HashSet<URI> wnURIs;
+    protected final Set<URI> wnURIs;
     static protected final String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
 
     protected String onlyOne = null;
@@ -51,7 +64,7 @@ public abstract class Converter {
     }
 
     protected Converter(final File path, final String resource, final RDFHandler sink,
-            final Properties properties, final String language, HashSet<URI> wnURIs) {
+            final Properties properties, final String language, Set<URI> wnURIs) {
 
         this.path = Objects.requireNonNull(path);
         this.resource = Objects.requireNonNull(resource);

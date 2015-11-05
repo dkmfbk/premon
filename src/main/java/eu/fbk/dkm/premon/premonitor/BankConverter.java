@@ -80,7 +80,7 @@ public abstract class BankConverter extends Converter {
     }
 
     public BankConverter(File path, String resource, RDFHandler sink, Properties properties,
-            String language, HashSet<URI> wnURIs) {
+            String language, Set<URI> wnURIs) {
         super(path, resource, sink, properties, language, wnURIs);
 
         this.ROLESET_PREFIX = resource;
@@ -181,7 +181,8 @@ public abstract class BankConverter extends Converter {
     //		return ret;
     //	}
 
-    @Override public void convert() throws IOException, RDFHandlerException {
+    @Override
+    public void convert() throws IOException, RDFHandlerException {
 
         // Fix due to XML library
         System.setProperty("javax.xml.accessExternalDTD", "file");
@@ -190,13 +191,12 @@ public abstract class BankConverter extends Converter {
         URI lexiconURI = factory.createURI(NAMESPACE, "lexicon");
         addStatementToSink(lexiconURI, RDF.TYPE, ONTOLEX.LEXICON, LE_GRAPH);
         addStatementToSink(lexiconURI, ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
-        addStatementToSink(lexiconURI, DCTERMS.LANGUAGE,
-                Premonitor.LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
+        addStatementToSink(lexiconURI, DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language),
+                LE_GRAPH);
 
         addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, source),
                 PM.META);
-        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, source),
-                PM.META);
+        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, source), PM.META);
 
         //todo: the first tour is not necessary any more
 
@@ -359,7 +359,8 @@ public abstract class BankConverter extends Converter {
                                     }
                                 }
 
-                                rolesOrExample.stream()
+                                rolesOrExample
+                                        .stream()
                                         .filter(rOrE -> rOrE instanceof Example && extractExamples)
                                         .forEach(rOrE -> {
                                             examples.add((Example) rOrE);
@@ -368,8 +369,7 @@ public abstract class BankConverter extends Converter {
                                 //todo: shall we start from 0?
                                 int exampleCount = 0;
 
-                                exampleLoop:
-                                for (Example rOrE : examples) {
+                                exampleLoop: for (Example rOrE : examples) {
                                     String text = null;
                                     Inflection inflection = null;
 
@@ -430,14 +430,13 @@ public abstract class BankConverter extends Converter {
                                             }
                                             int end = start + value.length();
 
-                                            URI markableURI = factory.createURI(
-                                                    String.format("%s#char=%d,%d",
-                                                            exampleURI.toString(), start, end));
+                                            URI markableURI = factory.createURI(String.format(
+                                                    "%s#char=%d,%d", exampleURI.toString(), start,
+                                                    end));
 
                                             addStatementToSink(markableURI, RDF.TYPE,
                                                     getMarkable());
-                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX,
-                                                    start);
+                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX, start);
                                             addStatementToSink(markableURI, NIF.END_INDEX, end);
                                             addStatementToSink(markableURI, NIF.ANCHOR_OF,
                                                     origValue);
@@ -465,14 +464,13 @@ public abstract class BankConverter extends Converter {
                                             }
                                             int end = start + value.length();
 
-                                            URI markableURI = factory.createURI(
-                                                    String.format("%s#char=%d,%d",
-                                                            exampleURI.toString(), start, end));
+                                            URI markableURI = factory.createURI(String.format(
+                                                    "%s#char=%d,%d", exampleURI.toString(), start,
+                                                    end));
 
                                             addStatementToSink(markableURI, RDF.TYPE,
                                                     getMarkable());
-                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX,
-                                                    start);
+                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX, start);
                                             addStatementToSink(markableURI, NIF.END_INDEX, end);
                                             addStatementToSink(markableURI, NIF.ANCHOR_OF, value);
                                             addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT,
@@ -587,8 +585,7 @@ public abstract class BankConverter extends Converter {
         return factory.createURI(builder.toString());
     }
 
-    private URI uriForConceptualization(String lemma, String type, String rolesetID,
-            String argName) {
+    private URI uriForConceptualization(String lemma, String type, String rolesetID, String argName) {
         return uriForConceptualizationGen(lemma, type, argPart(rolesetID, argName));
     }
 
@@ -645,7 +642,7 @@ public abstract class BankConverter extends Converter {
         StringBuilder builder = new StringBuilder();
         builder.append(type);
         builder.append(SEPARATOR);
-        builder.append(lemma);
+        builder.append(lemma.equals("%") ? "perc-sign" : lemma);
         return builder.toString();
     }
 
@@ -683,7 +680,8 @@ public abstract class BankConverter extends Converter {
         addStatementToSink(subject, predicate, objectValue, true);
     }
 
-    protected void addStatementToSink(Resource subject, URI predicate, String objectValue, URI graph) {
+    protected void addStatementToSink(Resource subject, URI predicate, String objectValue,
+            URI graph) {
         addStatementToSink(subject, predicate, objectValue, true, graph);
     }
 
@@ -725,7 +723,7 @@ public abstract class BankConverter extends Converter {
     abstract URI getPredicate();
 
     abstract URI getSemanticArgument();
-    
+
     abstract URI getMarkable();
 
     abstract URI getExample();

@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 /**
@@ -18,15 +19,14 @@ import java.util.regex.Matcher;
 
 public class NombankConverter extends BankConverter {
 
-    public NombankConverter(File path, RDFHandler sink, Properties properties, String language,
-            HashSet<URI> wnURIs) {
-        super(path, properties.getProperty("nb-source"), sink, properties, language, wnURIs);
+    public NombankConverter(File path, RDFHandler sink, Properties properties, Set<URI> wnURIs) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnURIs);
 
         this.nonVerbsToo = true;
         this.isOntoNotes = false;
-        this.noDef = properties.getProperty("nb-no-def", "0").equals("1");
-        this.source = properties.getProperty("nb-source");
-        this.extractExamples = properties.getProperty("nb-examples", "0").equals("1");
+        this.noDef = ! properties.getProperty("extractdefinitions", "0").equals("1");
+        this.source = properties.getProperty("source");
+        this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
         this.defaultType = "n";
     }
 

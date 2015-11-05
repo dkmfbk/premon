@@ -1,0 +1,77 @@
+PreMOnitor tool
+===
+
+**PreMOnitor** is a Java command line tool for converting the frame files distributed with various predicate resources in the premon RDF representation.
+
+
+Download the last stable version (easy way)
+---
+
+The tool is distributed using the git/Maven paradigms. This means that you can easily download and install the last version (stable or unstable).
+To install the last stable version of the tool, just download it from [here](${site-download}premon-bin.tar.gz).
+
+
+Install from sources (not-so-easy way)
+---
+
+To compile the tool from sources, just open a terminal (for Linux/Mac OS) and type these commands:
+
+
+```
+git checkout https://github.com/dkmfbk/premon.git
+cd premon
+
+# Uncomment the following command to use the last/unstable version of PreMOn
+# git checkout -b develop origin/develop
+
+mvn clean package -DskipTests -Prelease
+cd target
+tar xzf premon-*-bin.tar.gz # the * refers to the version
+cd premon
+```
+
+You can now start the program by using the `./premonitor` executable.
+
+
+Run the tool
+---
+
+Starting from a downloaded or compiled version, you should use the `./premonitor` executable to run the tool.
+The only mandatory parameter is the name of a property files supplying a detailed configuration of the conversion process.
+A 'default.properties' file is included with the default configuration.
+
+Based on the configuration supplied, the programm will look for a number of folders containing PropBank/NomBank XMLs frame files (default: `pb17` for PropBank 1.7, `pbon5` for PropBank Ontonote5, `nb10` for NomBank 1.0).
+You can overwrite this behavior by editing the properties file.
+PropBank/NomBank folders must contain the `frameset.dtd` file.
+If missing, you can use the one provided with this tool (in `src/main/resources/`):
+just copy it in the XMLs folder.
+
+This is the complete list of options (that the tool print when the `-h` option is set):
+
+```
+usage: ./premonitor [-b <PATH>] [-c] [-d] [-D] [-f <FMTS>] [-h] [-i <FOLDER>]
+       [-p <FILE>] [-s <LEMMA>] [-V] [-v] [--wordnet <FILE>] [-x]
+
+Transform linguistic resources into RDF
+
+  -b,--output-base <PATH>     Output base path/name (default 'premon')
+  -c,--closure                Emits also the RDFS closure of produced datasets
+  -d,--divide                 Emits one dataset for each resource converted
+  -D,--verbose                enable verbose output
+  -f,--output-formats <FMTS>  Comma-separated list of output formats (default
+                              'tql.gz')
+  -h,--help                   display this help message and terminate
+  -i,--input <FOLDER>         input folder (default .)
+  -p,--properties <FILE>      Property file (default default.properties)
+  -s,--single <LEMMA>         Extract single lemma (apply to all resources)
+  -V,--very verbose           enable very verbose output
+  -v,--version                display version information and terminate
+     --wordnet <FILE>         WordNet RDF triple file
+  -x,--stats                  Generates also VOID statistics for each dataset
+```
+
+Example of invocation that generates all the files available on PreMOn web site (requires filling the `pb17`, `pbon5`, `nb10` folders with appropriate frame data, plus downloading [WordNet 3.1 RDF data](http://wordnet-rdf.princeton.edu/wn31.nt.gz)):
+
+```
+./premonitor -p default.properties -f tql.gz,trig.gz,ttl.gz --wordnet PATH_TO_WN31.NT.GZ -d -c -x
+```

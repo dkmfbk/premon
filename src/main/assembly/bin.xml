@@ -20,8 +20,33 @@
                 <include>README.md</include>
                 <include>LICENSE.txt</include>
                 <include>THIRD-PARTY.txt</include>
+                <include>default.properties</include>
             </includes>
         </fileSet>
+
+        <!-- Resources -->
+        <fileSet>
+            <outputDirectory>./PropBank17</outputDirectory>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>frameset.dtd</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>./PropBankON5</outputDirectory>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>frameset.dtd</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>./NomBank10</outputDirectory>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>frameset.dtd</include>
+            </includes>
+        </fileSet>
+
     </fileSets>
     <dependencySets>
         <dependencySet>
