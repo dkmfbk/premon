@@ -2,8 +2,8 @@ SPARQL access
 ===
 
 PreMOn data can be programmatically queried using the SPARQL endpoint publicly available at [http://premon.fbk.eu/sparql](http://premon.fbk.eu/sparql).
-The query interface below (powered by [YASQE](http://yasr.yasgui.org/) and [YASR](http://yasr.yasgui.org/) can be used to submit your queries to the endpoint using your browser; a [full-page](query-full.html) version of the interface is also available.
-The following named graphs are used:
+The query interface below (powered by [YASQE](http://yasr.yasgui.org/) and [YASR](http://yasr.yasgui.org/)) can be used to query the endpoint using the browser; a [full-page](query-full.html) version of the interface is also available.
+The following named graphs are available, with their content included by default in the query default graph (if no FROM clause is given):
  `pm:tbox` for TBox definitions;
  `pm:entries` for lexical entries, forms and WordNet links;
  `pm:nb10` for NomBank 1.0;

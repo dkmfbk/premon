@@ -9,9 +9,9 @@ For each dataset, we provide three dumps in different RDF formats (trig.gz, tql.
   * the **VOID statistics** associated to the dataset;
 
 All IRIs are placed in namespace `http://premon.fbk.eu/resource/` (prefix `pm`).
-Triples are placed in different named graphs (only for `trig.gz` and `tql.gz`) that can be used when querying (e.g., in SPARQL FROM clauses):
+Triples are placed in different named graphs (only for `trig.gz` and `tql.gz`) that can be used when querying to select information only from particular sources (e.g., in SPARQL FROM clauses):
 
-  * **`pm:entries`** contains lexical entries, lexical forms and the `owl:sameAs` links to lexical entries in WordNet 3.1
+  * **`pm:entries`** contains lexical entries, lexical forms and the `owl:sameAs` links to lexical entries in [WordNet 3.1](http://wordnet-rdf.princeton.edu/)
   * **`pm:nb10`** contains predicates, arguments and examples specific to [NomBank 1.0](http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz)
   * **`pm:pb17`** contains predicates, arguments and examples specific to [PropBank 1.7](http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz)
   * **`pm:pbon5`** contains predicates, arguments and examples specific to [PropBank Ontonote 5](http://verbs.colorado.edu/propbank/frame_downloads/Ontonote5frames.tar.gz)
