@@ -6,12 +6,12 @@ import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
- * Vocabulary constants for the PREMON Ontology - core module (PMO).
+ * Vocabulary constants for the PreMOn Ontology - core module (PMO).
  */
-public class PMO {
+public final class PMO {
 
     /** Recommended prefix for the vocabulary namespace: "pmo". */
-    public static final String PREFIX = "PMO";
+    public static final String PREFIX = "pmo";
 
     /** Vocabulary namespace: "http://premon.fbk.eu/ontology/core#". */
     public static final String NAMESPACE = "http://premon.fbk.eu/ontology/core#";

@@ -6,9 +6,9 @@ import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
- * Constants for the SYNSEM vocabulary, syntactic/semantic mapping module of W3C LEMON draft.
+ * Vocabulary constants for the syntactic/semantic mapping module of W3C Ontolex lemon (SYNSEM).
  */
-public class SYNSEM {
+public final class SYNSEM {
 
     /** Recommended prefix for the vocabulary namespace: "synsem". */
     public static final String PREFIX = "synsem";

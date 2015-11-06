@@ -6,9 +6,9 @@ import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
- * Constants for the ONTOLEX vocabulary, core module of W3C LEMON draft.
+ * Vocabulary constants for the core module of W3C Ontolex lemon (ONTOLEX).
  */
-public class ONTOLEX {
+public final class ONTOLEX {
 
     /** Recommended prefix for the vocabulary namespace: "ontolex". */
     public static final String PREFIX = "ontolex";

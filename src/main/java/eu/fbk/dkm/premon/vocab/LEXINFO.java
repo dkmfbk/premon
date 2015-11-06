@@ -10,7 +10,7 @@ import java.util.HashMap;
 /**
  * Vocabulary constants for the LEXINFO Ontology (subset, work in progress).
  */
-public class LEXINFO {
+public final class LEXINFO {
 
     /** Recommended prefix for the vocabulary namespace: "lexinfo". */
     public static final String PREFIX = "lexinfo";
