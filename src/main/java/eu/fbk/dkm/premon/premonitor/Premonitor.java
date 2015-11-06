@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.fbk.dkm.premon.vocab.DECOMP;
+import eu.fbk.dkm.premon.vocab.FB;
 import eu.fbk.dkm.premon.vocab.LEXINFO;
 import eu.fbk.dkm.premon.vocab.ONTOLEX;
 import eu.fbk.dkm.premon.vocab.PM;
@@ -264,6 +265,7 @@ public class Premonitor {
         prefixMap.put(ONTOLEX.NAMESPACE, ONTOLEX.PREFIX);
         prefixMap.put(DECOMP.NAMESPACE, DECOMP.PREFIX);
         prefixMap.put(LEXINFO.NAMESPACE, LEXINFO.PREFIX);
+        prefixMap.put(FB.NAMESPACE, FB.PREFIX);
 
         // Process one source / statement list pair at a time
         for (final Map.Entry<String, List<Statement>> entry : map.entrySet()) {
