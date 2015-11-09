@@ -13,6 +13,6 @@ The following named graphs are available, with their content included by default
 <link href='//cdn.jsdelivr.net/g/yasqe@2.2(yasqe.min.css),yasr@2.4(yasr.min.css)' rel='stylesheet' type='text/css'/>
 <div id="yasqe"></div>
 <div id="yasr"></div>
-<script src='//cdn.jsdelivr.net/yasr/2.4/yasr.bundled.min.js'></script>
-<script src='//cdn.jsdelivr.net/yasqe/2.2/yasqe.bundled.min.js'></script>
+<script src='js/yasr.bundled.min.js'></script>
+<script src='js/yasqe.bundled.min.js'></script>
 <script src='js/init-yasgui.js'></script>
