@@ -6,9 +6,9 @@ import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
- * Constants for the SYNSEM vocabulary, linguistic metadata module of W3C LEMON draft.
+ * Vocabulary constants for the linguistic metadata module of W3C Ontolex lemon (SYNSEM).
  */
-public class LIME {
+public final class LIME {
 
     /** Recommended prefix for the vocabulary namespace: "lime". */
     public static final String PREFIX = "lime";

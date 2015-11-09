@@ -6,9 +6,9 @@ import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
- * Constants for the DECOMP vocabulary, decomposition module of W3C LEMON draft.
+ * Vocabulary constants for the decomposition module of W3C Ontolex lemon (DECOMP).
  */
-public class DECOMP {
+public final class DECOMP {
 
     /** Recommended prefix for the vocabulary namespace: "decomp". */
     public static final String PREFIX = "decomp";

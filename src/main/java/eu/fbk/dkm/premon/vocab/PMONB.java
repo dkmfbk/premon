@@ -8,9 +8,9 @@ import org.openrdf.model.impl.ValueFactoryImpl;
 import java.util.HashMap;
 
 /**
- * Vocabulary constants for the PREMON Ontology - NomBank module (PMONB).
+ * Vocabulary constants for the PreMOn Ontology - NomBank module (PMONB).
  */
-public class PMONB {
+public final class PMONB {
 
     /** Recommended prefix for the vocabulary namespace: "pmonb". */
     public static final String PREFIX = "pmonb";

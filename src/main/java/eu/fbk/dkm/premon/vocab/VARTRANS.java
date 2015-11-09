@@ -6,9 +6,9 @@ import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
- * Constants for the VARTRANS vocabulary, variation and translation module of W3C LEMON draft.
+ * Vocabulary constants for the variation and translation module of W3C Ontolex lemon (VARTRANS).
  */
-public class VARTRANS {
+public final class VARTRANS {
 
     /** Recommended prefix for the vocabulary namespace: "vartrans". */
     public static final String PREFIX = "vartrans";

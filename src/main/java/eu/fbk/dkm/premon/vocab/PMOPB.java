@@ -8,9 +8,9 @@ import org.openrdf.model.impl.ValueFactoryImpl;
 import java.util.HashMap;
 
 /**
- * Vocabulary constants for the PREMON Ontology - PropBank module (PMOPB).
+ * Vocabulary constants for the PreMOn Ontology - PropBank module (PMOPB).
  */
-public class PMOPB {
+public final class PMOPB {
 
     /** Recommended prefix for the vocabulary namespace: "pmopb". */
     public static final String PREFIX = "pmopb";
@@ -23,52 +23,52 @@ public class PMOPB {
 
     // Classes
 
-    /** Class pmobp:Aspect. */
+    /** Class pmopb:Aspect. */
     public static final URI ASPECT_C = createURI("Aspect");
 
-    /** Class pmobp:Example. */
+    /** Class pmopb:Example. */
     public static final URI EXAMPLE = createURI("Example");
 
-    /** Class pmobp:Form. */
+    /** Class pmopb:Form. */
     public static final URI FORM_C = createURI("Form");
 
-    /** Class pmobp:Inflection. */
+    /** Class pmopb:Inflection. */
     public static final URI INFLECTION_C = createURI("Inflection");
 
-    /** Class pmobp:Markable. */
+    /** Class pmopb:Markable. */
     public static final URI MARKABLE = createURI("Markable");
 
-    /** Class pmobp:ModifierRole. */
+    /** Class pmopb:ModifierRole. */
     public static final URI MODIFIER_ROLE = createURI("ModifierRole");
 
-    /** Class pmobp:AgentiveRole. */
+    /** Class pmopb:AgentiveRole. */
     public static final URI AGENTIVE_ROLE = createURI("AgentiveRole");
 
-    /** Class pmobp:NumberedRole. */
+    /** Class pmopb:NumberedRole. */
     public static final URI NUMBERED_ROLE = createURI("NumberedRole");
 
-    /** Class pmobp:Person. */
+    /** Class pmopb:Person. */
     public static final URI PERSON_C = createURI("Person");
 
-    /** Class pmobp:Predicate. */
+    /** Class pmopb:Predicate. */
     public static final URI PREDICATE = createURI("Predicate");
 
-    /** Class pmobp:Preposition. */
+    /** Class pmopb:Preposition. */
     public static final URI PREPOSITION = createURI("Preposition");
 
-    /** Class pmobp:SemanticArgument. */
+    /** Class pmopb:SemanticArgument. */
     public static final URI SEMANTIC_ARGUMENT = createURI("SemanticArgument");
 
-    /** Class pmobp:SemanticRole. */
+    /** Class pmopb:SemanticRole. */
     public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
 
-    /** Class pmobp:Tag. */
+    /** Class pmopb:Tag. */
     public static final URI TAG = createURI("Tag");
 
-    /** Class pmobp:Tense. */
+    /** Class pmopb:Tense. */
     public static final URI TENSE_C = createURI("Tense");
 
-    /** Class pmobp:Voice. */
+    /** Class pmopb:Voice. */
     public static final URI VOICE_C = createURI("Voice");
 
     // Object properties
