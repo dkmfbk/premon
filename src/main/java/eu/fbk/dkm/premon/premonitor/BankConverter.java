@@ -15,6 +15,7 @@ import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
@@ -243,11 +244,8 @@ public abstract class BankConverter extends Converter {
 
                 for (Object predicate : noteOrPredicate) {
                     if (predicate instanceof Predicate) {
-                        String lemma = ((Predicate) predicate).getLemma().replace('_', '+')
-                                .replace(' ', '+');
-                        if (lemmaToTransform.keySet().contains(lemma)) {
-                            lemma = lemmaToTransform.get(lemma);
-                        }
+
+                        String lemma = getLemmaFromPredicateName(((Predicate) predicate).getLemma());
 
                         URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, type, lexiconURI);
 
@@ -261,6 +259,7 @@ public abstract class BankConverter extends Converter {
                                 }
 
                                 URI rolesetURI = uriForRoleset(rolesetID);
+
                                 addStatementToSink(rolesetURI, RDF.TYPE, getPredicate());
                                 if (!noDef) {
                                     addStatementToSink(rolesetURI, SKOS.DEFINITION,
@@ -269,14 +268,15 @@ public abstract class BankConverter extends Converter {
                                 addStatementToSink(rolesetURI, RDFS.LABEL, rolesetID, false);
                                 addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, rolesetURI);
 
-                                URI conceptualizationURI = uriForConceptualization(lemma, type,
-                                        rolesetID);
+                                URI conceptualizationURI = uriForConceptualization(lemma, type, rolesetID);
                                 addStatementToSink(conceptualizationURI, RDF.TYPE,
                                         PMO.CONCEPTUALIZATION);
                                 addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY,
                                         lexicalEntryURI);
                                 addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT,
                                         rolesetURI);
+
+                                addConceptualizationLink((Roleset) roleset, conceptualizationURI);
 
                                 //								String[] vnClasses = new String[0];
                                 //								if (((Roleset) roleset).getVncls() != null) {
@@ -353,7 +353,7 @@ public abstract class BankConverter extends Converter {
 
                                                 addArgumentToSink(argumentURI, argName, nf.getF(),
                                                         argType, lemma, type, rolesetID,
-                                                        lexicalEntryURI);
+                                                        lexicalEntryURI, (Role) role, (Roleset) roleset);
                                             }
                                         }
                                     }
@@ -369,7 +369,8 @@ public abstract class BankConverter extends Converter {
                                 //todo: shall we start from 0?
                                 int exampleCount = 0;
 
-                                exampleLoop: for (Example rOrE : examples) {
+                                exampleLoop:
+                                for (Example rOrE : examples) {
                                     String text = null;
                                     Inflection inflection = null;
 
@@ -515,6 +516,15 @@ public abstract class BankConverter extends Converter {
         }
     }
 
+    protected String getLemmaFromPredicateName(String lemmaFromPredicate) {
+        String lemma = lemmaFromPredicate.replace('_', '+')
+                .replace(' ', '+');
+        if (lemmaToTransform.keySet().contains(lemma)) {
+            lemma = lemmaToTransform.get(lemma);
+        }
+        return lemma;
+    }
+
     protected void addArgumentToSink(String key, URI keyURI, URI argumentURI, String lemma,
             String type, String rolesetID, URI lexicalEntryURI) {
         addStatementToSink(argumentURI, PMO.ROLE, keyURI);
@@ -578,19 +588,32 @@ public abstract class BankConverter extends Converter {
         return factory.createURI(builder.toString());
     }
 
-    private URI uriForRoleset(String rolesetID) {
+    protected URI uriForRoleset(String rolesetID) {
+        return uriForRoleset(rolesetID, null);
+    }
+
+    protected URI uriForRoleset(String rolesetID, @Nullable String prefix) {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
-        builder.append(rolesetPart(rolesetID));
+        builder.append(rolesetPart(rolesetID, prefix));
         return factory.createURI(builder.toString());
     }
 
-    private URI uriForConceptualization(String lemma, String type, String rolesetID, String argName) {
+    protected URI uriForConceptualization(String lemma, String type, String rolesetID, String argName) {
         return uriForConceptualizationGen(lemma, type, argPart(rolesetID, argName));
     }
 
-    private URI uriForConceptualization(String lemma, String type, String rolesetID) {
+    protected URI uriForConceptualization(String lemma, String type, String rolesetID) {
         return uriForConceptualizationGen(lemma, type, rolesetPart(rolesetID));
+    }
+
+    protected URI uriForConceptualizationWithPrefix(String lemma, String type, String rolesetID, String prefix) {
+        return uriForConceptualizationGen(lemma, type, rolesetPart(rolesetID, prefix));
+    }
+
+    protected URI uriForConceptualizationWithPrefix(String lemma, String type, String rolesetID, String argName,
+            String prefix) {
+        return uriForConceptualizationGen(lemma, type, argPart(rolesetID, argName, prefix));
     }
 
     private URI uriForConceptualizationGen(String lemma, String type, String rolesetID) {
@@ -629,6 +652,15 @@ public abstract class BankConverter extends Converter {
         return builder.toString();
     }
 
+    private String argPart(String rolesetID, String argName, String prefix) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(rolesetPart(rolesetID, prefix));
+        builder.append(SEPARATOR);
+        builder.append("arg");
+        builder.append(argName);
+        return builder.toString();
+    }
+
     private String examplePart(String rolesetID, Integer exampleCount) {
         StringBuilder builder = new StringBuilder();
         builder.append(rolesetPart(rolesetID));
@@ -647,8 +679,15 @@ public abstract class BankConverter extends Converter {
     }
 
     private String rolesetPart(String rolesetID) {
+        return rolesetPart(rolesetID, null);
+    }
+
+    private String rolesetPart(String rolesetID, @Nullable String prefix) {
+        if (prefix == null) {
+            prefix = ROLESET_PREFIX;
+        }
         StringBuilder builder = new StringBuilder();
-        builder.append(ROLESET_PREFIX);
+        builder.append(prefix);
         builder.append(SEPARATOR);
         builder.append(rolesetID);
         return builder.toString();
@@ -733,7 +772,7 @@ public abstract class BankConverter extends Converter {
     abstract void addInflectionToSink(URI exampleURI, Inflection inflection);
 
     abstract void addArgumentToSink(URI argumentURI, String argName, String f, Type argType,
-            String lemma, String type, String rolesetID, URI lexicalEntryURI);
+            String lemma, String type, String rolesetID, URI lexicalEntryURI, Role role, Roleset roleset);
 
     abstract Type getType(String code);
 
@@ -741,5 +780,7 @@ public abstract class BankConverter extends Converter {
             String f, String rolesetID);
 
     protected abstract void addRelToSink(Type argType, String argName, URI markableURI);
+
+    protected abstract void addConceptualizationLink(Roleset roleset, URI rolesetURI);
 
 }

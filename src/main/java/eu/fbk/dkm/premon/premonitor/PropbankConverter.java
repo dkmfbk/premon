@@ -4,6 +4,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
+import eu.fbk.dkm.premon.premonitor.propbank.Role;
+import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
 import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.PMONB;
 import eu.fbk.dkm.premon.vocab.PMOPB;
@@ -142,7 +144,7 @@ public class PropbankConverter extends BankConverter {
     }
 
     @Override void addArgumentToSink(URI argumentURI, String argName, String f, Type argType,
-            String lemma, String type, String rolesetID, URI lexicalEntryURI) {
+            String lemma, String type, String rolesetID, URI lexicalEntryURI, Role role, Roleset roleset) {
         //todo: transform this double switch into an external class
         switch (argType) {
         case NUMERIC:
@@ -223,5 +225,9 @@ public class PropbankConverter extends BankConverter {
         default:
             //todo: should never happen, but it happens
         }
+    }
+
+    @Override protected void addConceptualizationLink(Roleset roleset, URI conceptualizationURI) {
+
     }
 }

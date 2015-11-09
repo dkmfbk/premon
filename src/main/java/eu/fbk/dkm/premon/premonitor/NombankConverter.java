@@ -1,14 +1,21 @@
 package eu.fbk.dkm.premon.premonitor;
 
 import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
+import eu.fbk.dkm.premon.premonitor.propbank.Role;
+import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
 import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.PMONB;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.rio.RDFHandler;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by alessio on 03/11/15.
@@ -17,13 +24,14 @@ import java.util.regex.Matcher;
 public class NombankConverter extends BankConverter {
 
     ArrayList<String> pbLinks = new ArrayList<>();
+    Pattern PB_PATTERN = Pattern.compile("^verb-((.*)\\.[0-9]+)$");
 
     public NombankConverter(File path, RDFHandler sink, Properties properties, Set<URI> wnURIs) {
         super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnURIs);
 
         this.nonVerbsToo = true;
         this.isOntoNotes = false;
-        this.noDef = ! properties.getProperty("extractdefinitions", "0").equals("1");
+        this.noDef = !properties.getProperty("extractdefinitions", "0").equals("1");
         this.source = properties.getProperty("source");
         this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
         this.defaultType = "n";
@@ -85,7 +93,7 @@ public class NombankConverter extends BankConverter {
     @Override URI getSemanticArgument() {
         return PMONB.SEMANTIC_ARGUMENT;
     }
-    
+
     @Override URI getMarkable() {
         return PMONB.MARKABLE;
     }
@@ -103,17 +111,46 @@ public class NombankConverter extends BankConverter {
     }
 
     @Override void addArgumentToSink(URI argumentURI, String argName, String f, Type argType,
-            String lemma, String type, String rolesetID, URI lexicalEntryURI) {
+            String lemma, String type, String rolesetID, URI lexicalEntryURI, Role role, Roleset roleset) {
         // F is not present in NomBank
+
+        String key;
+        URI keyURI;
+
         switch (argType) {
         case NUMERIC:
-            addArgumentToSink(argName, PMONB.mapF.get(argName), argumentURI, lemma, type,
-                    rolesetID, lexicalEntryURI);
+            key = argName;
+            keyURI = PMONB.mapF.get(argName);
             break;
         case AGENT:
-            addArgumentToSink("a", PMONB.ARGA, argumentURI, lemma, type, rolesetID,
-                    lexicalEntryURI);
+            key = "a";
+            keyURI = PMONB.ARGA;
             break;
+        default:
+            return;
+        }
+
+        addArgumentToSink(key, keyURI, argumentURI, lemma, type, rolesetID, lexicalEntryURI);
+
+        URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
+        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
+        for (Matcher matcher : matchers) {
+            String pbLemma = matcher.group(2);
+            String pbPredicate = matcher.group(1);
+
+            //todo: really bad check
+            String source = role.getSource();
+            if (source != null && source.length() > 0) {
+                key = source;
+//                LOGGER.info(lemma + " " + source);
+            }
+
+            for (String pbLink : pbLinks) {
+                pbLemma = getLemmaFromPredicateName(pbLemma);
+                URI argPropBankConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, key,
+                        pbLink);
+                addStatementToSink(argConceptualizationURI, SKOS.CLOSE_MATCH, argPropBankConceptualizationURI);
+            }
         }
     }
 
@@ -143,5 +180,45 @@ public class NombankConverter extends BankConverter {
             throw new IllegalArgumentException(String.format("String %s not found", code));
         }
         return Type.NULL;
+    }
+
+    private ArrayList<Matcher> getPropBankPredicates(Roleset roleset) {
+
+        ArrayList<Matcher> ret = new ArrayList<>();
+
+        String source = roleset.getSource();
+        if (source != null && source.length() > 0) {
+
+            String[] parts = source.split("\\s+");
+            for (String part : parts) {
+                if (part.trim().length() == 0) {
+                    continue;
+                }
+
+                Matcher matcher = PB_PATTERN.matcher(source);
+                if (!matcher.find()) {
+                    continue;
+                }
+
+                ret.add(matcher);
+            }
+        }
+
+        return ret;
+    }
+
+    @Override protected void addConceptualizationLink(Roleset roleset, URI conceptualizationURI) {
+
+        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
+        for (Matcher matcher : matchers) {
+            String pbLemma = matcher.group(2);
+            String pbPredicate = matcher.group(1);
+
+            for (String pbLink : pbLinks) {
+                String lemma = getLemmaFromPredicateName(pbLemma);
+                URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
+                addStatementToSink(conceptualizationURI, SKOS.CLOSE_MATCH, pbConceptURI);
+            }
+        }
     }
 }
