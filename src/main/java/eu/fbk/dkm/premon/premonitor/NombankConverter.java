@@ -7,10 +7,7 @@ import org.openrdf.model.URI;
 import org.openrdf.rio.RDFHandler;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -18,6 +15,8 @@ import java.util.regex.Matcher;
  */
 
 public class NombankConverter extends BankConverter {
+
+    ArrayList<String> pbLinks = new ArrayList<>();
 
     public NombankConverter(File path, RDFHandler sink, Properties properties, Set<URI> wnURIs) {
         super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnURIs);
@@ -28,6 +27,15 @@ public class NombankConverter extends BankConverter {
         this.source = properties.getProperty("source");
         this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
         this.defaultType = "n";
+
+        String pbLinksString = properties.getProperty("linkpb");
+        if (pbLinksString != null) {
+            for (String link : pbLinksString.split(",")) {
+                pbLinks.add(link.trim().toLowerCase());
+            }
+        }
+
+        LOGGER.info("Links to: {}", pbLinks.toString());
     }
 
     @Override protected void addExampleArgToSink(Type argType, String argName, URI markableURI,
