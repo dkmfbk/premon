@@ -24,6 +24,8 @@ import java.util.regex.Matcher;
 
 public class PropbankConverter extends BankConverter {
 
+    private static String LINK_PATTERN = "http://verbs.colorado.edu/propbank/framesets-english/%s-%s.html";
+
     public PropbankConverter(File path, RDFHandler sink, Properties properties, Set<URI> wnURIs) {
         super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnURIs);
 
@@ -175,6 +177,10 @@ public class PropbankConverter extends BankConverter {
         default:
             //todo: should never happen, but it happens
         }
+    }
+
+    @Override protected URI getExternalLink(String lemma, String type) {
+        return factory.createURI(String.format(LINK_PATTERN, lemma, type));
     }
 
     @Override protected void addRelToSink(Type argType, String argName, URI markableURI) {

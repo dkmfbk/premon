@@ -25,6 +25,7 @@ public class NombankConverter extends BankConverter {
 
     ArrayList<String> pbLinks = new ArrayList<>();
     Pattern PB_PATTERN = Pattern.compile("^verb-((.*)\\.[0-9]+)$");
+    private static String LINK_PATTERN = "http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0/frames/%s.xml";
 
     public NombankConverter(File path, RDFHandler sink, Properties properties, Set<URI> wnURIs) {
         super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnURIs);
@@ -110,6 +111,10 @@ public class NombankConverter extends BankConverter {
 
     }
 
+    @Override protected URI getExternalLink(String lemma, String type) {
+        return factory.createURI(String.format(LINK_PATTERN, lemma));
+    }
+
     @Override void addArgumentToSink(URI argumentURI, String argName, String f, Type argType,
             String lemma, String type, String rolesetID, URI lexicalEntryURI, Role role, Roleset roleset) {
         // F is not present in NomBank
@@ -142,7 +147,6 @@ public class NombankConverter extends BankConverter {
             String source = role.getSource();
             if (source != null && source.length() > 0) {
                 key = source;
-//                LOGGER.info(lemma + " " + source);
             }
 
             for (String pbLink : pbLinks) {

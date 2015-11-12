@@ -259,6 +259,7 @@ public abstract class BankConverter extends Converter {
                                 }
 
                                 URI rolesetURI = uriForRoleset(rolesetID);
+                                addStatementToSink(rolesetURI, RDFS.SEEALSO, getExternalLink(lemma, type));
 
                                 addStatementToSink(rolesetURI, RDF.TYPE, getPredicate());
                                 if (!noDef) {
@@ -515,6 +516,8 @@ public abstract class BankConverter extends Converter {
             e.printStackTrace();
         }
     }
+
+    protected abstract URI getExternalLink(String lemma, String type);
 
     protected String getLemmaFromPredicateName(String lemmaFromPredicate) {
         String lemma = lemmaFromPredicate.replace('_', '+')
