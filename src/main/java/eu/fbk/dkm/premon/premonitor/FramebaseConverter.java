@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -365,16 +366,23 @@ public class FramebaseConverter extends Converter {
                 emit(handler, this.uri, RDFS.RANGE, uri);
             }
 
-            for (final URI uri : this.aliases) {
-                final String s = uri.stringValue();
-                final int index = s.lastIndexOf('.');
-                if (index > 0) {
-                    final String pos = s.substring(index + 1);
+            if (this.isMicroframe) {
+                for (final URI uri : this.aliases) {
+                    URI entry = null;
+                    final String uriStr = uri.stringValue();
+                    final int index = uriStr.lastIndexOf('.');
+                    final String pos = uriStr.substring(index + 1);
                     if (POS_TAGS.contains(pos)) {
-                        final int start = s.lastIndexOf('-', index);
-                        final String form = s.substring(start + 1, index);
-                        emit(handler, this.uri, ONTOLEX.IS_DENOTED_BY,
-                                VF.createURI(PM.NAMESPACE, pos + "-" + form));
+                        for (final URI parent : uriMap.get(uri).inheritsFrom) {
+                            final String parentStr = parent.stringValue();
+                            if (uriStr.startsWith(parentStr)) {
+                                final String form = uriStr
+                                        .substring(parentStr.length() + 1, index);
+                                entry = VF.createURI(PM.NAMESPACE, pos + "-" + form);
+                            }
+                        }
+                        Preconditions.checkArgument(entry != null, uriStr);
+                        emit(handler, this.uri, ONTOLEX.IS_DENOTED_BY, entry);
                     }
                 }
             }

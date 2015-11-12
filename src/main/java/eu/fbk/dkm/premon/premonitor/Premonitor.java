@@ -296,8 +296,8 @@ public class Premonitor {
             if (closure || statistics) {
                 final RDFSource tbox = RDFSources.read(false, true, null, null,
                         "classpath:/eu/fbk/dkm/premon/premonitor/tbox.ttl");
-                processors.add(RDFProcessors.rdfs(tbox, null, true, true, "rdfs2", "rdfs3",
-                        "rdfs4a", "rdfs4b", "rdfs8"));
+                processors.add(RDFProcessors.rdfs(tbox, null, true, true, "rdfs4a", "rdfs4b",
+                        "rdfs8"));
                 processors.add(RDFProcessors.unique(false));
                 processors.add(RDFProcessors.track(new Tracker(LOGGER, null,
                         "%d quads with inference", null)));
