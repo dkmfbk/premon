@@ -37,4 +37,5 @@ PreMOn consists of an **OWL ontology** for modelling predicates with their argum
 
 ### News
 
+- 2015-11-12 Updated datasets (added missing inferences)
 - 2015-10-28 Published ontology, PropBank and NomBank datasets
