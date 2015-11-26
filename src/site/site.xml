@@ -11,11 +11,7 @@
 
     <body>
         <head>
-            <style>
-                footer { padding-top: 5px!important; padding-bottom: 5px!important; margin-top: 30px!important }
-                div.subfooter { padding-top: 20px!important; padding-bottom: 10px!important }
-                p.copyright { display: none }
-            </style>
+            <link rel="icon" type="image/png" href="${site-root}/images/favicon.png" />
         </head>
 
         <menu name="About">
@@ -133,7 +129,7 @@
                     PreMOn software is licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>
                 </div>
                 <div style="float: right">
-                    <a href="http://dkm.fbk.eu/"><img src="https://premon.fbk.eu/images/fbkdkm.png"/></a>&nbsp;&nbsp;
+                    <a href="http://dkm.fbk.eu/"><img src="${site-root}/images/fbkdkm.png"/></a>&nbsp;&nbsp;
                 </div>
 
                 <script>
