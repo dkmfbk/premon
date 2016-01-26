@@ -11,13 +11,13 @@
 
     <body>
         <head>
-            <link rel="icon" type="image/png" href="${site-root}/images/favicon.png" />
+            <link rel="icon" type="image/png" href="${site-root}/images/favicon.png"/>
         </head>
 
         <menu name="About">
             <item name="Home" href="index.html"/>
             <item name="Overview" href="overview.html"/>
-            <!-- <item name="Publications" href="publications.html"/> -->
+            <item name="Publications" href="publications.html"/>
             <item name="Team" href="team-list.html"/>
             <item name="License" href="license.html"/>
         </menu>
@@ -26,21 +26,21 @@
             <item name="Overview" href="ontology.html"/>
             <item name="Core module" href="http://premon.fbk.eu/ontology/core.html"/>
             <item name="PropBank module" href="http://premon.fbk.eu/ontology/pb.html"/>
-            <item name="NomBank module" href="http://premon.fbk.eu/ontology/nb.html"/>            
+            <item name="NomBank module" href="http://premon.fbk.eu/ontology/nb.html"/>
         </menu>
-        
+
         <menu name="Data">
             <item name="Datasets download" href="download.html"/>
             <item name="SPARQL endpoint" href="query.html"/>
             <item name="URI dereferencing" href="browse.html"/>
         </menu>
-        
+
         <menu name="Software">
             <item name="PreMOnitor tool" href="premonitor.html"/>
         </menu>
 
         <menu name="Maven Reports" ref="reports"/>
-        
+
         <!--<menu ref="modules" inherit="top"/>-->
         <!--<menu ref="parent" inherit="top"/>-->
 
@@ -51,7 +51,7 @@
         </menu>
 
         <!-- Menus used only in the footer -->
-        
+
         <menu name="Main">
             <item name="Home" href="index.html"/>
             <item name="Overview" href="overview.html"/>
@@ -83,10 +83,10 @@
             <bootstrapIcons>true</bootstrapIcons>
             <html5Anchor>true</html5Anchor>
             <markPageHeader>true</markPageHeader>
-            
+
             <absoluteResourceURL>${site-root}</absoluteResourceURL>
             <protocolRelativeURLs>true</protocolRelativeURLs>
-            
+
             <skinAttribution>true</skinAttribution>
             <brand>
                 <name>
@@ -114,12 +114,12 @@
             </bottomNav>
 
             <breadcrumbs>false</breadcrumbs>
-                <!-- 
-                PreMOn means PREdicate Model for ONtologies and is developed within:<br/><br/>
-                <a href="http://dkm.fbk.eu/"><img src="https://premon.fbk.eu/images/fbkdkm.png"/></a>&nbsp;&nbsp;
-                <a href="http://www.newsreader-project.eu/"><img src="https://premon.fbk.eu/images/newsreader.png"/></a><br/>
-                -->
-                <!-- Insert here Google Analytics -->
+            <!--
+            PreMOn means PREdicate Model for ONtologies and is developed within:<br/><br/>
+            <a href="http://dkm.fbk.eu/"><img src="https://premon.fbk.eu/images/fbkdkm.png"/></a>&nbsp;&nbsp;
+            <a href="http://www.newsreader-project.eu/"><img src="https://premon.fbk.eu/images/newsreader.png"/></a><br/>
+            -->
+            <!-- Insert here Google Analytics -->
             <bottomDescription quote="false">
                 <![CDATA[
                 <div style="width: 60%; float: left">
