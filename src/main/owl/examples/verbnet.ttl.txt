@@ -1,0 +1,247 @@
+#######################################################
+# - thematic roles used disjoint from hierarchy on the guidelines
+# - members propagate up the verbclass hierarchy, such as individuals in classes
+# - roles, restriction propagate down the verbclass hierarchy, such as restrictions on subclasses (CAREFUL: selection restrictions on thematic roles)
+#######################################################
+
+@prefix : <http://premon.fbk.eu/ontology/all#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix lime: <http://www.w3.org/ns/lemon/lime#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
+
+@prefix pmovn: <http://premon.fbk.eu/ontology/vn#> .
+@prefix pmo: <http://premon.fbk.eu/ontology/core#> .
+@prefix pm: <http://premon.fbk.eu/resource/> .
+
+
+#######################################################
+# Basics....
+#######################################################
+
+# VerbNet classs
+pm:vn32-wipe_manner-10.4.1   a                 pmovn:VerbClass  .
+pm:vn32-wipe_manner-10.4.1   rdfs:label        "wipe_manner-10.4.1" .
+
+#subclass:
+pm:vn32-wipe_manner-10.4.1-1 a                 pmovn:VerbClass  .
+pm:vn32-wipe_manner-10.4.1-1 skos:broader      pm:vn32-wipe_manner-10.4.1
+
+#x member:
+pm:v-trim                    ontolex:evokes    pm:vn32-wipe_manner-10.4.1 .
+
+
+#######################################################
+# mapping con WN e groupings, non a livello di verbClass, ma di member+VerbClass --> conceptualization
+#######################################################
+
+pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1  a                   pmo:Conceptualization .
+pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1  pmo:evokedConcept   pm:vn32-wipe_manner-10.4.1 .
+pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1  pmo:evokingEntry    pm:v-trim .
+
+#groupings
+# Come trattare i mapping su groupings? http://verbs.colorado.edu/html_groupings/  , http://verbs.colorado.edu/~mpalmer/Ling7800/WordSenses.Sep4.pdf  OntoNotes?
+# Sono in qualche modo aggregazioni di verbi secondo alcune feature syn/sem... 
+pm:conceptualization-v-trim-on5-trim-v-sense-1       a                   pmo:Conceptualization .
+pm:conceptualization-v-trim-on5-trim-v-sense-1       pmo:evokedConcept   pm:on5-trim-v-sense-1 .   #pm:on5-trim-v-sense-1 a  ol:LexicalContent  #Ontonotes....
+pm:conceptualization-v-trim-on5-trim-v-sense-1       pmo:evokingEntry    pm:v-trim .
+
+pm:conceptualization-v-trim-on5-trim-v-sense-1         skos:closeMatch      pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1   .   #decide the right property...
+pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1    skos:closeMatch      pm:conceptualization-v-trim-on5-trim-v-sense-1 .	
+
+#WordNet
+#pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1   mappa su   trim%2:35:03
+#lexical sense corrispondente: <http://wordnet-rdf.princeton.edu/wn31/trim-v#1-v> <http://wordnet-rdf.princeton.edu/ontology#old_sense_key> "trim%2:35:03::" via WordNet RDF
+#sysnset corrispondente:  <http://wordnet-rdf.princeton.edu/wn31/trim-v#1-v> <http://lemon-model.net/lemon#reference> <http://wordnet-rdf.princeton.edu/wn31/201265128-v> .   via WordNet RDF
+
+pm:conceptualization-v-trim-wn31-1-v        a                   pmo:Conceptualization .
+pm:conceptualization-v-trim-wn31-1-v        pmo:evokedConcept   <http://wordnet-rdf.princeton.edu/wn31/201265128-v>  .
+pm:conceptualization-v-trim-wn31-1-v        pmo:evokingEntry    pm:v-trim .
+pm:conceptualization-v-trim-wn31-1-v        rdfs:seeAlso        <http://wordnet-rdf.princeton.edu/wn31/trim-v#1-v>   .
+
+pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1    skos:closeMatch    pm:conceptualization-v-trim-wn31-1-v   .
+pm:conceptualization-v-trim-wn31-1-v    skos:closeMatch      pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1 .
+
+
+
+#######################################################
+# ThematicRoles
+#######################################################
+
+pm:vn32-wipe_manner-10.4.1        pmo:semArg        pm:vn32-wipe_manner-10.4.1-theme .
+
+pm:vn32-wipe_manner-10.4.1-theme  a                 pmovn:SemanticArgument  .
+pm:vn32-wipe_manner-10.4.1-theme  pmo:role          pmovn:theme .
+
+pm:v-trim                         ontolex:evokes    pm:vn32-wipe_manner-10.4.1-theme .
+
+#conceptualization for the semantic argument
+pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1-theme  a                   pmo:Conceptualization .
+pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1-theme  pmo:evokedConcept   pm:vn32-wipe_manner-10.4.1-theme .
+pm:conceptualization-v-trim-vn32-wipe_manner-10.4.1-theme  pmo:evokingEntry    pm:v-trim .
+
+....
+
+
+#######################################################
+# selectional constraint on ThematicRoles
+#######################################################
+
+pm:vn32-wipe_manner-10.4.1-theme       pmovn:selRestriction   pm:vn32-wipe_manner-10.4.1-theme_srs .
+pm:vn32-wipe_manner-10.4.1-theme_srs   a                      pmovn:AndSelectionalRestrictionSet .
+
+pm:vn32-wipe_manner-10.4.1-theme_srs   pmovn:item       pm:vn32-wipe_manner-10.4.1-theme_srs_1 .
+pm:vn32-wipe_manner-10.4.1-theme_srs_1 a                pmovn:ExistAtomicSelectionalRestriction .
+pm:vn32-wipe_manner-10.4.1-theme_srs_1 pmovn:property   pmovn:concrete_srp .
+
+pm:vn32-wipe_manner-10.4.1-theme_srs   pmovn:item       pm:vn32-wipe_manner-10.4.1-theme_srs_2 .
+pm:vn32-wipe_manner-10.4.1-theme_srs_2 a                pmovn:AbsentAtomicSelectionalRestriction .
+pm:vn32-wipe_manner-10.4.1-theme_srs_2 pmovn:property   pmovn:animate_srp .
+
+
+#######################################################
+# FRAME
+#######################################################
+# Frames order not modelled, but could be modelled with first, next, item as usual
+
+pm:vn32-wipe_manner-10.4.1           pmovn:frame   pm:vn32-wipe_manner-10.4.1_frame_1 .
+pm:vn32-wipe_manner-10.4.1_frame_1   a             pmovn:Frame .
+
+pm:vn32-wipe_manner-10.4.1_frame_1          pmovn:frameDescNumber      "0.2"^^xsd:string .
+pm:vn32-wipe_manner-10.4.1_frame_1          pmovn:framePrimary         "NP V NP PP.source" ^^xsd:string . 
+pm:vn32-wipe_manner-10.4.1_frame_1          pmovn:frameSecondary       "NP-PP; Source-PP"   ^^xsd:string . #non è chiaro il valore, lasciamolo stringa
+pm:vn32-wipe_manner-10.4.1_frame_1          pmovn:frameXtag            ""^^xsd:string .
+
+
+#######################################################
+# FRAME EXAMPLE
+#######################################################
+
+pm:vn32-wipe_manner-10.4.1_frame_1           pmo:example             pm:vn32-wipe_manner-10.4.1_frame_1_ex .
+pm:vn32-wipe_manner-10.4.1_frame_1_ex        a                       pmovn:Example . 
+pm:vn32-wipe_manner-10.4.1_frame_1_ex        nif:isString            "Brian wiped the fingerprints from the counter."  .
+
+#######################################################
+# SYNTAX
+#######################################################
+
+pm:vn32-wipe_manner-10.4.1_frame_1           pmovn:frameSyntaxDescription           "Agent V Theme {{+src}} Source"^^xsd:string . 
+
+
+#value attribute always mapped to rdfs:label, and if also NpSynItem corresponding to a thematic role (check substring!!!), to the role (see above) or PrepSynItem to PrepType
+pm:vn32-wipe_manner-10.4.1_frame_1              pmovn:first          pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_1 . 
+
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_1    a                    pmovn:NpSynItem   .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_1    pmovn:itemValue      pm:vn32-wipe_manner-10.4.1-agent .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_1    rdfs:label           "Agent" .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_1    pmovn:next           pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_2 .
+
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_2    a                    pmovn:VerbSynItem   .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_2    pmovn:next           pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_3 .
+
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_3    a                    pmovn:NpSynItem   .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_3    pmovn:itemValue      pm:vn32-wipe_manner-10.4.1-theme .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_1    rdfs:label           "Theme" .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_3    pmovn:next           pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_4 .
+
+
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_4           a                     pmovn:PrepSynItem   .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_4           pmovn:selRestriction  pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_4_selres . 
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_4_selRes    a                     pmovn:ExistAtomicSelectionalRestriction .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_4_selRes    pmovn:property        pmovn:src_prp .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_4           pmovn:next            pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_5 .
+
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_5    a                    pmovn:NpSynItem   .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_5    rdfs:label           "Source" .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_5    pmovn:itemValue      pm:vn32-wipe_manner-10.4.1-source .
+
+#example of syntactic restriction, not real!!
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_5         pmovn:synRestriction  pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_5_synRes .
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_5_synRes  a                     pmovn:ExistAtomicSyntacticRestriction  .   
+pm:vn32-wipe_manner-10.4.1_frame_1_SysItem_5_synRes  pmovn:property        pmovn:rs_to_inf_syrp .
+
+
+#######################################################
+# SEMANTICS
+#######################################################
+
+pm:vn32-wipe_manner-10.4.1_frame_1           pmovn:frameSemanticsDescription           "cause(Agent, E) location(start(E), Theme, Source) not(location(end(E), Theme, ?Source))"^^xsd:string .
+
+
+#PRED 1
+pm:vn32-wipe_manner-10.4.1_frame_1           pmovn:first          pm:vn32-wipe_manner-10.4.1_frame_1_pred_1 . 
+
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1    rdf:type             pmovn:Pred .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1    rdfs:label           "cause" .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1    pmovn:itemValue      pmovn:cause_pred .
+
+#its arguments
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1           pmovn:first          pm:vn32-wipe_manner-10.4.1_frame_1_pred_1_arg_1 .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1_arg_1     rdf:type             pmovn:Arg , pmovn:ThemRoleArg .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1_arg_1     rdfs:label           "agent"
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1_arg_1     pmovn:itemValue      pm:vn32-wipe_manner-10.4.1-agent .
+    
+
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1_arg_1     pmovn:next           pm:vn32-wipe_manner-10.4.1_frame_1_pred_1_arg_2 .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1_arg_2     rdf:type             pmovn:Arg , pmovn:EventArg .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1_arg_2     rdfs:label           "E"
+#no itemValue here...
+
+#PRED 2
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_1    pmovn:next      pm:vn32-wipe_manner-10.4.1_frame_1_pred_2   .
+
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2    rdf:type             pmovn:Pred .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2    rdfs:label           "location" .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2    pmovn:itemValue      pmovn:location_pred .
+
+
+#its arguments
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2           pmovn:first          pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_1 .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_1     rdf:type             pmovn:Arg , pmovn:EventArg .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_1     rdfs:label           "start(E)"
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_1     pmovn:itemValue      pmovn:startEventArg .
+
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_1     pmovn:next           pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_2 .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_2     rdf:type             pmovn:Arg , pmovn:ThemRoleArg .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_2     rdfs:label           "theme"
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_2     pmovn:itemValue      pm:vn32-wipe_manner-10.4.1-theme .
+
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_2     pmovn:next           pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_3 .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_3     rdf:type             pmovn:Arg , pmovn:ThemRoleArg .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_3     rdfs:label           "source"
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2_arg_3     pmovn:itemValue      pm:vn32-wipe_manner-10.4.1-source .
+
+
+#PRED 3
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_2    pmovn:next      pm:vn32-wipe_manner-10.4.1_frame_1_pred_3   .
+
+#bool=! --> NotPred instead of Pred
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3    rdf:type             pmovn:NotPred .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3    rdfs:label           "location" .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3    pmovn:itemValue      pmovn:location_pred .
+
+
+#its arguments
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3           pmovn:first          pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_1 .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_1     rdf:type             pmovn:Arg , pmovn:EventArg .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_1     rdfs:label           "end(E)"
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_1     pmovn:itemValue      pmovn:endEventArg .
+
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_1     pmovn:next           pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_2 .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_2     rdf:type             pmovn:Arg , pmovn:ThemRoleArg .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_2     rdfs:label           "theme"
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_2     pmovn:itemValue      pm:vn32-wipe_manner-10.4.1-theme .
+
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_2     pmovn:next           pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_3 .
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_3     rdf:type             pmovn:Arg , pmovn:ThemRoleArg , pmovn:ImplicitArg .  #note implicit argument "?"
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_3     rdfs:label           "source"
+pm:vn32-wipe_manner-10.4.1_frame_1_pred_3_arg_3     pmovn:itemValue      pm:vn32-wipe_manner-10.4.1-source .
