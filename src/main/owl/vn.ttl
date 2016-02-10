@@ -88,6 +88,8 @@ skos:related rdf:type owl:AnnotationProperty .
 
 pmovn:first rdf:type owl:ObjectProperty ;
             
+            rdfs:label "first"@en ;
+            
             rdfs:subPropertyOf pmovn:item .
 
 
@@ -95,6 +97,8 @@ pmovn:first rdf:type owl:ObjectProperty ;
 ###  http://premon.fbk.eu/ontology/vn#frame
 
 pmovn:frame rdf:type owl:ObjectProperty ;
+            
+            rdfs:label "frame"@en ;
             
             rdfs:domain pmovn:VerbClass ;
             
@@ -106,6 +110,8 @@ pmovn:frame rdf:type owl:ObjectProperty ;
 
 pmovn:item rdf:type owl:ObjectProperty ;
            
+           rdfs:label "item"@en ;
+           
            owl:propertyChainAxiom ( pmovn:first
                                     pmovn:next
                                   ) .
@@ -115,6 +121,8 @@ pmovn:item rdf:type owl:ObjectProperty ;
 ###  http://premon.fbk.eu/ontology/vn#itemValue
 
 pmovn:itemValue rdf:type owl:ObjectProperty ;
+                
+                rdfs:comment "item value"@en ;
                 
                 rdfs:domain [ rdf:type owl:Class ;
                               owl:unionOf ( pmovn:Arg
@@ -127,7 +135,9 @@ pmovn:itemValue rdf:type owl:ObjectProperty ;
 
 ###  http://premon.fbk.eu/ontology/vn#next
 
-pmovn:next rdf:type owl:ObjectProperty .
+pmovn:next rdf:type owl:ObjectProperty ;
+           
+           rdfs:label "next"@en .
 
 
 
@@ -156,17 +166,17 @@ pmovn:property rdf:type owl:ObjectProperty ;
 
 pmovn:restrictionItem rdf:type owl:ObjectProperty ;
                       
-                      rdfs:range [ rdf:type owl:Class ;
-                                   owl:unionOf ( pmovn:SelectionalRestriction
-                                                 pmovn:SyntacticRestriction
-                                               )
-                                 ] ;
-                      
                       rdfs:domain [ rdf:type owl:Class ;
                                     owl:unionOf ( pmovn:SelectionalRestrictionSet
                                                   pmovn:SyntacticRestrictionSet
                                                 )
-                                  ] .
+                                  ] ;
+                      
+                      rdfs:range [ rdf:type owl:Class ;
+                                   owl:unionOf ( pmovn:SelectionalRestriction
+                                                 pmovn:SyntacticRestriction
+                                               )
+                                 ] .
 
 
 
@@ -174,7 +184,7 @@ pmovn:restrictionItem rdf:type owl:ObjectProperty ;
 
 pmovn:selRestriction rdf:type owl:ObjectProperty ;
                      
-                     rdfs:range pmovn:SelectionalRestrictionSet ;
+                     rdfs:range pmovn:SelectionalRestriction ;
                      
                      rdfs:subPropertyOf owl:topObjectProperty ;
                      
@@ -193,7 +203,7 @@ pmovn:synRestriction rdf:type owl:ObjectProperty ;
                      
                      rdfs:domain pmovn:NpSynItem ;
                      
-                     rdfs:range pmovn:SyntacticRestrictionSet ;
+                     rdfs:range pmovn:SyntacticRestriction ;
                      
                      rdfs:subPropertyOf owl:topObjectProperty .
 
@@ -285,12 +295,11 @@ pmovn:frameXtag rdf:type owl:DatatypeProperty ,
 #################################################################
 
 
-###  http://premon.fbk.eu/ontology/core#SemanticArgument
+###  http://premon.fbk.eu/ontology/vn#AbsentAtomicSelectionalRestriction
 
-pmo:SemanticArgument rdfs:subClassOf [ rdf:type owl:Restriction ;
-                                       owl:onProperty pmovn:selRestriction ;
-                                       owl:allValuesFrom pmovn:SelectionalRestriction
-                                     ] .
+pmovn:AbsentAtomicSelectionalRestriction rdf:type owl:Class ;
+                                         
+                                         rdfs:subClassOf pmovn:AtomicSelectionalRestriction .
 
 
 
@@ -298,8 +307,7 @@ pmo:SemanticArgument rdfs:subClassOf [ rdf:type owl:Restriction ;
 
 pmovn:AbsentAtomicSyntacticRestriction rdf:type owl:Class ;
                                        
-                                       rdfs:subClassOf pmovn:AtomicSelectionalRestriction ,
-                                                       pmovn:AtomicSyntacticRestriction .
+                                       rdfs:subClassOf pmovn:AtomicSyntacticRestriction .
 
 
 
@@ -361,13 +369,19 @@ pmovn:Arg rdf:type owl:Class ;
 
 pmovn:AtomicSelectionalRestriction rdf:type owl:Class ;
                                    
-                                   owl:equivalentClass [ rdf:type owl:Class ;
-                                                         owl:unionOf ( pmovn:AbsentAtomicSyntacticRestriction
-                                                                       pmovn:ExistAtomicSelectionalRestriction
-                                                                     )
-                                                       ] ;
+                                   rdfs:subClassOf pmovn:SelectionalRestriction ,
+                                                   [ rdf:type owl:Restriction ;
+                                                     owl:onProperty pmovn:property ;
+                                                     owl:cardinality "1"^^xsd:nonNegativeInteger
+                                                   ] ,
+                                                   [ rdf:type owl:Restriction ;
+                                                     owl:onProperty pmovn:property ;
+                                                     owl:allValuesFrom pmovn:SelectionalRestrictionProperty
+                                                   ] ;
                                    
-                                   rdfs:subClassOf pmovn:SelectionalRestriction .
+                                   owl:disjointUnionOf ( pmovn:AbsentAtomicSelectionalRestriction
+                                                         pmovn:ExistAtomicSelectionalRestriction
+                                                       ) .
 
 
 
@@ -375,13 +389,19 @@ pmovn:AtomicSelectionalRestriction rdf:type owl:Class ;
 
 pmovn:AtomicSyntacticRestriction rdf:type owl:Class ;
                                  
-                                 owl:equivalentClass [ rdf:type owl:Class ;
-                                                       owl:unionOf ( pmovn:AbsentAtomicSyntacticRestriction
-                                                                     pmovn:ExistAtomicSyntacticRestriction
-                                                                   )
-                                                     ] ;
+                                 rdfs:subClassOf pmovn:SyntacticRestriction ,
+                                                 [ rdf:type owl:Restriction ;
+                                                   owl:onProperty pmovn:property ;
+                                                   owl:cardinality "1"^^xsd:nonNegativeInteger
+                                                 ] ,
+                                                 [ rdf:type owl:Restriction ;
+                                                   owl:onProperty pmovn:property ;
+                                                   owl:allValuesFrom pmovn:SyntacticRestrictionProperty
+                                                 ] ;
                                  
-                                 rdfs:subClassOf pmovn:SyntacticRestriction .
+                                 owl:disjointUnionOf ( pmovn:AbsentAtomicSyntacticRestriction
+                                                       pmovn:ExistAtomicSyntacticRestriction
+                                                     ) .
 
 
 
@@ -424,6 +444,8 @@ pmovn:EventArgType rdf:type owl:Class ;
 ###  http://premon.fbk.eu/ontology/vn#Example
 
 pmovn:Example rdf:type owl:Class ;
+              
+              rdfs:label "example"@en ;
               
               rdfs:subClassOf pmo:Example .
 
@@ -483,6 +505,10 @@ pmovn:NpSynItem rdf:type owl:Class ;
                                                                     pmovn:ThematicRole
                                                                   )
                                                     ]
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty pmovn:itemValue ;
+                                  owl:cardinality "1"^^xsd:nonNegativeInteger
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty pmovn:selRestriction ;
@@ -653,12 +679,12 @@ pmovn:PrepSynItem rdf:type owl:Class ;
                   
                   rdfs:subClassOf pmovn:SynItem ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmovn:itemValue ;
-                                    owl:allValuesFrom pmovn:PrepType
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
                                     owl:onProperty pmovn:selRestriction ;
                                     owl:allValuesFrom pmovn:SelectionalRestriction
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmovn:itemValue ;
+                                    owl:allValuesFrom pmovn:PrepType
                                   ] ;
                   
                   skos:closeMatch <http://www.lexinfo.net/lexinfo#Preposition> .
@@ -777,12 +803,9 @@ pmovn:RoleRestrictionProperty rdf:type owl:Class ;
 
 pmovn:SelectionalRestriction rdf:type owl:Class ;
                              
-                             owl:equivalentClass [ rdf:type owl:Class ;
-                                                   owl:unionOf ( pmovn:PrepositionalRestrictionProperty
-                                                                 pmovn:RoleRestrictionProperty
-                                                                 pmovn:SelectionalRestrictionSet
-                                                               )
-                                                 ] .
+                             owl:disjointUnionOf ( pmovn:AtomicSelectionalRestriction
+                                                   pmovn:SelectionalRestrictionSet
+                                                 ) .
 
 
 
@@ -790,11 +813,9 @@ pmovn:SelectionalRestriction rdf:type owl:Class ;
 
 pmovn:SelectionalRestrictionProperty rdf:type owl:Class ;
                                      
-                                     owl:equivalentClass [ rdf:type owl:Class ;
-                                                           owl:unionOf ( pmovn:PrepositionalRestrictionProperty
-                                                                         pmovn:RoleRestrictionProperty
-                                                                       )
-                                                         ] .
+                                     owl:disjointUnionOf ( pmovn:PrepositionalRestrictionProperty
+                                                           pmovn:RoleRestrictionProperty
+                                                         ) .
 
 
 
@@ -802,17 +823,15 @@ pmovn:SelectionalRestrictionProperty rdf:type owl:Class ;
 
 pmovn:SelectionalRestrictionSet rdf:type owl:Class ;
                                 
-                                owl:equivalentClass [ rdf:type owl:Class ;
-                                                      owl:unionOf ( pmovn:AndSelectionalRestrictionSet
-                                                                    pmovn:OrSelectionalRestrictionSet
-                                                                  )
-                                                    ] ;
-                                
                                 rdfs:subClassOf pmovn:SelectionalRestriction ,
                                                 [ rdf:type owl:Restriction ;
                                                   owl:onProperty pmovn:restrictionItem ;
                                                   owl:someValuesFrom pmovn:SelectionalRestriction
-                                                ] .
+                                                ] ;
+                                
+                                owl:disjointUnionOf ( pmovn:AndSelectionalRestrictionSet
+                                                      pmovn:OrSelectionalRestrictionSet
+                                                    ) .
 
 
 
@@ -820,7 +839,22 @@ pmovn:SelectionalRestrictionSet rdf:type owl:Class ;
 
 pmovn:SemanticArgument rdf:type owl:Class ;
                        
-                       rdfs:subClassOf pmo:SemanticArgument .
+                       rdfs:label "VerbNet semantic argument"@en ;
+                       
+                       rdfs:subClassOf pmo:SemanticArgument ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty pmovn:selRestriction ;
+                                         owl:allValuesFrom pmovn:SelectionalRestriction
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty [ owl:inverseOf pmo:semArg
+                                                        ] ;
+                                         owl:allValuesFrom pmovn:VerbClass
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty pmo:role ;
+                                         owl:allValuesFrom pmovn:ThematicRole
+                                       ] .
 
 
 
@@ -828,15 +862,18 @@ pmovn:SemanticArgument rdf:type owl:Class ;
 
 pmovn:SynItem rdf:type owl:Class ;
               
-              owl:equivalentClass [ rdf:type owl:Class ;
-                                    owl:unionOf ( pmovn:AdjSynItem
-                                                  pmovn:AdvSynItem
-                                                  pmovn:LexSynItem
-                                                  pmovn:NpSynItem
-                                                  pmovn:PrepSynItem
-                                                  pmovn:VerbSynItem
-                                                )
-                                  ] .
+              rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                owl:onProperty pmovn:next ;
+                                owl:allValuesFrom pmovn:SynItem
+                              ] ;
+              
+              owl:disjointUnionOf ( pmovn:AdjSynItem
+                                    pmovn:AdvSynItem
+                                    pmovn:LexSynItem
+                                    pmovn:NpSynItem
+                                    pmovn:PrepSynItem
+                                    pmovn:VerbSynItem
+                                  ) .
 
 
 
@@ -844,11 +881,9 @@ pmovn:SynItem rdf:type owl:Class ;
 
 pmovn:SyntacticRestriction rdf:type owl:Class ;
                            
-                           owl:equivalentClass [ rdf:type owl:Class ;
-                                                 owl:unionOf ( pmovn:SyntacticRestrictionProperty
-                                                               pmovn:SyntacticRestrictionSet
-                                                             )
-                                               ] .
+                           owl:disjointUnionOf ( pmovn:AtomicSyntacticRestriction
+                                                 pmovn:SyntacticRestrictionSet
+                                               ) .
 
 
 
@@ -907,17 +942,15 @@ pmovn:SyntacticRestrictionProperty rdf:type owl:Class ;
 
 pmovn:SyntacticRestrictionSet rdf:type owl:Class ;
                               
-                              owl:equivalentClass [ rdf:type owl:Class ;
-                                                    owl:unionOf ( pmovn:AndSyntacticRestrictionSet
-                                                                  pmovn:OrSyntacticRestrictionSet
-                                                                )
-                                                  ] ;
-                              
                               rdfs:subClassOf pmovn:SyntacticRestriction ,
                                               [ rdf:type owl:Restriction ;
                                                 owl:onProperty pmovn:restrictionItem ;
                                                 owl:someValuesFrom pmovn:SyntacticRestriction
-                                              ] .
+                                              ] ;
+                              
+                              owl:disjointUnionOf ( pmovn:AndSyntacticRestrictionSet
+                                                    pmovn:OrSyntacticRestrictionSet
+                                                  ) .
 
 
 
@@ -933,7 +966,7 @@ pmovn:ThemRoleArg rdf:type owl:Class ;
 
 pmovn:ThematicRole rdf:type owl:Class ;
                    
-                   rdfs:label "ThematicRole" ;
+                   rdfs:label "VerbNet thematic role"@en ;
                    
                    owl:equivalentClass [ rdf:type owl:Class ;
                                          owl:oneOf ( pmovn:theme
@@ -973,7 +1006,12 @@ pmovn:ThematicRole rdf:type owl:Class ;
                                                    )
                                        ] ;
                    
-                   rdfs:subClassOf pmo:SemanticRole .
+                   rdfs:subClassOf pmo:SemanticRole ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty [ owl:inverseOf pmo:role
+                                                    ] ;
+                                     owl:allValuesFrom pmovn:SemanticArgument
+                                   ] .
 
 
 
@@ -981,9 +1019,13 @@ pmovn:ThematicRole rdf:type owl:Class ;
 
 pmovn:VerbClass rdf:type owl:Class ;
                 
-                rdfs:label "VerbClass" ;
+                rdfs:label "VerbNet verb class"@en ;
                 
-                rdfs:subClassOf pmo:Predicate .
+                rdfs:subClassOf pmo:Predicate ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty pmo:semArg ;
+                                  owl:allValuesFrom pmovn:SemanticArgument
+                                ] .
 
 
 
@@ -991,9 +1033,17 @@ pmovn:VerbClass rdf:type owl:Class ;
 
 pmovn:VerbFrame rdf:type owl:Class ;
                 
-                rdfs:label "Frame" ;
+                rdfs:label "VerbNet syntactic frame"@en ;
                 
-                rdfs:subClassOf owl:Thing ,
+                rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                  owl:onProperty pmovn:item ;
+                                  owl:allValuesFrom pmovn:SynItem
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty pmovn:item ;
+                                  owl:onClass pmovn:VerbSynItem ;
+                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                ] ,
                                 [ rdf:type owl:Class ;
                                   owl:unionOf ( [ rdf:type owl:Class ;
                                                   owl:complementOf [ rdf:type owl:Restriction ;
@@ -1058,7 +1108,7 @@ pmovn:about_pred rdf:type pmovn:PredType ,
 pmovn:about_prepType rdf:type pmovn:PrepType ,
                               owl:NamedIndividual ;
                      
-                     rdfs:label "about" .
+                     rdfs:label "about"@en .
 
 
 
@@ -1112,7 +1162,9 @@ pmovn:acc_ing_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:actor rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:comment "abstract, non instantiated in the dataset" ;
+            rdfs:label "actor"@en ;
+            
+            rdfs:comment "abstract, non instantiated in the dataset"@en ;
             
             skos:broader pmovn:participant .
 
@@ -1150,7 +1202,7 @@ pmovn:adv_pred rdf:type pmovn:PredType ,
 pmovn:after_prepType rdf:type pmovn:PrepType ,
                               owl:NamedIndividual ;
                      
-                     rdfs:label "after" .
+                     rdfs:label "after"@en .
 
 
 
@@ -1159,7 +1211,7 @@ pmovn:after_prepType rdf:type pmovn:PrepType ,
 pmovn:against_prepType rdf:type pmovn:PrepType ,
                                 owl:NamedIndividual ;
                        
-                       rdfs:label "against" .
+                       rdfs:label "against"@en .
 
 
 
@@ -1168,7 +1220,7 @@ pmovn:against_prepType rdf:type pmovn:PrepType ,
 pmovn:agent rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "agent" ;
+            rdfs:label "agent"@en ;
             
             skos:broader pmovn:actor .
 
@@ -1197,7 +1249,7 @@ pmovn:allow_pred rdf:type pmovn:PredType ,
 pmovn:among_prepType rdf:type pmovn:PrepType ,
                               owl:NamedIndividual ;
                      
-                     rdfs:label "among" .
+                     rdfs:label "among"@en .
 
 
 
@@ -1288,7 +1340,7 @@ pmovn:artifact_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:as_prepType rdf:type pmovn:PrepType ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "as" .
+                  rdfs:label "as"@en .
 
 
 
@@ -1306,7 +1358,7 @@ pmovn:assess_pred rdf:type pmovn:PredType ,
 pmovn:asset rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "asset" ;
+            rdfs:label "asset"@en ;
             
             skos:broader pmovn:value .
 
@@ -1326,7 +1378,7 @@ pmovn:associate_pred rdf:type pmovn:PredType ,
 pmovn:at_prepType rdf:type pmovn:PrepType ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "at" .
+                  rdfs:label "at"@en .
 
 
 
@@ -1353,7 +1405,7 @@ pmovn:attempt_pred rdf:type pmovn:PredType ,
 pmovn:attribute rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:label "attribute" ;
+                rdfs:label "attribute"@en ;
                 
                 skos:broader pmovn:undergoer .
 
@@ -1382,7 +1434,7 @@ pmovn:be_sc_ing_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:before_prepType rdf:type pmovn:PrepType ,
                                owl:NamedIndividual ;
                       
-                      rdfs:label "before" .
+                      rdfs:label "before"@en .
 
 
 
@@ -1409,7 +1461,7 @@ pmovn:believe_pred rdf:type pmovn:PredType ,
 pmovn:beneficiary rdf:type pmovn:ThematicRole ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "beneficiary" ;
+                  rdfs:label "beneficiary"@en ;
                   
                   skos:broader pmovn:undergoer .
 
@@ -1429,7 +1481,7 @@ pmovn:benefit_pred rdf:type pmovn:PredType ,
 pmovn:between_prepType rdf:type pmovn:PrepType ,
                                 owl:NamedIndividual ;
                        
-                       rdfs:label "between" .
+                       rdfs:label "between"@en .
 
 
 
@@ -1494,7 +1546,7 @@ pmovn:body_reflex_pred rdf:type pmovn:PredType ,
 pmovn:by_prepType rdf:type pmovn:PrepType ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "by" .
+                  rdfs:label "by"@en .
 
 
 
@@ -1512,7 +1564,7 @@ pmovn:capacity_pred rdf:type pmovn:PredType ,
 pmovn:cause rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "cause" ;
+            rdfs:label "cause"@en ;
             
             skos:broader pmovn:actor .
 
@@ -1541,7 +1593,7 @@ pmovn:change_value_pred rdf:type pmovn:PredType ,
 pmovn:co-Agent rdf:type pmovn:ThematicRole ,
                         owl:NamedIndividual ;
                
-               rdfs:label "co-Agent" .
+               rdfs:label "co-agent"@en .
 
 
 
@@ -1550,7 +1602,7 @@ pmovn:co-Agent rdf:type pmovn:ThematicRole ,
 pmovn:co-Patient rdf:type pmovn:ThematicRole ,
                           owl:NamedIndividual ;
                  
-                 rdfs:label "co-Patient" .
+                 rdfs:label "co-patient"@en .
 
 
 
@@ -1559,7 +1611,7 @@ pmovn:co-Patient rdf:type pmovn:ThematicRole ,
 pmovn:co-Theme rdf:type pmovn:ThematicRole ,
                         owl:NamedIndividual ;
                
-               rdfs:label "co-Theme" .
+               rdfs:label "co-theme"@en .
 
 
 
@@ -1615,7 +1667,7 @@ pmovn:communication_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:concerning_prepType rdf:type pmovn:PrepType ,
                                    owl:NamedIndividual ;
                           
-                          rdfs:label "concerning" .
+                          rdfs:label "concerning"@en .
 
 
 
@@ -1831,7 +1883,7 @@ pmovn:dest_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
 pmovn:destination rdf:type pmovn:ThematicRole ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "destination" ;
+                  rdfs:label "destination"@en ;
                   
                   skos:broader pmovn:location .
 
@@ -1984,7 +2036,7 @@ pmovn:experience_pred rdf:type pmovn:PredType ,
 pmovn:experiencer rdf:type pmovn:ThematicRole ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "experiencer" ;
+                  rdfs:label "experiencer"@en ;
                   
                   skos:broader pmovn:patient .
 
@@ -2004,7 +2056,7 @@ pmovn:express_pred rdf:type pmovn:PredType ,
 pmovn:extent rdf:type pmovn:ThematicRole ,
                       owl:NamedIndividual ;
              
-             rdfs:label "extent" ;
+             rdfs:label "extent"@en ;
              
              skos:broader pmovn:value .
 
@@ -2051,7 +2103,7 @@ pmovn:for_comp_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:for_prepType rdf:type pmovn:PrepType ,
                             owl:NamedIndividual ;
                    
-                   rdfs:label "for" .
+                   rdfs:label "for"@en .
 
 
 
@@ -2098,7 +2150,7 @@ pmovn:free_pred rdf:type pmovn:PredType ,
 pmovn:from_prepType rdf:type pmovn:PrepType ,
                              owl:NamedIndividual ;
                     
-                    rdfs:label "from" .
+                    rdfs:label "from"@en .
 
 
 
@@ -2145,7 +2197,7 @@ pmovn:give_birth_pred rdf:type pmovn:PredType ,
 pmovn:goal rdf:type pmovn:ThematicRole ,
                     owl:NamedIndividual ;
            
-           rdfs:label "goal" ;
+           rdfs:label "goal"@en ;
            
            skos:broader pmovn:place .
 
@@ -2230,7 +2282,7 @@ pmovn:human_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:in_between_prepType rdf:type pmovn:PrepType ,
                                    owl:NamedIndividual ;
                           
-                          rdfs:label "in_between" .
+                          rdfs:label "in_between"@en .
 
 
 
@@ -2248,7 +2300,7 @@ pmovn:in_pred rdf:type pmovn:PredType ,
 pmovn:in_prepType rdf:type pmovn:PrepType ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "in" .
+                  rdfs:label "in"@en .
 
 
 
@@ -2275,7 +2327,7 @@ pmovn:indicate_pred rdf:type pmovn:PredType ,
 pmovn:initial_Location rdf:type pmovn:ThematicRole ,
                                 owl:NamedIndividual ;
                        
-                       rdfs:label "initial_Location" ;
+                       rdfs:label "initial location"@en ;
                        
                        skos:broader pmovn:location ,
                                     pmovn:source .
@@ -2293,7 +2345,7 @@ pmovn:initial_location rdf:type owl:NamedIndividual .
 pmovn:instrument rdf:type pmovn:ThematicRole ,
                           owl:NamedIndividual ;
                  
-                 rdfs:label "instrument" ;
+                 rdfs:label "instrument"@en ;
                  
                  skos:broader pmovn:undergoer .
 
@@ -2319,7 +2371,7 @@ pmovn:int_control_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:into_prepType rdf:type pmovn:PrepType ,
                              owl:NamedIndividual ;
                     
-                    rdfs:label "into" .
+                    rdfs:label "into"@en .
 
 
 
@@ -2337,7 +2389,7 @@ pmovn:involuntary_pred rdf:type pmovn:PredType ,
 pmovn:like_prepType rdf:type pmovn:PrepType ,
                              owl:NamedIndividual ;
                     
-                    rdfs:label "like" .
+                    rdfs:label "like"@en .
 
 
 
@@ -2364,7 +2416,7 @@ pmovn:loc_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
 pmovn:location rdf:type pmovn:ThematicRole ,
                         owl:NamedIndividual ;
                
-               rdfs:label "location" ;
+               rdfs:label "location"@en ;
                
                skos:broader pmovn:place .
 
@@ -2435,7 +2487,7 @@ pmovn:masquerade_pred rdf:type pmovn:PredType ,
 pmovn:material rdf:type pmovn:ThematicRole ,
                         owl:NamedIndividual ;
                
-               rdfs:label "material" ;
+               rdfs:label "material"@en ;
                
                skos:broader pmovn:patient ,
                             pmovn:source .
@@ -2629,7 +2681,7 @@ pmovn:occurred_pred rdf:type pmovn:PredType ,
 pmovn:of_prepType rdf:type pmovn:PrepType ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "of" .
+                  rdfs:label "of"@en .
 
 
 
@@ -2638,7 +2690,7 @@ pmovn:of_prepType rdf:type pmovn:PrepType ,
 pmovn:off_prepType rdf:type pmovn:PrepType ,
                             owl:NamedIndividual ;
                    
-                   rdfs:label "off" .
+                   rdfs:label "off"@en .
 
 
 
@@ -2647,7 +2699,7 @@ pmovn:off_prepType rdf:type pmovn:PrepType ,
 pmovn:on_prepType rdf:type pmovn:PrepType ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "on" .
+                  rdfs:label "on"@en .
 
 
 
@@ -2656,7 +2708,7 @@ pmovn:on_prepType rdf:type pmovn:PrepType ,
 pmovn:onto_prepType rdf:type pmovn:PrepType ,
                              owl:NamedIndividual ;
                     
-                    rdfs:label "onto" .
+                    rdfs:label "onto"@en .
 
 
 
@@ -2674,7 +2726,7 @@ pmovn:organization_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:out_of_prepType rdf:type pmovn:PrepType ,
                                owl:NamedIndividual ;
                       
-                      rdfs:label "out_of" .
+                      rdfs:label "out_of"@en .
 
 
 
@@ -2683,7 +2735,7 @@ pmovn:out_of_prepType rdf:type pmovn:PrepType ,
 pmovn:over_prepType rdf:type pmovn:PrepType ,
                              owl:NamedIndividual ;
                     
-                    rdfs:label "over" .
+                    rdfs:label "over"@en .
 
 
 
@@ -2692,7 +2744,9 @@ pmovn:over_prepType rdf:type pmovn:PrepType ,
 pmovn:participant rdf:type pmovn:ThematicRole ,
                            owl:NamedIndividual ;
                   
-                  rdfs:comment "abstract, non instantiated in the dataset." .
+                  rdfs:label "participant"@en ;
+                  
+                  rdfs:comment "abstract, non instantiated in the dataset."@en .
 
 
 
@@ -2710,7 +2764,7 @@ pmovn:path_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
 pmovn:patient rdf:type pmovn:ThematicRole ,
                        owl:NamedIndividual ;
               
-              rdfs:label "patient" ;
+              rdfs:label "patient"@en ;
               
               skos:broader pmovn:undergoer .
 
@@ -2761,7 +2815,7 @@ pmovn:physical_form_pred rdf:type pmovn:PredType ,
 pmovn:pivot rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "pivot" ;
+            rdfs:label "pivot"@en ;
             
             skos:broader pmovn:undergoer .
 
@@ -2772,7 +2826,9 @@ pmovn:pivot rdf:type pmovn:ThematicRole ,
 pmovn:place rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:comment "abstract, non instantiated in the dataset" ;
+            rdfs:label "place"@en ;
+            
+            rdfs:comment "abstract, non instantiated in the dataset"@en ;
             
             skos:broader pmovn:participant .
 
@@ -2852,7 +2908,7 @@ pmovn:pred_pred rdf:type pmovn:PredType ,
 pmovn:predicate rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:label "predicate" .
+                rdfs:label "predicate"@en .
 
 
 
@@ -2870,7 +2926,7 @@ pmovn:prep_pred rdf:type pmovn:PredType ,
 pmovn:product rdf:type pmovn:ThematicRole ,
                        owl:NamedIndividual ;
               
-              rdfs:label "product" ;
+              rdfs:label "product"@en ;
               
               skos:broader pmovn:result .
 
@@ -2908,7 +2964,7 @@ pmovn:quotation_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:recipient rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:label "recipient" ;
+                rdfs:label "recipient"@en ;
                 
                 skos:broader pmovn:destination .
 
@@ -2937,7 +2993,7 @@ pmovn:refl_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:reflexive rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:label "reflexive" .
+                rdfs:label "reflexive"@en .
 
 
 
@@ -2946,7 +3002,7 @@ pmovn:reflexive rdf:type pmovn:ThematicRole ,
 pmovn:regarding_prepType rdf:type pmovn:PrepType ,
                                   owl:NamedIndividual ;
                          
-                         rdfs:label "regarding" .
+                         rdfs:label "regarding"@en .
 
 
 
@@ -2966,7 +3022,7 @@ pmovn:region_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:respecting_prepType rdf:type pmovn:PrepType ,
                                    owl:NamedIndividual ;
                           
-                          rdfs:label "respecting" .
+                          rdfs:label "respecting"@en .
 
 
 
@@ -2975,7 +3031,7 @@ pmovn:respecting_prepType rdf:type pmovn:PrepType ,
 pmovn:result rdf:type pmovn:ThematicRole ,
                       owl:NamedIndividual ;
              
-             rdfs:label "result" ;
+             rdfs:label "result"@en ;
              
              skos:broader pmovn:goal ,
                           pmovn:patient .
@@ -3143,7 +3199,7 @@ pmovn:sound_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:source rdf:type pmovn:ThematicRole ,
                       owl:NamedIndividual ;
              
-             rdfs:label "source" ;
+             rdfs:label "source"@en ;
              
              skos:broader pmovn:place .
 
@@ -3206,7 +3262,7 @@ pmovn:state_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:stimulus rdf:type pmovn:ThematicRole ,
                         owl:NamedIndividual ;
                
-               rdfs:label "stimulus" ;
+               rdfs:label "stimulus"@en ;
                
                skos:broader pmovn:cause .
 
@@ -3273,7 +3329,7 @@ pmovn:that_comp_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:theme rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "theme" ;
+            rdfs:label "theme"@en ;
             
             skos:broader pmovn:undergoer .
 
@@ -3284,7 +3340,7 @@ pmovn:theme rdf:type pmovn:ThematicRole ,
 pmovn:through_prepType rdf:type pmovn:PrepType ,
                                 owl:NamedIndividual ;
                        
-                       rdfs:label "through" .
+                       rdfs:label "through"@en .
 
 
 
@@ -3293,7 +3349,7 @@ pmovn:through_prepType rdf:type pmovn:PrepType ,
 pmovn:time rdf:type pmovn:ThematicRole ,
                     owl:NamedIndividual ;
            
-           rdfs:label "time" ;
+           rdfs:label "time"@en ;
            
            skos:broader pmovn:participant .
 
@@ -3322,7 +3378,7 @@ pmovn:to_be_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:to_prepType rdf:type pmovn:PrepType ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "to" .
+                  rdfs:label "to"@en .
 
 
 
@@ -3353,7 +3409,7 @@ pmovn:tool_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:topic rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "topic" ;
+            rdfs:label "topic"@en ;
             
             skos:broader pmovn:theme .
 
@@ -3364,7 +3420,7 @@ pmovn:topic rdf:type pmovn:ThematicRole ,
 pmovn:towards_prepType rdf:type pmovn:PrepType ,
                                 owl:NamedIndividual ;
                        
-                       rdfs:label "towards" .
+                       rdfs:label "towards"@en .
 
 
 
@@ -3373,7 +3429,7 @@ pmovn:towards_prepType rdf:type pmovn:PrepType ,
 pmovn:trajectory rdf:type pmovn:ThematicRole ,
                           owl:NamedIndividual ;
                  
-                 rdfs:label "trajectory" .
+                 rdfs:label "trajectory"@en .
 
 
 
@@ -3400,7 +3456,7 @@ pmovn:transfer_pred rdf:type pmovn:PredType ,
 pmovn:under_prepType rdf:type pmovn:PrepType ,
                               owl:NamedIndividual ;
                      
-                     rdfs:label "under" .
+                     rdfs:label "under"@en .
 
 
 
@@ -3409,7 +3465,9 @@ pmovn:under_prepType rdf:type pmovn:PrepType ,
 pmovn:undergoer rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:comment "abstract, non instantiated in the dataset" ;
+                rdfs:label "undergoer"@en ;
+                
+                rdfs:comment "abstract, non instantiated in the dataset"@en ;
                 
                 skos:broader pmovn:participant .
 
@@ -3420,7 +3478,7 @@ pmovn:undergoer rdf:type pmovn:ThematicRole ,
 pmovn:until_prepType rdf:type pmovn:PrepType ,
                               owl:NamedIndividual ;
                      
-                     rdfs:label "until" .
+                     rdfs:label "until"@en .
 
 
 
@@ -3429,7 +3487,7 @@ pmovn:until_prepType rdf:type pmovn:PrepType ,
 pmovn:upon_prepType rdf:type pmovn:PrepType ,
                              owl:NamedIndividual ;
                     
-                    rdfs:label "upon" .
+                    rdfs:label "upon"@en .
 
 
 
@@ -3456,7 +3514,7 @@ pmovn:use_pred rdf:type pmovn:PredType ,
 pmovn:value rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "value" ;
+            rdfs:label "value"@en ;
             
             skos:broader pmovn:place .
 
@@ -3595,7 +3653,7 @@ pmovn:wheth_inf_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:with_prepType rdf:type pmovn:PrepType ,
                              owl:NamedIndividual ;
                     
-                    rdfs:label "with" .
+                    rdfs:label "with"@en .
 
 
 
@@ -3612,6 +3670,10 @@ pmovn:with_prepTypep rdf:type owl:NamedIndividual .
 #    Annotations
 #
 #################################################################
+
+
+pmo:core rdfs:label "core"@en .
+
 
 
 pmovn:natural_rrp skos:broader pmovn:concrete_rrp .
