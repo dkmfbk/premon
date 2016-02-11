@@ -127,6 +127,8 @@ vann:preferredNamespaceUri rdf:type owl:AnnotationProperty .
 nif:annotation rdf:type owl:ObjectProperty .
 
 
+skos:broader rdf:type owl:ObjectProperty .
+
 
 ###  http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#referenceContext
 
@@ -169,6 +171,38 @@ pmo:evokingEntry rdf:type owl:FunctionalProperty ,
                  rdfs:domain pmo:Conceptualization ;
                  
                  rdfs:range ontolex:LexicalEntry .
+
+
+
+###  http://premon.fbk.eu/ontology/core#example
+
+pmo:example rdf:type owl:ObjectProperty ;
+            
+            rdfs:range pmo:Example .
+
+
+
+###  http://premon.fbk.eu/ontology/core#first
+
+pmo:first rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf pmo:item .
+
+
+
+###  http://premon.fbk.eu/ontology/core#item
+
+pmo:item rdf:type owl:ObjectProperty ;
+         
+         owl:propertyChainAxiom ( pmo:item
+                                  pmo:next
+                                ) .
+
+
+
+###  http://premon.fbk.eu/ontology/core#next
+
+pmo:next rdf:type owl:ObjectProperty .
 
 
 
@@ -260,6 +294,8 @@ ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf pmo:evokingEntry
 pmo:core rdf:type owl:DatatypeProperty ,
                   owl:FunctionalProperty ;
          
+         rdfs:label "core"@en ;
+         
          rdfs:domain pmo:SemanticArgument ;
          
          rdfs:range xsd:boolean .
@@ -295,13 +331,13 @@ pmo:Conceptualization rdf:type owl:Class ;
                       
                       rdfs:subClassOf skos:Concept ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokingEntry ;
-                                        owl:onClass ontolex:LexicalEntry ;
+                                        owl:onProperty pmo:evokedConcept ;
+                                        owl:onClass ontolex:LexicalConcept ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokedConcept ;
-                                        owl:onClass ontolex:LexicalConcept ;
+                                        owl:onProperty pmo:evokingEntry ;
+                                        owl:onClass ontolex:LexicalEntry ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] .
 
@@ -326,12 +362,12 @@ pmo:Markable rdf:type owl:Class ;
              rdfs:subClassOf nif:RFC5147String ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:onClass pmo:Example ;
-                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               owl:allValuesFrom pmo:Example
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:allValuesFrom pmo:Example
+                               owl:onClass pmo:Example ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] .
 
 
