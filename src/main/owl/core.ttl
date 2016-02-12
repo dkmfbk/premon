@@ -271,6 +271,14 @@ pmo:typeRel rdf:type owl:ObjectProperty ;
 
 
 
+###  http://premon.fbk.eu/ontology/core#valueObj
+
+pmo:valueObj rdf:type owl:ObjectProperty ;
+             
+             rdfs:comment "item value"@en .
+
+
+
 ###  http://www.w3.org/2004/02/skos/core#broader
 
 skos:broader rdf:type owl:ObjectProperty .
@@ -308,6 +316,12 @@ pmo:core rdf:type owl:DatatypeProperty ,
 
 
 
+###  http://premon.fbk.eu/ontology/core#valueDt
+
+pmo:valueDt rdf:type owl:DatatypeProperty .
+
+
+
 
 
 #################################################################
@@ -337,13 +351,13 @@ pmo:Conceptualization rdf:type owl:Class ;
                       
                       rdfs:subClassOf skos:Concept ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokingEntry ;
-                                        owl:onClass ontolex:LexicalEntry ;
+                                        owl:onProperty pmo:evokedConcept ;
+                                        owl:onClass ontolex:LexicalConcept ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokedConcept ;
-                                        owl:onClass ontolex:LexicalConcept ;
+                                        owl:onProperty pmo:evokingEntry ;
+                                        owl:onClass ontolex:LexicalEntry ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] .
 
