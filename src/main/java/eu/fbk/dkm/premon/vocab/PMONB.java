@@ -109,13 +109,13 @@ public final class PMONB {
     public static final URI ARGM_TMP = createURI("argm-tmp");
 
     /** Individual pmonb:prd (a pmonb:Tag). */
-    public static final URI PRD = createURI("prd");
+    public static final URI TAG_PRD = createURI("prd");
 
     /** Individual pmonb:ref (a pmonb:Tag). */
-    public static final URI REF = createURI("ref");
+    public static final URI TAG_REF = createURI("ref");
 
     /** Individual pmonb:support (a pmonb:Tag). */
-    public static final URI SUPPORT = createURI("support");
+    public static final URI TAG_SUPPORT = createURI("support");
 
     // Map
 
@@ -136,9 +136,9 @@ public final class PMONB {
         mapM.put("prd", ARGM_PRD);
         mapM.put("tmp", ARGM_TMP);
 
-        mapO.put("prd", PRD);
-        mapO.put("ref", REF);
-        mapO.put("support", SUPPORT);
+        mapO.put("prd", TAG_PRD);
+        mapO.put("ref", TAG_REF);
+        mapO.put("support", TAG_SUPPORT);
 
         mapF.put("0", ARG0);
         mapF.put("1", ARG1);
