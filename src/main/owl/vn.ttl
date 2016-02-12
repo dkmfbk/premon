@@ -588,11 +588,11 @@ pmovn:PrepositionSelectionalRestriction rdf:type owl:Class ;
 
 pmovn:Restriction rdf:type owl:Class ;
                   
-                  owl:disjointUnionOf ( pmovn:AtomicRestriction
-                                        pmovn:CompoundRestriction
-                                      ) ,
-                                      ( pmovn:SelectionalRestriction
+                  owl:disjointUnionOf ( pmovn:SelectionalRestriction
                                         pmovn:SyntacticRestriction
+                                      ) ,
+                                      ( pmovn:AtomicRestriction
+                                        pmovn:CompoundRestriction
                                       ) .
 
 
@@ -1795,12 +1795,6 @@ pmovn:predicate rdf:type pmovn:ThematicRole ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#preposition
-
-pmovn:preposition rdf:type owl:NamedIndividual .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#product
 
 pmovn:product rdf:type pmovn:ThematicRole ,
@@ -2263,12 +2257,6 @@ pmovn:wheth_inf_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
                               owl:NamedIndividual ;
                      
                      rdfs:label "wheth_inf" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#with_prepTypep
-
-pmovn:with_prepTypep rdf:type owl:NamedIndividual .
 
 
 
