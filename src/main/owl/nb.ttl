@@ -174,13 +174,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
                   
                   rdfs:subClassOf pmo:SemanticArgument ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmo:role ;
-                                    owl:allValuesFrom :SemanticRole
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
                                     owl:onProperty [ owl:inverseOf pmo:semArg
                                                    ] ;
                                     owl:allValuesFrom :Predicate
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmo:role ;
+                                    owl:allValuesFrom :SemanticRole
                                   ] .
 
 
@@ -342,24 +342,24 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 
 
-###  http://premon.fbk.eu/ontology/nb#prd
+###  http://premon.fbk.eu/ontology/nb#tag-prd
 
-:prd rdf:type :Tag ,
-              owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/nb#ref
-
-:ref rdf:type :Tag ,
-              owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/nb#support
-
-:support rdf:type :Tag ,
+:tag-prd rdf:type :Tag ,
                   owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ontology/nb#tag-ref
+
+:tag-ref rdf:type :Tag ,
+                  owl:NamedIndividual .
+
+
+
+###  http://premon.fbk.eu/ontology/nb#tag-support
+
+:tag-support rdf:type :Tag ,
+                      owl:NamedIndividual .
 
 
 

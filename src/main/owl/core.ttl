@@ -172,6 +172,40 @@ pmo:evokingEntry rdf:type owl:FunctionalProperty ,
 
 
 
+###  http://premon.fbk.eu/ontology/core#example
+
+pmo:example rdf:type owl:ObjectProperty ;
+            
+            rdfs:comment "example"@en ;
+            
+            rdfs:range pmo:Example .
+
+
+
+###  http://premon.fbk.eu/ontology/core#first
+
+pmo:first rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf pmo:item .
+
+
+
+###  http://premon.fbk.eu/ontology/core#item
+
+pmo:item rdf:type owl:ObjectProperty ;
+         
+         owl:propertyChainAxiom ( pmo:item
+                                  pmo:next
+                                ) .
+
+
+
+###  http://premon.fbk.eu/ontology/core#next
+
+pmo:next rdf:type owl:ObjectProperty .
+
+
+
 ###  http://premon.fbk.eu/ontology/core#predicateRel
 
 pmo:predicateRel rdf:type owl:ObjectProperty ;
@@ -237,6 +271,20 @@ pmo:typeRel rdf:type owl:ObjectProperty ;
 
 
 
+###  http://premon.fbk.eu/ontology/core#valueObj
+
+pmo:valueObj rdf:type owl:ObjectProperty ;
+             
+             rdfs:comment "item value"@en .
+
+
+
+###  http://www.w3.org/2004/02/skos/core#broader
+
+skos:broader rdf:type owl:ObjectProperty .
+
+
+
 ###  http://www.w3.org/ns/lemon/ontolex#evokes
 
 ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf pmo:evokingEntry
@@ -260,9 +308,17 @@ ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf pmo:evokingEntry
 pmo:core rdf:type owl:DatatypeProperty ,
                   owl:FunctionalProperty ;
          
+         rdfs:label "core"@en ;
+         
          rdfs:domain pmo:SemanticArgument ;
          
          rdfs:range xsd:boolean .
+
+
+
+###  http://premon.fbk.eu/ontology/core#valueDt
+
+pmo:valueDt rdf:type owl:DatatypeProperty .
 
 
 
@@ -295,13 +351,13 @@ pmo:Conceptualization rdf:type owl:Class ;
                       
                       rdfs:subClassOf skos:Concept ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokingEntry ;
-                                        owl:onClass ontolex:LexicalEntry ;
+                                        owl:onProperty pmo:evokedConcept ;
+                                        owl:onClass ontolex:LexicalConcept ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokedConcept ;
-                                        owl:onClass ontolex:LexicalConcept ;
+                                        owl:onProperty pmo:evokingEntry ;
+                                        owl:onClass ontolex:LexicalEntry ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] .
 

@@ -23,6 +23,9 @@ public final class PMOPB {
 
     // Classes
 
+    /** Class pmopb:AgentiveRole. */
+    public static final URI AGENTIVE_ROLE = createURI("AgentiveRole");
+
     /** Class pmopb:Aspect. */
     public static final URI ASPECT_C = createURI("Aspect");
 
@@ -40,9 +43,6 @@ public final class PMOPB {
 
     /** Class pmopb:ModifierRole. */
     public static final URI MODIFIER_ROLE = createURI("ModifierRole");
-
-    /** Class pmopb:AgentiveRole. */
-    public static final URI AGENTIVE_ROLE = createURI("AgentiveRole");
 
     /** Class pmopb:NumberedRole. */
     public static final URI NUMBERED_ROLE = createURI("NumberedRole");
@@ -180,14 +180,14 @@ public final class PMOPB {
     /** Individual pmopb:argm-tmp (a pmopb:ModifierRole). */
     public static final URI ARGM_TMP = createURI("argm-tmp");
 
-    /** Individual pmopb:pag (a pmopb:Tag). */
-    public static final URI PAG = createURI("pag");
+    /** Individual pmopb:tag-pag (a pmopb:Tag). */
+    public static final URI TAG_PAG = createURI("tag-pag");
 
-    /** Individual pmopb:ppt (a pmopb:Tag). */
-    public static final URI PPT = createURI("ppt");
+    /** Individual pmopb:tag-ppt (a pmopb:Tag). */
+    public static final URI TAG_PPT = createURI("tag-ppt");
 
-    /** Individual pmopb:vsp (a pmopb:Tag). */
-    public static final URI VSP = createURI("vsp");
+    /** Individual pmopb:tag-vsp (a pmopb:Tag). */
+    public static final URI TAG_VSP = createURI("tag-vsp");
 
     /** Individual pmopb:active (a pmopb:Voice). */
     public static final URI ACTIVE = createURI("active");
@@ -306,9 +306,9 @@ public final class PMOPB {
         mapM.put("slc", ARGM_SLC);
         mapM.put("lvb", ARGM_LVB);
 
-        mapO.put("pag", PAG);
-        mapO.put("ppt", PPT);
-        mapO.put("vsp", VSP);
+        mapO.put("pag", TAG_PAG);
+        mapO.put("ppt", TAG_PPT);
+        mapO.put("vsp", TAG_VSP);
 
         mapF.put("0", ARG0);
         mapF.put("1", ARG1);

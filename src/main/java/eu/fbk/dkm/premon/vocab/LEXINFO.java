@@ -1,11 +1,11 @@
 package eu.fbk.dkm.premon.vocab;
 
+import java.util.HashMap;
+
 import org.openrdf.model.Namespace;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
-
-import java.util.HashMap;
 
 /**
  * Vocabulary constants for the LEXINFO Ontology (subset, work in progress).
@@ -53,6 +53,9 @@ public final class LEXINFO {
 
     /** Individual lexinfo:noun(a lexinfo:PartOfSpeech). */
     public static final URI NOUN = createURI("noun");
+
+    /** Individual lexinfo:preposition (a lexinfo:PartOfSpeech). */
+    public static final URI PREPOSITION = createURI("preposition");
 
     /** Individual lexinfo:pronoun (a lexinfo:PartOfSpeech). */
     public static final URI PRONOUN = createURI("pronoun");
