@@ -349,7 +349,7 @@ public abstract class BankConverter extends Converter {
                                                     addStatementToSink(argumentURI,
                                                             SKOS.DEFINITION, descr);
                                                 }
-                                                addStatementToSink(lexicalEntryURI, PMO.SEM_ARG,
+                                                addStatementToSink(rolesetURI, PMO.SEM_ARG,
                                                         argumentURI);
 
                                                 addArgumentToSink(argumentURI, argName, nf.getF(),
