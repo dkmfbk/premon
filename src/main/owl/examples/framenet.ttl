@@ -1,0 +1,247 @@
+definition --> skos:definition 
+cBy        --> by (string)
+cDate      --> date (le facciamo xsd date?)
+ID         --> ID (int)  oppure dcterms:identifier (literal)
+name       --> name (string)
+abbrev     --> abbreviation (string)
+
+pos        --> lexinfo:partOfSpeech
+
+
+
+
+modellazione Semantic Roles?? 
+
+coreType modelled with subclasses on SemanticArgument
+name mappato su rdfs:label
+
+
+#######################
+## Conversione del semType
+#######################
+
+
+
+ <semType abbrev="Body-of-water" name="Body_of_water" ID="2">
+        <definition>Labels LU's which designate bodies of water.  The limits of a body of water are defined in terms of the land that borders the water.  Equivlent to WN Body of water.
+(Appropriate for LU's in Locale frame and its descendants.)</definition>
+        <superType supID="17" superTypeName="Region"/>
+    </semType>
+    
+    
+    
+pmofn:fn16-body_of_water_semType   a     pmofn:SemType   .
+pmofn:fn16-body_of_water_semType   dc:identifier     "2"^^xsd:int   .
+pmofn:fn16-body_of_water_semType   rdfs:label     "Body_of_water"^^xsd:string   .
+pmofn:fn16-body_of_water_semType   skos:definition   "Labels LU's which designate bodies of water.  The limits of a body of water are defined in terms of the land that borders the water.  Equivlent to WN Body of water.
+(Appropriate for LU's in Locale frame and its descendants.)"^^xsd:string   .
+pmofn:fn16-body_of_water_semType   skos:broader     pmofn:fn16-region_semType   .
+#il superType ID verrà modellato sul supertype... non qui. 
+
+
+
+
+#######################
+## frame files
+#######################
+
+
+pm:fn16-abounding_with  	a			pmofn:Frame ;
+							rdfs:label      "Abounding_with"^^xsd:string ;
+							pmofn:cBy  		"MJE"^^xsd:string ;
+							pmofn:cDate		"2002-01-28T04:30:50-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
+							dct:identifier  "262"^^xsd:int ;
+							skos:definition "kadsrfoerprmkrt"xsd:string ; #tag definition da escappare....
+							pmo:semArg      pm:fn16-abounding_with@theme ;
+					
+#definition of a frame element 
+
+pm:fn16-abounding_with@theme		a				pmofn:FrameElement , pmofn:CoreFrameElement;
+									rdfs:label      "Theme"^^xsd:string ;
+									pmofn:cBy  		"MJE"^^xsd:string ;
+									pmofn:cDate		"2002-01-28T04:59:48-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
+									dct:identifier  "2260"^^xsd:int ;
+									skos:definition "adsjnkfdsjkregndjakfwdmfe"xsd:string ; #tag definition da escappare....
+									pmo:semType		pmofn:fn16-physical_object_semType  .  # definito nei semType (vedi sopra)
+		
+# se un frame element contiene la excludes (esempio qui fittizio)
+pm:fn16-abounding_with@theme        pmofn:excludesFrameElement      pm:fn16-abounding_with@Transferors   .	
+# se un frame element contiene la requires (esempio qui fittizio)
+pm:fn16-abounding_with@theme        pmofn:requiresFrameElement      pm:fn16-abounding_with@Transferors   .			
+
+
+####
+#    <FEcoreSet>
+#        <memberFE name="Expressor" ID="9042"/>
+#        <memberFE name="Medium" ID="9031"/>
+#        <memberFE name="Speaker" ID="9023"/>
+#    </FEcoreSet>
+#    <FEcoreSet>
+#        <memberFE name="Message" ID="9040"/>
+#        <memberFE name="Topic" ID="9026"/>
+#    </FEcoreSet>
+pm:fn16-abounding_with				pmofn:feCoreSet		pm:fn16-abounding_with_coreSet1    .
+pm:fn16-abounding_with_coreSet1  	a			pmofn:FECoreSet ;
+									:item		pm:fn16-abounding_with@expressor   ,  pm:fn16-abounding_with@medium   , pm:fn16-abounding_with@speaker	.
+									
+pm:fn16-abounding_with				pmofn:feCoreSet		pm:fn16-abounding_with_coreSet2    .
+pm:fn16-abounding_with_coreSet2  	a			pmofn:FECoreSet ;
+									:item		pm:fn16-abounding_with@message   ,  pm:fn16-abounding_with@topic   .
+
+
+					
+					
+#frame relations
+
+pm:fn16-abounding_with	pmofn:inheritsFrom		pm:fn16-locative_relation    ;
+						pmofn:isInheritedBy		pm:fn16-locative_relation    ;
+#						...
+						pmofn:seeAlso			pm:fn16-distributed_position    .
+
+
+#lexical units
+pm:lexicalunit-v-teem-fn16-abounding_with		a						pmofn:LexicalUnit         ;
+												pmo:evokedConcept		pm:fn16-abounding_with    ;
+												pmo:evokingEntry		pm:v-teem    ;
+												pmofn:status			"Finished_Initial"^^xsd:string  ;
+												lexinfo:partOfSpeech	lexinfo:verb ; #to be checked the correct pos value...
+												rdfs:label				"teem.v" ;
+												dct:identifier  		"4765"^^xsd:int ;
+												#lemma ID non modellato, non server....
+												pmofn:cBy  				"MJE"^^xsd:string ;
+												pmofn:cDate				"2002-01-28T04:31:33-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
+												skos:definition			"COD: be full of or swarming with."^^xsd:string
+#sentence count non modellato, non serve....
+   
+# se ci fosse "incorporatedFE", tipo  <lexUnit status="Created" incorporatedFE="Vehicle" POS="N" name="vessel.n" ID="13131" lemmaID="42925" cBy="MJE" cDate="03/21/2006 11:14:13 PST Tue">
+pm:lexicalunit-n-vessel-fn16-abounding_with		pmofn:incorporatedFrameElement				pm:fn16-vehicle@vehicle
+
+
+pm:v-teem 		a        ontolex:LexicalEntry   .
+#.... TBD: add usual modelling Lexical Entry....
+# se composta da più parole (caso di LU con multipli lexeme) usare ontolex:MultiWordExpression e legare (decomp:subterm) i singoli lexeme alla composta.
+
+pm:v-teem		pmo:evokes		pm:fn16-abounding_with    .
+
+
+#conceptualization dell'argomento, i.e. del frame element.....   
+pm:conceptualization-v-teem-fn16-abounding_with@theme		a						pmo:Conceptualization         ;
+													pmo:evokedConcept		pm:fn16-abounding_with@theme    ;
+													pmo:evokingEntry		pm:v-teem    .
+
+pm:v-teem		pmo:evokes		pm:lexicalunit-v-teem-fn16-abounding_with@theme    .
+
+
+#######################
+## fr Relation 
+#######################
+
+#dato il seguente xml
+#    <frameRelationType subFrameName="Child" superFrameName="Parent" name="Inheritance" ID="1">
+#        <frameRelation subID="341" supID="187" subFrameName="Change_of_consistency" superFrameName="Event" ID="2">
+#            <FERelation subID="2921" supID="1446" subFEName="Time" superFEName="Time" ID="808"/>
+
+
+# controllare che la relazione ci sia già  
+#    <frameRelationType subFrameName="Child" superFrameName="Parent" name="Inheritance" ID="1">
+#    	<frameRelation subID="341" supID="187" subFrameName="Change_of_consistency" superFrameName="Event" ID="2">
+# altrimenti aggiungerla (vedi sopra) tra i due frame 
+pm:fn16-change_of_consistency   pmofn:inheritsFrom		pm:fn16-event    .
+
+#mappare le i frameElement
+
+<FERelation subID="2921" supID="1446" subFEName="Time" superFEName="Time" ID="808"/> 
+
+pm:fn16-change_of_consistency@time		pmofn:frameElementRelation		pm:fn16-event@Time	.
+
+
+
+
+##############################
+## Examples from lexical Units
+##############################
+
+
+# <sentence corpID="111" docID="421" sentNo="4" paragNo="2882" aPos="0" ID="1225353">
+#            <text>I have been communicating with the Minister since 1988 on that problem .</text>
+#            <annotationSet cDate="06/11/2003 10:01:42 PDT Wed" status="UNANN" ID="1897766">
+#                <layer rank="1" name="PENN">
+#                    <label end="0" start="0" name="PP"/>
+#                    <label end="5" start="2" name="VHP"/>
+#                    <label end="10" start="7" name="VBN"/>
+#                    <label end="24" start="12" name="VVG"/>
+#                    <label end="29" start="26" name="in"/>
+#                    <label end="33" start="31" name="dt"/>
+#                    <label end="42" start="35" name="NP"/>
+#                    <label end="48" start="44" name="in"/>
+#                    <label end="53" start="50" name="cd"/>
+#                    <label end="56" start="55" name="in"/>
+#                    <label end="61" start="58" name="dt"/>
+#                    <label end="69" start="63" name="nn"/>
+#                    <label end="71" start="71" name="sent"/>
+#                </layer>
+#                <layer rank="1" name="NER"/>
+#                <layer rank="1" name="WSL"/>
+#            </annotationSet>
+#            <annotationSet cDate="06/11/2003 10:01:43 PDT Wed" status="MANUAL" ID="1897767">
+#                <layer rank="1" name="Target">
+#                    <label cBy="CFB" end="24" start="12" name="Target"/>
+#                </layer>
+#                <layer rank="1" name="FE">
+#                    <label cBy="CFB" feID="21" end="0" start="0" name="Communicator"/>
+#                    <label cBy="CFB" feID="22" end="42" start="26" name="Addressee"/>
+#                    <label cBy="CFB" feID="4614" end="53" start="44" name="Duration"/>
+#                    <label cBy="CFB" feID="24" end="69" start="55" name="Topic"/>
+#                </layer>
+#                <layer rank="1" name="GF">
+#                    <label end="0" start="0" name="Ext"/>
+#                    <label end="42" start="26" name="Dep"/>
+#                    <label end="53" start="44" name="Dep"/>
+#                    <label end="69" start="55" name="Dep"/>
+#                </layer>
+#                <layer rank="1" name="PT">
+#                    <label end="0" start="0" name="NP"/>
+#                    <label end="42" start="26" name="PP"/>
+#                    <label end="53" start="44" name="PP"/>
+#                    <label end="69" start="55" name="PP"/>
+#                </layer>
+#                <layer rank="1" name="Other"/>
+#                <layer rank="1" name="Sent"/>
+#                <layer rank="1" name="Verb"/>
+#            </annotationSet>
+#        </sentence>
+
+
+#Vedi anche modellazione esempi e markable in propbank e nombank
+
+pm:example_1225353			a				pmofn:Example		;
+							nif:isString	"I have been communicating with the Minister since 1988 on that problem ."^^xsd:string		.
+							
+
+pm:fn16-communication								pmo:example		pm:example_1225353		.			#frame	
+pm:lexicalunitv-communicate-fn16-communication		pmo:example		pm:example_1225353		.			#LU
+
+pm:fn16-communication@communicator					pmo:implicitIn		pm:example_1225353		.			#FE  a span 0,0 , quindi implicito, no markable
+pm:fn16-communication@addressee						pmo:example			pm:example_1225353		.			#FE
+pm:fn16-communication@duration						pmo:example			pm:example_1225353		.			#FE
+pm:fn16-communication@topic							pmo:example			pm:example_1225353		.			#FE
+
+
+							
+pm:example_1225353#char=12,24			a						pmofn:Markable		;
+										nif:anchorOf			"communicating"		;
+										nif:annotation			pm:fn16-communication								;    #target va su frame e lu
+										nif:annotation			pm:lexicalunitv-communicate-fn16-communication		;    #target va su frame e lu
+										nif:beginIndex			"12"^^xsd:int ;
+										nif:beginIndex			"24"^^xsd:int ;
+										nif:referenceContext	pm:example_1225353	.
+
+# non c'e' quello per communicator xche span 0,0
+
+
+pm:example_1225353#char=26,42			a						pmofn:Markable		;
+										nif:anchorOf			"with the Minister"		;
+										nif:annotation			pm:fn16-communication@addressee								;    #il FE corrispondente
+										nif:beginIndex			"26"^^xsd:int ;
+										nif:beginIndex			"42"^^xsd:int ;
+										nif:referenceContext	pm:example_1225353	.

@@ -20,8 +20,6 @@
                                    
                                    vann:preferredNamespacePrefix "pmofn" ;
                                    
-                                   dc:creator "Alessio Palmero Aprosio" ;
-                                   
                                    dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                    
                                    dc:creator "Francesco Corcoglioniti" ,
@@ -44,6 +42,343 @@
                                    rdfs:isDefinedBy <http://premon.fbk.eu/ontology/fn.ttl> ;
                                    
                                    owl:imports <http://www.w3.org/ns/lemon/ontolex> .
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://premon.fbk.eu/ontology/fn#excludesFrameElement
+
+:excludesFrameElement rdf:type owl:ObjectProperty ;
+                      
+                      rdfs:subPropertyOf :frameElementRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#frameElementRelation
+
+:frameElementRelation rdf:type owl:ObjectProperty ;
+                      
+                      rdfs:range :FrameElement ;
+                      
+                      rdfs:domain :FrameElement .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#frameRelation
+
+:frameRelation rdf:type owl:ObjectProperty ;
+               
+               rdfs:domain :Frame ;
+               
+               rdfs:range :Frame .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#hasSubframe
+
+:hasSubframe rdf:type owl:ObjectProperty ;
+             
+             rdfs:subPropertyOf :frameRelation ;
+             
+             owl:inverseOf :subframeOf .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#implicitIn
+
+:implicitIn rdf:type owl:ObjectProperty ;
+            
+            rdfs:subPropertyOf pmo:example ;
+            
+            rdfs:domain :FrameElement .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#incorporatedFrameElement
+
+:incorporatedFrameElement rdf:type owl:FunctionalProperty ,
+                                   owl:ObjectProperty ;
+                          
+                          rdfs:range :FrameElement ;
+                          
+                          rdfs:domain :LexicalUnit .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#inheritsFrom
+
+:inheritsFrom rdf:type owl:ObjectProperty ;
+              
+              rdfs:subPropertyOf :frameRelation ,
+                                 skos:broader .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#isCausativeOf
+
+:isCausativeOf rdf:type owl:ObjectProperty ;
+               
+               rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#isInchoativeOf
+
+:isInchoativeOf rdf:type owl:ObjectProperty ;
+                
+                rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#isInheritedBy
+
+:isInheritedBy rdf:type owl:ObjectProperty ;
+               
+               rdfs:subPropertyOf :frameRelation ;
+               
+               owl:inverseOf :inheritsFrom .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#isPerspectivizedIn
+
+:isPerspectivizedIn rdf:type owl:ObjectProperty ;
+                    
+                    rdfs:subPropertyOf :frameRelation ;
+                    
+                    owl:inverseOf :perspectiveOn .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#isPrecededBy
+
+:isPrecededBy rdf:type owl:ObjectProperty ;
+              
+              rdfs:subPropertyOf :frameRelation ;
+              
+              owl:inverseOf :precedes .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#isUsedBy
+
+:isUsedBy rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf :frameRelation ;
+          
+          owl:inverseOf :uses .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#perspectiveOn
+
+:perspectiveOn rdf:type owl:ObjectProperty ;
+               
+               rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#precedes
+
+:precedes rdf:type owl:ObjectProperty ;
+          
+          rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#requiresFrameElement
+
+:requiresFrameElement rdf:type owl:ObjectProperty ;
+                      
+                      rdfs:subPropertyOf :frameElementRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#seeAlso
+
+:seeAlso rdf:type owl:ObjectProperty ;
+         
+         rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#subType
+
+:subType rdf:type owl:ObjectProperty ;
+         
+         rdfs:range :SemType ;
+         
+         rdfs:domain :SemType .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#subframeOf
+
+:subframeOf rdf:type owl:ObjectProperty ;
+            
+            rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#uses
+
+:uses rdf:type owl:ObjectProperty ;
+      
+      rdfs:subPropertyOf :frameRelation .
+
+
+
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://premon.fbk.eu/ontology/fn#abbrev
+
+:abbrev rdf:type owl:DatatypeProperty ;
+        
+        rdfs:label "abbreviation"@en ;
+        
+        rdfs:range xsd:string ;
+        
+        rdfs:subPropertyOf owl:topDataProperty .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#cBy
+
+:cBy rdf:type owl:DatatypeProperty ;
+     
+     rdfs:label "created by"@en ;
+     
+     rdfs:range xsd:string .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#cDate
+
+:cDate rdf:type owl:DatatypeProperty ;
+       
+       rdfs:label "creation date"@en ;
+       
+       rdfs:range xsd:dateTimeStamp .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#status
+
+:status rdf:type owl:DatatypeProperty ;
+        
+        rdfs:label "status"@en ;
+        
+        rdfs:range xsd:string .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://premon.fbk.eu/ontology/fn#CoreFrameElement
+
+:CoreFrameElement rdf:type owl:Class ;
+                  
+                  rdfs:subClassOf :FrameElement .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#CoreUnexpressedFrameElement
+
+:CoreUnexpressedFrameElement rdf:type owl:Class ;
+                             
+                             rdfs:subClassOf :FrameElement .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#Example
+
+:Example rdf:type owl:Class ;
+         
+         rdfs:subClassOf pmo:Example .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#ExtraThematicFrameElement
+
+:ExtraThematicFrameElement rdf:type owl:Class ;
+                           
+                           rdfs:subClassOf :FrameElement .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#Frame
+
+:Frame rdf:type owl:Class ;
+       
+       rdfs:label "Frame"@en ;
+       
+       rdfs:subClassOf pmo:Predicate .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#FrameElement
+
+:FrameElement rdf:type owl:Class ;
+              
+              rdfs:subClassOf pmo:SemanticArgument .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#LexicalUnit
+
+:LexicalUnit rdf:type owl:Class ;
+             
+             rdfs:label "Lexical Unit"@en ;
+             
+             rdfs:subClassOf pmo:Conceptualization .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#Markable
+
+:Markable rdf:type owl:Class ;
+          
+          rdfs:subClassOf pmo:Markable .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#PeripheralFrameElement
+
+:PeripheralFrameElement rdf:type owl:Class ;
+                        
+                        rdfs:subClassOf :FrameElement .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#SemType
+
+:SemType rdf:type owl:Class ;
+         
+         rdfs:label "FrameNet Semantic Type"@en ;
+         
+         rdfs:subClassOf pmo:SemanticType .
+
+
+
 
 ###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
 

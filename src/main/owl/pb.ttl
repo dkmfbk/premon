@@ -18,14 +18,13 @@
 
 <http://premon.fbk.eu/ontology/pb> rdf:type owl:Ontology ;
                                    
-                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ,
-                                              "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" ;
-                                   
-                                   dcterms:title "Predicate Model for Ontologies (premon) - PropBank ontology module"@en ;
+                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
                                    
                                    vann:preferredNamespacePrefix "pmopb" ;
                                    
                                    dc:creator "Francesco Corcoglioniti" ;
+                                   
+                                   dcterms:title "Predicate Model for Ontologies (premon) - PropBank ontology module"@en ;
                                    
                                    vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/pb#" ;
                                    
@@ -193,13 +192,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
          
          rdfs:subClassOf pmo:Example ,
                          [ rdf:type owl:Restriction ;
+                           owl:onProperty :inflection ;
+                           owl:maxCardinality "1"^^xsd:nonNegativeInteger
+                         ] ,
+                         [ rdf:type owl:Restriction ;
                            owl:onProperty [ owl:inverseOf nif:referenceContext
                                           ] ;
                            owl:allValuesFrom :Markable
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :inflection ;
-                           owl:maxCardinality "1"^^xsd:nonNegativeInteger
                          ] .
 
 
@@ -341,13 +340,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
                   
                   rdfs:subClassOf pmo:SemanticArgument ,
                                   [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmo:role ;
+                                    owl:allValuesFrom :SemanticRole
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
                                     owl:onProperty [ owl:inverseOf pmo:semArg
                                                    ] ;
                                     owl:allValuesFrom :Predicate
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmo:role ;
-                                    owl:allValuesFrom :SemanticRole
                                   ] .
 
 

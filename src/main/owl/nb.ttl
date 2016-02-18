@@ -26,8 +26,7 @@
                                    
                                    rdfs:comment "The NomBank module of the PreMOn ontology extends the core module for representing concepts specific to NomBank: numbered/modifier roles, function tags, examples." ;
                                    
-                                   dc:creator "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" ,
-                                              "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
+                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
                                    
                                    dcterms:title "Predicate Model for Ontologies (premon) - NomBank ontology module"@en ;
                                    
@@ -174,13 +173,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
                   
                   rdfs:subClassOf pmo:SemanticArgument ,
                                   [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmo:role ;
+                                    owl:allValuesFrom :SemanticRole
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
                                     owl:onProperty [ owl:inverseOf pmo:semArg
                                                    ] ;
                                     owl:allValuesFrom :Predicate
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmo:role ;
-                                    owl:allValuesFrom :SemanticRole
                                   ] .
 
 

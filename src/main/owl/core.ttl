@@ -17,8 +17,7 @@
 
 <http://premon.fbk.eu/ontology/core> rdf:type owl:Ontology ;
                                      
-                                     dc:creator "Alessio Palmero Aprosio <https://dkm.fbk.eu/people/profile/aprosio>" ,
-                                                "Francesco Corcoglioniti" ;
+                                     dc:creator "Francesco Corcoglioniti" ;
                                      
                                      dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                      
@@ -249,13 +248,7 @@ pmo:semType rdf:type owl:ObjectProperty ;
             
             rdfs:label "semantic type"@en ;
             
-            rdfs:range pmo:SemanticType ;
-            
-            rdfs:domain [ rdf:type owl:Class ;
-                          owl:unionOf ( pmo:Predicate
-                                        pmo:SemanticArgument
-                                      )
-                        ] .
+            rdfs:range pmo:SemanticType .
 
 
 
@@ -303,19 +296,6 @@ ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf pmo:evokingEntry
 #################################################################
 
 
-###  http://premon.fbk.eu/ontology/core#core
-
-pmo:core rdf:type owl:DatatypeProperty ,
-                  owl:FunctionalProperty ;
-         
-         rdfs:label "core"@en ;
-         
-         rdfs:domain pmo:SemanticArgument ;
-         
-         rdfs:range xsd:boolean .
-
-
-
 ###  http://premon.fbk.eu/ontology/core#valueDt
 
 pmo:valueDt rdf:type owl:DatatypeProperty .
@@ -351,13 +331,13 @@ pmo:Conceptualization rdf:type owl:Class ;
                       
                       rdfs:subClassOf skos:Concept ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokedConcept ;
-                                        owl:onClass ontolex:LexicalConcept ;
+                                        owl:onProperty pmo:evokingEntry ;
+                                        owl:onClass ontolex:LexicalEntry ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokingEntry ;
-                                        owl:onClass ontolex:LexicalEntry ;
+                                        owl:onProperty pmo:evokedConcept ;
+                                        owl:onClass ontolex:LexicalConcept ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] .
 
@@ -382,12 +362,12 @@ pmo:Markable rdf:type owl:Class ;
              rdfs:subClassOf nif:RFC5147String ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:onClass pmo:Example ;
-                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               owl:allValuesFrom pmo:Example
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:allValuesFrom pmo:Example
+                               owl:onClass pmo:Example ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] .
 
 
