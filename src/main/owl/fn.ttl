@@ -55,13 +55,28 @@
 
 :excludesFrameElement rdf:type owl:ObjectProperty ;
                       
+                      rdfs:label "excludes frame element"@en ;
+                      
                       rdfs:subPropertyOf :frameElementRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#feCoreSet
+
+:feCoreSet rdf:type owl:InverseFunctionalProperty ,
+                    owl:ObjectProperty ;
+           
+           rdfs:range :FECoreSet ;
+           
+           rdfs:domain :Frame .
 
 
 
 ###  http://premon.fbk.eu/ontology/fn#frameElementRelation
 
 :frameElementRelation rdf:type owl:ObjectProperty ;
+                      
+                      rdfs:label "frame element relation"@en ;
                       
                       rdfs:range :FrameElement ;
                       
@@ -72,6 +87,8 @@
 ###  http://premon.fbk.eu/ontology/fn#frameRelation
 
 :frameRelation rdf:type owl:ObjectProperty ;
+               
+               rdfs:label "frame relation"@en ;
                
                rdfs:domain :Frame ;
                
@@ -93,6 +110,8 @@
 
 :implicitIn rdf:type owl:ObjectProperty ;
             
+            rdfs:label "implicit in"@en ;
+            
             rdfs:subPropertyOf pmo:example ;
             
             rdfs:domain :FrameElement .
@@ -103,6 +122,8 @@
 
 :incorporatedFrameElement rdf:type owl:FunctionalProperty ,
                                    owl:ObjectProperty ;
+                          
+                          rdfs:label "incorporated frame element"@en ;
                           
                           rdfs:range :FrameElement ;
                           
@@ -123,6 +144,8 @@
 
 :isCausativeOf rdf:type owl:ObjectProperty ;
                
+               rdfs:label "is causative of"@en ;
+               
                rdfs:subPropertyOf :frameRelation .
 
 
@@ -130,6 +153,8 @@
 ###  http://premon.fbk.eu/ontology/fn#isInchoativeOf
 
 :isInchoativeOf rdf:type owl:ObjectProperty ;
+                
+                rdfs:label "is inchoative of"@en ;
                 
                 rdfs:subPropertyOf :frameRelation .
 
@@ -195,6 +220,8 @@
 
 :requiresFrameElement rdf:type owl:ObjectProperty ;
                       
+                      rdfs:label "requires frame element"@en ;
+                      
                       rdfs:subPropertyOf :frameElementRelation .
 
 
@@ -202,6 +229,8 @@
 ###  http://premon.fbk.eu/ontology/fn#seeAlso
 
 :seeAlso rdf:type owl:ObjectProperty ;
+         
+         rdfs:label "see also"@en ;
          
          rdfs:subPropertyOf :frameRelation .
 
@@ -297,6 +326,8 @@
 
 :CoreFrameElement rdf:type owl:Class ;
                   
+                  rdfs:label "core frame element"@en ;
+                  
                   rdfs:subClassOf :FrameElement .
 
 
@@ -304,6 +335,8 @@
 ###  http://premon.fbk.eu/ontology/fn#CoreUnexpressedFrameElement
 
 :CoreUnexpressedFrameElement rdf:type owl:Class ;
+                             
+                             rdfs:label "core-unexpressed frame element"@en ;
                              
                              rdfs:subClassOf :FrameElement .
 
@@ -321,7 +354,24 @@
 
 :ExtraThematicFrameElement rdf:type owl:Class ;
                            
+                           rdfs:label "extra-thematic frame element"@en ;
+                           
                            rdfs:subClassOf :FrameElement .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#FECoreSet
+
+:FECoreSet rdf:type owl:Class ;
+           
+           rdfs:subClassOf [ rdf:type owl:Restriction ;
+                             owl:onProperty pmo:item ;
+                             owl:allValuesFrom :FrameElement
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty pmo:item ;
+                             owl:minCardinality "2"^^xsd:nonNegativeInteger
+                           ] .
 
 
 
@@ -329,9 +379,18 @@
 
 :Frame rdf:type owl:Class ;
        
-       rdfs:label "Frame"@en ;
+       rdfs:label "frame"@en ;
        
-       rdfs:subClassOf pmo:Predicate .
+       rdfs:subClassOf pmo:Predicate ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty pmo:semArg ;
+                         owl:allValuesFrom :FrameElement
+                       ] ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty [ owl:inverseOf pmo:evokedConcept
+                                        ] ;
+                         owl:allValuesFrom :LexicalUnit
+                       ] .
 
 
 
@@ -339,7 +398,14 @@
 
 :FrameElement rdf:type owl:Class ;
               
-              rdfs:subClassOf pmo:SemanticArgument .
+              rdfs:label "frame element"@en ;
+              
+              rdfs:subClassOf pmo:SemanticArgument ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty [ owl:inverseOf pmo:semArg
+                                               ] ;
+                                owl:allValuesFrom :Frame
+                              ] .
 
 
 
@@ -347,9 +413,13 @@
 
 :LexicalUnit rdf:type owl:Class ;
              
-             rdfs:label "Lexical Unit"@en ;
+             rdfs:label "lexical unit"@en ;
              
-             rdfs:subClassOf pmo:Conceptualization .
+             rdfs:subClassOf pmo:Conceptualization ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty pmo:evokedConcept ;
+                               owl:allValuesFrom :Frame
+                             ] .
 
 
 
@@ -365,6 +435,8 @@
 
 :PeripheralFrameElement rdf:type owl:Class ;
                         
+                        rdfs:label "peripheral frame element"@en ;
+                        
                         rdfs:subClassOf :FrameElement .
 
 
@@ -373,7 +445,7 @@
 
 :SemType rdf:type owl:Class ;
          
-         rdfs:label "FrameNet Semantic Type"@en ;
+         rdfs:label "FrameNet semantic type"@en ;
          
          rdfs:subClassOf pmo:SemanticType .
 
