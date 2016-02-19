@@ -102,6 +102,12 @@ pmovn:frame rdf:type owl:ObjectProperty ;
             rdfs:range pmovn:VerbNetFrame .
 
 
+pmovn:definesFrame rdf:type owl:ObjectProperty ;
+            
+            rdfs:label "defines frame"@en ;
+            
+            rdfs:subPropertyOf pmovn:frame .
+
 
 ###  http://premon.fbk.eu/ontology/vn#restriction
 
