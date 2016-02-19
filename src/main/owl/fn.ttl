@@ -57,7 +57,13 @@
                       
                       rdfs:label "excludes frame element"@en ;
                       
-                      rdfs:subPropertyOf :frameElementRelation .
+                      rdfs:subPropertyOf pmo:argumentRel ;
+                      
+                      rdfs:range :FrameElement ;
+                      
+                      rdfs:domain :FrameElement ;
+                      
+                      owl:propertyDisjointWith :requiresFrameElement .
 
 
 
@@ -72,18 +78,6 @@
 
 
 
-###  http://premon.fbk.eu/ontology/fn#frameElementRelation
-
-:frameElementRelation rdf:type owl:ObjectProperty ;
-                      
-                      rdfs:label "frame element relation"@en ;
-                      
-                      rdfs:range :FrameElement ;
-                      
-                      rdfs:domain :FrameElement .
-
-
-
 ###  http://premon.fbk.eu/ontology/fn#frameRelation
 
 :frameRelation rdf:type owl:ObjectProperty ;
@@ -93,16 +87,6 @@
                rdfs:domain :Frame ;
                
                rdfs:range :Frame .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#hasSubframe
-
-:hasSubframe rdf:type owl:ObjectProperty ;
-             
-             rdfs:subPropertyOf :frameRelation ;
-             
-             owl:inverseOf :subframeOf .
 
 
 
@@ -160,43 +144,17 @@
 
 
 
-###  http://premon.fbk.eu/ontology/fn#isInheritedBy
+###  http://premon.fbk.eu/ontology/fn#mapsToFrameElement
 
-:isInheritedBy rdf:type owl:ObjectProperty ;
-               
-               rdfs:subPropertyOf :frameRelation ;
-               
-               owl:inverseOf :inheritsFrom .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#isPerspectivizedIn
-
-:isPerspectivizedIn rdf:type owl:ObjectProperty ;
+:mapsToFrameElement rdf:type owl:ObjectProperty ;
                     
-                    rdfs:subPropertyOf :frameRelation ;
+                    rdfs:label "frame element relation"@en ;
                     
-                    owl:inverseOf :perspectiveOn .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#isPrecededBy
-
-:isPrecededBy rdf:type owl:ObjectProperty ;
-              
-              rdfs:subPropertyOf :frameRelation ;
-              
-              owl:inverseOf :precedes .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#isUsedBy
-
-:isUsedBy rdf:type owl:ObjectProperty ;
-          
-          rdfs:subPropertyOf :frameRelation ;
-          
-          owl:inverseOf :uses .
+                    rdfs:subPropertyOf pmo:argumentRel ;
+                    
+                    rdfs:domain :FrameElement ;
+                    
+                    rdfs:range :FrameElement .
 
 
 
@@ -222,7 +180,11 @@
                       
                       rdfs:label "requires frame element"@en ;
                       
-                      rdfs:subPropertyOf :frameElementRelation .
+                      rdfs:subPropertyOf pmo:argumentRel ;
+                      
+                      rdfs:range :FrameElement ;
+                      
+                      rdfs:domain :FrameElement .
 
 
 
@@ -236,13 +198,30 @@
 
 
 
-###  http://premon.fbk.eu/ontology/fn#subType
+###  http://premon.fbk.eu/ontology/fn#status
 
-:subType rdf:type owl:ObjectProperty ;
-         
-         rdfs:range :SemType ;
-         
-         rdfs:domain :SemType .
+:status rdf:type owl:FunctionalProperty ,
+                 owl:ObjectProperty ;
+        
+        rdfs:label "status"@en ;
+        
+        rdfs:range :LUStatus ;
+        
+        rdfs:domain :LexicalUnit .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#subTypeOf
+
+:subTypeOf rdf:type owl:ObjectProperty ;
+           
+           rdfs:subPropertyOf pmo:typeRel ;
+           
+           rdfs:domain :SemType ;
+           
+           rdfs:range :SemType ;
+           
+           rdfs:subPropertyOf skos:broader .
 
 
 
@@ -259,57 +238,6 @@
 :uses rdf:type owl:ObjectProperty ;
       
       rdfs:subPropertyOf :frameRelation .
-
-
-
-
-
-#################################################################
-#
-#    Data properties
-#
-#################################################################
-
-
-###  http://premon.fbk.eu/ontology/fn#abbrev
-
-:abbrev rdf:type owl:DatatypeProperty ;
-        
-        rdfs:label "abbreviation"@en ;
-        
-        rdfs:range xsd:string ;
-        
-        rdfs:subPropertyOf owl:topDataProperty .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#cBy
-
-:cBy rdf:type owl:DatatypeProperty ;
-     
-     rdfs:label "created by"@en ;
-     
-     rdfs:range xsd:string .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#cDate
-
-:cDate rdf:type owl:DatatypeProperty ;
-       
-       rdfs:label "creation date"@en ;
-       
-       rdfs:range xsd:dateTimeStamp .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#status
-
-:status rdf:type owl:DatatypeProperty ;
-        
-        rdfs:label "status"@en ;
-        
-        rdfs:range xsd:string .
 
 
 
@@ -405,7 +333,21 @@
                                 owl:onProperty [ owl:inverseOf pmo:semArg
                                                ] ;
                                 owl:allValuesFrom :Frame
-                              ] .
+                              ] ;
+              
+              owl:disjointUnionOf ( :CoreFrameElement
+                                    :CoreUnexpressedFrameElement
+                                    :ExtraThematicFrameElement
+                                    :PeripheralFrameElement
+                                  ) .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#LUStatus
+
+:LUStatus rdf:type owl:Class ;
+          
+          rdfs:label "Lexical Unit Status"@en .
 
 
 
@@ -448,6 +390,29 @@
          rdfs:label "FrameNet semantic type"@en ;
          
          rdfs:subClassOf pmo:SemanticType .
+
+
+
+
+
+#################################################################
+#
+#    General axioms
+#
+#################################################################
+
+
+[ rdf:type owl:AllDisjointProperties ;
+  owl:members ( :inheritsFrom
+                :isCausativeOf
+                :isInchoativeOf
+                :perspectiveOn
+                :precedes
+                :seeAlso
+                :subframeOf
+                :uses
+              )
+] .
 
 
 

@@ -17,6 +17,24 @@ name mappato su rdfs:label
 
 
 #######################
+## Conversione del luIndex
+#######################
+
+
+
+#        <statusType description="LU defined and sentences ready for annotation" name="New"/>
+
+
+pmofn:new_LUStatus		a		pmofn:LUStatus   ;
+						rdfds:label		"New"^^xsd:string  ;
+						skos:definition	"LU defined and sentences ready for annotation"^^xsd:string  .
+
+
+
+
+
+
+#######################
 ## Conversione del semType
 #######################
 
@@ -35,7 +53,7 @@ pmofn:fn16-body_of_water_semType   dc:identifier     "2"^^xsd:int   .
 pmofn:fn16-body_of_water_semType   rdfs:label     "Body_of_water"^^xsd:string   .
 pmofn:fn16-body_of_water_semType   skos:definition   "Labels LU's which designate bodies of water.  The limits of a body of water are defined in terms of the land that borders the water.  Equivlent to WN Body of water.
 (Appropriate for LU's in Locale frame and its descendants.)"^^xsd:string   .
-pmofn:fn16-body_of_water_semType   skos:broader     pmofn:fn16-region_semType   .
+pmofn:fn16-body_of_water_semType   pmofn:subTypeOf     pmofn:fn16-region_semType   .
 #il superType ID verrà modellato sul supertype... non qui. 
 
 
@@ -103,11 +121,10 @@ pm:fn16-abounding_with	pmofn:inheritsFrom		pm:fn16-locative_relation    ;
 pm:lexicalunit-v-teem-fn16-abounding_with		a						pmofn:LexicalUnit         ;
 												pmo:evokedConcept		pm:fn16-abounding_with    ;
 												pmo:evokingEntry		pm:v-teem    ;
-												pmofn:status			"Finished_Initial"^^xsd:string  ;
+												pmofn:status			finished_Initial_LUStatus  ;
 												lexinfo:partOfSpeech	lexinfo:verb ; #to be checked the correct pos value...
-												rdfs:label				"teem.v" ;
 												dct:identifier  		"4765"^^xsd:int ;
-												#lemma ID non modellato, non server....
+												#lemma ID non modellato, non serve....
 												pmofn:cBy  				"MJE"^^xsd:string ;
 												pmofn:cDate				"2002-01-28T04:31:33-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
 												skos:definition			"COD: be full of or swarming with."^^xsd:string

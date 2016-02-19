@@ -296,6 +296,18 @@ ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf pmo:evokingEntry
 #################################################################
 
 
+###  http://premon.fbk.eu/ontology/core#abbreviation
+
+pmo:abbreviation rdf:type owl:DatatypeProperty ;
+                 
+                 rdfs:label "abbreviation"@en ;
+                 
+                 rdfs:range xsd:string ;
+                 
+                 rdfs:subPropertyOf owl:topDataProperty .
+
+
+
 ###  http://premon.fbk.eu/ontology/core#valueDt
 
 pmo:valueDt rdf:type owl:DatatypeProperty .
@@ -331,13 +343,13 @@ pmo:Conceptualization rdf:type owl:Class ;
                       
                       rdfs:subClassOf skos:Concept ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokingEntry ;
-                                        owl:onClass ontolex:LexicalEntry ;
+                                        owl:onProperty pmo:evokedConcept ;
+                                        owl:onClass ontolex:LexicalConcept ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokedConcept ;
-                                        owl:onClass ontolex:LexicalConcept ;
+                                        owl:onProperty pmo:evokingEntry ;
+                                        owl:onClass ontolex:LexicalEntry ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] .
 
