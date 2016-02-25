@@ -158,6 +158,9 @@ public final class PMOVN {
     /** Object property pmovn:frame. */
     public static final URI FRAME = createURI("frame");
 
+    /** Object property pmovn:definesFrame. */
+    public static final URI DEFINES_FRAME = createURI("definesFrame");
+
     /** Object property pmovn:restriction. */
     public static final URI RESTRICTION_P = createURI("restriction");
 
@@ -672,7 +675,7 @@ public final class PMOVN {
         return null;
     }
 
-    private static URI createURI(final String localName) {
+    public static URI createURI(final String localName) {
         return ValueFactoryImpl.getInstance().createURI(NAMESPACE, localName);
     }
 

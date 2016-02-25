@@ -91,6 +91,9 @@ public final class PMO {
     /** Datatype property pmo:valueDt. */
     public static final URI VALUE_DT = createURI("valueDt");
 
+    /** Datatype property pmo:abbreviation. */
+    public static final URI ABBREVIATION = createURI("abbreviation");
+
     // Utility methods
 
     private static URI createURI(final String localName) {

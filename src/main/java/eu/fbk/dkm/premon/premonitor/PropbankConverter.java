@@ -7,7 +7,6 @@ import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
 import eu.fbk.dkm.premon.premonitor.propbank.Role;
 import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
 import eu.fbk.dkm.premon.vocab.NIF;
-import eu.fbk.dkm.premon.vocab.PMONB;
 import eu.fbk.dkm.premon.vocab.PMOPB;
 
 import org.openrdf.model.URI;
@@ -26,13 +25,12 @@ public class PropbankConverter extends BankConverter {
 
     private static String LINK_PATTERN = "http://verbs.colorado.edu/propbank/framesets-english/%s-%s.html";
 
-    public PropbankConverter(File path, RDFHandler sink, Properties properties, Set<URI> wnURIs) {
-        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnURIs);
+    public PropbankConverter(File path, RDFHandler sink, Properties properties) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"));
 
         this.nonVerbsToo = properties.getProperty("extractnonverbs", "0").equals("1");
         this.isOntoNotes = properties.getProperty("ontonotes", "0").equals("1");
         this.noDef = ! properties.getProperty("extractdefinitions", "0").equals("1");
-        this.source = properties.getProperty("source");
         this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
         this.defaultType = "v";
     }
@@ -109,7 +107,7 @@ public class PropbankConverter extends BankConverter {
             builder.append(NAMESPACE);
             builder.append(INFLECTION_PREFIX);
             for (String part : inflectionParts) {
-                builder.append(SEPARATOR);
+                builder.append(separator);
                 builder.append(part);
             }
             URI inflectionURI = factory.createURI(builder.toString());

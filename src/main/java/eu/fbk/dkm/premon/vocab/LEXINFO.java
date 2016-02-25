@@ -36,6 +36,9 @@ public final class LEXINFO {
     /** Individual lexinfo:adjective (a lexinfo:PartOfSpeech). */
     public static final URI ADJECTIVE = createURI("adjective");
 
+    /** Individual lexinfo:cardinalNumeral (a lexinfo:PartOfSpeech). */
+    public static final URI CARDINAL_NUMERAL = createURI("cardinalNumeral");
+
     /** Individual lexinfo:adverb (a lexinfo:PartOfSpeech). */
     public static final URI ADVERB = createURI("adverb");
 
@@ -44,6 +47,9 @@ public final class LEXINFO {
 
     /** Individual lexinfo:coordinatingConjunction (a lexinfo:PartOfSpeech). */
     public static final URI COORDINATING_CONJUNCTION = createURI("coordinatingConjunction");
+
+    /** Individual lexinfo:subordinatingConjunction (a lexinfo:PartOfSpeech). */
+    public static final URI SUBORDINATING_CONJUNCTION = createURI("subordinatingConjunction");
 
     /** Individual lexinfo:determiner (a lexinfo:PartOfSpeech). */
     public static final URI DETERMINER = createURI("determiner");
@@ -70,6 +76,7 @@ public final class LEXINFO {
     static {
         map.put("v", VERB);
         map.put("n", NOUN);
+        map.put("p", PREPOSITION);
     }
 
     private static URI createURI(final String localName) {

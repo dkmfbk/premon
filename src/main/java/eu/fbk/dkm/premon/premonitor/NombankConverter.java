@@ -27,14 +27,12 @@ public class NombankConverter extends BankConverter {
     Pattern PB_PATTERN = Pattern.compile("^verb-((.*)\\.[0-9]+)$");
     private static String LINK_PATTERN = "http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0/frames/%s.xml";
 
-    public NombankConverter(File path, RDFHandler sink, Properties properties, Set<URI> wnURIs) {
-        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnURIs);
+    public NombankConverter(File path, RDFHandler sink, Properties properties) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"));
 
         this.nonVerbsToo = true;
         this.isOntoNotes = false;
         this.noDef = !properties.getProperty("extractdefinitions", "0").equals("1");
-        this.source = properties.getProperty("source");
-        this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
         this.defaultType = "n";
 
         String pbLinksString = properties.getProperty("linkpb");

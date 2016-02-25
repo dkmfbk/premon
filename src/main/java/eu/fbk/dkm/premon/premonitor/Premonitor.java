@@ -1,48 +1,28 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
+import eu.fbk.dkm.premon.vocab.*;
+import eu.fbk.dkm.utils.CommandLine;
+import eu.fbk.rdfpro.*;
+import eu.fbk.rdfpro.util.Namespaces;
+import eu.fbk.rdfpro.util.Statements;
+import eu.fbk.rdfpro.util.Tracker;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.fbk.dkm.premon.vocab.DECOMP;
-import eu.fbk.dkm.premon.vocab.FB;
-import eu.fbk.dkm.premon.vocab.LEXINFO;
-import eu.fbk.dkm.premon.vocab.ONTOLEX;
-import eu.fbk.dkm.premon.vocab.PM;
-import eu.fbk.dkm.premon.vocab.PMO;
-import eu.fbk.dkm.premon.vocab.PMONB;
-import eu.fbk.dkm.premon.vocab.PMOPB;
-import eu.fbk.dkm.utils.CommandLine;
-import eu.fbk.rdfpro.AbstractRDFHandler;
-import eu.fbk.rdfpro.RDFHandlers;
-import eu.fbk.rdfpro.RDFProcessor;
-import eu.fbk.rdfpro.RDFProcessors;
-import eu.fbk.rdfpro.RDFSource;
-import eu.fbk.rdfpro.RDFSources;
-import eu.fbk.rdfpro.util.Namespaces;
-import eu.fbk.rdfpro.util.Statements;
-import eu.fbk.rdfpro.util.Tracker;
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Constructor;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Premonitor command line tool for converting predicate resources to the PreMOn model
@@ -57,8 +37,14 @@ public class Premonitor {
     private static final Pattern PROPERTIES_RESOURCES_PATTERN = Pattern
             .compile("^resource([0-9]+)\\.(.*)$");
 
+    private static final String WN_PREFIX = "http://wordnet-rdf.princeton.edu/wn31/";
+
     private static final URI LEMON_LEXICAL_ENTRY = Statements.VALUE_FACTORY
             .createURI("http://lemon-model.net/lemon#LexicalEntry");
+    private static final URI LEMON_REFERENCE = Statements.VALUE_FACTORY
+            .createURI("http://lemon-model.net/lemon#reference");
+    private static final URI WN_OLD_SENSE = Statements.VALUE_FACTORY
+            .createURI("http://wordnet-rdf.princeton.edu/ontology#old_sense_key");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Premonitor.class);
 
@@ -84,6 +70,8 @@ public class Premonitor {
                             "LEMMA", CommandLine.Type.STRING, true, false, false)
                     .withOption(null, "wordnet", "WordNet RDF triple file", "FILE",
                             CommandLine.Type.FILE_EXISTING, true, false, false)
+                    .withOption(null, "wordnet-sensekeys", "WordNet senseKey mapping", "FILE",
+                            CommandLine.Type.FILE_EXISTING, true, false, false)
                     .withOption("d", "divide", "Emits one dataset for each resource converted")
                     .withOption("c", "closure", "Emits also the RDFS closure of produced datasets")
                     .withOption("x", "stats", "Generates also VOID statistics for each dataset")
@@ -99,8 +87,27 @@ public class Premonitor {
                 propertiesFile = cmd.getOptionValue("properties", File.class);
             }
 
+            System.setProperty("javax.xml.accessExternalDTD", "file");
+
             // WordNet
-            final HashSet<URI> wnURIs = new HashSet<>();
+//            final HashSet<URI> wnURIs = new HashSet<>();
+            final HashMap<String, URI> wnOldURIs = new HashMap<>();
+
+            if (cmd.hasOption("wordnet-sensekeys")) {
+                List<String> allLines = Files
+                        .readAllLines(cmd.getOptionValue("wordnet-sensekeys", File.class).toPath());
+                for (String line : allLines) {
+                    line = line.trim();
+                    String[] parts = line.split("\\s+");
+                    if (parts.length >= 2) {
+                        String senseKey = parts[0];
+                        String synsetID = parts[1];
+                        senseKey = senseKey.replaceAll(":[^:]*:[^:]*$", "");
+                        wnOldURIs.put(senseKey, Converter.factory.createURI(WN_PREFIX, synsetID));
+                    }
+                }
+            }
+
             if (cmd.hasOption("wordnet")) {
                 final File wnRDF = cmd.getOptionValue("wordnet", File.class);
                 if (wnRDF != null) {
@@ -112,17 +119,46 @@ public class Premonitor {
                         @Override
                         public void handleStatement(final Statement statement)
                                 throws RDFHandlerException {
-                            if (statement.getPredicate().equals(RDF.TYPE)
-                                    && statement.getObject().equals(LEMON_LEXICAL_ENTRY)) {
-                                if (statement.getSubject() instanceof URI) {
-                                    synchronized (wnURIs) {
-                                        wnURIs.add((URI) statement.getSubject());
+//
+//                            if (statement.getPredicate().equals(RDF.TYPE)
+//                                    && statement.getObject().equals(LEMON_LEXICAL_ENTRY)) {
+//                                if (statement.getSubject() instanceof URI) {
+//                                    synchronized (wnURIs) {
+//                                        wnURIs.add((URI) statement.getSubject());
+//                                    }
+//                                }
+//                            }
+//
+                            // Really really bad!
+                            if (statement.getPredicate().equals(LEMON_REFERENCE)) {
+                                if (statement.getSubject() instanceof URI &&
+                                        statement.getObject() instanceof URI) {
+                                    synchronized (wnOldURIs) {
+                                        wnOldURIs
+                                                .put(statement.getObject().stringValue(), (URI) statement.getSubject());
                                     }
                                 }
                             }
+
+//                            if (statement.getPredicate().equals(WN_OLD_SENSE)) {
+//                                synchronized (wnOldURIs) {
+//                                    if (statement.getSubject() instanceof URI) {
+//                                        String o = statement.getObject().stringValue();
+//                                        URI s = (URI) statement.getSubject();
+//                                        wnOldURIs.put(o, s);
+//
+//                                        // todo: Remove last :: in the IDs, is ok?
+//                                        o = o.replaceAll(":[^:]*:[^:]*$", "");
+//                                        wnOldURIs.put(o, s);
+//                                    }
+//                                }
+//                            }
+//
                         }
                     }, 1);
-                    LOGGER.info("Loaded {} URIs", wnURIs.size());
+
+//                    LOGGER.info("Loaded {} URIs", wnURIs.size());
+                    LOGGER.info("Loaded {} URIs", wnOldURIs.size());
                 }
             }
 
@@ -152,6 +188,12 @@ public class Premonitor {
 
             for (final Integer id : multiProperties.keySet()) {
                 final Properties properties = multiProperties.get(id);
+
+                boolean active = properties.getProperty("active", "0").equals("1");
+                if (!active) {
+                    LOGGER.info("Resource {} is not active", id);
+                    continue;
+                }
 
                 final String source = properties.getProperty("source");
                 if (source == null || source.length() == 0) {
@@ -191,20 +233,20 @@ public class Premonitor {
 
                 try {
                     final Class<?> cls = Class.forName(className);
-                    final Constructor<?> constructor = cls.getConstructor(File.class,
-                            RDFHandler.class, Properties.class, Set.class);
-                    if (constructor == null) {
-                        LOGGER.error("No constructor found for {}", className);
-                        continue;
-                    }
 
-                    final Object converter = constructor.newInstance(folder, handler, properties,
-                            wnURIs);
+                    Constructor<?> constructor = cls.getConstructor(
+                            File.class, RDFHandler.class, Properties.class, Map.class);
+                    final Object converter = constructor.newInstance(folder, handler, properties, wnOldURIs);
                     if (converter instanceof Converter) {
                         ((Converter) converter).convert();
                     }
 
                     multiStatements.put(source, statements);
+
+                    // todo: remove!
+//                    for (Statement statement : statements) {
+//                        System.out.println(statement);
+//                    }
 
                 } catch (final ClassNotFoundException e) {
                     LOGGER.error("Class {} not found", className);

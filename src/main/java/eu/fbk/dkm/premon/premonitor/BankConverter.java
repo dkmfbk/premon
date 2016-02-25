@@ -4,18 +4,17 @@ import com.google.common.io.Files;
 import eu.fbk.dkm.premon.premonitor.propbank.*;
 import eu.fbk.dkm.premon.util.NF;
 import eu.fbk.dkm.premon.util.PropBankResource;
-import eu.fbk.dkm.premon.vocab.*;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
+import eu.fbk.dkm.premon.vocab.NIF;
+import eu.fbk.dkm.premon.vocab.ONTOLEX;
+import eu.fbk.dkm.premon.vocab.PM;
+import eu.fbk.dkm.premon.vocab.PMO;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.*;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
@@ -31,26 +30,26 @@ public abstract class BankConverter extends Converter {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(BankConverter.class);
 
-    public static final String NAMESPACE = "http://premon.fbk.eu/resource/";
-    public static final String SEPARATOR = "-";
-
-    public static final String FORM_PREFIX = "form";
-    public static final String CONCEPTUALIZATION_PREFIX = "conceptualization";
-    public String ROLESET_PREFIX;
     public static final String EXAMPLE_PREFIX = "example";
     public static final String INFLECTION_PREFIX = "inflection";
 
     boolean nonVerbsToo = false;
     boolean isOntoNotes = false;
     boolean noDef = false;
-    boolean extractExamples = false;
-    String source;
     String defaultType;
 
-    static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
+//    private Set<URI> wnURIs;
+    public static String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
 
-    URI DEFAULT_GRAPH;
-    static final URI LE_GRAPH = PM.ENTRIES;
+    protected static HashMap<String, String> on2wnMap = new HashMap<>();
+
+    static {
+        on2wnMap.put("n", "n");
+        on2wnMap.put("v", "v");
+        on2wnMap.put("j", "a");
+    }
+
+    static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
 
     // Bugs!
     private static HashMap<String, String> bugMap = new HashMap<String, String>();
@@ -80,12 +79,10 @@ public abstract class BankConverter extends Converter {
         fileToDiscard.add("except-v.xml");
     }
 
-    public BankConverter(File path, String resource, RDFHandler sink, Properties properties,
-            String language, Set<URI> wnURIs) {
-        super(path, resource, sink, properties, language, wnURIs);
-
-        this.ROLESET_PREFIX = resource;
-        this.DEFAULT_GRAPH = factory.createURI(NAMESPACE, resource);
+//    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language, Set<URI> wnURIs) {
+    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language) {
+        super(path, resource, sink, properties, language);
+//        this.wnURIs = wnURIs;
     }
 
     private static boolean discardFile(File file, boolean onlyVerbs, boolean isOntoNotes) {
@@ -109,95 +106,16 @@ public abstract class BankConverter extends Converter {
         return false;
     }
 
-    //	private static String getThetaName(String name) {
-    //		Matcher matcher = THETA_NAME_PATTERN.matcher(name);
-    //		if (matcher.matches()) {
-    //			String num = matcher.group(2);
-    //			if (num.equals("1")) {
-    //				return matcher.group(1);
-    //			}
-    //			else {
-    //				return "co-" + matcher.group(1);
-    //			}
-    //		}
-    //		return name;
-    //	}
-    //
-    //	private static String getSenseNumberOnly(String senseName) {
-    //
-    //		// Fix: conflict-v.xml
-    //		if (senseName.equals("36.4-136.")) {
-    //			senseName = "36.4-1";
-    //		}
-    //
-    //		// Fix: cram-v.xml
-    //		if (senseName.equals("14-1S")) {
-    //			senseName = "14-1";
-    //		}
-    //
-    //		// Fix: plan-v.xml
-    //		if (senseName.equals("62t")) {
-    //			senseName = "62";
-    //		}
-    //
-    //		// Fix: plot-v.xml
-    //		if (senseName.equals("25.2t")) {
-    //			senseName = "25.2";
-    //		}
-    //
-    //		return senseName.replaceAll(VN_NAME_REGEXP, "");
-    //	}
-    //
-    //	private static String isGoodSense(String sense) {
-    //		sense = getSenseNumberOnly(sense);
-    //		Matcher matcher = VN_CODE_PATTERN.matcher(sense);
-    //		if (!matcher.matches()) {
-    //			LOGGER.trace("{} does not pass the match test", sense);
-    //			return null;
-    //		}
-    //
-    //		return sense;
-    //	}
-    //
-    //	private static HashSet<String> getGoodSensesOnly(String vnSenseString) {
-    //		HashSet<String> ret = new HashSet<String>();
-    //
-    //		if (vnSenseString != null && vnSenseString.trim().length() > 0) {
-    //
-    //			// Fix: attest-v.xml
-    //			if (vnSenseString.equals("29. 5")) {
-    //				vnSenseString = "29.5";
-    //			}
-    //
-    //			String[] vnSenses = vnSenseString.split("[\\s,]+");
-    //
-    //			for (String sense : vnSenses) {
-    //				String okSense = isGoodSense(sense);
-    //				if (okSense != null) {
-    //					ret.add(okSense);
-    //				}
-    //			}
-    //		}
-    //
-    //		return ret;
-    //	}
-
     @Override
     public void convert() throws IOException, RDFHandlerException {
 
-        // Fix due to XML library
-        System.setProperty("javax.xml.accessExternalDTD", "file");
-
         // Lexicon
-        URI lexiconURI = factory.createURI(NAMESPACE, "lexicon");
-        addStatementToSink(lexiconURI, RDF.TYPE, ONTOLEX.LEXICON, LE_GRAPH);
-        addStatementToSink(lexiconURI, ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
-        addStatementToSink(lexiconURI, DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language),
-                LE_GRAPH);
+        addStatementToSink(getLexicon(), RDF.TYPE, ONTOLEX.LEXICON, LE_GRAPH);
+        addStatementToSink(getLexicon(), ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
+        addStatementToSink(getLexicon(), DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
 
-        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, source),
-                PM.META);
-        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, source), PM.META);
+        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
 
         //todo: the first tour is not necessary any more
 
@@ -247,7 +165,17 @@ public abstract class BankConverter extends Converter {
 
                         String lemma = getLemmaFromPredicateName(((Predicate) predicate).getLemma());
 
-                        URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, type, lexiconURI);
+                        URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, type, getLexicon());
+
+//                        if (wnURIs.size() > 0) {
+//                            String wnLemma = lemma + "-" + on2wnMap.get(type);
+//                            URI wnURI = factory.createURI(WN_NAMESPACE, wnLemma);
+//                            if (wnURIs.contains(wnURI)) {
+//                                addStatementToSink(lexicalEntryURI, OWL.SAMEAS, wnURI, LE_GRAPH);
+//                            } else {
+//                                LOGGER.debug("Word not found: {}", wnLemma);
+//                            }
+//                        }
 
                         List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
                         for (Object roleset : noteOrRoleset) {
@@ -533,109 +461,12 @@ public abstract class BankConverter extends Converter {
         addStatementToSink(argumentURI, PMO.ROLE, keyURI);
 
         URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
+        addStatementToSink(argConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
         addStatementToSink(argConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
         addStatementToSink(argConceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
     }
 
-    private URI addLexicalEntry(String origLemma, String lemma, String type, Resource lexiconURI)
-            throws RDFHandlerException {
-        if (!origLemma.equals(lemma)) {
-            URI lemmaURI = uriForLexicalEntry(lemma, type);
-            URI oLemmaURI = uriForLexicalEntry(origLemma, type);
-
-            addStatementToSink(lemmaURI, DECOMP.SUBTERM, oLemmaURI);
-        }
-
-        String goodLemma = lemma.replaceAll("\\+", " ");
-
-        URI leURI = uriForLexicalEntry(lemma, type);
-        URI formURI = uriForForm(lemma, type);
-
-        addStatementToSink(leURI, RDF.TYPE, ONTOLEX.LEXICAL_ENTRY, LE_GRAPH);
-        addStatementToSink(leURI, LEXINFO.PART_OF_SPEECH_P, LEXINFO.map.get(type), LE_GRAPH);
-        addStatementToSink(lexiconURI, ONTOLEX.ENTRY, leURI, LE_GRAPH);
-        addStatementToSink(formURI, RDF.TYPE, ONTOLEX.FORM, LE_GRAPH);
-        addStatementToSink(leURI, ONTOLEX.CANONICAL_FORM, formURI, LE_GRAPH);
-        addStatementToSink(formURI, ONTOLEX.WRITTEN_REP, goodLemma, LE_GRAPH);
-        addStatementToSink(leURI, RDFS.LABEL, goodLemma, LE_GRAPH);
-        addStatementToSink(leURI, ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
-
-        if (wnURIs.size() > 0) {
-            String wnLemma = lemma + "-" + on2wnMap.get(type);
-            URI wnURI = factory.createURI(WN_NAMESPACE, wnLemma);
-            if (wnURIs.contains(wnURI)) {
-                addStatementToSink(leURI, OWL.SAMEAS, wnURI, LE_GRAPH);
-            } else {
-                LOGGER.debug("Word not found: {}", wnLemma);
-            }
-        }
-
-        return leURI;
-    }
-
     // URIs
-
-    private URI uriForForm(String lemma, String type) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(NAMESPACE);
-        builder.append(FORM_PREFIX);
-        builder.append(SEPARATOR);
-        builder.append(lemmaPart(lemma, type));
-        return factory.createURI(builder.toString());
-    }
-
-    private URI uriForLexicalEntry(String lemma, String type) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(NAMESPACE);
-        builder.append(lemmaPart(lemma, type));
-        return factory.createURI(builder.toString());
-    }
-
-    protected URI uriForRoleset(String rolesetID) {
-        return uriForRoleset(rolesetID, null);
-    }
-
-    protected URI uriForRoleset(String rolesetID, @Nullable String prefix) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(NAMESPACE);
-        builder.append(rolesetPart(rolesetID, prefix));
-        return factory.createURI(builder.toString());
-    }
-
-    protected URI uriForConceptualization(String lemma, String type, String rolesetID, String argName) {
-        return uriForConceptualizationGen(lemma, type, argPart(rolesetID, argName));
-    }
-
-    protected URI uriForConceptualization(String lemma, String type, String rolesetID) {
-        return uriForConceptualizationGen(lemma, type, rolesetPart(rolesetID));
-    }
-
-    protected URI uriForConceptualizationWithPrefix(String lemma, String type, String rolesetID, String prefix) {
-        return uriForConceptualizationGen(lemma, type, rolesetPart(rolesetID, prefix));
-    }
-
-    protected URI uriForConceptualizationWithPrefix(String lemma, String type, String rolesetID, String argName,
-            String prefix) {
-        return uriForConceptualizationGen(lemma, type, argPart(rolesetID, argName, prefix));
-    }
-
-    private URI uriForConceptualizationGen(String lemma, String type, String rolesetID) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(NAMESPACE);
-        builder.append(CONCEPTUALIZATION_PREFIX);
-        builder.append(SEPARATOR);
-        builder.append(lemmaPart(lemma, type));
-        builder.append(SEPARATOR);
-        builder.append(rolesetID);
-        return factory.createURI(builder.toString());
-    }
-
-    protected URI uriForArgument(String rolesetID, String argName) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(NAMESPACE);
-        builder.append(argPart(rolesetID, argName));
-        return factory.createURI(builder.toString());
-    }
 
     private URI uriForExample(String rolesetID, int exampleCount) {
         StringBuilder builder = new StringBuilder();
@@ -646,118 +477,13 @@ public abstract class BankConverter extends Converter {
 
     // Parts
 
-    private String argPart(String rolesetID, String argName) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(rolesetPart(rolesetID));
-        builder.append(SEPARATOR);
-        builder.append("arg");
-        builder.append(argName);
-        return builder.toString();
-    }
-
-    private String argPart(String rolesetID, String argName, String prefix) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(rolesetPart(rolesetID, prefix));
-        builder.append(SEPARATOR);
-        builder.append("arg");
-        builder.append(argName);
-        return builder.toString();
-    }
-
     private String examplePart(String rolesetID, Integer exampleCount) {
         StringBuilder builder = new StringBuilder();
         builder.append(rolesetPart(rolesetID));
-        builder.append(SEPARATOR);
+        builder.append(separator);
         builder.append(EXAMPLE_PREFIX);
         builder.append(exampleCount);
         return builder.toString();
-    }
-
-    private String lemmaPart(String lemma, String type) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(type);
-        builder.append(SEPARATOR);
-        builder.append(lemma.equals("%") ? "perc-sign" : lemma);
-        return builder.toString();
-    }
-
-    private String rolesetPart(String rolesetID) {
-        return rolesetPart(rolesetID, null);
-    }
-
-    private String rolesetPart(String rolesetID, @Nullable String prefix) {
-        if (prefix == null) {
-            prefix = ROLESET_PREFIX;
-        }
-        StringBuilder builder = new StringBuilder();
-        builder.append(prefix);
-        builder.append(SEPARATOR);
-        builder.append(rolesetID);
-        return builder.toString();
-    }
-
-    // Methods to add statement
-
-    protected void addStatementToSink(Resource subject, URI predicate, Value object) {
-        addStatementToSink(subject, predicate, object, DEFAULT_GRAPH);
-    }
-
-    protected void addStatementToSink(Resource subject, URI predicate, Value object, URI graph) {
-
-        // Fix for missing object
-        // <http://premon.fbk.eu/resource/pb-accumulate.01-arg3> <http://premon.fbk.eu/ontology/pb#functionTag>  .
-        if (object == null) {
-            return;
-        }
-
-        Statement statement = factory.createStatement(subject, predicate, object, graph);
-        try {
-            sink.handleStatement(statement);
-        } catch (RDFHandlerException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    protected void addStatementToSink(Resource subject, URI predicate, String objectValue) {
-        addStatementToSink(subject, predicate, objectValue, true);
-    }
-
-    protected void addStatementToSink(Resource subject, URI predicate, String objectValue,
-            URI graph) {
-        addStatementToSink(subject, predicate, objectValue, true, graph);
-    }
-
-    protected void addStatementToSink(Resource subject, URI predicate, String objectValue,
-            boolean useLanguage) {
-        addStatementToSink(subject, predicate, objectValue, useLanguage, DEFAULT_GRAPH);
-    }
-
-    protected void addStatementToSink(Resource subject, URI predicate, String objectValue,
-            boolean useLanguage, URI graph) {
-
-        // Return on null or empty string
-        if (objectValue == null || objectValue.length() == 0) {
-            return;
-        }
-
-        Value object;
-        if (useLanguage) {
-            object = factory.createLiteral(objectValue, language);
-        } else {
-            object = factory.createLiteral(objectValue);
-        }
-
-        addStatementToSink(subject, predicate, object, graph);
-    }
-
-    protected void addStatementToSink(Resource subject, URI predicate, boolean objectValue) {
-        Value object = factory.createLiteral(objectValue);
-        addStatementToSink(subject, predicate, object);
-    }
-
-    protected void addStatementToSink(Resource subject, URI predicate, int objectValue) {
-        Value object = factory.createLiteral(objectValue);
-        addStatementToSink(subject, predicate, object);
     }
 
     // Abstract methods
