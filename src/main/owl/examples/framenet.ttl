@@ -48,21 +48,25 @@ pmofn:fn16-body_of_water_semType   pmofn:subTypeOf     pmofn:fn16-region_semType
 
 pm:fn16-abounding_with  	a			pmofn:Frame ;
 							rdfs:label      "Abounding_with"^^xsd:string ;
-							pmofn:cBy  		"MJE"^^xsd:string ;
-							pmofn:cDate		"2002-01-28T04:30:50-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
+							dct:creator  	pm:mje_Creator	;
+							dct:created		"2002-01-28T04:30:50-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
 							dct:identifier  "262"^^xsd:int ;
 							skos:definition "kadsrfoerprmkrt"xsd:string ; #tag definition da escappare....
 							pmo:semArg      pm:fn16-abounding_with@theme ;
+
+pm:mje_Creator				dct:identifier			"MJE"^^xsd:string ;
 					
 #definition of a frame element 
 
 pm:fn16-abounding_with@theme		a				pmofn:FrameElement , pmofn:CoreFrameElement;
 									rdfs:label      "Theme"^^xsd:string ;
-									pmofn:cBy  		"MJE"^^xsd:string ;
-									pmofn:cDate		"2002-01-28T04:59:48-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
+									dct:creator  	pm:mje_Creator	;
+									dct:created		"2002-01-28T04:59:48-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
 									dct:identifier  "2260"^^xsd:int ;
 									skos:definition "adsjnkfdsjkregndjakfwdmfe"xsd:string ; #tag definition da escappare....
 									pmo:semType		pmofn:fn16-physical_object_semType  .  # definito nei semType (vedi sopra)
+
+#pm:mje_Creator				dct:identifier			"MJE"^^xsd:string ; già definito sopra...
 		
 # se un frame element contiene la excludes (esempio qui fittizio)
 pm:fn16-abounding_with@theme        pmofn:excludesFrameElement      pm:fn16-abounding_with@Transferors   .	
@@ -107,10 +111,12 @@ pm:lexicalunit-v-teem-fn16-abounding_with		a						pmofn:LexicalUnit         ;
 												lexinfo:partOfSpeech	lexinfo:verb ; #to be checked the correct pos value...
 												dct:identifier  		"4765"^^xsd:int ;
 												#lemma ID non modellato, non serve....
-												pmofn:cBy  				"MJE"^^xsd:string ;
-												pmofn:cDate				"2002-01-28T04:31:33-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
+												dct:creator  	pm:mje_Creator	;
+												dct:created				"2002-01-28T04:31:33-08:00"^^xsd:datetime ;   #occhio che va fatta la conversione
 												skos:definition			"COD: be full of or swarming with."^^xsd:string
 #sentence count non modellato, non serve....
+   
+#pm:mje_Creator				dct:identifier			"MJE"^^xsd:string ; già definito sopra...
    
 # se ci fosse "incorporatedFE", tipo  <lexUnit status="Created" incorporatedFE="Vehicle" POS="N" name="vessel.n" ID="13131" lemmaID="42925" cBy="MJE" cDate="03/21/2006 11:14:13 PST Tue">
 pm:lexicalunit-n-vessel-fn16-abounding_with		pmofn:incorporatedFrameElement				pm:fn16-vehicle@vehicle
