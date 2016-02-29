@@ -93,7 +93,7 @@ public class FramebaseConverter extends Converter {
 
         };
         final RDFProcessor p = RDFProcessors.sequence(p1, p2);
-        p.apply(RDFSources.NIL, this.sink, 1);
+        p.apply(RDFSources.NIL, this.defaultSink, 1);
     }
 
     private static class Handler extends AbstractRDFHandlerWrapper {

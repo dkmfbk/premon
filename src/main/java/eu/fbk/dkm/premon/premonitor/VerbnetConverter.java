@@ -91,7 +91,7 @@ public class VerbnetConverter extends Converter {
 
                         // todo: Remove it!
 //                        String id = thisClass.getAttribute("ID");
-//                        if (!id.equals("tape-22.4")) {
+//                        if (!id.equals("continue-55.3")) {
 //                            continue;
 //                        }
 
@@ -151,10 +151,14 @@ public class VerbnetConverter extends Converter {
             addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
             addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, rolesetURI);
 
-            if (groupingString != null) {
-                String[] groupings = groupingString.split("\\s+");
+            if (groupingString != null && groupingString.trim().length() > 0) {
+                String[] groupings = groupingString.trim().split("\\s+");
                 for (String grouping : groupings) {
                     for (String pbLink : pbLinks) {
+                        if (pbLink.length() == 0) {
+                            continue;
+                        }
+
                         URI pbRolesetURI = uriForRoleset(grouping, pbLink);
                         URI pbConceptualizationURI = uriForConceptualizationWithPrefix(lemma, "v",
                                 grouping, pbLink);
@@ -231,6 +235,8 @@ public class VerbnetConverter extends Converter {
         for (Element element : elements) {
             String argName = element.getAttribute("type");
             thisThemRolesElements.put(argName, element);
+            URI argumentURI = uriForArgument(id, argName);
+            addStatementToSink(rolesetURI, PMOVN.DEFINES_SEM_ARG, argumentURI);
         }
 
         for (String argName : thisThemRolesElements.keySet()) {
@@ -243,7 +249,7 @@ public class VerbnetConverter extends Converter {
             addStatementToSink(argumentURI, PMO.ROLE, PMOVN.lookup(PMOVN.THEMATIC_ROLE, argName));
             for (String lemma : lemmas.keySet()) {
                 URI lemmaURI = lemmas.get(lemma);
-                addStatementToSink(lemmaURI, ONTOLEX.EVOKES, rolesetURI);
+                addStatementToSink(lemmaURI, ONTOLEX.EVOKES, argumentURI);
 
                 URI conceptualizationURI = uriForConceptualization(lemma, "v",
                         argPart(id, argName, ""));
@@ -253,7 +259,7 @@ public class VerbnetConverter extends Converter {
             }
 
             addRestrictions("SELRESTRS", "SELRESTR", argumentURI, element, "srs", PMOVN.ROLE_SELECTIONAL_RESTRICTION,
-                    PMOVN.THEMATIC_ROLE);
+                    PMOVN.ROLE_RESTRICTION_PROPERTY);
         }
 
         HashSet<Element> thisFrameElements = new HashSet<>();
@@ -308,11 +314,14 @@ public class VerbnetConverter extends Converter {
             Match selrestrs = JOOX.$(selrestrse.getElementsByTagName(label2));
             URI restrictionURI = uriForRestriction(startingURI, suffix);
             if (selrestrs.size() == 1) {
+                URI voURI = PMOVN.lookup(lookup, selrestrs.get(0).getAttribute("type"));
+                if (voURI == null) {
+                    LOGGER.error("Value not found: {}:{}", lookup, selrestrs.get(0).getAttribute("type"));
+                }
                 addStatementToSink(startingURI, PMOVN.RESTRICTION_P, restrictionURI);
                 addStatementToSink(restrictionURI, RDF.TYPE, typeURI);
                 addStatementToSink(restrictionURI, RDF.TYPE, getAtomicURI(selrestrs.get(0)));
-                addStatementToSink(restrictionURI, PMO.VALUE_OBJ,
-                        PMOVN.lookup(lookup, selrestrs.get(0).getAttribute("type")));
+                addStatementToSink(restrictionURI, PMO.VALUE_OBJ, voURI);
                 if (pieces != null) {
                     pieces.add(String.format("%s%s%s%s", sep1, selrestrs.get(0).getAttribute("Value"),
                             selrestrs.get(0).getAttribute("type"), sep2));
@@ -331,11 +340,14 @@ public class VerbnetConverter extends Converter {
                     i++;
                     URI thisRestrictionURI = uriForRestriction(startingURI, suffix, i);
 
+                    URI voURI = PMOVN.lookup(lookup, selrestr.getAttribute("type"));
+                    if (voURI == null) {
+                        LOGGER.error("Value not found: {}:{}", lookup, selrestr.getAttribute("type"));
+                    }
                     addStatementToSink(restrictionURI, PMO.ITEM, thisRestrictionURI);
                     addStatementToSink(thisRestrictionURI, RDF.TYPE, typeURI);
                     addStatementToSink(thisRestrictionURI, RDF.TYPE, getAtomicURI(selrestr));
-                    addStatementToSink(thisRestrictionURI, PMO.VALUE_OBJ,
-                            PMOVN.lookup(lookup, selrestr.getAttribute("type")));
+                    addStatementToSink(thisRestrictionURI, PMO.VALUE_OBJ, voURI);
                     if (pieces != null) {
                         pieces.add(String.format("%s%s%s%s", sep1, selrestr.getAttribute("Value"),
                                 selrestr.getAttribute("type"), sep2));
@@ -442,7 +454,7 @@ public class VerbnetConverter extends Converter {
             switch (type) {
             case "Event":
                 addStatementToSink(thisURI, RDF.TYPE, PMOVN.EVENT_PRED_ARG);
-                String okValue = value.replaceAll("\\([.*]\\)", "");
+                String okValue = value.replaceAll("\\(.*\\)", "");
                 URI argType = PMOVN.lookup(PMOVN.EVENT_PRED_ARG_TYPE, okValue);
                 if (argType != null) {
                     addStatementToSink(thisURI, PMO.VALUE_OBJ, argType);
@@ -557,6 +569,14 @@ public class VerbnetConverter extends Converter {
 
             String value = element.getAttribute("value");
 
+//            URI tmpURI = factory.createURI("http://premon.fbk.eu/resource/vn32-amalgamate-22.2-1_frame_1_SynItem_4");
+//            System.out.println(thisURI);
+//            if (thisURI.equals(tmpURI)) {
+//                System.out.println("Yes!");
+//                System.out.println(tagName);
+//                System.out.println(value);
+//            }
+
             switch (tagName) {
             case "NP":
                 pieces.add(value);
@@ -565,6 +585,8 @@ public class VerbnetConverter extends Converter {
                 addStatementToSink(thisURI, PMO.VALUE_OBJ, argumentURI);
                 addRestrictions("SYNRESTRS", "SYNRESTR", thisURI, element, "synRes", PMOVN.SYNTACTIC_RESTRICTION,
                         PMOVN.SYNTACTIC_RESTRICTION_PROPERTY, pieces, "[", "]");
+                addRestrictions("SELRESTRS", "SELRESTR", thisURI, element, "selRes", PMOVN.ROLE_SELECTIONAL_RESTRICTION,
+                        PMOVN.ROLE_RESTRICTION_PROPERTY, pieces, "{{", "}}");
                 break;
             case "VERB":
                 pieces.add("V");
@@ -573,12 +595,15 @@ public class VerbnetConverter extends Converter {
             case "PREP":
                 if (value != null && value.length() > 0) {
                     pieces.add(String.format("{%s}", value));
+                    String[] values = value.split("\\s+");
+                    for (String thisValue : values) {
+                        URI lexicalEntryURI = addLexicalEntry(thisValue, thisValue, "p", getLexicon());
+                        addStatementToSink(thisURI, PMO.VALUE_OBJ, lexicalEntryURI);
+                    }
                 }
                 addStatementToSink(thisURI, RDF.TYPE, PMOVN.PREP_SYN_ITEM);
-                if (value != null && value.length() > 0) {
-                    addLexicalEntry(value, value, "p", getLexicon());
-                }
-                addRestrictions("SELRESTRS", "SELRESTR", thisURI, element, "selRes", PMOVN.SELECTIONAL_RESTRICTION,
+                addRestrictions("SELRESTRS", "SELRESTR", thisURI, element, "selRes",
+                        PMOVN.PREPOSITION_SELECTIONAL_RESTRICTION,
                         PMOVN.PREPOSITION_RESTRICTION_PROPERTY, pieces, "{{", "}}");
                 break;
             case "LEX":

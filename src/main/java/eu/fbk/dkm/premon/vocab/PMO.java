@@ -83,6 +83,9 @@ public final class PMO {
     /** Object property pmo:valueObj. */
     public static final URI VALUE_OBJ = createURI("valueObj");
 
+    /** Object property pmo:implicitIn. */
+    public static final URI IMPLICIT_IN = createURI("implicitIn");
+
     // Datatype properties
 
     /** Datatype property pmo:core. */

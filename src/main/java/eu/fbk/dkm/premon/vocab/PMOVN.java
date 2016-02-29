@@ -161,6 +161,9 @@ public final class PMOVN {
     /** Object property pmovn:definesFrame. */
     public static final URI DEFINES_FRAME = createURI("definesFrame");
 
+    /** Object property pmovn:definesSemArg. */
+    public static final URI DEFINES_SEM_ARG = createURI("definesSemArg");
+
     /** Object property pmovn:restriction. */
     public static final URI RESTRICTION_P = createURI("restriction");
 
@@ -463,6 +466,9 @@ public final class PMOVN {
     /** Individual pmovn:plant_rrp (a pmovn:RoleRestrictionProperty). */
     public static final URI PLANT_RRP = createURI("plant_rrp", ROLE_RESTRICTION_PROPERTY, "plant");
 
+    /** Individual pmovn:plural_rrp (a pmovn:RoleRestrictionProperty). */
+    public static final URI PLURAL_RRP = createURI("plural_rrp", ROLE_RESTRICTION_PROPERTY, "plural");
+
     /** Individual pmovn:pointy_rrp (a pmovn:RoleRestrictionProperty). */
     public static final URI POINTY_RRP = createURI("pointy_rrp", ROLE_RESTRICTION_PROPERTY,
             "pointy");
@@ -664,6 +670,20 @@ public final class PMOVN {
     /** Individual pmovn:wh_ing_syrp (a pmovn:SyntacticRestrictionProperty). */
     public static final URI WH_ING_SYRP = createURI("wh_ing_syrp", SYNTACTIC_RESTRICTION_PROPERTY,
             "wh_ing");
+
+    /** VN 3.2 */
+
+    /** Individual pmovn:to_inf_rs_syrp (a pmovn:SyntacticRestrictionProperty). */
+    public static final URI TO_INF_RF_SYRP = createURI("to_inf_rs_syrp",
+            SYNTACTIC_RESTRICTION_PROPERTY, "to_inf_rs");
+
+    /** Individual pmovn:pos_ing_syrp (a pmovn:SyntacticRestrictionProperty). */
+    public static final URI POS_ING_SYRP = createURI("pos_ing_syrp",
+            SYNTACTIC_RESTRICTION_PROPERTY, "pos_ing");
+
+//    /** Individual pmovn:plural_syrp (a pmovn:SyntacticRestrictionProperty). */
+//    public static final URI PLURAL_SYRP = createURI("plural_syrp",
+//            SYNTACTIC_RESTRICTION_PROPERTY, "plural");
 
     // Utility methods
 

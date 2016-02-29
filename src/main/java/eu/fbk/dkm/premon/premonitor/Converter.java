@@ -51,7 +51,8 @@ public abstract class Converter {
     }
 
     protected final File path;
-    protected final RDFHandler sink;
+    protected final RDFHandler defaultSink;
+    protected RDFHandler sink;
     protected final Properties properties;
     protected final String language;
 
@@ -78,7 +79,8 @@ public abstract class Converter {
 
         this.path = Objects.requireNonNull(path);
         this.resource = Objects.requireNonNull(resource);
-        this.sink = Objects.requireNonNull(sink);
+        this.defaultSink = Objects.requireNonNull(sink);
+        this.sink = defaultSink;
         this.properties = Objects.requireNonNull(properties);
         this.language = language;
 
@@ -89,12 +91,28 @@ public abstract class Converter {
         this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
     }
 
+    public void setDefaultSinkAsSink() {
+        this.sink = defaultSink;
+    }
+
+    public void setSink(RDFHandler newSink) {
+        this.sink = newSink;
+    }
+
     public abstract void convert() throws IOException, RDFHandlerException;
 
     // Methods to add statement
 
     protected void addStatementToSink(Resource subject, URI predicate, Value object) {
         addStatementToSink(subject, predicate, object, DEFAULT_GRAPH);
+    }
+
+    protected void addStatementToSink(Statement statement) {
+        try {
+            sink.handleStatement(statement);
+        } catch (RDFHandlerException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void addStatementToSink(Resource subject, URI predicate, Value object, URI graph) {
