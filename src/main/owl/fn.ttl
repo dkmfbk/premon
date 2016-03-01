@@ -124,6 +124,18 @@
 
 
 
+###  http://premon.fbk.eu/ontology/fn#inheritsFromFER
+
+:inheritsFromFER rdf:type owl:ObjectProperty ;
+                 
+                 rdfs:subPropertyOf pmo:argumentRel ;
+                 
+                 rdfs:domain :FrameElement ;
+                 
+                 rdfs:range :FrameElement .
+
+
+
 ###  http://premon.fbk.eu/ontology/fn#isCausativeOf
 
 :isCausativeOf rdf:type owl:ObjectProperty ;
@@ -131,6 +143,18 @@
                rdfs:label "is causative of"@en ;
                
                rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#isCausativeOfFER
+
+:isCausativeOfFER rdf:type owl:ObjectProperty ;
+                  
+                  rdfs:subPropertyOf pmo:argumentRel ;
+                  
+                  rdfs:range :FrameElement ;
+                  
+                  rdfs:domain :FrameElement .
 
 
 
@@ -144,17 +168,15 @@
 
 
 
-###  http://premon.fbk.eu/ontology/fn#mapsToFrameElement
+###  http://premon.fbk.eu/ontology/fn#isInchoativeOfFER
 
-:mapsToFrameElement rdf:type owl:ObjectProperty ;
-                    
-                    rdfs:label "frame element relation"@en ;
-                    
-                    rdfs:subPropertyOf pmo:argumentRel ;
-                    
-                    rdfs:domain :FrameElement ;
-                    
-                    rdfs:range :FrameElement .
+:isInchoativeOfFER rdf:type owl:ObjectProperty ;
+                   
+                   rdfs:subPropertyOf pmo:argumentRel ;
+                   
+                   rdfs:range :FrameElement ;
+                   
+                   rdfs:domain :FrameElement .
 
 
 
@@ -166,11 +188,55 @@
 
 
 
+###  http://premon.fbk.eu/ontology/fn#perspectiveOnFER
+
+:perspectiveOnFER rdf:type owl:ObjectProperty ;
+                  
+                  rdfs:subPropertyOf pmo:argumentRel ;
+                  
+                  rdfs:range :FrameElement ;
+                  
+                  rdfs:domain :FrameElement .
+
+
+
 ###  http://premon.fbk.eu/ontology/fn#precedes
 
 :precedes rdf:type owl:ObjectProperty ;
           
           rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#precedesFER
+
+:precedesFER rdf:type owl:ObjectProperty ;
+             
+             rdfs:subPropertyOf pmo:argumentRel ;
+             
+             rdfs:domain :FrameElement ;
+             
+             rdfs:range :FrameElement .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#reFrameMapping
+
+:reFrameMapping rdf:type owl:ObjectProperty ;
+                
+                rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#reFrameMappingFER
+
+:reFrameMappingFER rdf:type owl:ObjectProperty ;
+                   
+                   rdfs:subPropertyOf pmo:argumentRel ;
+                   
+                   rdfs:range :FrameElement ;
+                   
+                   rdfs:domain :FrameElement .
 
 
 
@@ -195,6 +261,18 @@
          rdfs:label "see also"@en ;
          
          rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#seeAlsoFER
+
+:seeAlsoFER rdf:type owl:ObjectProperty ;
+            
+            rdfs:subPropertyOf pmo:argumentRel ;
+            
+            rdfs:range :FrameElement ;
+            
+            rdfs:domain :FrameElement .
 
 
 
@@ -230,6 +308,18 @@
 :subframeOf rdf:type owl:ObjectProperty ;
             
             rdfs:subPropertyOf :frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#subframeOfFER
+
+:subframeOfFER rdf:type owl:ObjectProperty ;
+               
+               rdfs:subPropertyOf pmo:argumentRel ;
+               
+               rdfs:domain :FrameElement ;
+               
+               rdfs:range :FrameElement .
 
 
 
@@ -311,13 +401,13 @@
        
        rdfs:subClassOf pmo:Predicate ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty pmo:semArg ;
-                         owl:allValuesFrom :FrameElement
-                       ] ,
-                       [ rdf:type owl:Restriction ;
                          owl:onProperty [ owl:inverseOf pmo:evokedConcept
                                         ] ;
                          owl:allValuesFrom :LexicalUnit
+                       ] ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty pmo:semArg ;
+                         owl:allValuesFrom :FrameElement
                        ] .
 
 
@@ -408,6 +498,7 @@
                 :isInchoativeOf
                 :perspectiveOn
                 :precedes
+                :reFrameMapping
                 :seeAlso
                 :subframeOf
                 :uses
