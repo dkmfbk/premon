@@ -1,0 +1,99 @@
+cambiare i prefix di Example e Markable: ora solo pmo:Example e pmo:Markable
+
+
+
+#Check creazione degli URI
+
+###esempi
+pm:example_1225353			a				pmo:Example		;
+							nif:isString	"I have been communicating with the Minister since 1988 on that problem ."^^xsd:string		.
+
+#queste non servono più 
+#pm:fn16-communication								pmo:example		pm:example_1225353		.			#frame	
+#pm:conceptualization-v-communicate-fn16-communication		pmo:example		pm:example_1225353		.			#LU
+
+#pm:fn16-communication@communicator					pmo:implicitIn	pm:example_1225353		.			#FE  a span 0,0 , quindi implicito, no markable
+#pm:fn16-communication@addressee					pmo:example		pm:example_1225353		.			#FE
+#...
+
+
+#annotation set contiene un item per ogni predicato o argomento annotato, anche implicitamente o con errore, nell'esempio....
+
+pm:example_1225353_annSet_XYZ			a			pmo:AnnotationSet    ;
+													pmo:item	pm:example_1225353_annSet_XYZ_pred ;
+													pmo:item	pm:example_1225353_annSet_XYZ_arg1 ;
+													pmo:item	pm:example_1225353_annSet_XYZ_arg2 .
+
+
+#un annotation item per ogni elemento dell'annotation 
+pm:example_1225353_annSet_XYZ_pred		a			nif:Annotation		;
+													pmo:valueObj		pm:fn16-communication	;
+													pmo:valueObj		pm:conceptualization-v-communicate-fn16-communication		. #in framenet, linkare sia alla LU che al predicato
+
+
+pm:example_1225353_annSet_XYZ_arg1		a			nif:Annotation	  .     pom:ImplicitAnnotation	;
+													pmo:valueObj		pm:fn16-communication@communicator	;
+
+pm:example_1225353_annSet_XYZ_arg2		a			nif:Annotation		;
+													pmo:valueObj		pm:fn16-communication@addressee	;
+
+
+#leghiamo gli annotation item all'esempio via nif:annotation
+pm:example_1225353						nif:annotation					pm:example_1225353_annSet_XYZ_pred   .
+pm:example_1225353						nif:annotation					pm:example_1225353_annSet_XYZ_arg1   .
+pm:example_1225353						nif:annotation					pm:example_1225353_annSet_XYZ_arg2   .
+
+
+#dove c'e' il markable, lo mettiamo.... dove non c'e' (e.g., implicit argument in FN, o esempi di VB
+
+###Markables
+pm:example_1225353#char=12,24			a						pmo:Markable		;
+										nif:anchorOf			"communicating"		;
+										nif:beginIndex			"12"^^xsd:int ;
+										nif:beginIndex			"24"^^xsd:int ;
+										nif:annotation			pm:pm:example_1225353_annSet_XYZ_pred   ;
+										nif:referenceContext	pm:example_1225353	.
+
+
+# Per communicator il markable non c'e' xche span 0,0
+
+pm:example_1225353#char=26,42			a						pmo:Markable		;
+										nif:anchorOf			"with the Minister"		;
+										nif:annotation			pm:example_1225353_annSet_XYZ_arg2			;   
+										nif:beginIndex			"26"^^xsd:int ;
+										nif:beginIndex			"42"^^xsd:int ;
+										nif:referenceContext	pm:example_1225353	.
+
+
+## nel vaso di propbank e nombank, si crea un pmo:AnnotationSet e un pmo:Example per ogni example
+#
+#<example name="autogen1">
+#<text>
+#the city 's racial and ethnic wounds
+#</text>
+#<arg n="1">the city 's</arg>
+#<arg n="0">racial and ethnic</arg>
+#<rel>wounds</rel>
+#</example>
+# e ci saranno i corrispondenti nif:Annotation, pmo:Markable, example
+# ricordarsi di legare example ai nif:Annotation con nif:annotation
+
+
+
+## nel vaso di verbnet, si crea un pmo:AnnotationSet e un pmo:Example per ogni example
+#<EXAMPLES>
+#	<EXAMPLE>He wished to come.</EXAMPLE>
+#</EXAMPLES>
+#<SYNTAX>
+#	<NP value="Experiencer">
+#		<SYNRESTRS/>
+#	</NP>
+#	<VERB/>
+#	<NP value="Theme">
+#		<SYNRESTRS>
+#			<SYNRESTR Value="+" type="sc_to_inf"/>
+#		</SYNRESTRS>
+#	</NP>
+#</SYNTAX>
+# qui non si sono i markable, ma solo i nif:Annotation che puntano via valueObj al corrispondente verb class o semantic argument
+# ricordarsi di legare example ai nif:Annotation con nif:annotation
