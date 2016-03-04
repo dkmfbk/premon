@@ -92,8 +92,8 @@ Subclasses of Example and Markable are introduced to model the specificities of 
              
              rdfs:range [ rdf:type owl:Class ;
                           owl:unionOf ( :ModifierRole
-                                        :Preposition
                                         :Tag
+                                        ontolex:LexicalEntry
                                       )
                         ] .
 
@@ -324,14 +324,6 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 
 
-###  http://premon.fbk.eu/ontology/pb#Preposition
-
-:Preposition rdf:type owl:Class ;
-             
-             rdfs:label "preposition" .
-
-
-
 ###  http://premon.fbk.eu/ontology/pb#SemanticArgument
 
 :SemanticArgument rdf:type owl:Class ;
@@ -340,13 +332,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
                   
                   rdfs:subClassOf pmo:SemanticArgument ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmo:role ;
-                                    owl:allValuesFrom :SemanticRole
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
                                     owl:onProperty [ owl:inverseOf pmo:semArg
                                                    ] ;
                                     owl:allValuesFrom :Predicate
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmo:role ;
+                                    owl:allValuesFrom :SemanticRole
                                   ] .
 
 
@@ -417,13 +409,6 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 #    Individuals
 #
 #################################################################
-
-
-###  http://premon.fbk.eu/ontology/pb#about
-
-:about rdf:type :Preposition ,
-                owl:NamedIndividual .
-
 
 
 ###  http://premon.fbk.eu/ontology/pb#active
@@ -629,48 +614,6 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 
 
-###  http://premon.fbk.eu/ontology/pb#around
-
-:around rdf:type :Preposition ,
-                 owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#as
-
-:as rdf:type :Preposition ,
-             owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#at
-
-:at rdf:type :Preposition ,
-             owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#by
-
-:by rdf:type :Preposition ,
-             owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#for
-
-:for rdf:type :Preposition ,
-              owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#from
-
-:from rdf:type :Preposition ,
-               owl:NamedIndividual .
-
-
-
 ###  http://premon.fbk.eu/ontology/pb#full
 
 :full rdf:type :Form ,
@@ -692,38 +635,10 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 
 
-###  http://premon.fbk.eu/ontology/pb#in
-
-:in rdf:type :Preposition ,
-             owl:NamedIndividual .
-
-
-
 ###  http://premon.fbk.eu/ontology/pb#infinitive
 
 :infinitive rdf:type :Form ,
                      owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#into
-
-:into rdf:type :Preposition ,
-               owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#of
-
-:of rdf:type :Preposition ,
-             owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#on
-
-:on rdf:type :Preposition ,
-             owl:NamedIndividual .
 
 
 
@@ -801,27 +716,6 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :third rdf:type :Person ,
                 owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#to
-
-:to rdf:type :Preposition ,
-             owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#upon
-
-:upon rdf:type :Preposition ,
-               owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#with
-
-:with rdf:type :Preposition ,
-               owl:NamedIndividual .
 
 
 

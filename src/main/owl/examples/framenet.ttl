@@ -219,34 +219,59 @@ pm:fn16-change_of_consistency@time		pmofn:frameElementRelation		pm:fn16-event@Ti
 
 #Vedi anche modellazione esempi e markable in propbank e nombank
 
+
+###esempi
 pm:example_1225353			a				pmofn:Example		;
 							nif:isString	"I have been communicating with the Minister since 1988 on that problem ."^^xsd:string		.
-							
 
+#la pmo:example ci serve per i casi dove non ci sono annotazioni (e.g., VerbNet) e i ruoli impliciti (framenet)					
 pm:fn16-communication								pmo:example		pm:example_1225353		.			#frame	
 pm:lexicalunit-communicate-fn16-communication		pmo:example		pm:example_1225353		.			#LU
 
-pm:fn16-communication@communicator					pmo:implicitIn		pm:example_1225353		.			#FE  a span 0,0 , quindi implicito, no markable
-pm:fn16-communication@addressee						pmo:example			pm:example_1225353		.			#FE
-pm:fn16-communication@duration						pmo:example			pm:example_1225353		.			#FE
-pm:fn16-communication@topic							pmo:example			pm:example_1225353		.			#FE
+pm:fn16-communication@communicator					pmo:implicitIn	pm:example_1225353		.			#FE  a span 0,0 , quindi implicito, no markable
+pm:fn16-communication@addressee						pmo:example		pm:example_1225353		.			#FE
+#...
 
-
-							
+###Markables
 pm:example_1225353#char=12,24			a						pmofn:Markable		;
 										nif:anchorOf			"communicating"		;
-										nif:annotation			pm:fn16-communication								;    #target va su frame e lu
-										nif:annotation			pm:lexicalunitv-communicate-fn16-communication		;    #target va su frame e lu
+#moved to annotation!!					nif:annotation			pm:fn16-communication								;    #target va su frame e lu
+#moved to annotation!!					nif:annotation			pm:lexicalunitv-communicate-fn16-communication		;    #target va su frame e lu
 										nif:beginIndex			"12"^^xsd:int ;
 										nif:beginIndex			"24"^^xsd:int ;
 										nif:referenceContext	pm:example_1225353	.
 
 # non c'e' quello per communicator xche span 0,0
 
-
 pm:example_1225353#char=26,42			a						pmofn:Markable		;
 										nif:anchorOf			"with the Minister"		;
-										nif:annotation			pm:fn16-communication@addressee								;    #il FE corrispondente
+#moved to annotation!!					nif:annotation			pm:fn16-communication@addressee								;    #il FE corrispondente
 										nif:beginIndex			"26"^^xsd:int ;
 										nif:beginIndex			"42"^^xsd:int ;
 										nif:referenceContext	pm:example_1225353	.
+
+
+#annotation del predicato
+#NB: da verificare come costruire l'uri dell'annotation set... forse conviene usare IDesempio+IDannotazione+itemNNN
+pm:example_1225353_annXWZ_item1		a		nif:Annotation				;
+											nif:annotation				pm:fn16-communication	;
+											nif:annotation				pm:lexicalunitv-communicate-fn16-communication		;
+											pmo:markable				pm:example_1225353#char=12,24  .
+																
+#annotation dei ruoli
+pm:example_1225353_annXWZ_item2		a		nif:Annotation			;
+											nif:annotation				pm:fn16-communication@addressee								;    #il FE corrispondente
+											pmo:markable				pm:example_1225353#char=26,42	;
+											pmo:predicateAnnotation		pm:example_1225353_annXWZ_item1	.
+																
+																
+																
+																
+
+
+
+
+
+
+
+							
