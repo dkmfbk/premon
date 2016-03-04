@@ -62,8 +62,9 @@ public class FramebaseConverter extends Converter {
 
     };
 
-    public FramebaseConverter(final File path, final RDFHandler sink, final Properties properties) {
-        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"));
+    public FramebaseConverter(final File path, final RDFHandler sink, final Properties properties,
+            Map<String, URI> wnInfo) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
     }
 
     @Override
@@ -436,4 +437,7 @@ public class FramebaseConverter extends Converter {
 
     }
 
+    @Override protected URI getPosURI(String textualPOS) {
+        return null;
+    }
 }

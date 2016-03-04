@@ -12,8 +12,8 @@ import org.openrdf.rio.RDFHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,8 +27,8 @@ public class NombankConverter extends BankConverter {
     Pattern PB_PATTERN = Pattern.compile("^verb-((.*)\\.[0-9]+)$");
     private static String LINK_PATTERN = "http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0/frames/%s.xml";
 
-    public NombankConverter(File path, RDFHandler sink, Properties properties) {
-        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"));
+    public NombankConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
 
         this.nonVerbsToo = true;
         this.isOntoNotes = false;
@@ -110,7 +110,7 @@ public class NombankConverter extends BankConverter {
     }
 
     @Override protected URI getExternalLink(String lemma, String type) {
-        return factory.createURI(String.format(LINK_PATTERN, lemma));
+        return createURI(String.format(LINK_PATTERN, lemma));
     }
 
     @Override void addArgumentToSink(URI argumentURI, String argName, String f, Type argType,

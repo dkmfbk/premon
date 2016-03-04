@@ -25,8 +25,8 @@ public class PropbankConverter extends BankConverter {
 
     private static String LINK_PATTERN = "http://verbs.colorado.edu/propbank/framesets-english/%s-%s.html";
 
-    public PropbankConverter(File path, RDFHandler sink, Properties properties) {
-        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"));
+    public PropbankConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
 
         this.nonVerbsToo = properties.getProperty("extractnonverbs", "0").equals("1");
         this.isOntoNotes = properties.getProperty("ontonotes", "0").equals("1");
@@ -110,7 +110,7 @@ public class PropbankConverter extends BankConverter {
                 builder.append(separator);
                 builder.append(part);
             }
-            URI inflectionURI = factory.createURI(builder.toString());
+            URI inflectionURI = createURI(builder.toString());
 
             for (URI key : inflections.keySet()) {
                 for (URI uri : inflections.get(key)) {
@@ -159,7 +159,9 @@ public class PropbankConverter extends BankConverter {
                 addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(f));
                 break;
             case PREPOSITION:
-                addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(f));
+//                addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(f));
+                URI lexicalEntry = addLexicalEntry(f, f, null, null, "prep", getLexicon());
+                addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, lexicalEntry);
                 break;
             }
             break;
@@ -178,7 +180,7 @@ public class PropbankConverter extends BankConverter {
     }
 
     @Override protected URI getExternalLink(String lemma, String type) {
-        return factory.createURI(String.format(LINK_PATTERN, lemma, type));
+        return createURI(String.format(LINK_PATTERN, lemma, type));
     }
 
     @Override protected void addRelToSink(Type argType, String argName, URI markableURI) {
@@ -214,7 +216,9 @@ public class PropbankConverter extends BankConverter {
                 addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(f));
                 break;
             case PREPOSITION:
-                addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(f));
+//                addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(f));
+                URI lexicalEntry = addLexicalEntry(f, f, null, null, "prep", getLexicon());
+                addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, lexicalEntry);
                 break;
             }
             break;

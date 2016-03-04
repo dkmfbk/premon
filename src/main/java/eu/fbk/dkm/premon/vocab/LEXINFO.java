@@ -71,12 +71,21 @@ public final class LEXINFO {
 
     // Utility methods
 
-    public static HashMap<String, URI> map = new HashMap<>();
+    public static HashMap<URI, String> map = new HashMap<>();
 
     static {
-        map.put("v", VERB);
-        map.put("n", NOUN);
-        map.put("p", PREPOSITION);
+        map.put(VERB, "v");
+        map.put(NOUN, "n");
+        map.put(PREPOSITION, "prep");
+        map.put(DETERMINER, "det");
+        map.put(ADJECTIVE, "adj");
+        map.put(ADVERB, "adv");
+        map.put(CONJUNCTION, "conj");
+        map.put(COORDINATING_CONJUNCTION, "conj");
+        map.put(SUBORDINATING_CONJUNCTION, "conj");
+        map.put(INTERJECTION, "int");
+        map.put(PRONOUN, "pron");
+        map.put(CARDINAL_NUMERAL, "card");
     }
 
     private static URI createURI(final String localName) {

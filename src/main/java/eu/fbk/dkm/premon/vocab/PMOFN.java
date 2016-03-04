@@ -94,6 +94,9 @@ public final class PMOFN {
     /** Object property pmovn:perspectiveOn. */
     public static final URI PERSPECTIVE_ON = createURI("perspectiveOn");
 
+    /** Object property pmovn:reFrameMapping. */
+    public static final URI REFRAME_MAPPING = createURI("reFrameMapping");
+
     /** Object property pmovn:precedes. */
     public static final URI PRECEDES = createURI("precedes");
 

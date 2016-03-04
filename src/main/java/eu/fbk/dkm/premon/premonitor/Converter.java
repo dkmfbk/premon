@@ -11,6 +11,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.rio.RDFHandler;
@@ -38,6 +39,9 @@ public abstract class Converter {
     public String argumentSeparator = "-";
     public static final String FORM_PREFIX = "form";
     public static final String CONCEPTUALIZATION_PREFIX = "conceptualization";
+    protected Map<String, URI> wnInfo;
+
+    static final Map<URI, String> wnMap = Maps.newHashMap();
 
     static {
         final Map<String, URI> codesToURIs = Maps.newHashMap();
@@ -48,7 +52,15 @@ public abstract class Converter {
             codesToURIs.put(language, uri);
         }
         LANGUAGE_CODES_TO_URIS = ImmutableMap.copyOf(codesToURIs);
+
+        wnMap.put(LEXINFO.NOUN, "n");
+        wnMap.put(LEXINFO.VERB, "v");
+        wnMap.put(LEXINFO.ADJECTIVE, "a");
+        wnMap.put(LEXINFO.ADVERB, "r");
     }
+
+    //    private Set<URI> wnURIs;
+    public static String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
 
     protected final File path;
     protected final RDFHandler defaultSink;
@@ -75,7 +87,7 @@ public abstract class Converter {
     }
 
     protected Converter(final File path, final String resource, final RDFHandler sink,
-            final Properties properties, final String language) {
+            final Properties properties, final String language, Map<String, URI> wnInfo) {
 
         this.path = Objects.requireNonNull(path);
         this.resource = Objects.requireNonNull(resource);
@@ -83,10 +95,11 @@ public abstract class Converter {
         this.sink = defaultSink;
         this.properties = Objects.requireNonNull(properties);
         this.language = language;
+        this.wnInfo = wnInfo;
 
         this.onlyOne = properties.getProperty("only-one");
         this.prefix = resource;
-        this.DEFAULT_GRAPH = factory.createURI(NAMESPACE, resource);
+        this.DEFAULT_GRAPH = createURI(NAMESPACE, resource);
 
         this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
     }
@@ -186,7 +199,7 @@ public abstract class Converter {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
         builder.append(rolesetPart(rolesetID, prefix));
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     protected String rolesetPart(String rolesetID) {
@@ -206,21 +219,39 @@ public abstract class Converter {
         return builder.toString();
     }
 
-    protected URI addLexicalEntry(String origLemma, String lemma, String type, Resource lexiconURI) {
-        if (!origLemma.equals(lemma)) {
-            URI lemmaURI = uriForLexicalEntry(lemma, type);
-            URI oLemmaURI = uriForLexicalEntry(origLemma, type);
+    protected URI addLexicalEntry(String goodLemma, String uriLemma, @Nullable List<String> tokens,
+            @Nullable List<String> pos, String mainPos, Resource lexiconURI) {
 
-            addStatementToSink(lemmaURI, DECOMP.SUBTERM, oLemmaURI);
+        URI leURI = addSingleEntry(goodLemma, uriLemma, mainPos, lexiconURI);
+        if (tokens != null && tokens.size() > 1) {
+            for (int i = 0; i < tokens.size(); i++) {
+                String token = tokens.get(i);
+                String thisPOS = null;
+                if (pos != null) {
+                    thisPOS = pos.get(i);
+                }
+
+                if (thisPOS != null) {
+                    URI thisURI = addSingleEntry(token, token, thisPOS, lexiconURI);
+                    addStatementToSink(leURI, DECOMP.SUBTERM, thisURI, LE_GRAPH);
+                }
+            }
         }
 
-        String goodLemma = lemma.replaceAll("\\+", " ");
+        return leURI;
+    }
 
-        URI leURI = uriForLexicalEntry(lemma, type);
-        URI formURI = uriForForm(lemma, type);
+    protected URI addSingleEntry(String goodLemma, String uriLemma, String pos, Resource lexiconURI) {
+        URI posURI = getPosURI(pos);
+        URI leURI = uriForLexicalEntry(uriLemma, posURI);
+        URI formURI = uriForForm(uriLemma, posURI);
+
+        if (posURI == null) {
+            LOGGER.error("POS URI is null: {}", pos);
+        }
 
         addStatementToSink(leURI, RDF.TYPE, ONTOLEX.LEXICAL_ENTRY, LE_GRAPH);
-        addStatementToSink(leURI, LEXINFO.PART_OF_SPEECH_P, LEXINFO.map.get(type), LE_GRAPH);
+        addStatementToSink(leURI, LEXINFO.PART_OF_SPEECH_P, posURI, LE_GRAPH);
         addStatementToSink(lexiconURI, ONTOLEX.ENTRY, leURI, LE_GRAPH);
         addStatementToSink(formURI, RDF.TYPE, ONTOLEX.FORM, LE_GRAPH);
         addStatementToSink(leURI, ONTOLEX.CANONICAL_FORM, formURI, LE_GRAPH);
@@ -228,28 +259,71 @@ public abstract class Converter {
         addStatementToSink(leURI, RDFS.LABEL, goodLemma, LE_GRAPH);
         addStatementToSink(leURI, ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
 
+        if (wnInfo.size() > 0 && posURI != null) {
+            String wnPos = wnMap.get(posURI);
+            if (wnPos != null) {
+                String wnLemma = uriLemma + "-" + wnPos;
+                URI wnURI = factory.createURI(WN_NAMESPACE, wnLemma);
+                if (wnInfo.containsKey(wnURI.toString())) {
+                    addStatementToSink(leURI, OWL.SAMEAS, wnURI, LE_GRAPH);
+                } else {
+                    LOGGER.debug("Word not found: {}", wnLemma);
+                }
+            }
+        }
+
         return leURI;
     }
 
-    private URI uriForForm(String lemma, String type) {
+//    protected URI addLexicalEntry(String origLemma, String lemma, String type, Resource lexiconURI) {
+//        if (!origLemma.equals(lemma)) {
+//            URI lemmaURI = uriForLexicalEntry(lemma, type);
+//            URI oLemmaURI = uriForLexicalEntry(origLemma, type);
+//
+//            addStatementToSink(lemmaURI, DECOMP.SUBTERM, oLemmaURI);
+//        }
+//
+//        String goodLemma = lemma.replaceAll("\\+", " ");
+//
+//        URI leURI = uriForLexicalEntry(lemma, type);
+//        URI formURI = uriForForm(lemma, type);
+//        URI posURI = getPosURI(type);
+//
+//        if (posURI == null) {
+//            LOGGER.error("POS URI is null: {}", type);
+//        }
+//
+//        addStatementToSink(leURI, RDF.TYPE, ONTOLEX.LEXICAL_ENTRY, LE_GRAPH);
+//        addStatementToSink(leURI, LEXINFO.PART_OF_SPEECH_P, posURI, LE_GRAPH);
+//        addStatementToSink(lexiconURI, ONTOLEX.ENTRY, leURI, LE_GRAPH);
+//        addStatementToSink(formURI, RDF.TYPE, ONTOLEX.FORM, LE_GRAPH);
+//        addStatementToSink(leURI, ONTOLEX.CANONICAL_FORM, formURI, LE_GRAPH);
+//        addStatementToSink(formURI, ONTOLEX.WRITTEN_REP, goodLemma, LE_GRAPH);
+//        addStatementToSink(leURI, RDFS.LABEL, goodLemma, LE_GRAPH);
+//        addStatementToSink(leURI, ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
+//
+//        return leURI;
+//    }
+
+    private URI uriForForm(String lemma, URI type) {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
         builder.append(FORM_PREFIX);
         builder.append(separator);
         builder.append(lemmaPart(lemma, type));
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
-    private URI uriForLexicalEntry(String lemma, String type) {
+    private URI uriForLexicalEntry(String lemma, URI type) {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
         builder.append(lemmaPart(lemma, type));
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
-    protected String lemmaPart(String lemma, String type) {
+    protected String lemmaPart(String lemma, URI type) {
         StringBuilder builder = new StringBuilder();
-        builder.append(type);
+        builder.append(LEXINFO.map.get(type));
         builder.append(separator);
         builder.append(lemma.equals("%") ? "perc-sign" : lemma);
         return builder.toString();
@@ -273,21 +347,24 @@ public abstract class Converter {
     }
 
     private URI uriForConceptualizationGen(String lemma, String type, String rolesetID) {
+
+        URI posURI = getPosURI(type);
+
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
         builder.append(CONCEPTUALIZATION_PREFIX);
         builder.append(separator);
-        builder.append(lemmaPart(lemma, type));
+        builder.append(lemmaPart(lemma, posURI));
         builder.append(separator);
         builder.append(rolesetID);
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     protected URI uriForArgument(String rolesetID, String argName) {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
         builder.append(argPart(rolesetID, argName));
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     public String getArgLabel() {
@@ -317,6 +394,19 @@ public abstract class Converter {
     }
 
     protected URI getLexicon() {
-        return factory.createURI(NAMESPACE, "lexicon");
+        return createURI(NAMESPACE, "lexicon");
     }
+
+    public static URI createURI(String text) {
+        text = text.replaceAll("\\s+", "_");
+        return factory.createURI(text);
+    }
+
+    public static URI createURI(String namespace, String text) {
+        text = text.replaceAll("\\s+", "_");
+        namespace = namespace.replaceAll("\\s+", "_");
+        return factory.createURI(namespace, text);
+    }
+
+    protected abstract URI getPosURI(String textualPOS);
 }

@@ -48,13 +48,9 @@ public class VerbnetConverter extends Converter {
     private static final String DEFAULT_ARG_SUFFIX = "arg";
 
     ArrayList<String> pbLinks = new ArrayList<>();
-    private Map<String, URI> wnURIs;
 
-    //    public VerbnetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnURIs) {
-    public VerbnetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnURIs) {
-        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"));
-
-        this.wnURIs = wnURIs;
+    public VerbnetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
 
         String pbLinksString = properties.getProperty("linkpb");
         if (pbLinksString != null) {
@@ -74,8 +70,8 @@ public class VerbnetConverter extends Converter {
         addStatementToSink(getLexicon(), ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
         addStatementToSink(getLexicon(), DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
 
-        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
-        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
 
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -136,17 +132,18 @@ public class VerbnetConverter extends Converter {
 
         elements = JOOX.$(thisClass).xpath("MEMBERS/MEMBER");
         for (Element member : elements) {
-            String lemma = member.getAttribute("name");
-            lemma = lemma.replaceAll("_", "+");
+            String uriLemma = member.getAttribute("name");
+            uriLemma = uriLemma.replaceAll("_", "+");
+            String goodLemma = uriLemma.replaceAll("\\+", " ");
 
             String groupingString = member.getAttribute("grouping");
             String wnString = member.getAttribute("wn");
 
-            URI lexicalEntryURI = addLexicalEntry(lemma, lemma, type, getLexicon());
-            lemmas.put(lemma, lexicalEntryURI);
+            URI lexicalEntryURI = addLexicalEntry(goodLemma, uriLemma, null, null, "v", getLexicon());
+            lemmas.put(uriLemma, lexicalEntryURI);
             addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, rolesetURI);
 
-            URI conceptualizationURI = uriForConceptualization(lemma, "v", id);
+            URI conceptualizationURI = uriForConceptualization(uriLemma, type, id);
             addStatementToSink(conceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
             addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
             addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, rolesetURI);
@@ -160,17 +157,20 @@ public class VerbnetConverter extends Converter {
                         }
 
                         URI pbRolesetURI = uriForRoleset(grouping, pbLink);
-                        URI pbConceptualizationURI = uriForConceptualizationWithPrefix(lemma, "v",
+                        URI pbConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, "v",
                                 grouping, pbLink);
 
                         addStatementToSink(pbConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
                         addStatementToSink(pbConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
                         addStatementToSink(pbConceptualizationURI, PMO.EVOKED_CONCEPT, pbRolesetURI);
+
+                        addStatementToSink(conceptualizationURI, SKOS.CLOSE_MATCH, pbConceptualizationURI);
+                        addStatementToSink(pbConceptualizationURI, SKOS.CLOSE_MATCH, conceptualizationURI);
                     }
                 }
             }
 
-            if (wnString != null && wnURIs.size() > 0) {
+            if (wnString != null && wnInfo.size() > 0) {
                 String[] wns = wnString.split("\\s+");
 
                 for (String wn : wns) {
@@ -188,14 +188,14 @@ public class VerbnetConverter extends Converter {
                         wn = wn.substring(1);
                     }
 
-                    URI wnURI = wnURIs.get(wn);
+                    URI wnURI = wnInfo.get(wn);
 
                     if (wnURI == null) {
                         LOGGER.warn("No wnURI found for {}", wn);
                         continue;
                     }
 
-                    URI reference = wnURIs.get(wnURI.toString());
+                    URI reference = wnInfo.get(wnURI.toString());
 
                     if (reference == null) {
                         LOGGER.warn("No reference found for {}", wnURI.toString());
@@ -207,7 +207,7 @@ public class VerbnetConverter extends Converter {
                         continue;
                     }
 
-                    URI wnConceptualizationURI = uriForConceptualizationWithPrefix(lemma, "v", m.group(1), "wn31");
+                    URI wnConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, "v", m.group(1), "wn31");
 
                     addStatementToSink(wnConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
                     addStatementToSink(wnConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
@@ -597,7 +597,7 @@ public class VerbnetConverter extends Converter {
                     pieces.add(String.format("{%s}", value));
                     String[] values = value.split("\\s+");
                     for (String thisValue : values) {
-                        URI lexicalEntryURI = addLexicalEntry(thisValue, thisValue, "p", getLexicon());
+                        URI lexicalEntryURI = addLexicalEntry(thisValue, thisValue, null, null, "prep", getLexicon());
                         addStatementToSink(thisURI, PMO.VALUE_OBJ, lexicalEntryURI);
                     }
                 }
@@ -674,7 +674,7 @@ public class VerbnetConverter extends Converter {
             if (index != null) {
                 builder.append("_").append(index);
             }
-            return factory.createURI(builder.toString());
+            return createURI(builder.toString());
         }
 
         abstract void addToSink(Element element, URI thisURI);
@@ -700,7 +700,7 @@ public class VerbnetConverter extends Converter {
         if (index != null) {
             builder.append("_").append(index);
         }
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     private URI getFrameURI(String rolesetID) {
@@ -716,7 +716,7 @@ public class VerbnetConverter extends Converter {
         if (index != null) {
             builder.append("_").append(index);
         }
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     private URI getLogicURI(Element selrestrse) {
@@ -745,7 +745,7 @@ public class VerbnetConverter extends Converter {
     }
 
     protected URI getExternalLink(String id) {
-        return factory.createURI(String.format(LINK_PATTERN, id));
+        return createURI(String.format(LINK_PATTERN, id));
     }
 
     protected URI uriForRestriction(URI start, @Nullable String suffix) {
@@ -760,10 +760,19 @@ public class VerbnetConverter extends Converter {
         if (index != null) {
             builder.append("_").append(index);
         }
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     @Override protected String formatArg(String arg) {
         return super.formatArg(arg).toLowerCase();
+    }
+
+    @Override protected URI getPosURI(String textualPOS) {
+        switch (textualPOS) {
+        case "prep":
+            return LEXINFO.PREPOSITION;
+        }
+
+        return LEXINFO.VERB;
     }
 }

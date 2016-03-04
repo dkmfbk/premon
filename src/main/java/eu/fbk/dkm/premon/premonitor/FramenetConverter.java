@@ -2,6 +2,7 @@ package eu.fbk.dkm.premon.premonitor;
 
 import com.google.common.io.Files;
 import eu.fbk.dkm.premon.vocab.*;
+import eu.fbk.dkm.utils.FrequencyHashSet;
 import eu.fbk.rdfpro.RDFHandlers;
 import org.joox.JOOX;
 import org.joox.Match;
@@ -38,22 +39,11 @@ public class FramenetConverter extends Converter {
 
     private static final Pattern TOKEN_REGEX = Pattern.compile("[^\\s]+");
 
-//    private static final Pattern LU_NAME_PATTERN = Pattern.compile("^(.*)\\.(.*)$");
-//    private static final Pattern WN_PATTERN = Pattern.compile("#([^#]+)$");
-//    private static final String LINK_PATTERN = "http://verbs.colorado.edu/verb-index/vn/%s.php";
+    //    private static final String ONE_FRAME = "Locative_relation.xml";
+    private static final String ONE_FRAME = null;
 
-//    private static final String DEFAULT_RESTRICTION_SUFFIX = "srs";
-//    private static final String DEFAULT_FRAME_SUFFIX = "frame";
-//    private static final String DEFAULT_EXAMPLE_SUFFIX = "ex";
-//    private static final String DEFAULT_SYNITEM_SUFFIX = "SynItem";
-//    private static final String DEFAULT_PRED_SUFFIX = "pred";
-//    private static final String DEFAULT_ARG_SUFFIX = "arg";
-
-//    ArrayList<String> pbLinks = new ArrayList<>();
-//    private Map<String, URI> wnURIs;
-
-    public FramenetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnURIs) {
-        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"));
+    public FramenetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
 
         paths.put("frame", new File(this.path.getAbsolutePath() + File.separator + "frame"));
         paths.put("lu", new File(this.path.getAbsolutePath() + File.separator + "lu"));
@@ -63,16 +53,6 @@ public class FramenetConverter extends Converter {
 
         argumentSeparator = "@";
 
-//        this.wnURIs = wnURIs;
-//
-//        String pbLinksString = properties.getProperty("linkpb");
-//        if (pbLinksString != null) {
-//            for (String link : pbLinksString.split(",")) {
-//                pbLinks.add(link.trim().toLowerCase());
-//            }
-//        }
-
-//        LOGGER.info("Links to: {}", pbLinks.toString());
         LOGGER.info("Starting dataset: {}", prefix);
     }
 
@@ -83,8 +63,8 @@ public class FramenetConverter extends Converter {
         addStatementToSink(getLexicon(), ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
         addStatementToSink(getLexicon(), DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
 
-        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
-        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
 
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -116,12 +96,18 @@ public class FramenetConverter extends Converter {
             }
 
             // frRelation
+            FrequencyHashSet<URI> typesFreqs = new FrequencyHashSet<>();
+            FrequencyHashSet<URI> typesFreqsFER = new FrequencyHashSet<>();
+
             LOGGER.info("Extracting frRelations");
             document = dbf.newDocumentBuilder().parse(paths.get("frRelation"));
             Match frRelationTypes = JOOX.$(document.getElementsByTagName("frameRelationType"));
             for (Element frRelationType : frRelationTypes) {
                 String name = frRelationType.getAttribute("name");
                 URI typeURI = null;
+
+                boolean invert = false;
+
                 switch (name) {
                 case "Inheritance":
                     typeURI = PMOFN.INHERITS_FROM;
@@ -134,23 +120,30 @@ public class FramenetConverter extends Converter {
                     break;
                 case "See_also":
                     typeURI = PMOFN.SEE_ALSO;
+                    invert = true;
                     break;
                 case "Inchoative_of":
                     typeURI = PMOFN.IS_INCHOATIVE_OF;
+                    invert = true;
                     break;
                 case "Causative_of":
                     typeURI = PMOFN.IS_CAUSATIVE_OF;
+                    invert = true;
                     break;
                 case "Precedes":
                     typeURI = PMOFN.PRECEDES;
+                    invert = true;
                     break;
                 case "Perspective_on":
                     typeURI = PMOFN.PERSPECTIVE_ON;
                     break;
+                case "ReFraming_Mapping":
+                    typeURI = PMOFN.REFRAME_MAPPING;
+                    break;
                 }
 
                 if (typeURI == null) {
-                    LOGGER.error("typeURI is null");
+                    LOGGER.error("typeURI is null ({})", name);
                     continue;
                 }
 
@@ -159,19 +152,30 @@ public class FramenetConverter extends Converter {
                     String subFrameName = frameRelation.getAttribute("subFrameName");
                     String superFrameName = frameRelation.getAttribute("superFrameName");
 
-                    addStatementToSink(uriForRoleset(subFrameName.toLowerCase()), typeURI,
-                            uriForRoleset(superFrameName.toLowerCase()));
+                    if (invert) {
+                        addStatementToSink(uriForRoleset(superFrameName.toLowerCase()), typeURI,
+                                uriForRoleset(subFrameName.toLowerCase()));
+                    } else {
+                        addStatementToSink(uriForRoleset(subFrameName.toLowerCase()), typeURI,
+                                uriForRoleset(superFrameName.toLowerCase()));
+                    }
+                    typesFreqs.add(typeURI);
 
                     Match feRelations = JOOX.$(frameRelation.getElementsByTagName("FERelation"));
                     for (Element feRelation : feRelations) {
 
                         // todo: molto brutto
-                        URI relURI = factory.createURI(typeURI.toString() + "FER");
+                        URI relURI = createURI(typeURI.toString() + "FER");
 
                         URI arg1 = uriForArgument(subFrameName.toLowerCase(), feRelation.getAttribute("subFEName"));
                         URI arg2 = uriForArgument(superFrameName.toLowerCase(), feRelation.getAttribute("superFEName"));
 
-                        addStatementToSink(arg1, relURI, arg2);
+                        if (invert) {
+                            addStatementToSink(arg2, relURI, arg1);
+                        } else {
+                            addStatementToSink(arg1, relURI, arg2);
+                        }
+                        typesFreqsFER.add(relURI);
                     }
 
                 }
@@ -180,15 +184,19 @@ public class FramenetConverter extends Converter {
 
             // frame
             LOGGER.info("Extracting frames");
+            int luCount = 0;
+            FrequencyHashSet<URI> semTypesFreq = new FrequencyHashSet<>();
+            FrequencyHashSet<URI> semTypesForFrame = new FrequencyHashSet<>();
             HashMap<String, URI> lus = new HashMap<>();
             for (final File file : Files.fileTreeTraverser().preOrderTraversal(paths.get("frame"))) {
                 if (!file.isDirectory() && file.getName().endsWith(".xml")) {
                     LOGGER.debug("Processing {} ...", file);
 
-                    // todo: remove!
-//                    if (!file.getName().equals("Assemble.xml")) {
-//                        continue;
-//                    }
+                    if (ONE_FRAME != null) {
+                        if (!file.getName().equals(ONE_FRAME)) {
+                            continue;
+                        }
+                    }
 
                     try {
                         document = dbf.newDocumentBuilder().parse(file);
@@ -200,12 +208,16 @@ public class FramenetConverter extends Converter {
                             String identifier = frame.attr("ID");
                             String frameName = frame.attr("name");
 
+                            URI frameURI = uriForRoleset(frameName.toLowerCase());
+
                             Date date = format.parse(cDate);
 
                             Match definition = JOOX.$(element.getElementsByTagName("definition"));
                             String defText = Jsoup.parse(definition.text()).text().trim();
 
-                            URI frameURI = uriForRoleset(frameName.toLowerCase());
+                            Match elements = JOOX.$(element).children("semType");
+                            addSemTypes(elements, semTypesFreq, semTypesForFrame, frameURI, frameURI);
+
                             URI cbyURI = addCBy(cBy);
 
                             addStatementToSink(frameURI, RDF.TYPE, PMOFN.FRAME_CLASS);
@@ -220,12 +232,16 @@ public class FramenetConverter extends Converter {
                             for (Element fe : fes) {
 
                                 String feName = fe.getAttribute("name");
+                                if (FEs.contains(feName)) {
+                                    continue;
+                                }
+
+                                FEs.add(feName);
                                 String coreType = fe.getAttribute("coreType");
                                 String feCBy = fe.getAttribute("cBy");
                                 String feCDate = fe.getAttribute("cDate");
                                 String feIdentifier = fe.getAttribute("ID");
                                 String abbrev = fe.getAttribute("abbrev");
-                                FEs.add(feName);
 
                                 Date feDate = format.parse(feCDate);
 
@@ -253,20 +269,17 @@ public class FramenetConverter extends Converter {
                                 URI feCByURI = addCBy(feCBy);
 
                                 addStatementToSink(argumentURI, RDFS.LABEL, feName, false);
-                                addStatementToSink(frameURI, DCTERMS.CREATOR, feCByURI);
-                                addStatementToSink(frameURI, DCTERMS.CREATED, feDate);
+                                addStatementToSink(argumentURI, DCTERMS.CREATOR, feCByURI);
+                                addStatementToSink(argumentURI, DCTERMS.CREATED, feDate);
                                 addStatementToSink(argumentURI, DCTERMS.IDENTIFIER, Integer.parseInt(feIdentifier));
                                 addStatementToSink(argumentURI, SKOS.DEFINITION, feDefText);
                                 addStatementToSink(argumentURI, PMO.ABBREVIATION, abbrev, false);
+                                addStatementToSink(frameURI, PMO.SEM_ARG, argumentURI);
 
                                 Match subElems;
 
                                 subElems = JOOX.$(fe.getElementsByTagName("semType"));
-                                for (Element feSemType : subElems) {
-                                    String feSTName = feSemType.getAttribute("name");
-                                    URI stURI = getSemTypeURI(feSTName);
-                                    addStatementToSink(argumentURI, PMO.SEM_TYPE, stURI);
-                                }
+                                addSemTypes(subElems, semTypesFreq, semTypesForFrame, argumentURI, frameURI);
 
                                 subElems = JOOX.$(fe.getElementsByTagName("excludesFE"));
                                 for (Element subElem : subElems) {
@@ -288,7 +301,7 @@ public class FramenetConverter extends Converter {
                             for (Element members : fecs) {
                                 coreset++;
 
-                                URI coresetURI = factory.createURI(frameURI.toString() + "_coreSet" + coreset);
+                                URI coresetURI = createURI(frameURI.toString() + "_coreSet" + coreset);
                                 addStatementToSink(frameURI, PMOFN.FE_CORE_SET, coresetURI);
                                 addStatementToSink(coresetURI, RDF.TYPE, PMOFN.FE_CORE_SET_CLASS);
 
@@ -344,12 +357,14 @@ public class FramenetConverter extends Converter {
                                     String relatedFrameName = relatedFrame.getTextContent();
                                     addStatementToSink(frameURI, typeURI,
                                             uriForRoleset(relatedFrameName.toLowerCase()));
+                                    typesFreqs.add(typeURI);
                                 }
 
                             }
 
                             final Match lexUnits = JOOX.$(element.getElementsByTagName("lexUnit"));
                             for (Element lexUnit : lexUnits) {
+                                luCount++;
                                 String leCBy = lexUnit.getAttribute("cBy");
                                 String leCDate = lexUnit.getAttribute("cDate");
                                 String leIdentifier = lexUnit.getAttribute("ID");
@@ -364,32 +379,59 @@ public class FramenetConverter extends Converter {
 
                                 // Lemmas
                                 StringBuilder builder = new StringBuilder();
-                                Match lexemes = JOOX.$(lexUnit.getElementsByTagName("lexeme"));
-                                String origLemma = null;
+                                Match lexemes = JOOX.$(lexUnit).children("lexeme");
+
+                                List<String> lexemeList = new ArrayList<>();
+                                List<String> posList = new ArrayList<>();
                                 for (Element lexeme : lexemes) {
                                     String lemmaName = lexeme.getAttribute("name");
-                                    String headWord = lexeme.getAttribute("headword");
-                                    if (headWord != null && headWord.equals("true")) {
-                                        origLemma = lemmaName;
-                                    }
-                                    builder.append(lemmaName).append(" ");
-                                }
-                                String lemma = builder.toString().trim().replaceAll("\\s+", "_");
-                                if (origLemma == null) {
-                                    origLemma = lemma;
+                                    String lemmaPos = lexeme.getAttribute("POS");
+
+                                    // todo: not used
+//                                    String headWord = lexeme.getAttribute("headword");
+//                                    if (headWord != null && headWord.equals("true")) {
+//
+//                                    }
+
+                                    lexemeList.add(lemmaName);
+                                    posList.add(lemmaPos);
                                 }
 
-                                URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, pos, getLexicon());
-                                URI luURI = getLuURI(pos, lemma, frameName.toLowerCase());
+                                String goodLemma = String.join(" ", lexemeList);
+                                String uriLemma = String.join("+", lexemeList);
+                                URI lexicalEntryURI = addLexicalEntry(goodLemma, uriLemma, lexemeList, posList, pos,
+                                        getLexicon());
+                                URI luURI = getLuURI(pos, uriLemma, frameName.toLowerCase());
+
+//                                String origLemma = null;
+//                                for (Element lexeme : lexemes) {
+//                                    String lemmaName = lexeme.getAttribute("name");
+//                                    String headWord = lexeme.getAttribute("headword");
+//                                    if (headWord != null && headWord.equals("true")) {
+//                                        origLemma = lemmaName;
+//                                    }
+//                                    builder.append(lemmaName).append(" ");
+//                                }
+//                                String lemma = builder.toString().trim().replaceAll("\\s+", "_");
+//                                if (origLemma == null) {
+//                                    origLemma = lemma;
+//                                }
+
+//                                URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, pos, getLexicon());
+//                                URI luURI = getLuURI(pos, lemma, frameName.toLowerCase());
 
                                 lus.put(leIdentifier, luURI);
+
+                                Match stElements = JOOX.$(lexUnit).children("semType");
+                                addSemTypes(stElements, semTypesFreq, semTypesForFrame, luURI, frameURI);
 
                                 addStatementToSink(luURI, RDF.TYPE, PMOFN.LEXICAL_UNIT_CLASS);
                                 addStatementToSink(luURI, PMO.EVOKED_CONCEPT, frameURI);
                                 addStatementToSink(luURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
-                                addStatementToSink(luURI, LEXINFO.PART_OF_SPEECH_P, getLexemeURIbyPOS(pos));
+                                addStatementToSink(luURI, LEXINFO.PART_OF_SPEECH_P, getPosURI(pos));
                                 addStatementToSink(luURI, DCTERMS.IDENTIFIER, Integer.parseInt(leIdentifier));
                                 addStatementToSink(luURI, SKOS.DEFINITION, leDefinition);
+                                addStatementToSink(luURI, RDFS.LABEL, name, false);
 
                                 URI statusURI = getStatusURI(status);
                                 addStatementToSink(luURI, PMOFN.STATUS, statusURI);
@@ -403,7 +445,7 @@ public class FramenetConverter extends Converter {
 
                                 for (String fe : FEs) {
                                     URI argumentURI = uriForArgument(frameName.toLowerCase(), fe.toLowerCase());
-                                    URI conceptualizationURI = uriForConceptualization(lemma, pos,
+                                    URI conceptualizationURI = uriForConceptualization(uriLemma, pos,
                                             frameName.toLowerCase(), fe.toLowerCase());
                                     addStatementToSink(conceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
                                     addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
@@ -426,6 +468,33 @@ public class FramenetConverter extends Converter {
                     }
                 }
             }
+
+            LOGGER.info("Extracted {} lexical units", luCount);
+
+            int semTypesCount = 0;
+            for (URI uri : semTypesFreq.keySet()) {
+                semTypesCount += semTypesFreq.get(uri);
+            }
+            LOGGER.info("Extracted {} semantic types", semTypesCount);
+
+//            for (URI uri : typesFreqs.keySet()) {
+//                LOGGER.info("{} --> {}", uri, typesFreqs.get(uri));
+//            }
+//            for (URI uri : typesFreqsFER.keySet()) {
+//                LOGGER.info("{} --> {}", uri, typesFreqsFER.get(uri));
+//            }
+//            for (URI uri : semTypesFreq.keySet()) {
+//                LOGGER.info("{} --> {}", uri, semTypesFreq.get(uri));
+//            }
+
+//            int total = 0;
+//            Iterator<Map.Entry<URI, Integer>> iterator = semTypesFreq.getSorted().iterator();
+//            while (iterator.hasNext()) {
+//                URI uri = iterator.next().getKey();
+//                LOGGER.info("{} --> {}", uri, semTypesFreq.get(uri));
+//                total += semTypesFreq.get(uri);
+//            }
+//            LOGGER.info("Total: {}", total);
 
             if (extractExamples) {
 
@@ -459,6 +528,7 @@ public class FramenetConverter extends Converter {
                                 synchronized (this) {
 
                                     // Create temporary sink
+                                    // todo: the absence of continue/break must be check for this to work
 
                                     Collection<Statement> tempStatements = new ArrayList<>();
                                     RDFHandler tempSink = RDFHandlers.wrap(tempStatements);
@@ -550,7 +620,7 @@ public class FramenetConverter extends Converter {
 
                                             hasTarget = true;
 
-                                            URI labelURI = factory.createURI(
+                                            URI labelURI = createURI(
                                                     exampleURI + String.format("#char=%d,%d", targetStart, targetEnd));
                                             String anchor = text.substring(targetStart, targetEnd);
 
@@ -621,10 +691,9 @@ public class FramenetConverter extends Converter {
                                                 } else {
                                                     addStatementToSink(roleURI, PMO.EXAMPLE_P, exampleURI);
 
-                                                    URI labelURI = factory
-                                                            .createURI(
-                                                                    exampleURI + String
-                                                                            .format("#char=%d,%d", start, end));
+                                                    URI labelURI = createURI(
+                                                            exampleURI + String
+                                                                    .format("#char=%d,%d", start, end));
 
                                                     addStatementToSink(labelURI, RDF.TYPE, PMOFN.MARKABLE_CLASS);
                                                     addStatementToSink(labelURI, NIF.ANCHOR_OF, anchor);
@@ -665,20 +734,22 @@ public class FramenetConverter extends Converter {
         } catch (final Exception ex) {
             throw new IOException(ex);
         }
+    }
 
-//        for (final File file : Files.fileTreeTraverser().preOrderTraversal(this.path)) {
-//            if (!file.isDirectory() && file.getName().endsWith(".xml")) {
-//                LOGGER.debug("Processing {} ...", file);
-//
-//                try {
-//                    final Document document = dbf.newDocumentBuilder().parse(file);
-//                    final Match vnClass = JOOX.$(document.getElementsByTagName("VNCLASS"));
-//                } catch (final Exception ex) {
-//                    throw new IOException(ex);
-//                }
-//            }
-//        }
-
+    private void addSemTypes(Match stElements, FrequencyHashSet<URI> semTypesFreq,
+            FrequencyHashSet<URI> semTypesForFrame, URI baseURI, URI frameURI) {
+        for (Element stElement : stElements) {
+            String LUSemType = stElement.getAttribute("name");
+            URI LUSemTypeURI = null;
+            if (LUSemType != null) {
+                LUSemTypeURI = getSemTypeURI(LUSemType);
+            }
+            if (LUSemTypeURI != null) {
+                addStatementToSink(baseURI, PMO.SEM_TYPE, LUSemTypeURI);
+                semTypesFreq.add(LUSemTypeURI);
+                semTypesForFrame.add(frameURI);
+            }
+        }
     }
 
     private URI addCBy(String cBy) {
@@ -692,7 +763,7 @@ public class FramenetConverter extends Converter {
         builder.append(NAMESPACE);
         builder.append(cBy.toLowerCase());
         builder.append("_Creator");
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     private URI uriForExample(String exampleID) {
@@ -700,7 +771,7 @@ public class FramenetConverter extends Converter {
         builder.append(NAMESPACE);
         builder.append("example_");
         builder.append(exampleID);
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     private void addSemTypeToSink(Element semType) {
@@ -737,6 +808,7 @@ public class FramenetConverter extends Converter {
 
         name = name.toLowerCase();
         name = name.replaceAll("-", "_");
+        name = name.replaceAll("\\s+", "_");
 
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
@@ -744,7 +816,7 @@ public class FramenetConverter extends Converter {
         builder.append(separator);
         builder.append(name);
         builder.append("_semType");
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     private void addStatusToSink(Element statusType) {
@@ -774,7 +846,7 @@ public class FramenetConverter extends Converter {
         builder.append(luName.replaceAll("[^a-zA-Z0-9-_]", ""));
         builder.append(separator);
         builder.append(rolesetPart(frameName, prefix));
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     private URI getStatusURI(String name) {
@@ -791,10 +863,10 @@ public class FramenetConverter extends Converter {
         builder.append(separator);
         builder.append(name.toLowerCase());
         builder.append("_LUStatus");
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
-    private URI getLexemeURIbyPOS(String pos) {
+    protected URI getPosURI(String pos) {
 
         pos = pos.toUpperCase();
 
@@ -815,6 +887,8 @@ public class FramenetConverter extends Converter {
             return LEXINFO.CARDINAL_NUMERAL;
         case "PREP":
             return LEXINFO.PREPOSITION;
+        case "PRON":
+            return LEXINFO.PRONOUN;
         case "SCON":
             return LEXINFO.SUBORDINATING_CONJUNCTION;
         case "V":

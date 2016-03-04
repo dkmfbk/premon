@@ -4,12 +4,12 @@ import com.google.common.io.Files;
 import eu.fbk.dkm.premon.premonitor.propbank.*;
 import eu.fbk.dkm.premon.util.NF;
 import eu.fbk.dkm.premon.util.PropBankResource;
-import eu.fbk.dkm.premon.vocab.NIF;
-import eu.fbk.dkm.premon.vocab.ONTOLEX;
-import eu.fbk.dkm.premon.vocab.PM;
-import eu.fbk.dkm.premon.vocab.PMO;
+import eu.fbk.dkm.premon.vocab.*;
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.*;
+import org.openrdf.model.vocabulary.DCTERMS;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
@@ -37,17 +37,6 @@ public abstract class BankConverter extends Converter {
     boolean isOntoNotes = false;
     boolean noDef = false;
     String defaultType;
-
-//    private Set<URI> wnURIs;
-    public static String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
-
-    protected static HashMap<String, String> on2wnMap = new HashMap<>();
-
-    static {
-        on2wnMap.put("n", "n");
-        on2wnMap.put("v", "v");
-        on2wnMap.put("j", "a");
-    }
 
     static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
 
@@ -79,9 +68,10 @@ public abstract class BankConverter extends Converter {
         fileToDiscard.add("except-v.xml");
     }
 
-//    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language, Set<URI> wnURIs) {
-    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language) {
-        super(path, resource, sink, properties, language);
+    //    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language, Set<URI> wnURIs) {
+    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language,
+            Map<String, URI> wnInfo) {
+        super(path, resource, sink, properties, language, wnInfo);
 //        this.wnURIs = wnURIs;
     }
 
@@ -114,8 +104,8 @@ public abstract class BankConverter extends Converter {
         addStatementToSink(getLexicon(), ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
         addStatementToSink(getLexicon(), DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
 
-        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
-        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
 
         //todo: the first tour is not necessary any more
 
@@ -163,19 +153,16 @@ public abstract class BankConverter extends Converter {
                 for (Object predicate : noteOrPredicate) {
                     if (predicate instanceof Predicate) {
 
-                        String lemma = getLemmaFromPredicateName(((Predicate) predicate).getLemma());
+                        String uriLemma = getLemmaFromPredicateName(((Predicate) predicate).getLemma());
+                        String goodLemma = uriLemma.replaceAll("\\+", " ");
 
-                        URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, type, getLexicon());
+                        List<String> tokens = new ArrayList<>();
+                        List<String> pos = new ArrayList<>();
+                        tokens.add(origLemma);
+                        pos.add(type);
 
-//                        if (wnURIs.size() > 0) {
-//                            String wnLemma = lemma + "-" + on2wnMap.get(type);
-//                            URI wnURI = factory.createURI(WN_NAMESPACE, wnLemma);
-//                            if (wnURIs.contains(wnURI)) {
-//                                addStatementToSink(lexicalEntryURI, OWL.SAMEAS, wnURI, LE_GRAPH);
-//                            } else {
-//                                LOGGER.debug("Word not found: {}", wnLemma);
-//                            }
-//                        }
+                        URI lexicalEntryURI = addLexicalEntry(goodLemma, uriLemma, tokens, pos, type,
+                                getLexicon());
 
                         List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
                         for (Object roleset : noteOrRoleset) {
@@ -187,7 +174,7 @@ public abstract class BankConverter extends Converter {
                                 }
 
                                 URI rolesetURI = uriForRoleset(rolesetID);
-                                addStatementToSink(rolesetURI, RDFS.SEEALSO, getExternalLink(lemma, type));
+                                addStatementToSink(rolesetURI, RDFS.SEEALSO, getExternalLink(origLemma, type));
 
                                 addStatementToSink(rolesetURI, RDF.TYPE, getPredicate());
                                 if (!noDef) {
@@ -197,7 +184,7 @@ public abstract class BankConverter extends Converter {
                                 addStatementToSink(rolesetURI, RDFS.LABEL, rolesetID, false);
                                 addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, rolesetURI);
 
-                                URI conceptualizationURI = uriForConceptualization(lemma, type, rolesetID);
+                                URI conceptualizationURI = uriForConceptualization(uriLemma, type, rolesetID);
                                 addStatementToSink(conceptualizationURI, RDF.TYPE,
                                         PMO.CONCEPTUALIZATION);
                                 addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY,
@@ -230,7 +217,7 @@ public abstract class BankConverter extends Converter {
                                 for (String key : functionMap.keySet()) {
                                     URI argumentURI = uriForArgument(rolesetID, key);
                                     addArgumentToSink(key, functionMap.get(key), argumentURI,
-                                            lemma, type, rolesetID, lexicalEntryURI);
+                                            uriLemma, type, rolesetID, lexicalEntryURI);
                                 }
 
                                 List<Example> examples = new ArrayList<Example>();
@@ -281,7 +268,7 @@ public abstract class BankConverter extends Converter {
                                                         argumentURI);
 
                                                 addArgumentToSink(argumentURI, argName, nf.getF(),
-                                                        argType, lemma, type, rolesetID,
+                                                        argType, uriLemma, type, rolesetID,
                                                         lexicalEntryURI, (Role) role, (Roleset) roleset);
                                             }
                                         }
@@ -360,7 +347,7 @@ public abstract class BankConverter extends Converter {
                                             }
                                             int end = start + value.length();
 
-                                            URI markableURI = factory.createURI(String.format(
+                                            URI markableURI = createURI(String.format(
                                                     "%s#char=%d,%d", exampleURI.toString(), start,
                                                     end));
 
@@ -394,7 +381,7 @@ public abstract class BankConverter extends Converter {
                                             }
                                             int end = start + value.length();
 
-                                            URI markableURI = factory.createURI(String.format(
+                                            URI markableURI = createURI(String.format(
                                                     "%s#char=%d,%d", exampleURI.toString(), start,
                                                     end));
 
@@ -426,7 +413,7 @@ public abstract class BankConverter extends Converter {
                                             } catch (Exception e) {
                                                 LOGGER.error(
                                                         "Error in lemma {}: " + e.getMessage(),
-                                                        lemma);
+                                                        uriLemma);
                                                 continue;
                                             }
 
@@ -459,6 +446,7 @@ public abstract class BankConverter extends Converter {
     protected void addArgumentToSink(String key, URI keyURI, URI argumentURI, String lemma,
             String type, String rolesetID, URI lexicalEntryURI) {
         addStatementToSink(argumentURI, PMO.ROLE, keyURI);
+        addStatementToSink(uriForRoleset(rolesetID), PMO.SEM_ARG, argumentURI);
 
         URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
         addStatementToSink(argConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
@@ -472,7 +460,7 @@ public abstract class BankConverter extends Converter {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
         builder.append(examplePart(rolesetID, exampleCount));
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     // Parts
@@ -512,4 +500,21 @@ public abstract class BankConverter extends Converter {
 
     protected abstract void addConceptualizationLink(Roleset roleset, URI rolesetURI);
 
+    @Override protected URI getPosURI(String textualPOS) {
+        if (textualPOS == null) {
+            return null;
+        }
+
+        switch (textualPOS) {
+        case "v":
+            return LEXINFO.VERB;
+        case "n":
+            return LEXINFO.NOUN;
+        case "prep":
+            return LEXINFO.PREPOSITION;
+        }
+
+        LOGGER.error("POS not found: {}", textualPOS);
+        return null;
+    }
 }
