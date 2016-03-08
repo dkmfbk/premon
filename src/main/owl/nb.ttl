@@ -58,6 +58,17 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 #################################################################
 
 
+###  http://premon.fbk.eu/ontology/nb#argument
+
+:argument rdf:type owl:FunctionalProperty ,
+                   owl:ObjectProperty ;
+          
+          rdfs:range :Argument ;
+          
+          rdfs:domain :SemanticRole .
+
+
+
 ###  http://premon.fbk.eu/ontology/nb#tag
 
 :tag rdf:type owl:ObjectProperty ;
@@ -77,110 +88,78 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 #################################################################
 
 
-###  http://premon.fbk.eu/ontology/nb#Example
+###  http://premon.fbk.eu/ontology/nb#Argument
 
-:Example rdf:type owl:Class ;
-         
-         rdfs:label "NomBank example" ;
-         
-         rdfs:subClassOf pmo:Example ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty [ owl:inverseOf nif:referenceContext
-                                          ] ;
-                           owl:allValuesFrom :Markable
-                         ] .
-
-
-
-###  http://premon.fbk.eu/ontology/nb#Markable
-
-:Markable rdf:type owl:Class ;
+:Argument rdf:type owl:Class ;
           
-          rdfs:label "NomBank markable" ;
+          rdfs:label "NomBank semantic role" ;
           
-          rdfs:subClassOf pmo:Markable ,
-                          [ rdf:type owl:Restriction ;
-                            owl:onProperty nif:referenceContext ;
-                            owl:allValuesFrom :Example
-                          ] .
-
-
-
-###  http://premon.fbk.eu/ontology/nb#ModifierRole
-
-:ModifierRole rdf:type owl:Class ;
-              
-              rdfs:label "NomBank modifier role" ;
-              
-              rdfs:subClassOf :SemanticRole ,
-                              [ rdf:type owl:Class ;
-                                owl:oneOf ( :argm-cau
-                                            :argm-tmp
-                                            :argm-dis
-                                            :argm-dir
-                                            :argm-prd
-                                            :argm-ext
-                                            :argm-mnr
-                                            :argm-loc
-                                            :argm-neg
-                                            :argm-pnc
-                                            :argm-adv
-                                          )
+          owl:equivalentClass [ rdf:type owl:Class ;
+                                owl:unionOf ( :Modifier
+                                              :NumberedArgument
+                                            )
                               ] ;
-              
-              owl:disjointWith :NumberedRole .
+          
+          rdfs:subClassOf ontolex:LexicalConcept .
 
 
 
-###  http://premon.fbk.eu/ontology/nb#NumberedRole
+###  http://premon.fbk.eu/ontology/nb#Modifier
 
-:NumberedRole rdf:type owl:Class ;
-              
-              rdfs:label "NomBank numbered role" ;
-              
-              rdfs:subClassOf :SemanticRole ,
-                              [ rdf:type owl:Class ;
-                                owl:oneOf ( :arg5
-                                            :arg4
-                                            :arg3
-                                            :arg2
-                                            :arg1
-                                            :arg0
-                                          )
-                              ] .
-
-
-
-###  http://premon.fbk.eu/ontology/nb#Predicate
-
-:Predicate rdf:type owl:Class ;
-           
-           rdfs:label "NomBank predicate" ;
-           
-           rdfs:subClassOf pmo:Predicate ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty pmo:semArg ;
-                             owl:allValuesFrom :SemanticArgument
-                           ] .
+:Modifier rdf:type owl:Class ;
+          
+          rdfs:label "NomBank modifier role" ;
+          
+          rdfs:subClassOf :Argument ,
+                          [ rdf:type owl:Class ;
+                            owl:oneOf ( :argm-cau
+                                        :argm-tmp
+                                        :argm-dis
+                                        :argm-dir
+                                        :argm-prd
+                                        :argm-ext
+                                        :argm-mnr
+                                        :argm-loc
+                                        :argm-neg
+                                        :argm-pnc
+                                        :argm-adv
+                                      )
+                          ] ;
+          
+          owl:disjointWith :NumberedArgument .
 
 
 
-###  http://premon.fbk.eu/ontology/nb#SemanticArgument
+###  http://premon.fbk.eu/ontology/nb#NumberedArgument
 
-:SemanticArgument rdf:type owl:Class ;
+:NumberedArgument rdf:type owl:Class ;
                   
-                  rdfs:label "NomBank semantic argument" ;
+                  rdfs:label "NomBank numbered role" ;
                   
-                  rdfs:subClassOf pmo:SemanticArgument ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmo:role ;
-                                    owl:allValuesFrom :SemanticRole
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty [ owl:inverseOf pmo:semArg
-                                                   ] ;
-                                    owl:allValuesFrom :Predicate
+                  rdfs:subClassOf :Argument ,
+                                  [ rdf:type owl:Class ;
+                                    owl:oneOf ( :arg5
+                                                :arg4
+                                                :arg3
+                                                :arg2
+                                                :arg1
+                                                :arg0
+                                              )
                                   ] .
+
+
+
+###  http://premon.fbk.eu/ontology/nb#Roleset
+
+:Roleset rdf:type owl:Class ;
+         
+         rdfs:label "NomBank predicate" ;
+         
+         rdfs:subClassOf pmo:SemanticClass ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty pmo:semRole ;
+                           owl:allValuesFrom :SemanticRole
+                         ] .
 
 
 
@@ -188,19 +167,17 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :SemanticRole rdf:type owl:Class ;
               
-              rdfs:label "NomBank semantic role" ;
-              
-              owl:equivalentClass [ rdf:type owl:Class ;
-                                    owl:unionOf ( :ModifierRole
-                                                  :NumberedRole
-                                                )
-                                  ] ;
+              rdfs:label "NomBank semantic argument" ;
               
               rdfs:subClassOf pmo:SemanticRole ,
                               [ rdf:type owl:Restriction ;
-                                owl:onProperty [ owl:inverseOf pmo:role
+                                owl:onProperty [ owl:inverseOf pmo:semRole
                                                ] ;
-                                owl:allValuesFrom :SemanticArgument
+                                owl:allValuesFrom :Roleset
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :argument ;
+                                owl:someValuesFrom :Argument
                               ] .
 
 
@@ -224,119 +201,119 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 ###  http://premon.fbk.eu/ontology/nb#arg0
 
-:arg0 rdf:type :NumberedRole ,
+:arg0 rdf:type :NumberedArgument ,
                owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#arg1
 
-:arg1 rdf:type :NumberedRole ,
+:arg1 rdf:type :NumberedArgument ,
                owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#arg2
 
-:arg2 rdf:type :NumberedRole ,
+:arg2 rdf:type :NumberedArgument ,
                owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#arg3
 
-:arg3 rdf:type :NumberedRole ,
+:arg3 rdf:type :NumberedArgument ,
                owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#arg4
 
-:arg4 rdf:type :NumberedRole ,
+:arg4 rdf:type :NumberedArgument ,
                owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#arg5
 
-:arg5 rdf:type :NumberedRole ,
+:arg5 rdf:type :NumberedArgument ,
                owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-adv
 
-:argm-adv rdf:type :ModifierRole ,
+:argm-adv rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-cau
 
-:argm-cau rdf:type :ModifierRole ,
+:argm-cau rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-dir
 
-:argm-dir rdf:type :ModifierRole ,
+:argm-dir rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-dis
 
-:argm-dis rdf:type :ModifierRole ,
+:argm-dis rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-ext
 
-:argm-ext rdf:type :ModifierRole ,
+:argm-ext rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-loc
 
-:argm-loc rdf:type :ModifierRole ,
+:argm-loc rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-mnr
 
-:argm-mnr rdf:type :ModifierRole ,
+:argm-mnr rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-neg
 
-:argm-neg rdf:type :ModifierRole ,
+:argm-neg rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-pnc
 
-:argm-pnc rdf:type :ModifierRole ,
+:argm-pnc rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-prd
 
-:argm-prd rdf:type :ModifierRole ,
+:argm-prd rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 
 
 ###  http://premon.fbk.eu/ontology/nb#argm-tmp
 
-:argm-tmp rdf:type :ModifierRole ,
+:argm-tmp rdf:type :Modifier ,
                    owl:NamedIndividual .
 
 

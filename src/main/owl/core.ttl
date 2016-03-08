@@ -133,15 +133,15 @@ nif:referenceContext rdf:type owl:ObjectProperty .
 
 
 
-###  http://premon.fbk.eu/ontology/core#argumentRel
+###  http://premon.fbk.eu/ontology/core#classRel
 
-pmo:argumentRel rdf:type owl:ObjectProperty ;
-                
-                rdfs:label "semantic argument relation"@en ;
-                
-                rdfs:range pmo:SemanticArgument ;
-                
-                rdfs:domain pmo:SemanticArgument .
+pmo:classRel rdf:type owl:ObjectProperty ;
+             
+             rdfs:label "semantic frame relation"@en ;
+             
+             rdfs:domain pmo:SemanticClass ;
+             
+             rdfs:range pmo:SemanticClass .
 
 
 
@@ -171,16 +171,6 @@ pmo:evokingEntry rdf:type owl:FunctionalProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/core#example
-
-pmo:example rdf:type owl:ObjectProperty ;
-            
-            rdfs:comment "example"@en ;
-            
-            rdfs:range pmo:Example .
-
-
-
 ###  http://premon.fbk.eu/ontology/core#first
 
 pmo:first rdf:type owl:ObjectProperty ;
@@ -205,62 +195,27 @@ pmo:next rdf:type owl:ObjectProperty .
 
 
 
-###  http://premon.fbk.eu/ontology/core#predicateRel
+###  http://premon.fbk.eu/ontology/core#roleRel
 
-pmo:predicateRel rdf:type owl:ObjectProperty ;
-                 
-                 rdfs:label "semantic frame relation"@en ;
-                 
-                 rdfs:domain pmo:Predicate ;
-                 
-                 rdfs:range pmo:Predicate .
-
-
-
-###  http://premon.fbk.eu/ontology/core#role
-
-pmo:role rdf:type owl:FunctionalProperty ,
-                  owl:ObjectProperty ;
-         
-         rdfs:label "role"@en ;
-         
-         rdfs:domain pmo:SemanticArgument ;
-         
-         rdfs:range pmo:SemanticRole .
-
-
-
-###  http://premon.fbk.eu/ontology/core#semArg
-
-pmo:semArg rdf:type owl:ObjectProperty ;
-           
-           rdfs:label "semantic argument"@en ;
-           
-           rdfs:domain pmo:Predicate ;
-           
-           rdfs:range pmo:SemanticArgument .
-
-
-
-###  http://premon.fbk.eu/ontology/core#semType
-
-pmo:semType rdf:type owl:ObjectProperty ;
+pmo:roleRel rdf:type owl:ObjectProperty ;
             
-            rdfs:label "semantic type"@en ;
+            rdfs:label "semantic role relation"@en ;
             
-            rdfs:range pmo:SemanticType .
+            rdfs:range pmo:SemanticRole ;
+            
+            rdfs:domain pmo:SemanticRole .
 
 
 
-###  http://premon.fbk.eu/ontology/core#typeRel
+###  http://premon.fbk.eu/ontology/core#semRole
 
-pmo:typeRel rdf:type owl:ObjectProperty ;
+pmo:semRole rdf:type owl:ObjectProperty ;
             
-            rdfs:label "semantic type relation"@en ;
+            rdfs:label "semantic argument"@en ;
             
-            rdfs:domain pmo:SemanticType ;
+            rdfs:domain pmo:SemanticClass ;
             
-            rdfs:range pmo:SemanticType .
+            rdfs:range pmo:SemanticRole .
 
 
 
@@ -323,6 +278,19 @@ pmo:valueDt rdf:type owl:DatatypeProperty .
 #################################################################
 
 
+###  http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Annotation
+
+nif:Annotation rdf:type owl:Class ;
+               
+               rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                 owl:onProperty [ owl:inverseOf pmo:item
+                                                ] ;
+                                 owl:onClass pmo:AnnotationSet ;
+                                 owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               ] .
+
+
+
 ###  http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context
 
 nif:Context rdf:type owl:Class .
@@ -332,6 +300,26 @@ nif:Context rdf:type owl:Class .
 ###  http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#RFC5147String
 
 nif:RFC5147String rdf:type owl:Class .
+
+
+
+###  http://premon.fbk.eu/ontology/core#AnnotationSet
+
+pmo:AnnotationSet rdf:type owl:Class ;
+                  
+                  rdfs:label "Annotation Set"@en ;
+                  
+                  rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmo:item ;
+                                    owl:allValuesFrom nif:Annotation
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmo:item ;
+                                    owl:onClass nif:Annotation ;
+                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                  ] ;
+                  
+                  rdfs:comment "Represent each annotation of a predicate, togheter with its arguments, in an example"@en .
 
 
 
@@ -361,7 +349,41 @@ pmo:Example rdf:type owl:Class ;
             
             rdfs:label "example" ;
             
-            rdfs:subClassOf nif:Context .
+            rdfs:subClassOf nif:Context ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty [ owl:inverseOf nif:referenceContext
+                                             ] ;
+                              owl:allValuesFrom pmo:Markable
+                            ] .
+
+
+
+###  http://premon.fbk.eu/ontology/core#Mapping
+
+pmo:Mapping rdf:type owl:Class ;
+            
+            rdfs:subClassOf [ rdf:type owl:Class ;
+                              owl:unionOf ( [ rdf:type owl:Restriction ;
+                                              owl:onProperty pmo:item ;
+                                              owl:allValuesFrom pmo:Conceptualization
+                                            ]
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty pmo:item ;
+                                              owl:allValuesFrom pmo:SemanticClass
+                                            ]
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty pmo:item ;
+                                              owl:allValuesFrom pmo:SemanticRole
+                                            ]
+                                          )
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty pmo:item ;
+                              owl:onClass skos:Concept ;
+                              owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
+                            ] ;
+            
+            rdfs:comment "An individual of this class represents a mapping between skos:Concepts"@en .
 
 
 
@@ -374,33 +396,23 @@ pmo:Markable rdf:type owl:Class ;
              rdfs:subClassOf nif:RFC5147String ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:allValuesFrom pmo:Example
+                               owl:onClass pmo:Example ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:onClass pmo:Example ;
-                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               owl:allValuesFrom pmo:Example
                              ] .
 
 
 
-###  http://premon.fbk.eu/ontology/core#Predicate
+###  http://premon.fbk.eu/ontology/core#SemanticClass
 
-pmo:Predicate rdf:type owl:Class ;
-              
-              rdfs:label "predicate"@en ;
-              
-              rdfs:subClassOf ontolex:LexicalConcept .
-
-
-
-###  http://premon.fbk.eu/ontology/core#SemanticArgument
-
-pmo:SemanticArgument rdf:type owl:Class ;
-                     
-                     rdfs:label "semantic argument"@en ;
-                     
-                     rdfs:subClassOf ontolex:LexicalConcept .
+pmo:SemanticClass rdf:type owl:Class ;
+                  
+                  rdfs:label "predicate"@en ;
+                  
+                  rdfs:subClassOf ontolex:LexicalConcept .
 
 
 
@@ -408,15 +420,8 @@ pmo:SemanticArgument rdf:type owl:Class ;
 
 pmo:SemanticRole rdf:type owl:Class ;
                  
-                 rdfs:label "semantic role"@en .
-
-
-
-###  http://premon.fbk.eu/ontology/core#SemanticType
-
-pmo:SemanticType rdf:type owl:Class ;
-                 
-                 rdfs:label "semantic type"@en ;
+                 rdfs:label "semantic argument"@en ,
+                            "semantic role"@en ;
                  
                  rdfs:subClassOf ontolex:LexicalConcept .
 

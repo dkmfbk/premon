@@ -58,7 +58,7 @@
                       
                       rdfs:label "excludes frame element"@en ;
                       
-                      rdfs:subPropertyOf pmo:argumentRel ;
+                      rdfs:subPropertyOf pmo:roleRel ;
                       
                       rdfs:range :FrameElement ;
                       
@@ -97,8 +97,6 @@
             
             rdfs:label "implicit in"@en ;
             
-            rdfs:subPropertyOf pmo:example ;
-            
             rdfs:domain :FrameElement .
 
 
@@ -129,7 +127,7 @@
 
 :inheritsFromFER rdf:type owl:ObjectProperty ;
                  
-                 rdfs:subPropertyOf pmo:argumentRel ;
+                 rdfs:subPropertyOf pmo:roleRel ;
                  
                  rdfs:domain :FrameElement ;
                  
@@ -151,7 +149,7 @@
 
 :isCausativeOfFER rdf:type owl:ObjectProperty ;
                   
-                  rdfs:subPropertyOf pmo:argumentRel ;
+                  rdfs:subPropertyOf pmo:roleRel ;
                   
                   rdfs:range :FrameElement ;
                   
@@ -173,7 +171,7 @@
 
 :isInchoativeOfFER rdf:type owl:ObjectProperty ;
                    
-                   rdfs:subPropertyOf pmo:argumentRel ;
+                   rdfs:subPropertyOf pmo:roleRel ;
                    
                    rdfs:range :FrameElement ;
                    
@@ -193,7 +191,7 @@
 
 :perspectiveOnFER rdf:type owl:ObjectProperty ;
                   
-                  rdfs:subPropertyOf pmo:argumentRel ;
+                  rdfs:subPropertyOf pmo:roleRel ;
                   
                   rdfs:range :FrameElement ;
                   
@@ -213,7 +211,7 @@
 
 :precedesFER rdf:type owl:ObjectProperty ;
              
-             rdfs:subPropertyOf pmo:argumentRel ;
+             rdfs:subPropertyOf pmo:roleRel ;
              
              rdfs:domain :FrameElement ;
              
@@ -233,7 +231,7 @@
 
 :reFrameMappingFER rdf:type owl:ObjectProperty ;
                    
-                   rdfs:subPropertyOf pmo:argumentRel ;
+                   rdfs:subPropertyOf pmo:roleRel ;
                    
                    rdfs:range :FrameElement ;
                    
@@ -247,7 +245,7 @@
                       
                       rdfs:label "requires frame element"@en ;
                       
-                      rdfs:subPropertyOf pmo:argumentRel ;
+                      rdfs:subPropertyOf pmo:roleRel ;
                       
                       rdfs:range :FrameElement ;
                       
@@ -271,7 +269,7 @@
 :seeAlsoFER rdf:type owl:ObjectProperty ,
                      owl:SymmetricProperty ;
             
-            rdfs:subPropertyOf pmo:argumentRel ;
+            rdfs:subPropertyOf pmo:roleRel ;
             
             rdfs:range :FrameElement ;
             
@@ -296,8 +294,6 @@
 
 :subTypeOf rdf:type owl:ObjectProperty ;
            
-           rdfs:subPropertyOf pmo:typeRel ;
-           
            rdfs:domain :SemType ;
            
            rdfs:range :SemType ;
@@ -318,7 +314,7 @@
 
 :subframeOfFER rdf:type owl:ObjectProperty ;
                
-               rdfs:subPropertyOf pmo:argumentRel ;
+               rdfs:subPropertyOf pmo:roleRel ;
                
                rdfs:domain :FrameElement ;
                
@@ -402,14 +398,14 @@
        
        rdfs:label "frame"@en ;
        
-       rdfs:subClassOf pmo:Predicate ,
+       rdfs:subClassOf pmo:SemanticClass ,
                        [ rdf:type owl:Restriction ;
                          owl:onProperty [ owl:inverseOf pmo:evokedConcept
                                         ] ;
                          owl:allValuesFrom :LexicalUnit
                        ] ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty pmo:semArg ;
+                         owl:onProperty pmo:semRole ;
                          owl:allValuesFrom :FrameElement
                        ] .
 
@@ -421,9 +417,9 @@
               
               rdfs:label "frame element"@en ;
               
-              rdfs:subClassOf pmo:SemanticArgument ,
+              rdfs:subClassOf pmo:SemanticRole ,
                               [ rdf:type owl:Restriction ;
-                                owl:onProperty [ owl:inverseOf pmo:semArg
+                                owl:onProperty [ owl:inverseOf pmo:semRole
                                                ] ;
                                 owl:allValuesFrom :Frame
                               ] ;
@@ -480,9 +476,7 @@
 
 :SemType rdf:type owl:Class ;
          
-         rdfs:label "FrameNet semantic type"@en ;
-         
-         rdfs:subClassOf pmo:SemanticType .
+         rdfs:label "FrameNet semantic type"@en .
 
 
 
