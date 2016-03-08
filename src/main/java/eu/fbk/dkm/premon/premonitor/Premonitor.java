@@ -11,6 +11,7 @@ import eu.fbk.rdfpro.util.Statements;
 import eu.fbk.rdfpro.util.Tracker;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
@@ -90,8 +91,7 @@ public class Premonitor {
             System.setProperty("javax.xml.accessExternalDTD", "file");
 
             // WordNet
-//            final HashSet<URI> wnURIs = new HashSet<>();
-            final HashMap<String, URI> wnOldURIs = new HashMap<>();
+            final HashMap<String, URI> wnInfo = new HashMap<>();
 
             if (cmd.hasOption("wordnet-sensekeys")) {
                 List<String> allLines = Files
@@ -103,7 +103,7 @@ public class Premonitor {
                         String senseKey = parts[0];
                         String synsetID = parts[1];
                         senseKey = senseKey.replaceAll(":[^:]*:[^:]*$", "");
-                        wnOldURIs.put(senseKey, Converter.factory.createURI(WN_PREFIX, synsetID));
+                        wnInfo.put(senseKey, Converter.createURI(WN_PREFIX, synsetID));
                     }
                 }
             }
@@ -119,22 +119,23 @@ public class Premonitor {
                         @Override
                         public void handleStatement(final Statement statement)
                                 throws RDFHandlerException {
-//
-//                            if (statement.getPredicate().equals(RDF.TYPE)
-//                                    && statement.getObject().equals(LEMON_LEXICAL_ENTRY)) {
-//                                if (statement.getSubject() instanceof URI) {
-//                                    synchronized (wnURIs) {
-//                                        wnURIs.add((URI) statement.getSubject());
-//                                    }
-//                                }
-//                            }
-//
+
+                            // Really really bad!
+                            if (statement.getPredicate().equals(RDF.TYPE)
+                                    && statement.getObject().equals(LEMON_LEXICAL_ENTRY)) {
+                                if (statement.getSubject() instanceof URI) {
+                                    synchronized (wnInfo) {
+                                        wnInfo.put(statement.getSubject().stringValue(), (URI) statement.getSubject());
+                                    }
+                                }
+                            }
+
                             // Really really bad!
                             if (statement.getPredicate().equals(LEMON_REFERENCE)) {
                                 if (statement.getSubject() instanceof URI &&
                                         statement.getObject() instanceof URI) {
-                                    synchronized (wnOldURIs) {
-                                        wnOldURIs
+                                    synchronized (wnInfo) {
+                                        wnInfo
                                                 .put(statement.getObject().stringValue(), (URI) statement.getSubject());
                                     }
                                 }
@@ -158,7 +159,7 @@ public class Premonitor {
                     }, 1);
 
 //                    LOGGER.info("Loaded {} URIs", wnURIs.size());
-                    LOGGER.info("Loaded {} URIs", wnOldURIs.size());
+                    LOGGER.info("Loaded {} URIs", wnInfo.size());
                 }
             }
 
@@ -236,7 +237,7 @@ public class Premonitor {
 
                     Constructor<?> constructor = cls.getConstructor(
                             File.class, RDFHandler.class, Properties.class, Map.class);
-                    final Object converter = constructor.newInstance(folder, handler, properties, wnOldURIs);
+                    final Object converter = constructor.newInstance(folder, handler, properties, wnInfo);
                     if (converter instanceof Converter) {
                         ((Converter) converter).convert();
                     }

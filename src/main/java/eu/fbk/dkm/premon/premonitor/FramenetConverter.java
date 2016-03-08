@@ -2,9 +2,12 @@ package eu.fbk.dkm.premon.premonitor;
 
 import com.google.common.io.Files;
 import eu.fbk.dkm.premon.vocab.*;
+import eu.fbk.dkm.utils.FrequencyHashSet;
+import eu.fbk.rdfpro.RDFHandlers;
 import org.joox.JOOX;
 import org.joox.Match;
 import org.jsoup.Jsoup;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.RDF;
@@ -32,42 +35,24 @@ public class FramenetConverter extends Converter {
     HashMap<String, File> paths = new HashMap<>();
 
     // 01/28/2002 04:30:50 PST Mon
-    DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss z E", Locale.ENGLISH);
+    private static final DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss z E", Locale.ENGLISH);
 
-    private static final Pattern LU_NAME_PATTERN = Pattern.compile("^(.*)\\.(.*)$");
-//    private static final Pattern WN_PATTERN = Pattern.compile("#([^#]+)$");
-//    private static final String LINK_PATTERN = "http://verbs.colorado.edu/verb-index/vn/%s.php";
+    private static final Pattern TOKEN_REGEX = Pattern.compile("[^\\s]+");
 
-//    private static final String DEFAULT_RESTRICTION_SUFFIX = "srs";
-//    private static final String DEFAULT_FRAME_SUFFIX = "frame";
-//    private static final String DEFAULT_EXAMPLE_SUFFIX = "ex";
-//    private static final String DEFAULT_SYNITEM_SUFFIX = "SynItem";
-//    private static final String DEFAULT_PRED_SUFFIX = "pred";
-//    private static final String DEFAULT_ARG_SUFFIX = "arg";
+    //    private static final String ONE_FRAME = "Locative_relation.xml";
+    private static final String ONE_FRAME = null;
 
-//    ArrayList<String> pbLinks = new ArrayList<>();
-//    private Map<String, URI> wnURIs;
-
-    public FramenetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnURIs) {
-        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"));
+    public FramenetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
 
         paths.put("frame", new File(this.path.getAbsolutePath() + File.separator + "frame"));
         paths.put("lu", new File(this.path.getAbsolutePath() + File.separator + "lu"));
         paths.put("luIndex", new File(this.path.getAbsolutePath() + File.separator + "luIndex.xml"));
         paths.put("semTypes", new File(this.path.getAbsolutePath() + File.separator + "semTypes.xml"));
+        paths.put("frRelation", new File(this.path.getAbsolutePath() + File.separator + "frRelation.xml"));
 
         argumentSeparator = "@";
 
-//        this.wnURIs = wnURIs;
-//
-//        String pbLinksString = properties.getProperty("linkpb");
-//        if (pbLinksString != null) {
-//            for (String link : pbLinksString.split(",")) {
-//                pbLinks.add(link.trim().toLowerCase());
-//            }
-//        }
-
-//        LOGGER.info("Links to: {}", pbLinks.toString());
         LOGGER.info("Starting dataset: {}", prefix);
     }
 
@@ -78,8 +63,8 @@ public class FramenetConverter extends Converter {
         addStatementToSink(getLexicon(), ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
         addStatementToSink(getLexicon(), DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
 
-        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
-        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
 
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -95,6 +80,7 @@ public class FramenetConverter extends Converter {
             Document document;
 
             // luIndex
+            LOGGER.info("Extracting luIndex");
             document = dbf.newDocumentBuilder().parse(paths.get("luIndex"));
             Match statusTypes = JOOX.$(document.getElementsByTagName("statusType"));
             for (Element statusType : statusTypes) {
@@ -102,79 +88,114 @@ public class FramenetConverter extends Converter {
             }
 
             // semTypes
+            LOGGER.info("Extracting semTypes");
             document = dbf.newDocumentBuilder().parse(paths.get("semTypes"));
             Match semTypes = JOOX.$(document.getElementsByTagName("semType"));
             for (Element semType : semTypes) {
                 addSemTypeToSink(semType);
             }
 
-            // lu
-            for (final File file : Files.fileTreeTraverser().preOrderTraversal(paths.get("lu"))) {
-                if (!file.isDirectory() && file.getName().endsWith(".xml")) {
-                    LOGGER.debug("Processing {} ...", file);
+            // frRelation
+            FrequencyHashSet<URI> typesFreqs = new FrequencyHashSet<>();
+            FrequencyHashSet<URI> typesFreqsFER = new FrequencyHashSet<>();
 
-                    try {
-                        document = dbf.newDocumentBuilder().parse(file);
-                        final Match lexUnit = JOOX.$(document.getElementsByTagName("lexUnit"));
+            LOGGER.info("Extracting frRelations");
+            document = dbf.newDocumentBuilder().parse(paths.get("frRelation"));
+            Match frRelationTypes = JOOX.$(document.getElementsByTagName("frameRelationType"));
+            for (Element frRelationType : frRelationTypes) {
+                String name = frRelationType.getAttribute("name");
+                URI typeURI = null;
 
-                        // <lexUnit status="Created" POS="V" name="look back.v" ID="12441"
-                        // frame="Remembering_experience" frameID="1222" totalAnnotated="1"
-                        String frame = lexUnit.attr("frame");
-                        String name = lexUnit.attr("name");
-                        String status = lexUnit.attr("status");
-                        String identifier = lexUnit.attr("ID");
-                        String pos = lexUnit.attr("POS").toLowerCase();
+                boolean invert = false;
 
-                        Matcher matcher = LU_NAME_PATTERN.matcher(name);
-                        if (!matcher.find()) {
-                            LOGGER.error("{} does not match LU pattern", name);
-                            continue;
-                        }
-
-//                        String pos = matcher.group(2);
-                        String simpleName = matcher.group(1);
-
-                        URI luURI = getLuURI(pos, simpleName, frame.toLowerCase());
-                        URI frameURI = uriForRoleset(frame.toLowerCase());
-
-                        // Lemmas
-                        StringBuilder builder = new StringBuilder();
-                        Match lexemes = JOOX.$(document.getElementsByTagName("lexeme"));
-                        for (Element lexeme : lexemes) {
-                            builder.append(lexeme.getAttribute("name")).append(" ");
-                        }
-                        String lemma = builder.toString().trim().replaceAll("\\s+", "");
-                        URI lexicalEntryURI = addLexicalEntry(lemma, lemma, pos, getLexicon());
-
-                        addStatementToSink(luURI, RDF.TYPE, PMOFN.LEXICAL_UNIT_CLASS);
-                        addStatementToSink(luURI, PMO.EVOKED_CONCEPT, frameURI);
-                        addStatementToSink(luURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
-                        addStatementToSink(luURI, LEXINFO.PART_OF_SPEECH_P, getLexemeURIbyPOS(pos));
-                        addStatementToSink(luURI, DCTERMS.IDENTIFIER, Integer.parseInt(identifier));
-
-                        URI statusURI = getStatusURI(status);
-                        addStatementToSink(luURI, PMOFN.STATUS, statusURI);
-
-                        System.out.println(file.getAbsolutePath());
-                        System.out.println(rolesetPart(frame.toLowerCase()));
-                        System.out.println(luURI);
-
-                    } catch (final Exception ex) {
-                        throw new IOException(ex);
-                    }
-
+                switch (name) {
+                case "Inheritance":
+                    typeURI = PMOFN.INHERITS_FROM;
+                    break;
+                case "Subframe":
+                    typeURI = PMOFN.SUBFRAME_OF;
+                    break;
+                case "Using":
+                    typeURI = PMOFN.USES;
+                    break;
+                case "See_also":
+                    typeURI = PMOFN.SEE_ALSO;
+                    invert = true;
+                    break;
+                case "Inchoative_of":
+                    typeURI = PMOFN.IS_INCHOATIVE_OF;
+                    invert = true;
+                    break;
+                case "Causative_of":
+                    typeURI = PMOFN.IS_CAUSATIVE_OF;
+                    invert = true;
+                    break;
+                case "Precedes":
+                    typeURI = PMOFN.PRECEDES;
+                    invert = true;
+                    break;
+                case "Perspective_on":
+                    typeURI = PMOFN.PERSPECTIVE_ON;
+                    break;
+                case "ReFraming_Mapping":
+                    typeURI = PMOFN.REFRAME_MAPPING;
                     break;
                 }
+
+                if (typeURI == null) {
+                    LOGGER.error("typeURI is null ({})", name);
+                    continue;
+                }
+
+                Match frameRelations = JOOX.$(frRelationType.getElementsByTagName("frameRelation"));
+                for (Element frameRelation : frameRelations) {
+                    String subFrameName = frameRelation.getAttribute("subFrameName");
+                    String superFrameName = frameRelation.getAttribute("superFrameName");
+
+                    if (invert) {
+                        addStatementToSink(uriForRoleset(superFrameName.toLowerCase()), typeURI,
+                                uriForRoleset(subFrameName.toLowerCase()));
+                    } else {
+                        addStatementToSink(uriForRoleset(subFrameName.toLowerCase()), typeURI,
+                                uriForRoleset(superFrameName.toLowerCase()));
+                    }
+                    typesFreqs.add(typeURI);
+
+                    Match feRelations = JOOX.$(frameRelation.getElementsByTagName("FERelation"));
+                    for (Element feRelation : feRelations) {
+
+                        // todo: molto brutto
+                        URI relURI = createURI(typeURI.toString() + "FER");
+
+                        URI arg1 = uriForArgument(subFrameName.toLowerCase(), feRelation.getAttribute("subFEName"));
+                        URI arg2 = uriForArgument(superFrameName.toLowerCase(), feRelation.getAttribute("superFEName"));
+
+                        if (invert) {
+                            addStatementToSink(arg2, relURI, arg1);
+                        } else {
+                            addStatementToSink(arg1, relURI, arg2);
+                        }
+                        typesFreqsFER.add(relURI);
+                    }
+
+                }
+
             }
 
             // frame
+            LOGGER.info("Extracting frames");
+            int luCount = 0;
+            FrequencyHashSet<URI> semTypesFreq = new FrequencyHashSet<>();
+            FrequencyHashSet<URI> semTypesForFrame = new FrequencyHashSet<>();
+            HashMap<String, URI> lus = new HashMap<>();
             for (final File file : Files.fileTreeTraverser().preOrderTraversal(paths.get("frame"))) {
                 if (!file.isDirectory() && file.getName().endsWith(".xml")) {
                     LOGGER.debug("Processing {} ...", file);
 
-                    // todo: remove!
-                    if (!file.getName().equals("Assemble.xml")) {
-                        continue;
+                    if (ONE_FRAME != null) {
+                        if (!file.getName().equals(ONE_FRAME)) {
+                            continue;
+                        }
                     }
 
                     try {
@@ -185,26 +206,37 @@ public class FramenetConverter extends Converter {
                             String cBy = frame.attr("cBy");
                             String cDate = frame.attr("cDate");
                             String identifier = frame.attr("ID");
-                            String name = frame.attr("name");
+                            String frameName = frame.attr("name");
+
+                            URI frameURI = uriForRoleset(frameName.toLowerCase());
 
                             Date date = format.parse(cDate);
 
                             Match definition = JOOX.$(element.getElementsByTagName("definition"));
                             String defText = Jsoup.parse(definition.text()).text().trim();
 
-                            URI frameURI = uriForRoleset(name.toLowerCase());
+                            Match elements = JOOX.$(element).children("semType");
+                            addSemTypes(elements, semTypesFreq, semTypesForFrame, frameURI, frameURI);
+
+                            URI cbyURI = addCBy(cBy);
 
                             addStatementToSink(frameURI, RDF.TYPE, PMOFN.FRAME_CLASS);
-                            addStatementToSink(frameURI, RDFS.LABEL, name, false);
-                            addStatementToSink(frameURI, PMOFN.C_BY, cBy, false);
-                            addStatementToSink(frameURI, PMOFN.C_DATE, date);
+                            addStatementToSink(frameURI, RDFS.LABEL, frameName, false);
+                            addStatementToSink(frameURI, DCTERMS.CREATOR, cbyURI);
+                            addStatementToSink(frameURI, DCTERMS.CREATED, date);
                             addStatementToSink(frameURI, DCTERMS.IDENTIFIER, Integer.parseInt(identifier));
                             addStatementToSink(frameURI, SKOS.DEFINITION, defText);
 
+                            HashSet<String> FEs = new HashSet<>();
                             final Match fes = JOOX.$(element.getElementsByTagName("FE"));
                             for (Element fe : fes) {
 
                                 String feName = fe.getAttribute("name");
+                                if (FEs.contains(feName)) {
+                                    continue;
+                                }
+
+                                FEs.add(feName);
                                 String coreType = fe.getAttribute("coreType");
                                 String feCBy = fe.getAttribute("cBy");
                                 String feCDate = fe.getAttribute("cDate");
@@ -216,7 +248,7 @@ public class FramenetConverter extends Converter {
                                 Match feDefinition = JOOX.$(fe.getElementsByTagName("definition"));
                                 String feDefText = Jsoup.parse(feDefinition.text()).text().trim();
 
-                                URI argumentURI = uriForArgument(name.toLowerCase(), feName.toLowerCase());
+                                URI argumentURI = uriForArgument(frameName.toLowerCase(), feName.toLowerCase());
                                 addStatementToSink(argumentURI, RDF.TYPE, PMOFN.FRAME_ELEMENT_CLASS);
                                 switch (coreType) {
                                 case "Core":
@@ -234,34 +266,32 @@ public class FramenetConverter extends Converter {
                                     break;
                                 }
 
-                                addStatementToSink(argumentURI, RDFS.LABEL, feName, false);
-                                addStatementToSink(argumentURI, PMOFN.C_BY, feCBy, false);
+                                URI feCByURI = addCBy(feCBy);
 
-                                addStatementToSink(argumentURI, PMOFN.C_DATE, feDate);
+                                addStatementToSink(argumentURI, RDFS.LABEL, feName, false);
+                                addStatementToSink(argumentURI, DCTERMS.CREATOR, feCByURI);
+                                addStatementToSink(argumentURI, DCTERMS.CREATED, feDate);
                                 addStatementToSink(argumentURI, DCTERMS.IDENTIFIER, Integer.parseInt(feIdentifier));
                                 addStatementToSink(argumentURI, SKOS.DEFINITION, feDefText);
                                 addStatementToSink(argumentURI, PMO.ABBREVIATION, abbrev, false);
+                                addStatementToSink(frameURI, PMO.SEM_ROLE, argumentURI);
 
                                 Match subElems;
 
                                 subElems = JOOX.$(fe.getElementsByTagName("semType"));
-                                for (Element feSemType : subElems) {
-                                    String feSTName = feSemType.getAttribute("name");
-                                    URI stURI = getSemTypeURI(feSTName);
-                                    addStatementToSink(argumentURI, PMO.SEM_TYPE, stURI);
-                                }
+                                addSemTypes(subElems, semTypesFreq, semTypesForFrame, argumentURI, frameURI);
 
                                 subElems = JOOX.$(fe.getElementsByTagName("excludesFE"));
                                 for (Element subElem : subElems) {
                                     String seName = subElem.getAttribute("name");
-                                    URI subElURI = uriForArgument(name.toLowerCase(), seName.toLowerCase());
+                                    URI subElURI = uriForArgument(frameName.toLowerCase(), seName.toLowerCase());
                                     addStatementToSink(argumentURI, PMOFN.EXCLUDES_FRAME_ELEMENT, subElURI);
                                 }
 
                                 subElems = JOOX.$(fe.getElementsByTagName("requiresFE"));
                                 for (Element subElem : subElems) {
                                     String seName = subElem.getAttribute("name");
-                                    URI subElURI = uriForArgument(name.toLowerCase(), seName.toLowerCase());
+                                    URI subElURI = uriForArgument(frameName.toLowerCase(), seName.toLowerCase());
                                     addStatementToSink(argumentURI, PMOFN.REQUIRES_FRAME_ELEMENT, subElURI);
                                 }
                             }
@@ -271,7 +301,7 @@ public class FramenetConverter extends Converter {
                             for (Element members : fecs) {
                                 coreset++;
 
-                                URI coresetURI = factory.createURI(frameURI.toString() + "_coreSet" + coreset);
+                                URI coresetURI = createURI(frameURI.toString() + "_coreSet" + coreset);
                                 addStatementToSink(frameURI, PMOFN.FE_CORE_SET, coresetURI);
                                 addStatementToSink(coresetURI, RDF.TYPE, PMOFN.FE_CORE_SET_CLASS);
 
@@ -280,7 +310,7 @@ public class FramenetConverter extends Converter {
                                     String mName = memberFE.getAttribute("name");
 
                                     // todo: the URI of a coreset item is the same as the role?
-                                    URI itemURI = uriForArgument(name.toLowerCase(), mName.toLowerCase());
+                                    URI itemURI = uriForArgument(frameName.toLowerCase(), mName.toLowerCase());
                                     addStatementToSink(coresetURI, PMO.ITEM, itemURI);
                                 }
 
@@ -290,6 +320,7 @@ public class FramenetConverter extends Converter {
                             for (Element frameRelation : frameRelations) {
                                 Match relatedFrames = JOOX.$(frameRelation.getElementsByTagName("relatedFrame"));
                                 String type = frameRelation.getAttribute("type");
+
                                 URI typeURI = null;
                                 switch (type) {
                                 case "Inherits from":
@@ -326,8 +357,108 @@ public class FramenetConverter extends Converter {
                                     String relatedFrameName = relatedFrame.getTextContent();
                                     addStatementToSink(frameURI, typeURI,
                                             uriForRoleset(relatedFrameName.toLowerCase()));
+                                    typesFreqs.add(typeURI);
                                 }
 
+                            }
+
+                            final Match lexUnits = JOOX.$(element.getElementsByTagName("lexUnit"));
+                            for (Element lexUnit : lexUnits) {
+                                luCount++;
+                                String leCBy = lexUnit.getAttribute("cBy");
+                                String leCDate = lexUnit.getAttribute("cDate");
+                                String leIdentifier = lexUnit.getAttribute("ID");
+                                String incorporatedFE = lexUnit.getAttribute("incorporatedFE");
+
+                                // todo: name non è mai usato?
+                                String name = lexUnit.getAttribute("name");
+
+                                String status = lexUnit.getAttribute("status");
+                                String pos = lexUnit.getAttribute("POS").toLowerCase();
+                                String leDefinition = JOOX.$(lexUnit.getElementsByTagName("definition")).text();
+
+                                // Lemmas
+                                StringBuilder builder = new StringBuilder();
+                                Match lexemes = JOOX.$(lexUnit).children("lexeme");
+
+                                List<String> lexemeList = new ArrayList<>();
+                                List<String> posList = new ArrayList<>();
+                                for (Element lexeme : lexemes) {
+                                    String lemmaName = lexeme.getAttribute("name");
+                                    String lemmaPos = lexeme.getAttribute("POS");
+
+                                    // todo: not used
+//                                    String headWord = lexeme.getAttribute("headword");
+//                                    if (headWord != null && headWord.equals("true")) {
+//
+//                                    }
+
+                                    lexemeList.add(lemmaName);
+                                    posList.add(lemmaPos);
+                                }
+
+                                String goodLemma = String.join(" ", lexemeList);
+                                String uriLemma = String.join("+", lexemeList);
+                                URI lexicalEntryURI = addLexicalEntry(goodLemma, uriLemma, lexemeList, posList, pos,
+                                        getLexicon());
+                                URI luURI = getLuURI(pos, uriLemma, frameName.toLowerCase());
+
+//                                String origLemma = null;
+//                                for (Element lexeme : lexemes) {
+//                                    String lemmaName = lexeme.getAttribute("name");
+//                                    String headWord = lexeme.getAttribute("headword");
+//                                    if (headWord != null && headWord.equals("true")) {
+//                                        origLemma = lemmaName;
+//                                    }
+//                                    builder.append(lemmaName).append(" ");
+//                                }
+//                                String lemma = builder.toString().trim().replaceAll("\\s+", "_");
+//                                if (origLemma == null) {
+//                                    origLemma = lemma;
+//                                }
+
+//                                URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, pos, getLexicon());
+//                                URI luURI = getLuURI(pos, lemma, frameName.toLowerCase());
+
+                                lus.put(leIdentifier, luURI);
+
+                                Match stElements = JOOX.$(lexUnit).children("semType");
+                                addSemTypes(stElements, semTypesFreq, semTypesForFrame, luURI, frameURI);
+
+                                addStatementToSink(luURI, RDF.TYPE, PMOFN.LEXICAL_UNIT_CLASS);
+                                addStatementToSink(luURI, PMO.EVOKED_CONCEPT, frameURI);
+                                addStatementToSink(luURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
+                                addStatementToSink(luURI, LEXINFO.PART_OF_SPEECH_P, getPosURI(pos));
+                                addStatementToSink(luURI, DCTERMS.IDENTIFIER, Integer.parseInt(leIdentifier));
+                                addStatementToSink(luURI, SKOS.DEFINITION, leDefinition);
+                                addStatementToSink(luURI, RDFS.LABEL, name, false);
+
+                                URI statusURI = getStatusURI(status);
+                                addStatementToSink(luURI, PMOFN.STATUS, statusURI);
+
+                                URI leCByURI = addCBy(leCBy);
+                                Date leDate = format.parse(leCDate);
+
+                                addStatementToSink(luURI, DCTERMS.CREATOR, leCByURI);
+                                addStatementToSink(luURI, DCTERMS.CREATED, leDate);
+                                addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, frameURI);
+
+                                for (String fe : FEs) {
+                                    URI argumentURI = uriForArgument(frameName.toLowerCase(), fe.toLowerCase());
+                                    URI conceptualizationURI = uriForConceptualization(uriLemma, pos,
+                                            frameName.toLowerCase(), fe.toLowerCase());
+                                    addStatementToSink(conceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
+                                    addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
+                                    addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
+                                    addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, argumentURI);
+                                }
+
+                                if (incorporatedFE != null && incorporatedFE.trim().length() > 0) {
+                                    incorporatedFE = incorporatedFE.trim();
+                                    URI argumentURI = uriForArgument(frameName.toLowerCase(),
+                                            incorporatedFE.toLowerCase());
+                                    addStatementToSink(luURI, PMOFN.INCORPORATED_FRAME_ELEMENT, argumentURI);
+                                }
                             }
 
                         }
@@ -338,23 +469,309 @@ public class FramenetConverter extends Converter {
                 }
             }
 
+            LOGGER.info("Extracted {} lexical units", luCount);
+
+            int semTypesCount = 0;
+            for (URI uri : semTypesFreq.keySet()) {
+                semTypesCount += semTypesFreq.get(uri);
+            }
+            LOGGER.info("Extracted {} semantic types", semTypesCount);
+
+//            for (URI uri : typesFreqs.keySet()) {
+//                LOGGER.info("{} --> {}", uri, typesFreqs.get(uri));
+//            }
+//            for (URI uri : typesFreqsFER.keySet()) {
+//                LOGGER.info("{} --> {}", uri, typesFreqsFER.get(uri));
+//            }
+//            for (URI uri : semTypesFreq.keySet()) {
+//                LOGGER.info("{} --> {}", uri, semTypesFreq.get(uri));
+//            }
+
+//            int total = 0;
+//            Iterator<Map.Entry<URI, Integer>> iterator = semTypesFreq.getSorted().iterator();
+//            while (iterator.hasNext()) {
+//                URI uri = iterator.next().getKey();
+//                LOGGER.info("{} --> {}", uri, semTypesFreq.get(uri));
+//                total += semTypesFreq.get(uri);
+//            }
+//            LOGGER.info("Total: {}", total);
+
+            if (extractExamples) {
+
+                int totalCount = 0;
+                int skippedCount = 0;
+
+                LOGGER.info("Extracting examples");
+                for (final File file : Files.fileTreeTraverser().preOrderTraversal(paths.get("lu"))) {
+                    if (!file.isDirectory() && file.getName().endsWith(".xml")) {
+                        LOGGER.debug("Processing {} ...", file);
+
+                        try {
+                            document = dbf.newDocumentBuilder().parse(file);
+                            final Match lexUnits = JOOX.$(document.getElementsByTagName("lexUnit"));
+                            String frameName = lexUnits.attr("frame");
+                            String luID = lexUnits.attr("ID");
+
+                            // todo: check this
+                            if (lus.get(luID) == null) {
+                                LOGGER.error("LU {} is not present in Map", luID);
+                                continue;
+                            }
+
+                            URI frameURI = uriForRoleset(frameName.toLowerCase());
+                            URI luURI = lus.get(luID);
+
+                            final Match examples = JOOX.$(document.getElementsByTagName("sentence"));
+
+                            for (Element example : examples) {
+
+                                synchronized (this) {
+
+                                    // Create temporary sink
+                                    // todo: the absence of continue/break must be check for this to work
+
+                                    Collection<Statement> tempStatements = new ArrayList<>();
+                                    RDFHandler tempSink = RDFHandlers.wrap(tempStatements);
+                                    boolean keep = true;
+                                    setSink(tempSink);
+
+                                    // Load example
+
+                                    boolean hasTarget = false;
+                                    totalCount++;
+
+                                    String id = example.getAttribute("ID");
+                                    URI exampleURI = uriForExample(id);
+
+                                    String text = JOOX.$(example.getElementsByTagName("text")).text();
+
+                                    Match layers = JOOX.$(example.getElementsByTagName("layer"));
+
+                                    Set<Integer> starts = new HashSet<>();
+                                    Set<Integer> ends = new HashSet<>();
+
+                                    Matcher matcher = TOKEN_REGEX.matcher(text);
+
+                                    while (matcher.find()) {
+                                        starts.add(matcher.start());
+                                        ends.add(matcher.end() - 1);
+                                    }
+
+                                    if (starts.size() == 0 || ends.size() == 0) {
+                                        LOGGER.error("A set is empty");
+                                        keep = false;
+                                    }
+
+                                    // Loop for target
+                                    for (Element layer : layers) {
+                                        String layerName = layer.getAttribute("name");
+
+                                        if (layerName == null) {
+                                            continue;
+                                        }
+
+                                        if (layerName.equals("Target")) {
+                                            Match labels = JOOX.$(layer.getElementsByTagName("label"));
+
+                                            Integer targetStart = null;
+                                            Integer targetEnd = null;
+
+                                            for (Element label : labels) {
+
+                                                Integer start = null;
+                                                Integer end = null;
+                                                try {
+                                                    start = Integer.parseInt(label.getAttribute("start"));
+                                                    end = Integer.parseInt(label.getAttribute("end"));
+                                                } catch (Exception e) {
+                                                    // ignored
+                                                }
+
+                                                if (start != null && !starts.contains(start)) {
+                                                    LOGGER.debug("Error in start index, skipping ({} - {})", luID,
+                                                            text);
+                                                    continue;
+                                                }
+                                                if (end != null && !ends.contains(end)) {
+                                                    LOGGER.debug("Error in end index, skipping ({} - {})", luID, text);
+                                                    continue;
+                                                }
+
+                                                if (start != null) {
+                                                    if (targetStart == null || targetStart > start) {
+                                                        targetStart = start;
+                                                    }
+                                                }
+                                                if (end != null) {
+                                                    if (targetEnd == null || targetEnd < end) {
+                                                        targetEnd = end;
+                                                    }
+                                                }
+                                            }
+
+                                            if (targetStart == null) {
+                                                LOGGER.debug("Target start is null");
+                                                continue;
+                                            }
+                                            if (targetEnd == null) {
+                                                LOGGER.debug("Target end is null");
+                                                continue;
+                                            }
+
+                                            hasTarget = true;
+
+                                            URI labelURI = createURI(
+                                                    exampleURI + String.format("#char=%d,%d", targetStart, targetEnd));
+                                            String anchor = text.substring(targetStart, targetEnd);
+
+                                            addStatementToSink(labelURI, RDF.TYPE, PMOFN.MARKABLE_CLASS);
+                                            addStatementToSink(labelURI, NIF.ANCHOR_OF, anchor);
+                                            addStatementToSink(labelURI, NIF.ANNOTATION_P, frameURI);
+                                            addStatementToSink(labelURI, NIF.ANNOTATION_P, luURI);
+                                            addStatementToSink(labelURI, NIF.BEGIN_INDEX, targetStart);
+                                            addStatementToSink(labelURI, NIF.END_INDEX, targetEnd);
+                                            addStatementToSink(labelURI, NIF.REFERENCE_CONTEXT, exampleURI);
+                                        }
+                                    }
+
+                                    if (!hasTarget) {
+                                        LOGGER.debug("Skipped example: {} in {}", id, luID);
+                                        keep = false;
+                                    }
+
+                                    addStatementToSink(exampleURI, RDF.TYPE, PMOFN.EXAMPLE_CLASS);
+                                    addStatementToSink(exampleURI, NIF.IS_STRING, text);
+                                    addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI);
+                                    addStatementToSink(luURI, PMO.EXAMPLE_P, exampleURI);
+
+                                    // Loop for FE
+                                    for (Element layer : layers) {
+                                        String layerName = layer.getAttribute("name");
+
+                                        if (layerName == null) {
+                                            continue;
+                                        }
+
+                                        if (layerName.equals("FE")) {
+                                            Match labels = JOOX.$(layer.getElementsByTagName("label"));
+                                            for (Element label : labels) {
+                                                String roleName = label.getAttribute("name");
+                                                URI roleURI = uriForArgument(frameName.toLowerCase(),
+                                                        roleName.toLowerCase());
+
+                                                String anchor = null;
+
+                                                Integer start = null;
+                                                Integer end = null;
+                                                try {
+                                                    start = Integer.parseInt(label.getAttribute("start"));
+                                                    end = Integer.parseInt(label.getAttribute("end"));
+
+                                                    if (start + end > 0) {
+                                                        anchor = text.substring(start, end);
+                                                    }
+                                                } catch (Exception e) {
+                                                    // ignored
+                                                }
+
+                                                if (start != null && !starts.contains(start)) {
+                                                    LOGGER.debug("Error in start index, skipping ({} - {})", luID,
+                                                            text);
+                                                    keep = false;
+                                                    continue;
+                                                }
+                                                if (end != null && !ends.contains(end)) {
+                                                    LOGGER.debug("Error in end index, skipping ({} - {})", luID, text);
+                                                    keep = false;
+                                                    continue;
+                                                }
+
+                                                if (anchor == null) {
+                                                    addStatementToSink(roleURI, PMO.IMPLICIT_IN, exampleURI);
+                                                } else {
+                                                    addStatementToSink(roleURI, PMO.EXAMPLE_P, exampleURI);
+
+                                                    URI labelURI = createURI(
+                                                            exampleURI + String
+                                                                    .format("#char=%d,%d", start, end));
+
+                                                    addStatementToSink(labelURI, RDF.TYPE, PMOFN.MARKABLE_CLASS);
+                                                    addStatementToSink(labelURI, NIF.ANCHOR_OF, anchor);
+                                                    addStatementToSink(labelURI, NIF.ANNOTATION_P, roleURI);
+                                                    addStatementToSink(labelURI, NIF.BEGIN_INDEX, start);
+                                                    addStatementToSink(labelURI, NIF.END_INDEX, end);
+                                                    addStatementToSink(labelURI, NIF.REFERENCE_CONTEXT, exampleURI);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    setDefaultSinkAsSink();
+
+                                    if (!keep) {
+                                        skippedCount++;
+                                        continue;
+                                    }
+
+                                    for (Statement statement : tempStatements) {
+                                        addStatementToSink(statement);
+                                    }
+                                }
+                            }
+
+                            // As a security measure
+                            setDefaultSinkAsSink();
+
+                        } catch (final Exception ex) {
+                            throw new IOException(ex);
+                        }
+                    }
+                }
+
+                LOGGER.info("Extracted examples: {}/{}", totalCount - skippedCount, totalCount);
+            }
+
         } catch (final Exception ex) {
             throw new IOException(ex);
         }
+    }
 
-//        for (final File file : Files.fileTreeTraverser().preOrderTraversal(this.path)) {
-//            if (!file.isDirectory() && file.getName().endsWith(".xml")) {
-//                LOGGER.debug("Processing {} ...", file);
-//
-//                try {
-//                    final Document document = dbf.newDocumentBuilder().parse(file);
-//                    final Match vnClass = JOOX.$(document.getElementsByTagName("VNCLASS"));
-//                } catch (final Exception ex) {
-//                    throw new IOException(ex);
-//                }
-//            }
-//        }
+    private void addSemTypes(Match stElements, FrequencyHashSet<URI> semTypesFreq,
+            FrequencyHashSet<URI> semTypesForFrame, URI baseURI, URI frameURI) {
+        for (Element stElement : stElements) {
+            String LUSemType = stElement.getAttribute("name");
+            URI LUSemTypeURI = null;
+            if (LUSemType != null) {
+                LUSemTypeURI = getSemTypeURI(LUSemType);
+            }
+            if (LUSemTypeURI != null) {
+                addStatementToSink(baseURI, PMO.SEM_TYPE, LUSemTypeURI);
+                semTypesFreq.add(LUSemTypeURI);
+                semTypesForFrame.add(frameURI);
+            }
+        }
+    }
 
+    private URI addCBy(String cBy) {
+        URI cbyURI = uriForCBy(cBy);
+        addStatementToSink(cbyURI, DCTERMS.IDENTIFIER, cBy, false);
+        return cbyURI;
+    }
+
+    private URI uriForCBy(String cBy) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(NAMESPACE);
+        builder.append(cBy.toLowerCase());
+        builder.append("_Creator");
+        return createURI(builder.toString());
+    }
+
+    private URI uriForExample(String exampleID) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(NAMESPACE);
+        builder.append("example_");
+        builder.append(exampleID);
+        return createURI(builder.toString());
     }
 
     private void addSemTypeToSink(Element semType) {
@@ -391,6 +808,7 @@ public class FramenetConverter extends Converter {
 
         name = name.toLowerCase();
         name = name.replaceAll("-", "_");
+        name = name.replaceAll("\\s+", "_");
 
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
@@ -398,7 +816,7 @@ public class FramenetConverter extends Converter {
         builder.append(separator);
         builder.append(name);
         builder.append("_semType");
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     private void addStatusToSink(Element statusType) {
@@ -428,7 +846,7 @@ public class FramenetConverter extends Converter {
         builder.append(luName.replaceAll("[^a-zA-Z0-9-_]", ""));
         builder.append(separator);
         builder.append(rolesetPart(frameName, prefix));
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     private URI getStatusURI(String name) {
@@ -445,10 +863,10 @@ public class FramenetConverter extends Converter {
         builder.append(separator);
         builder.append(name.toLowerCase());
         builder.append("_LUStatus");
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
-    private URI getLexemeURIbyPOS(String pos) {
+    protected URI getPosURI(String pos) {
 
         pos = pos.toUpperCase();
 
@@ -469,6 +887,8 @@ public class FramenetConverter extends Converter {
             return LEXINFO.CARDINAL_NUMERAL;
         case "PREP":
             return LEXINFO.PREPOSITION;
+        case "PRON":
+            return LEXINFO.PRONOUN;
         case "SCON":
             return LEXINFO.SUBORDINATING_CONJUNCTION;
         case "V":

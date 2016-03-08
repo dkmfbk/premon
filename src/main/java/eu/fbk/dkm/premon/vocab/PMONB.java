@@ -23,26 +23,20 @@ public final class PMONB {
 
     // Classes
 
-    /** Class pmonb:Example. */
-    public static final URI EXAMPLE = createURI("Example");
+    /** Class pmonb:Modifier. */
+    public static final URI MODIFIER = createURI("Modifier");
 
-    /** Class pmonb:Markable. */
-    public static final URI MARKABLE = createURI("Markable");
-
-    /** Class pmonb:ModifierRole. */
-    public static final URI MODIFIER_ROLE = createURI("ModifierRole");
-
-    /** Class pmonb:NumberedRole. */
-    public static final URI NUMBERED_ROLE = createURI("NumberedRole");
+    /** Class pmonb:NumberedArgument. */
+    public static final URI NUMBERED_ARGUMENT = createURI("NumberedArgument");
 
     /** Class pmonb:Predicate. */
-    public static final URI PREDICATE = createURI("Predicate");
-
-    /** Class pmonb:SemanticArgument. */
-    public static final URI SEMANTIC_ARGUMENT = createURI("SemanticArgument");
+    public static final URI ROLESET = createURI("Roleset");
 
     /** Class pmonb:SemanticRole. */
     public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
+
+    /** Class pmonb:Argument. */
+    public static final URI ARGUMENT = createURI("Argument");
 
     /** Class pmonb:Tag. */
     public static final URI TAG_C = createURI("Tag");

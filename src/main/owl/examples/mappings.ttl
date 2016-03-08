@@ -1,0 +1,93 @@
+
+per il naming dei mapping credo sia meglio usare una cosa tipo
+ pm:map_HASH, dove hash è una stringa computata dall'hashing delle URI
+ delle conceptualization incluse nel mapping, in ordine alfabetico
+ (hash di 22 caratteri); forse distinguerei tra pm:map_pred e
+ pm:map_arg visto che l'hash non dice niente.
+
+
+# viene introdotto un individuo per rappresentare il mapping
+# un mapping può legare n elementi, n>1
+
+#esempio da VERBNET:
+#<MEMBER name="expect" wn="expect%2:32:00" grouping="expect.01"/>
+# per questo viene creato un unico individuo mapping, che lega le conceptualization corrispondenti di Verbnet, WordNet, e ontonote-sense
+
+#creare un URI in maniera furba.... qui ho scelto di basarlo sulla coppia verbnet class+lemma, visto che è estratto da li, ma basta che sia univoco crossresources
+
+pm:map_wish-62_expect_vn32	a			pmo:Mapping														;
+										pmo:item			pm:conceptualization-v-expect-vn32-wish-62	;
+										pmo:item			pm:conceptualization-v-expect-on5-wish.02	;
+										pmo:item			pm:conceptualization-v-expect-wn31-3-v		.
+	
+#rimane ovviamente la modellazione delle conceptualizations	 di Wordnet e OntonoteSense/groupings
+											
+#esempio da PROPBANK	
+#<predicate lemma="yield">										
+#<roleset id="yield.02" name="Give way" vncls="13.3">
+#<roles>
+#	<role descr="Thing giving way" n="0">
+#
+#	<vnrole vncls="13.3" vntheta="Agent"/></role>
+#
+#	<role descr="what's lost" n="1">
+#
+#	<vnrole vncls="13.3" vntheta="Theme"/></role>
+#
+#	<role descr="what's preferred" n="2">
+#
+#	<vnrole vncls="13.3" vntheta="Recipient"/></role>
+#
+#</roles>
+
+# viene creato un mapping tra le conceptualization corrispondenti ai predicati  
+pm:map_yield.02_yield_pb17	a			pmo:Mapping															;
+										pmo:item			pm:conceptualization-v-yield-vn32-yield-13.3	;
+										pmo:item			pm:conceptualization-v-yield-pb17-yield.01		.
+
+# viene creato un mapping per ogni coppia di conceptualization corrispondenti ai ruoli. Non serve creare la conceptualization di VerbNet, perché verrà creata dalla risorsa stessa.
+pm:map_yield.02_yield_arg0_pb17	a			pmo:Mapping													;
+								pmo:item	pm:conceptualization-v-yield-vn32-future_having-13.3-agent	;
+								pmo:item	pm:conceptualization-v-yield-pb17-yield.01-arg0	.
+								
+pm:map_yield.02_yield_arg1_pb17	a			pmo:Mapping													;
+								pmo:item	pm:conceptualization-v-yield-vn32-future_having-13.3-theme	;
+								pmo:item	pm:conceptualization-v-yield-pb17-yield.01-arg1	.
+								
+pm:map_yield.02_yield_arg2_pb17	a			pmo:Mapping														;
+								pmo:item	pm:conceptualization-v-yield-vn32-future_having-13.3-recipient	;
+								pmo:item	pm:conceptualization-v-yield-pb17-yield.01-arg2	.								
+															
+#esempio da NOMBANK:								
+#<predicate lemma="yield">
+#<roleset id="yield.01" name="give a dividend" source="verb-yield.03">
+#<roles>
+#
+#<role descr="thing providing a dividend" n="0"></role>
+#
+#<role descr="dividend, earnings" n="1"></role>
+#
+#<role descr="recipient" n="2"></role>
+#
+#</roles>
+
+# viene creato un mapping tra le conceptualization corrispondenti ai predicati  
+pm:map_yield.01_yield_nb10		a			pmo:Mapping														;
+											pmo:item			pm:conceptualization-v-yield-nb10-yield.01	;
+											pmo:item			pm:conceptualization-v-yield-pb17-yield.03	.
+										
+pm:map_yield.01_yield_arg0_nb10	a			pmo:Mapping														;
+											pmo:item			pm:conceptualization-v-yield-nb10-yield.01-arg0	;
+											pmo:item			pm:conceptualization-v-yield-pb17-yield.03-arg0	.
+
+pm:map_yield.01_yield_arg1_nb10	a			pmo:Mapping														;
+											pmo:item			pm:conceptualization-v-yield-nb10-yield.01-arg1	;
+											pmo:item			pm:conceptualization-v-yield-pb17-yield.03-arg1	.
+
+pm:map_yield.01_yield_arg1_nb10	a			pmo:Mapping														;
+											pmo:item			pm:conceptualization-v-yield-nb10-yield.01-arg2	;
+											pmo:item			pm:conceptualization-v-yield-pb17-yield.03-arg2	.
+										
+										
+										
+										

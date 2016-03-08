@@ -4,22 +4,29 @@ import com.google.common.io.Files;
 import eu.fbk.dkm.premon.premonitor.propbank.*;
 import eu.fbk.dkm.premon.util.NF;
 import eu.fbk.dkm.premon.util.PropBankResource;
-import eu.fbk.dkm.premon.vocab.NIF;
-import eu.fbk.dkm.premon.vocab.ONTOLEX;
-import eu.fbk.dkm.premon.vocab.PM;
-import eu.fbk.dkm.premon.vocab.PMO;
+import eu.fbk.dkm.premon.vocab.*;
+import org.joox.JOOX;
+import org.joox.Match;
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.*;
+import org.openrdf.model.vocabulary.DCTERMS;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -38,16 +45,10 @@ public abstract class BankConverter extends Converter {
     boolean noDef = false;
     String defaultType;
 
-//    private Set<URI> wnURIs;
-    public static String WN_NAMESPACE = "http://wordnet-rdf.princeton.edu/wn31/";
-
-    protected static HashMap<String, String> on2wnMap = new HashMap<>();
-
-    static {
-        on2wnMap.put("n", "n");
-        on2wnMap.put("v", "v");
-        on2wnMap.put("j", "a");
-    }
+    protected ArrayList<String> fnLinks = new ArrayList<>();
+    protected ArrayList<String> vnLinks = new ArrayList<>();
+    protected Map<String, String> vnMap = new HashMap<>();
+    protected static final Pattern VN_PATTERN = Pattern.compile("(.*[^0-9]?)-([0-9\\.-]*)");
 
     static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
 
@@ -79,10 +80,52 @@ public abstract class BankConverter extends Converter {
         fileToDiscard.add("except-v.xml");
     }
 
-//    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language, Set<URI> wnURIs) {
-    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language) {
-        super(path, resource, sink, properties, language);
-//        this.wnURIs = wnURIs;
+    //    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language, Set<URI> wnURIs) {
+    public BankConverter(File path, String resource, RDFHandler sink, Properties properties, String language,
+            Map<String, URI> wnInfo) {
+        super(path, resource, sink, properties, language, wnInfo);
+
+        // todo: use default input path
+
+        String vnPath = properties.getProperty("vnpath");
+        if (vnPath != null) {
+            LOGGER.info("Loading VerbNet");
+            File vnFile = new File(vnPath);
+            if (vnFile.exists() && vnFile.isDirectory()) {
+                final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+                for (final File file : Files.fileTreeTraverser().preOrderTraversal(vnFile)) {
+                    if (!file.isDirectory() && file.getName().endsWith(".xml")) {
+                        LOGGER.debug("Processing {} ...", file);
+
+                        try {
+                            final Document document = dbf.newDocumentBuilder().parse(file);
+                            final Match vnClass = JOOX.$(document.getElementsByTagName("VNCLASS"))
+                                    .add(JOOX.$(document.getElementsByTagName("VNSUBCLASS")));
+
+                            for (Element thisClass : vnClass) {
+                                String id = thisClass.getAttribute("ID");
+                                Matcher mID = VN_PATTERN.matcher(id);
+                                if (mID.find()) {
+                                    vnMap.put(mID.group(2), mID.group(1));
+                                } else {
+                                    LOGGER.error("Unable to parse {}", id);
+                                }
+                            }
+
+                        } catch (final Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+        }
+
+        addLinks(fnLinks, properties.getProperty("linkfn"));
+        LOGGER.info("Links to: {}", fnLinks.toString());
+        addLinks(vnLinks, properties.getProperty("linkvn"));
+        LOGGER.info("Links to: {}", vnLinks.toString());
     }
 
     private static boolean discardFile(File file, boolean onlyVerbs, boolean isOntoNotes) {
@@ -114,8 +157,8 @@ public abstract class BankConverter extends Converter {
         addStatementToSink(getLexicon(), ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
         addStatementToSink(getLexicon(), DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
 
-        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
-        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, factory.createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
+        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
 
         //todo: the first tour is not necessary any more
 
@@ -163,19 +206,16 @@ public abstract class BankConverter extends Converter {
                 for (Object predicate : noteOrPredicate) {
                     if (predicate instanceof Predicate) {
 
-                        String lemma = getLemmaFromPredicateName(((Predicate) predicate).getLemma());
+                        String uriLemma = getLemmaFromPredicateName(((Predicate) predicate).getLemma());
+                        String goodLemma = uriLemma.replaceAll("\\+", " ");
 
-                        URI lexicalEntryURI = addLexicalEntry(origLemma, lemma, type, getLexicon());
+                        List<String> tokens = new ArrayList<>();
+                        List<String> pos = new ArrayList<>();
+                        tokens.add(origLemma);
+                        pos.add(type);
 
-//                        if (wnURIs.size() > 0) {
-//                            String wnLemma = lemma + "-" + on2wnMap.get(type);
-//                            URI wnURI = factory.createURI(WN_NAMESPACE, wnLemma);
-//                            if (wnURIs.contains(wnURI)) {
-//                                addStatementToSink(lexicalEntryURI, OWL.SAMEAS, wnURI, LE_GRAPH);
-//                            } else {
-//                                LOGGER.debug("Word not found: {}", wnLemma);
-//                            }
-//                        }
+                        URI lexicalEntryURI = addLexicalEntry(goodLemma, uriLemma, tokens, pos, type,
+                                getLexicon());
 
                         List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
                         for (Object roleset : noteOrRoleset) {
@@ -187,7 +227,7 @@ public abstract class BankConverter extends Converter {
                                 }
 
                                 URI rolesetURI = uriForRoleset(rolesetID);
-                                addStatementToSink(rolesetURI, RDFS.SEEALSO, getExternalLink(lemma, type));
+                                addStatementToSink(rolesetURI, RDFS.SEEALSO, getExternalLink(origLemma, type));
 
                                 addStatementToSink(rolesetURI, RDF.TYPE, getPredicate());
                                 if (!noDef) {
@@ -197,7 +237,7 @@ public abstract class BankConverter extends Converter {
                                 addStatementToSink(rolesetURI, RDFS.LABEL, rolesetID, false);
                                 addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, rolesetURI);
 
-                                URI conceptualizationURI = uriForConceptualization(lemma, type, rolesetID);
+                                URI conceptualizationURI = uriForConceptualization(uriLemma, type, rolesetID);
                                 addStatementToSink(conceptualizationURI, RDF.TYPE,
                                         PMO.CONCEPTUALIZATION);
                                 addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY,
@@ -207,21 +247,7 @@ public abstract class BankConverter extends Converter {
 
                                 addConceptualizationLink((Roleset) roleset, conceptualizationURI);
 
-                                //								String[] vnClasses = new String[0];
-                                //								if (((Roleset) roleset).getVncls() != null) {
-                                //									vnClasses = ((Roleset) roleset).getVncls().trim().split("\\s+");
-                                //								}
-                                //
-                                //								String[] fnPredicates = new String[0];
-                                //								if (((Roleset) roleset).getFramnet() != null) {
-                                //									fnPredicates = ((Roleset) roleset).getFramnet().trim().toLowerCase().split("\\s+");
-                                //								}
-
-                                //todo: do stuff with VN and FN
-
-                                //								if (roleSetsToIgnore.contains(rolesetID)) {
-                                //									continue;
-                                //								}
+                                addExternalLinks((Roleset) roleset, conceptualizationURI, uriLemma, type);
 
                                 List<Object> rolesOrExample = ((Roleset) roleset)
                                         .getNoteOrRolesOrExample();
@@ -230,7 +256,7 @@ public abstract class BankConverter extends Converter {
                                 for (String key : functionMap.keySet()) {
                                     URI argumentURI = uriForArgument(rolesetID, key);
                                     addArgumentToSink(key, functionMap.get(key), argumentURI,
-                                            lemma, type, rolesetID, lexicalEntryURI);
+                                            uriLemma, type, rolesetID, lexicalEntryURI, null);
                                 }
 
                                 List<Example> examples = new ArrayList<Example>();
@@ -243,9 +269,6 @@ public abstract class BankConverter extends Converter {
                                                 String n = ((Role) role).getN();
                                                 String f = ((Role) role).getF();
                                                 String descr = ((Role) role).getDescr();
-
-                                                //todo: do stuff with VN
-                                                //												List<Vnrole> vnroleList = ((Role) role).getVnrole();
 
                                                 NF nf = new NF(n, f);
                                                 String argName = nf.getArgName();
@@ -268,21 +291,17 @@ public abstract class BankConverter extends Converter {
                                                     continue;
                                                 }
 
-                                                URI argumentURI = uriForArgument(rolesetID,
-                                                        argName);
-                                                addStatementToSink(argumentURI, RDF.TYPE,
-                                                        getSemanticArgument());
+                                                URI argumentURI = uriForArgument(rolesetID, argName);
+                                                addStatementToSink(argumentURI, RDF.TYPE, getSemanticArgument());
                                                 addStatementToSink(argumentURI, PMO.CORE, true);
                                                 if (!noDef) {
-                                                    addStatementToSink(argumentURI,
-                                                            SKOS.DEFINITION, descr);
+                                                    addStatementToSink(argumentURI, SKOS.DEFINITION, descr);
                                                 }
-                                                addStatementToSink(rolesetURI, PMO.SEM_ARG,
-                                                        argumentURI);
+                                                addStatementToSink(rolesetURI, PMO.SEM_ROLE, argumentURI);
 
-                                                addArgumentToSink(argumentURI, argName, nf.getF(),
-                                                        argType, lemma, type, rolesetID,
-                                                        lexicalEntryURI, (Role) role, (Roleset) roleset);
+                                                addArgumentToSink(argumentURI, argName, nf.getF(), argType, uriLemma,
+                                                        type, rolesetID, lexicalEntryURI, (Role) role,
+                                                        (Roleset) roleset);
                                             }
                                         }
                                     }
@@ -299,18 +318,17 @@ public abstract class BankConverter extends Converter {
                                 int exampleCount = 0;
 
                                 exampleLoop:
-                                for (Example rOrE : examples) {
+                                for (Example example : examples) {
                                     String text = null;
                                     Inflection inflection = null;
 
-                                    //									String exType = rOrE.getType();
-                                    String exName = rOrE.getName();
-                                    String exSrc = rOrE.getSrc();
+                                    String exName = example.getName();
+                                    String exSrc = example.getSrc();
 
                                     List<Rel> myRels = new ArrayList<Rel>();
                                     List<Arg> myArgs = new ArrayList<Arg>();
 
-                                    List<Object> exThings = rOrE
+                                    List<Object> exThings = example
                                             .getInflectionOrNoteOrTextOrArgOrRel();
                                     for (Object thing : exThings) {
                                         if (thing instanceof Text) {
@@ -332,21 +350,27 @@ public abstract class BankConverter extends Converter {
                                     }
 
                                     if (text != null && text.length() > 0) {
-                                        URI exampleURI = uriForExample(rolesetID, exampleCount);
-                                        exampleCount++;
-                                        addStatementToSink(exampleURI, RDF.TYPE, getExample());
-                                        addStatementToSink(exampleURI, RDFS.COMMENT, exName);
+
+                                        URI exampleURI = uriForExample(rolesetID, exampleCount++);
+                                        URI annotationSetURI = uriForAnnotationSet(exampleURI, null);
+
+                                        addStatementToSink(exampleURI, RDF.TYPE, PMO.EXAMPLE_C, EXAMPLE_GRAPH);
+                                        addStatementToSink(annotationSetURI, RDF.TYPE, PMO.ANNOTATION_SET,
+                                                EXAMPLE_GRAPH);
+
+                                        addStatementToSink(exampleURI, RDFS.COMMENT, exName, EXAMPLE_GRAPH);
                                         if (exSrc != null && !exSrc.equals(exName)) {
-                                            addStatementToSink(exampleURI, DCTERMS.SOURCE, exSrc);
+                                            addStatementToSink(exampleURI, DCTERMS.SOURCE, exSrc, EXAMPLE_GRAPH);
                                         }
-                                        addStatementToSink(exampleURI, NIF.IS_STRING, text);
+                                        addStatementToSink(exampleURI, NIF.IS_STRING, text, EXAMPLE_GRAPH);
 
                                         // Bugfix
                                         text = text.toLowerCase();
 
                                         addInflectionToSink(exampleURI, inflection);
 
-                                        for (Rel rel : myRels) {
+                                        for (int i = 0; i < myRels.size(); i++) {
+                                            Rel rel = myRels.get(i);
 
                                             String origValue = rel.getvalue()
                                                     .replaceAll("\\s+", " ").trim();
@@ -355,25 +379,32 @@ public abstract class BankConverter extends Converter {
                                             int start = text.indexOf(value);
                                             if (start == -1) {
                                                 //todo: fix these
-                                                //												LOGGER.error("Rel string not found in {}: {}", rolesetID, value);
+                                                // LOGGER.error("Rel string not found in {}: {}", rolesetID, value);
                                                 continue exampleLoop;
                                             }
                                             int end = start + value.length();
 
-                                            URI markableURI = factory.createURI(String.format(
-                                                    "%s#char=%d,%d", exampleURI.toString(), start,
-                                                    end));
+                                            URI markableURI = uriForMarkable(exampleURI, start, end);
+                                            URI annotationURI = createURI(annotationSetURI.toString() + "-rel-" + i);
 
-                                            addStatementToSink(markableURI, RDF.TYPE,
-                                                    getMarkable());
-                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX, start);
-                                            addStatementToSink(markableURI, NIF.END_INDEX, end);
-                                            addStatementToSink(markableURI, NIF.ANCHOR_OF,
-                                                    origValue);
-                                            addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT,
-                                                    exampleURI);
-                                            addStatementToSink(markableURI, NIF.ANNOTATION_P,
-                                                    rolesetURI);
+                                            addStatementToSink(exampleURI, NIF.ANNOTATION_P, annotationURI,
+                                                    EXAMPLE_GRAPH);
+                                            addStatementToSink(annotationURI, RDF.TYPE, NIF.ANNOTATION_C,
+                                                    EXAMPLE_GRAPH);
+                                            addStatementToSink(annotationURI, PMO.VALUE_OBJ, rolesetURI, EXAMPLE_GRAPH);
+                                            addStatementToSink(annotationURI, PMO.VALUE_OBJ, conceptualizationURI,
+                                                    EXAMPLE_GRAPH);
+                                            addStatementToSink(annotationSetURI, PMO.ITEM, annotationURI,
+                                                    EXAMPLE_GRAPH);
+
+                                            addStatementToSink(markableURI, RDF.TYPE, PMO.MARKABLE, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX, start, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.END_INDEX, end, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.ANCHOR_OF, origValue, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI,
+                                                    EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.ANNOTATION_P, rolesetURI,
+                                                    EXAMPLE_GRAPH);
 
                                             NF nf = new NF(null, rel.getF());
                                             String argName = nf.getArgName();
@@ -382,30 +413,35 @@ public abstract class BankConverter extends Converter {
                                             addRelToSink(argType, argName, markableURI);
                                         }
 
-                                        for (Arg arg : myArgs) {
+                                        for (int i = 0; i < myArgs.size(); i++) {
+                                            Arg arg = myArgs.get(i);
                                             String value = arg.getvalue().toLowerCase()
                                                     .replaceAll("\\s+", " ").trim();
 
                                             int start = text.indexOf(value);
                                             if (start == -1) {
                                                 //todo: fix these
-                                                //												LOGGER.error("Arg string not found in {}: {}", rolesetID, value);
+                                                // LOGGER.error("Arg string not found in {}: {}", rolesetID, value);
                                                 continue;
                                             }
                                             int end = start + value.length();
 
-                                            URI markableURI = factory.createURI(String.format(
-                                                    "%s#char=%d,%d", exampleURI.toString(), start,
-                                                    end));
+                                            URI markableURI = uriForMarkable(exampleURI, start, end);
+                                            URI annotationURI = createURI(annotationSetURI.toString() + "-arg-" + i);
 
-                                            addStatementToSink(markableURI, RDF.TYPE,
-                                                    getMarkable());
-                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX, start);
-                                            addStatementToSink(markableURI, NIF.END_INDEX, end);
-                                            addStatementToSink(markableURI, NIF.ANCHOR_OF, value);
-                                            addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT,
-                                                    exampleURI);
-                                            //											addStatementToSink(markableURI, NIF.ANNOTATION_P, rolesetURI);
+                                            addStatementToSink(exampleURI, NIF.ANNOTATION_P, annotationURI,
+                                                    EXAMPLE_GRAPH);
+                                            addStatementToSink(annotationURI, RDF.TYPE, NIF.ANNOTATION_C,
+                                                    EXAMPLE_GRAPH);
+                                            addStatementToSink(annotationSetURI, PMO.ITEM, annotationURI,
+                                                    EXAMPLE_GRAPH);
+
+                                            addStatementToSink(markableURI, RDF.TYPE, PMO.MARKABLE, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX, start, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.END_INDEX, end, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.ANCHOR_OF, value, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI,
+                                                    EXAMPLE_GRAPH);
 
                                             NF nf = new NF(arg.getN(), arg.getF());
                                             String argName = nf.getArgName();
@@ -424,14 +460,14 @@ public abstract class BankConverter extends Converter {
                                             try {
                                                 argType = getType(argName);
                                             } catch (Exception e) {
-                                                LOGGER.error(
-                                                        "Error in lemma {}: " + e.getMessage(),
-                                                        lemma);
+                                                LOGGER.error("Error in lemma {}: " + e.getMessage(), uriLemma);
                                                 continue;
                                             }
 
-                                            addExampleArgToSink(argType, argName, markableURI,
+                                            URI argumentURI = addExampleArgToSink(argType, argName, markableURI,
                                                     nf.getF(), rolesetID);
+                                            addStatementToSink(annotationURI, PMO.VALUE_OBJ, argumentURI,
+                                                    EXAMPLE_GRAPH);
                                         }
                                     }
                                 }
@@ -443,6 +479,14 @@ public abstract class BankConverter extends Converter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
+        // use for Links
+    }
+
+    protected void addExternalLinks(Role role, URI argConceptualizationURI, String uriLemma, String type) {
+        // use for Links
     }
 
     protected abstract URI getExternalLink(String lemma, String type);
@@ -457,13 +501,18 @@ public abstract class BankConverter extends Converter {
     }
 
     protected void addArgumentToSink(String key, URI keyURI, URI argumentURI, String lemma,
-            String type, String rolesetID, URI lexicalEntryURI) {
+            String type, String rolesetID, URI lexicalEntryURI, @Nullable Role role) {
         addStatementToSink(argumentURI, PMO.ROLE, keyURI);
+        addStatementToSink(uriForRoleset(rolesetID), PMO.SEM_ROLE, argumentURI);
 
         URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
         addStatementToSink(argConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
         addStatementToSink(argConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
         addStatementToSink(argConceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
+
+        if (role != null) {
+            addExternalLinks(role, argConceptualizationURI, lemma, type);
+        }
     }
 
     // URIs
@@ -472,7 +521,7 @@ public abstract class BankConverter extends Converter {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
         builder.append(examplePart(rolesetID, exampleCount));
-        return factory.createURI(builder.toString());
+        return createURI(builder.toString());
     }
 
     // Parts
@@ -492,10 +541,6 @@ public abstract class BankConverter extends Converter {
 
     abstract URI getSemanticArgument();
 
-    abstract URI getMarkable();
-
-    abstract URI getExample();
-
     abstract HashMap<String, URI> getFunctionMap();
 
     abstract void addInflectionToSink(URI exampleURI, Inflection inflection);
@@ -505,11 +550,28 @@ public abstract class BankConverter extends Converter {
 
     abstract Type getType(String code);
 
-    protected abstract void addExampleArgToSink(Type argType, String argName, URI markableURI,
+    protected abstract URI addExampleArgToSink(Type argType, String argName, URI markableURI,
             String f, String rolesetID);
 
     protected abstract void addRelToSink(Type argType, String argName, URI markableURI);
 
     protected abstract void addConceptualizationLink(Roleset roleset, URI rolesetURI);
 
+    @Override protected URI getPosURI(String textualPOS) {
+        if (textualPOS == null) {
+            return null;
+        }
+
+        switch (textualPOS) {
+        case "v":
+            return LEXINFO.VERB;
+        case "n":
+            return LEXINFO.NOUN;
+        case "prep":
+            return LEXINFO.PREPOSITION;
+        }
+
+        LOGGER.error("POS not found: {}", textualPOS);
+        return null;
+    }
 }
