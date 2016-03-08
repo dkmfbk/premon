@@ -23,14 +23,11 @@ public final class PMOPB {
 
     // Classes
 
-    /** Class pmopb:AgentiveRole. */
-    public static final URI AGENTIVE_ROLE = createURI("AgentiveRole");
+    /** Class pmopb:SecondaryAgent. */
+    public static final URI SECONDARY_AGENT = createURI("SecondaryAgent");
 
     /** Class pmopb:Aspect. */
     public static final URI ASPECT_C = createURI("Aspect");
-
-    /** Class pmopb:Example. */
-    public static final URI EXAMPLE = createURI("Example");
 
     /** Class pmopb:Form. */
     public static final URI FORM_C = createURI("Form");
@@ -38,29 +35,26 @@ public final class PMOPB {
     /** Class pmopb:Inflection. */
     public static final URI INFLECTION_C = createURI("Inflection");
 
-    /** Class pmopb:Markable. */
-    public static final URI MARKABLE = createURI("Markable");
+    /** Class pmopb:Modifier. */
+    public static final URI MODIFIER = createURI("Modifier");
 
-    /** Class pmopb:ModifierRole. */
-    public static final URI MODIFIER_ROLE = createURI("ModifierRole");
-
-    /** Class pmopb:NumberedRole. */
-    public static final URI NUMBERED_ROLE = createURI("NumberedRole");
+    /** Class pmopb:NumberedArgument. */
+    public static final URI NUMBERED_ARGUMENT = createURI("NumberedArgument");
 
     /** Class pmopb:Person. */
     public static final URI PERSON_C = createURI("Person");
 
-    /** Class pmopb:Predicate. */
-    public static final URI PREDICATE = createURI("Predicate");
+    /** Class pmopb:Roleset. */
+    public static final URI ROLESET = createURI("Roleset");
 
     /** Class pmopb:Preposition. */
     public static final URI PREPOSITION = createURI("Preposition");
 
-    /** Class pmopb:SemanticArgument. */
-    public static final URI SEMANTIC_ARGUMENT = createURI("SemanticArgument");
-
     /** Class pmopb:SemanticRole. */
     public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
+
+    /** Class pmopb:Argument. */
+    public static final URI ARGUMENT = createURI("Argument");
 
     /** Class pmopb:Tag. */
     public static final URI TAG = createURI("Tag");

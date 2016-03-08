@@ -27,25 +27,25 @@ public final class PMO {
     /** Class pmo:Example. */
     public static final URI EXAMPLE_C = createURI("Example");
 
+    /** Class pmo:Mapping. */
+    public static final URI MAPPING = createURI("Mapping");
+
     /** Class pmo:Markable. */
     public static final URI MARKABLE = createURI("Markable");
 
-    /** Class pmo:Predicate. */
-    public static final URI PREDICATE = createURI("Predicate");
+    /** Class pmo:AnnotationSet. */
+    public static final URI ANNOTATION_SET = createURI("AnnotationSet");
 
-    /** Class pmo:SemanticArgument. */
-    public static final URI SEMANTIC_ARGUMENT = createURI("SemanticArgument");
+    /** Class pmo:SemanticClass. */
+    public static final URI SEMANTIC_CLASS = createURI("SemanticClass");
 
     /** Class pmo:SemanticRole. */
     public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
 
-    /** Class pmo:SemanticType. */
-    public static final URI SEMANTIC_TYPE = createURI("SemanticType");
-
     // Object properties
 
-    /** Object property pmo:argumentRel. */
-    public static final URI ARGUMENT_REL = createURI("argumentRel");
+    /** Object property pmo:roleRel. */
+    public static final URI ROLE_REL = createURI("roleRel");
 
     /** Object property pmo:example. */
     public static final URI EXAMPLE_P = createURI("example");
@@ -65,14 +65,14 @@ public final class PMO {
     /** Object property pmo:next. */
     public static final URI NEXT = createURI("next");
 
-    /** Object property pmo:predicateRel. */
-    public static final URI PREDICATE_REL = createURI("predicateRel");
+    /** Object property pmo:classRel. */
+    public static final URI CLASS_REL = createURI("classRel");
 
     /** Object property pmo:role. */
     public static final URI ROLE = createURI("role");
 
-    /** Object property pmo:semArg. */
-    public static final URI SEM_ARG = createURI("semArg");
+    /** Object property pmo:semRole. */
+    public static final URI SEM_ROLE = createURI("semRole");
 
     /** Object property pmo:semType. */
     public static final URI SEM_TYPE = createURI("semType");

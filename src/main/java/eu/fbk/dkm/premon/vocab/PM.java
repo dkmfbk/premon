@@ -27,6 +27,9 @@ public final class PM {
     /** Class pm:entries. */
     public static final URI ENTRIES = createURI("entries");
 
+    /** Class pm:examples. */
+    public static final URI EXAMPLES = createURI("examples");
+
     // Utility methods
 
     private static URI createURI(final String localName) {

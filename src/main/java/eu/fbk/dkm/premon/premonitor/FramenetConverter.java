@@ -274,7 +274,7 @@ public class FramenetConverter extends Converter {
                                 addStatementToSink(argumentURI, DCTERMS.IDENTIFIER, Integer.parseInt(feIdentifier));
                                 addStatementToSink(argumentURI, SKOS.DEFINITION, feDefText);
                                 addStatementToSink(argumentURI, PMO.ABBREVIATION, abbrev, false);
-                                addStatementToSink(frameURI, PMO.SEM_ARG, argumentURI);
+                                addStatementToSink(frameURI, PMO.SEM_ROLE, argumentURI);
 
                                 Match subElems;
 

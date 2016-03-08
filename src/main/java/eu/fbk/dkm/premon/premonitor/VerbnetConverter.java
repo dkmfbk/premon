@@ -1,15 +1,14 @@
 package eu.fbk.dkm.premon.premonitor;
 
 import com.google.common.io.Files;
+import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.*;
 import org.joox.JOOX;
 import org.joox.Match;
-import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
-import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.rio.RDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,21 +43,15 @@ public class VerbnetConverter extends Converter {
     private static final String DEFAULT_FRAME_SUFFIX = "frame";
     private static final String DEFAULT_EXAMPLE_SUFFIX = "ex";
     private static final String DEFAULT_SYNITEM_SUFFIX = "SynItem";
-    private static final String DEFAULT_PRED_SUFFIX = "pred";
-    private static final String DEFAULT_ARG_SUFFIX = "arg";
+//    private static final String DEFAULT_PRED_SUFFIX = "pred";
+//    private static final String DEFAULT_ARG_SUFFIX = "arg";
 
     ArrayList<String> pbLinks = new ArrayList<>();
 
     public VerbnetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
         super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
 
-        String pbLinksString = properties.getProperty("linkpb");
-        if (pbLinksString != null) {
-            for (String link : pbLinksString.split(",")) {
-                pbLinks.add(link.trim().toLowerCase());
-            }
-        }
-
+        addLinks(pbLinks, properties.getProperty("linkpb"));
         LOGGER.info("Links to: {}", pbLinks.toString());
         LOGGER.info("Starting dataset: {}", prefix);
     }
@@ -148,6 +141,9 @@ public class VerbnetConverter extends Converter {
             addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
             addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, rolesetURI);
 
+            TreeSet<URI> mapping = new URITreeSet();
+            mapping.add(conceptualizationURI);
+
             if (groupingString != null && groupingString.trim().length() > 0) {
                 String[] groupings = groupingString.trim().split("\\s+");
                 for (String grouping : groupings) {
@@ -164,8 +160,9 @@ public class VerbnetConverter extends Converter {
                         addStatementToSink(pbConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
                         addStatementToSink(pbConceptualizationURI, PMO.EVOKED_CONCEPT, pbRolesetURI);
 
-                        addStatementToSink(conceptualizationURI, SKOS.CLOSE_MATCH, pbConceptualizationURI);
-                        addStatementToSink(pbConceptualizationURI, SKOS.CLOSE_MATCH, conceptualizationURI);
+//                        addStatementToSink(conceptualizationURI, SKOS.CLOSE_MATCH, pbConceptualizationURI);
+//                        addStatementToSink(pbConceptualizationURI, SKOS.CLOSE_MATCH, conceptualizationURI);
+                        mapping.add(pbConceptualizationURI);
                     }
                 }
             }
@@ -213,17 +210,21 @@ public class VerbnetConverter extends Converter {
                     addStatementToSink(wnConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
                     addStatementToSink(wnConceptualizationURI, PMO.EVOKED_CONCEPT, reference);
                     addStatementToSink(wnConceptualizationURI, RDFS.SEEALSO, wnURI);
-                    addStatementToSink(conceptualizationURI, SKOS.CLOSE_MATCH, wnConceptualizationURI);
-                    addStatementToSink(wnConceptualizationURI, SKOS.CLOSE_MATCH, conceptualizationURI);
+//                    addStatementToSink(conceptualizationURI, SKOS.CLOSE_MATCH, wnConceptualizationURI);
+//                    addStatementToSink(wnConceptualizationURI, SKOS.CLOSE_MATCH, conceptualizationURI);
+                    mapping.add(wnConceptualizationURI);
 
                     // todo: check this
-                    if (questionMark) {
-                        addStatementToSink(conceptualizationURI, SKOS.RELATED_MATCH, wnConceptualizationURI);
-                        addStatementToSink(wnConceptualizationURI, SKOS.RELATED_MATCH, conceptualizationURI);
-                    }
+//                    if (questionMark) {
+//                        addStatementToSink(conceptualizationURI, SKOS.RELATED_MATCH, wnConceptualizationURI);
+//                        addStatementToSink(wnConceptualizationURI, SKOS.RELATED_MATCH, conceptualizationURI);
+//                    }
                 }
 
             }
+
+            // Added only whether there is more than one URI in the Set
+            addMappingToSink(mapping, DEFAULT_PRED_SUFFIX);
         }
 
         // Load thematic roles
@@ -236,7 +237,7 @@ public class VerbnetConverter extends Converter {
             String argName = element.getAttribute("type");
             thisThemRolesElements.put(argName, element);
             URI argumentURI = uriForArgument(id, argName);
-            addStatementToSink(rolesetURI, PMOVN.DEFINES_SEM_ARG, argumentURI);
+            addStatementToSink(rolesetURI, PMOVN.DEFINES_SEM_ROLE, argumentURI);
         }
 
         for (String argName : thisThemRolesElements.keySet()) {
@@ -244,8 +245,8 @@ public class VerbnetConverter extends Converter {
 
             URI argumentURI = uriForArgument(id, argName);
 
-            addStatementToSink(rolesetURI, PMO.SEM_ARG, argumentURI);
-            addStatementToSink(argumentURI, RDF.TYPE, PMOVN.SEMANTIC_ARGUMENT);
+            addStatementToSink(rolesetURI, PMO.SEM_ROLE, argumentURI);
+            addStatementToSink(argumentURI, RDF.TYPE, PMOVN.SEMANTIC_ROLE);
             addStatementToSink(argumentURI, PMO.ROLE, PMOVN.lookup(PMOVN.THEMATIC_ROLE, argName));
             for (String lemma : lemmas.keySet()) {
                 URI lemmaURI = lemmas.get(lemma);
@@ -375,10 +376,13 @@ public class VerbnetConverter extends Converter {
         addStatementToSink(frameURI, PMOVN.FRAME_SECONDARY, description.attr("secondary"));
         addStatementToSink(frameURI, PMOVN.FRAME_XTAG, description.attr("xtag"));
 
+        Map<URI, URI> exampleURIs = new HashMap<>();
+
         Match examples = JOOX.$(frameElement.getElementsByTagName("EXAMPLE"));
         if (examples.size() == 1) {
             URI exampleURI = getExampleURI(frameURI);
-            addExampleToSink(frameURI, exampleURI, examples.get(0));
+            URI uri = addExampleToSink(frameURI, exampleURI, examples.get(0));
+            exampleURIs.put(exampleURI, uri);
         }
         if (examples.size() > 1) {
             int i = 0;
@@ -386,7 +390,8 @@ public class VerbnetConverter extends Converter {
                 i++;
 
                 URI exampleURI = getExampleURI(frameURI, i);
-                addExampleToSink(frameURI, exampleURI, example);
+                URI uri = addExampleToSink(frameURI, exampleURI, example);
+                exampleURIs.put(exampleURI, uri);
             }
         }
 
@@ -395,6 +400,28 @@ public class VerbnetConverter extends Converter {
             Element syntaxElement = syntax.get(0);
             SyntaxArrayLogic syntaxArrayLogic = new SyntaxArrayLogic(syntaxElement, frameURI, classID);
             syntaxArrayLogic.add();
+
+            for (URI exampleURI : exampleURIs.keySet()) {
+                URI annotationSetURI = exampleURIs.get(exampleURI);
+
+                URI predURI = createURI(annotationSetURI.toString() + "-pred");
+                addStatementToSink(predURI, RDF.TYPE, NIF.ANNOTATION_C, EXAMPLE_GRAPH);
+                addStatementToSink(annotationSetURI, PMO.ITEM, predURI, EXAMPLE_GRAPH);
+                addStatementToSink(exampleURI, NIF.ANNOTATION_P, predURI, EXAMPLE_GRAPH);
+                addStatementToSink(predURI, PMO.VALUE_OBJ, frameURI, EXAMPLE_GRAPH);
+
+                for (String role : syntaxArrayLogic.getRoles()) {
+                    String rolePart = formatArg(role);
+                    URI roleURI = createURI(annotationSetURI.toString() + "-" + rolePart);
+                    URI argumentURI = uriForArgument(classID, role);
+
+                    addStatementToSink(roleURI, RDF.TYPE, NIF.ANNOTATION_C, EXAMPLE_GRAPH);
+                    addStatementToSink(annotationSetURI, PMO.ITEM, roleURI, EXAMPLE_GRAPH);
+                    addStatementToSink(exampleURI, NIF.ANNOTATION_P, roleURI, EXAMPLE_GRAPH);
+                    addStatementToSink(roleURI, PMO.VALUE_OBJ, argumentURI, EXAMPLE_GRAPH);
+                }
+
+            }
 
             String pieces = String.join(" ", syntaxArrayLogic.getPieces());
             pieces = pieces.trim();
@@ -546,6 +573,7 @@ public class VerbnetConverter extends Converter {
 
         protected String rolesetID;
         List<String> pieces = new ArrayList<>();
+        List<String> roles = new ArrayList<>();
 
         public List<String> getPieces() {
             return pieces;
@@ -558,6 +586,10 @@ public class VerbnetConverter extends Converter {
         public SyntaxArrayLogic(Element startElement, URI parentURI, String rolesetID) {
             super(startElement, parentURI);
             this.rolesetID = rolesetID;
+        }
+
+        public List<String> getRoles() {
+            return roles;
         }
 
         @Override String getSuffix() {
@@ -580,6 +612,7 @@ public class VerbnetConverter extends Converter {
             switch (tagName) {
             case "NP":
                 pieces.add(value);
+                roles.add(value);
                 addStatementToSink(thisURI, RDF.TYPE, PMOVN.NP_SYN_ITEM);
                 URI argumentURI = uriForArgument(rolesetID, value);
                 addStatementToSink(thisURI, PMO.VALUE_OBJ, argumentURI);
@@ -682,10 +715,17 @@ public class VerbnetConverter extends Converter {
         abstract String getSuffix();
     }
 
-    private void addExampleToSink(Resource frameURI, Resource exampleURI, Element example) {
-        addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI);
-        addStatementToSink(exampleURI, RDF.TYPE, PMOVN.EXAMPLE);
-        addStatementToSink(exampleURI, NIF.IS_STRING, example.getTextContent());
+    private URI addExampleToSink(URI frameURI, URI exampleURI, Element example) {
+
+        URI annotationSetURI = uriForAnnotationSet(exampleURI, null);
+
+        addStatementToSink(annotationSetURI, RDF.TYPE, PMO.ANNOTATION_SET, EXAMPLE_GRAPH);
+
+        addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI, EXAMPLE_GRAPH);
+        addStatementToSink(exampleURI, RDF.TYPE, PMOVN.EXAMPLE, EXAMPLE_GRAPH);
+        addStatementToSink(exampleURI, NIF.IS_STRING, example.getTextContent(), EXAMPLE_GRAPH);
+
+        return annotationSetURI;
     }
 
     private URI getExampleURI(URI frameURI) {

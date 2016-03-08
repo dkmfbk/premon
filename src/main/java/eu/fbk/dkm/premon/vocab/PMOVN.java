@@ -31,8 +31,8 @@ public final class PMOVN {
     /** Class pmovn:VerbClass. */
     public static final URI VERB_CLASS = createURI("VerbClass");
 
-    /** Class pmovn:SemanticArgument. */
-    public static final URI SEMANTIC_ARGUMENT = createURI("SemanticArgument");
+    /** Class pmovn:SemanticRole. */
+    public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
 
     /** Class pmovn:ThematicRole. */
     public static final URI THEMATIC_ROLE = createURI("ThematicRole");
@@ -161,8 +161,8 @@ public final class PMOVN {
     /** Object property pmovn:definesFrame. */
     public static final URI DEFINES_FRAME = createURI("definesFrame");
 
-    /** Object property pmovn:definesSemArg. */
-    public static final URI DEFINES_SEM_ARG = createURI("definesSemArg");
+    /** Object property pmovn:definesSemRole. */
+    public static final URI DEFINES_SEM_ROLE = createURI("definesSemRole");
 
     /** Object property pmovn:restriction. */
     public static final URI RESTRICTION_P = createURI("restriction");

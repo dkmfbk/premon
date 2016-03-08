@@ -2,10 +2,8 @@ package eu.fbk.dkm.premon.premonitor;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import eu.fbk.dkm.premon.vocab.DECOMP;
-import eu.fbk.dkm.premon.vocab.LEXINFO;
-import eu.fbk.dkm.premon.vocab.ONTOLEX;
-import eu.fbk.dkm.premon.vocab.PM;
+import eu.fbk.dkm.premon.vocab.*;
+import eu.fbk.rdfpro.util.Hash;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -31,8 +29,11 @@ public abstract class Converter {
     static final Map<String, URI> LANGUAGE_CODES_TO_URIS;
     static final ValueFactoryImpl factory = ValueFactoryImpl.getInstance();
     public static final String NAMESPACE = "http://premon.fbk.eu/resource/";
+
     static final URI LE_GRAPH = PM.ENTRIES;
-    URI DEFAULT_GRAPH;
+    static final URI EXAMPLE_GRAPH = PM.EXAMPLES;
+    protected URI DEFAULT_GRAPH;
+
     public String prefix;
     boolean extractExamples = false;
     public String separator = "-";
@@ -40,6 +41,9 @@ public abstract class Converter {
     public static final String FORM_PREFIX = "form";
     public static final String CONCEPTUALIZATION_PREFIX = "conceptualization";
     protected Map<String, URI> wnInfo;
+    protected static final String DEFAULT_PRED_SUFFIX = "pred";
+    protected static final String DEFAULT_ARG_SUFFIX = "arg";
+    protected static final String DEFAULT_ANNSET_SUFFIX = "annotationSet";
 
     static final Map<URI, String> wnMap = Maps.newHashMap();
 
@@ -113,6 +117,17 @@ public abstract class Converter {
     }
 
     public abstract void convert() throws IOException, RDFHandlerException;
+
+    protected void addLinks(ArrayList<String> linkList, String linkString) {
+        if (linkString != null) {
+            for (String link : linkString.split(",")) {
+                link = link.trim();
+                if (link.length() > 0) {
+                    linkList.add(link.toLowerCase());
+                }
+            }
+        }
+    }
 
     // Methods to add statement
 
@@ -189,6 +204,11 @@ public abstract class Converter {
     protected void addStatementToSink(Resource subject, URI predicate, int objectValue) {
         Value object = factory.createLiteral(objectValue);
         addStatementToSink(subject, predicate, object);
+    }
+
+    protected void addStatementToSink(Resource subject, URI predicate, int objectValue, URI graph) {
+        Value object = factory.createLiteral(objectValue);
+        addStatementToSink(subject, predicate, object, graph);
     }
 
     protected URI uriForRoleset(String rolesetID) {
@@ -368,7 +388,7 @@ public abstract class Converter {
     }
 
     public String getArgLabel() {
-        return "arg";
+        return DEFAULT_ARG_SUFFIX;
     }
 
     protected String argPart(String rolesetID, String argName) {
@@ -389,6 +409,36 @@ public abstract class Converter {
         return builder.toString();
     }
 
+    protected void addMappingToSink(TreeSet<URI> mapping, String suffix) {
+
+        if (mapping.size() <= 1) {
+            return;
+        }
+
+        URI mappingURI = uriForMapping(mapping, suffix);
+
+        addStatementToSink(mappingURI, RDF.TYPE, PMO.MAPPING);
+        for (URI uri : mapping) {
+            addStatementToSink(mappingURI, PMO.ITEM, uri);
+        }
+    }
+
+    protected URI uriForMapping(TreeSet<URI> mapping, String suffix) {
+        TreeSet<String> strings = new TreeSet<>();
+        for (URI uri : mapping) {
+            strings.add(uri.toString());
+        }
+        String hash = Hash.murmur3(String.join("|", strings)).toString();
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(NAMESPACE);
+        builder.append(suffix);
+        builder.append(separator);
+        builder.append(hash);
+        return createURI(builder.toString());
+    }
+
+
     protected String formatArg(String arg) {
         return arg;
     }
@@ -408,5 +458,23 @@ public abstract class Converter {
         return factory.createURI(namespace, text);
     }
 
+    public static URI uriForMarkable(URI base, int start, int end) {
+        URI markableURI = createURI(String.format(
+                "%s#char=%d,%d", base.toString(), start,
+                end));
+        return markableURI;
+    }
+
     protected abstract URI getPosURI(String textualPOS);
+
+    protected URI uriForAnnotationSet(URI exampleURI, @Nullable String addendum) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(exampleURI.toString());
+        builder.append(separator).append(DEFAULT_ANNSET_SUFFIX);
+        if (addendum != null) {
+            builder.append(separator).append(addendum);
+        }
+        return createURI(builder.toString());
+    }
+
 }

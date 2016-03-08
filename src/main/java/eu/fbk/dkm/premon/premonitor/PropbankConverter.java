@@ -2,13 +2,13 @@ package eu.fbk.dkm.premon.premonitor;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
 import eu.fbk.dkm.premon.premonitor.propbank.Role;
 import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
+import eu.fbk.dkm.premon.premonitor.propbank.Vnrole;
+import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.PMOPB;
-
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFHandler;
@@ -30,9 +30,10 @@ public class PropbankConverter extends BankConverter {
 
         this.nonVerbsToo = properties.getProperty("extractnonverbs", "0").equals("1");
         this.isOntoNotes = properties.getProperty("ontonotes", "0").equals("1");
-        this.noDef = ! properties.getProperty("extractdefinitions", "0").equals("1");
+        this.noDef = !properties.getProperty("extractdefinitions", "0").equals("1");
         this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
         this.defaultType = "v";
+
     }
 
     private boolean usableInflectionPart(String part) {
@@ -118,25 +119,17 @@ public class PropbankConverter extends BankConverter {
                 }
             }
 
-            addStatementToSink(exampleURI, PMOPB.INFLECTION_P, inflectionURI);
-            addStatementToSink(inflectionURI, RDF.TYPE, PMOPB.INFLECTION_C);
+            addStatementToSink(exampleURI, PMOPB.INFLECTION_P, inflectionURI, EXAMPLE_GRAPH);
+            addStatementToSink(inflectionURI, RDF.TYPE, PMOPB.INFLECTION_C, EXAMPLE_GRAPH);
         }
     }
 
     @Override URI getPredicate() {
-        return PMOPB.PREDICATE;
-    }
-    
-    @Override URI getSemanticArgument() {
-        return PMOPB.SEMANTIC_ARGUMENT;
-    }
-    
-    @Override URI getMarkable() {
-        return PMOPB.MARKABLE;
+        return PMOPB.ROLESET;
     }
 
-    @Override URI getExample() {
-        return PMOPB.EXAMPLE;
+    @Override URI getSemanticArgument() {
+        return PMOPB.SEMANTIC_ROLE;
     }
 
     @Override HashMap<String, URI> getFunctionMap() {
@@ -149,33 +142,42 @@ public class PropbankConverter extends BankConverter {
         switch (argType) {
         case NUMERIC:
             addArgumentToSink(argName, PMOPB.mapF.get(argName), argumentURI, lemma, type,
-                    rolesetID, lexicalEntryURI);
-            Type secondType = getType(f);
-            switch (secondType) {
-            case M_FUNCTION:
-                addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(f));
-                break;
-            case ADDITIONAL:
-                addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(f));
-                break;
-            case PREPOSITION:
-//                addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(f));
-                URI lexicalEntry = addLexicalEntry(f, f, null, null, "prep", getLexicon());
-                addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, lexicalEntry);
-                break;
-            }
+                    rolesetID, lexicalEntryURI, role);
+            addStatementForSecondType(argumentURI, f);
             break;
         case M_FUNCTION:
             // Should be already there...
             addArgumentToSink(argName, PMOPB.mapM.get(argName), argumentURI, lemma, type,
-                    rolesetID, lexicalEntryURI);
+                    rolesetID, lexicalEntryURI, role);
             break;
         case AGENT:
             addArgumentToSink("a", PMOPB.ARGA, argumentURI, lemma, type, rolesetID,
-                    lexicalEntryURI);
+                    lexicalEntryURI, role);
             break;
         default:
             //todo: should never happen, but it happens
+        }
+    }
+
+    private void addStatementForSecondType(URI argumentURI, String f) {
+        Type secondType;
+        try {
+            secondType = getType(f);
+        } catch (Exception e) {
+            LOGGER.error("Error: " + e.getMessage());
+            return;
+        }
+        switch (secondType) {
+        case M_FUNCTION:
+            addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(f));
+            break;
+        case ADDITIONAL:
+            addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(f));
+            break;
+        case PREPOSITION:
+            URI lexicalEntry = addLexicalEntry(f, f, null, null, "prep", getLexicon());
+            addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, lexicalEntry);
+            break;
         }
     }
 
@@ -186,56 +188,138 @@ public class PropbankConverter extends BankConverter {
     @Override protected void addRelToSink(Type argType, String argName, URI markableURI) {
         switch (argType) {
         case M_FUNCTION:
-            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName));
+            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
             break;
         default:
             //todo: should never happen (and strangely it really never happens)
         }
     }
 
-    @Override protected void addExampleArgToSink(Type argType, String argName, URI markableURI,
+    @Override protected URI addExampleArgToSink(Type argType, String argName, URI markableURI,
             String f, String rolesetID) {
         URI argumentURI = uriForArgument(rolesetID, argName);
 
         switch (argType) {
         case NUMERIC:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI);
-            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapF.get(argName));
-            Type secondType;
-            try {
-                secondType = getType(f);
-            } catch (Exception e) {
-                LOGGER.error("Error: " + e.getMessage());
-                break;
-            }
-            switch (secondType) {
-            case M_FUNCTION:
-                addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(f));
-                break;
-            case ADDITIONAL:
-                addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(f));
-                break;
-            case PREPOSITION:
-//                addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapP.get(f));
-                URI lexicalEntry = addLexicalEntry(f, f, null, null, "prep", getLexicon());
-                addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, lexicalEntry);
-                break;
-            }
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI, EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapF.get(argName), EXAMPLE_GRAPH);
+            addStatementForSecondType(markableURI, f);
             break;
         case M_FUNCTION:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI);
-            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName));
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI, EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
             break;
         case AGENT:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI);
-            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.ARGA);
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI, EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.ARGA, EXAMPLE_GRAPH);
             break;
         default:
             //todo: should never happen, but it happens
         }
+
+        return argumentURI;
     }
 
     @Override protected void addConceptualizationLink(Roleset roleset, URI conceptualizationURI) {
+        // empty
+    }
 
+    @Override protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
+        super.addExternalLinks(roleset, conceptualizationURI, uriLemma, type);
+
+        List<String> fnPredicates = new ArrayList<>();
+        if (roleset.getFramnet() != null) {
+            String[] tmpFnPreds = roleset.getFramnet().trim().toLowerCase()
+                    .split("\\s+");
+            for (String tmpClass : tmpFnPreds) {
+                tmpClass = tmpClass.trim();
+                if (tmpClass.length() > 1) {
+                    fnPredicates.add(tmpClass);
+                }
+            }
+        }
+
+        TreeSet<URI> cluster = new URITreeSet();
+        cluster.add(conceptualizationURI);
+
+        for (String fnPredicate : fnPredicates) {
+            for (String fnLink : fnLinks) {
+                URI fnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, fnPredicate, fnLink);
+                cluster.add(fnConcURI);
+            }
+        }
+
+        List<String> vnClasses = getVnClasses(roleset.getVncls());
+        for (String vnClass : vnClasses) {
+            for (String vnLink : vnLinks) {
+                URI fnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, vnLink);
+                cluster.add(fnConcURI);
+            }
+        }
+
+        addMappingToSink(cluster, DEFAULT_PRED_SUFFIX);
+    }
+
+    private List<String> getVnClasses(String vnList) {
+
+        List<String> vnClasses = new ArrayList<>();
+
+        if (vnList != null) {
+            vnList = vnList.replaceAll(",", " ");
+            vnList = vnList.trim();
+
+            String[] tmpClasses = vnList.split("\\s+");
+            for (String tmpClass : tmpClasses) {
+                tmpClass = tmpClass.trim();
+                if (tmpClass.length() == 0) {
+                    continue;
+                }
+                if (tmpClass.equals("-")) {
+                    continue;
+                }
+                if (tmpClass.endsWith(".")) {
+                    tmpClass = tmpClass.substring(0, tmpClass.length() - 1);
+                }
+
+                String realVnClass = vnMap.get(tmpClass);
+                if (realVnClass == null && vnMap.size() > 0) {
+                    Matcher matcher = VN_PATTERN.matcher(tmpClass);
+                    if (matcher.find()) {
+                        realVnClass = tmpClass;
+                    } else {
+                        LOGGER.warn("VerbNet class not found: {}", tmpClass);
+                        continue;
+                    }
+                }
+                vnClasses.add(realVnClass);
+            }
+        }
+
+        return vnClasses;
+    }
+
+    protected void addExternalLinks(Role role, URI argConceptualizationURI, String uriLemma, String type) {
+        TreeSet<URI> cluster = new URITreeSet();
+        cluster.add(argConceptualizationURI);
+
+        List<Vnrole> vnroleList = role.getVnrole();
+        for (Vnrole vnrole : vnroleList) {
+            List<String> vnClasses = getVnClasses(vnrole.getVncls());
+
+            // todo: thetha is unique (information got by grepping the dataset)
+            String theta = vnrole.getVntheta();
+            theta = theta.trim();
+
+            for (String vnClass : vnClasses) {
+                for (String vnLink : vnLinks) {
+//                    URI fnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, vnLink);
+                    URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, theta, vnLink);
+                    cluster.add(vnConcURI);
+                }
+            }
+
+        }
+
+        addMappingToSink(cluster, DEFAULT_PRED_SUFFIX);
     }
 }
