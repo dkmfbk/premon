@@ -103,13 +103,13 @@ public final class PMONB {
     public static final URI ARGM_TMP = createURI("argm-tmp");
 
     /** Individual pmonb:prd (a pmonb:Tag). */
-    public static final URI TAG_PRD = createURI("prd");
+    public static final URI TAG_PRD = createURI("tag-prd");
 
     /** Individual pmonb:ref (a pmonb:Tag). */
-    public static final URI TAG_REF = createURI("ref");
+    public static final URI TAG_REF = createURI("tag-ref");
 
     /** Individual pmonb:support (a pmonb:Tag). */
-    public static final URI TAG_SUPPORT = createURI("support");
+    public static final URI TAG_SUPPORT = createURI("tag-support");
 
     // Map
 
