@@ -711,12 +711,12 @@ public class FramenetConverter extends Converter {
 
                                                     URI markableURI = uriForMarkable(exampleURI, start, end);
 
-                                                    addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS);
-                                                    addStatementToSink(markableURI, NIF.ANCHOR_OF, anchor);
-                                                    addStatementToSink(markableURI, NIF.ANNOTATION_P, aURI);
-                                                    addStatementToSink(markableURI, NIF.BEGIN_INDEX, start);
-                                                    addStatementToSink(markableURI, NIF.END_INDEX, end);
-                                                    addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI);
+                                                    addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS, EXAMPLE_GRAPH);
+                                                    addStatementToSink(markableURI, NIF.ANCHOR_OF, anchor, EXAMPLE_GRAPH);
+                                                    addStatementToSink(markableURI, NIF.ANNOTATION_P, aURI, EXAMPLE_GRAPH);
+                                                    addStatementToSink(markableURI, NIF.BEGIN_INDEX, start, EXAMPLE_GRAPH);
+                                                    addStatementToSink(markableURI, NIF.END_INDEX, end, EXAMPLE_GRAPH);
+                                                    addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI, EXAMPLE_GRAPH);
                                                 }
                                             }
                                         }
