@@ -633,14 +633,17 @@ public class FramenetConverter extends Converter {
                                             addStatementToSink(aURI, PMO.VALUE_OBJ, lus.get(luID), EXAMPLE_GRAPH);
                                             addStatementToSink(exampleURI, NIF.ANNOTATION_P, aURI, EXAMPLE_GRAPH);
 
-                                            addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS,
+                                                    EXAMPLE_GRAPH);
                                             addStatementToSink(markableURI, NIF.ANCHOR_OF, anchor, EXAMPLE_GRAPH);
 //                                            addStatementToSink(markableURI, NIF.ANNOTATION_P, frameURI);
 //                                            addStatementToSink(markableURI, NIF.ANNOTATION_P, luURI);
                                             addStatementToSink(markableURI, NIF.ANNOTATION_P, aURI, EXAMPLE_GRAPH);
-                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX, targetStart, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX, targetStart,
+                                                    EXAMPLE_GRAPH);
                                             addStatementToSink(markableURI, NIF.END_INDEX, targetEnd, EXAMPLE_GRAPH);
-                                            addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI,
+                                                    EXAMPLE_GRAPH);
                                         }
                                     }
 
@@ -656,67 +659,78 @@ public class FramenetConverter extends Converter {
 
                                     // Loop for FE
                                     int i = 0;
-                                    for (Element layer : layers) {
-                                        String layerName = layer.getAttribute("name");
+                                    if (hasTarget) {
+                                        for (Element layer : layers) {
+                                            String layerName = layer.getAttribute("name");
 
-                                        if (layerName == null) {
-                                            continue;
-                                        }
+                                            if (layerName == null) {
+                                                continue;
+                                            }
 
-                                        if (layerName.equals("FE")) {
-                                            Match labels = JOOX.$(layer.getElementsByTagName("label"));
-                                            for (Element label : labels) {
-                                                String roleName = label.getAttribute("name");
-                                                URI argumentURI = uriForArgument(frameName.toLowerCase(),
-                                                        roleName.toLowerCase());
+                                            if (layerName.equals("FE")) {
+                                                Match labels = JOOX.$(layer.getElementsByTagName("label"));
+                                                for (Element label : labels) {
+                                                    String roleName = label.getAttribute("name");
+                                                    URI argumentURI = uriForArgument(frameName.toLowerCase(),
+                                                            roleName.toLowerCase());
 
-                                                String anchor = null;
+                                                    String anchor = null;
 
-                                                Integer start = null;
-                                                Integer end = null;
-                                                try {
-                                                    start = Integer.parseInt(label.getAttribute("start"));
-                                                    end = Integer.parseInt(label.getAttribute("end"));
+                                                    Integer start = null;
+                                                    Integer end = null;
+                                                    try {
+                                                        start = Integer.parseInt(label.getAttribute("start"));
+                                                        end = Integer.parseInt(label.getAttribute("end"));
 
-                                                    if (start + end > 0) {
-                                                        anchor = text.substring(start, end);
+                                                        if (start + end > 0) {
+                                                            anchor = text.substring(start, end);
+                                                        }
+                                                    } catch (Exception e) {
+                                                        // ignored
                                                     }
-                                                } catch (Exception e) {
-                                                    // ignored
-                                                }
 
-                                                if (start != null && !starts.contains(start)) {
-                                                    LOGGER.debug("Error in start index, skipping ({} - {})", luID,
-                                                            text);
-                                                    keep = false;
-                                                    continue;
-                                                }
-                                                if (end != null && !ends.contains(end)) {
-                                                    LOGGER.debug("Error in end index, skipping ({} - {})", luID, text);
-                                                    keep = false;
-                                                    continue;
-                                                }
+                                                    if (start != null && !starts.contains(start)) {
+                                                        LOGGER.debug("Error in start index, skipping ({} - {})", luID,
+                                                                text);
+                                                        keep = false;
+                                                        continue;
+                                                    }
+                                                    if (end != null && !ends.contains(end)) {
+                                                        LOGGER.debug("Error in end index, skipping ({} - {})", luID,
+                                                                text);
+                                                        keep = false;
+                                                        continue;
+                                                    }
 
-                                                i++;
+                                                    i++;
 
-                                                URI aURI = createURI(asURI + "_arg" + i);
-                                                addStatementToSink(asURI, PMO.ITEM, aURI, EXAMPLE_GRAPH);
-                                                addStatementToSink(aURI, RDF.TYPE, NIF.ANNOTATION_C, EXAMPLE_GRAPH);
-                                                addStatementToSink(aURI, PMO.VALUE_OBJ, argumentURI, EXAMPLE_GRAPH);
-                                                addStatementToSink(exampleURI, NIF.ANNOTATION_P, aURI, EXAMPLE_GRAPH);
+                                                    URI aURI = createURI(asURI + "_arg" + i);
+                                                    addStatementToSink(asURI, PMO.ITEM, aURI, EXAMPLE_GRAPH);
+                                                    addStatementToSink(aURI, RDF.TYPE, NIF.ANNOTATION_C, EXAMPLE_GRAPH);
+                                                    addStatementToSink(aURI, PMO.VALUE_OBJ, argumentURI, EXAMPLE_GRAPH);
+                                                    addStatementToSink(exampleURI, NIF.ANNOTATION_P, aURI,
+                                                            EXAMPLE_GRAPH);
 
-                                                if (anchor == null) {
-                                                    addStatementToSink(aURI, RDF.TYPE, PMO.IMPLICIT_ANNOTATION, EXAMPLE_GRAPH);
-                                                } else {
+                                                    if (anchor == null) {
+                                                        addStatementToSink(aURI, RDF.TYPE, PMO.IMPLICIT_ANNOTATION,
+                                                                EXAMPLE_GRAPH);
+                                                    } else {
 
-                                                    URI markableURI = uriForMarkable(exampleURI, start, end);
+                                                        URI markableURI = uriForMarkable(exampleURI, start, end);
 
-                                                    addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS, EXAMPLE_GRAPH);
-                                                    addStatementToSink(markableURI, NIF.ANCHOR_OF, anchor, EXAMPLE_GRAPH);
-                                                    addStatementToSink(markableURI, NIF.ANNOTATION_P, aURI, EXAMPLE_GRAPH);
-                                                    addStatementToSink(markableURI, NIF.BEGIN_INDEX, start, EXAMPLE_GRAPH);
-                                                    addStatementToSink(markableURI, NIF.END_INDEX, end, EXAMPLE_GRAPH);
-                                                    addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI, EXAMPLE_GRAPH);
+                                                        addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS,
+                                                                EXAMPLE_GRAPH);
+                                                        addStatementToSink(markableURI, NIF.ANCHOR_OF, anchor,
+                                                                EXAMPLE_GRAPH);
+                                                        addStatementToSink(markableURI, NIF.ANNOTATION_P, aURI,
+                                                                EXAMPLE_GRAPH);
+                                                        addStatementToSink(markableURI, NIF.BEGIN_INDEX, start,
+                                                                EXAMPLE_GRAPH);
+                                                        addStatementToSink(markableURI, NIF.END_INDEX, end,
+                                                                EXAMPLE_GRAPH);
+                                                        addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT,
+                                                                exampleURI, EXAMPLE_GRAPH);
+                                                    }
                                                 }
                                             }
                                         }
