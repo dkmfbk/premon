@@ -43,12 +43,12 @@ public class NombankConverter extends BankConverter {
     }
 
     @Override protected URI addExampleArgToSink(Type argType, String argName, URI markableURI,
-            String f, String rolesetID) {
+            String f, String rolesetID, URI asURI) {
         URI argumentURI = uriForArgument(rolesetID, argName);
 
         switch (argType) {
         case NUMERIC:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI, EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
             Type fType = getType(f);
             switch (fType) {
             case M_FUNCTION:
@@ -57,21 +57,21 @@ public class NombankConverter extends BankConverter {
                 }
 
                 if (f.equals("prd")) {
-                    addStatementToSink(markableURI, PMONB.TAG_P, PMONB.mapO.get(f), EXAMPLE_GRAPH);
+                    addStatementToSink(asURI, PMONB.TAG_P, PMONB.mapO.get(f), EXAMPLE_GRAPH);
                 } else {
                     throw new IllegalArgumentException(String.format("String %s not found", f));
                 }
                 break;
             case ADDITIONAL:
-                addStatementToSink(markableURI, PMONB.TAG_P, PMONB.mapO.get(f), EXAMPLE_GRAPH);
+                addStatementToSink(asURI, PMONB.TAG_P, PMONB.mapO.get(f), EXAMPLE_GRAPH);
                 break;
             }
             break;
         case M_FUNCTION:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI, EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
             break;
         case ADDITIONAL:
-            addStatementToSink(markableURI, PMONB.TAG_P, PMONB.mapO.get(argName), EXAMPLE_GRAPH);
+            addStatementToSink(asURI, PMONB.TAG_P, PMONB.mapO.get(argName), EXAMPLE_GRAPH);
             break;
         default:
             //todo: should never happen, but it happens

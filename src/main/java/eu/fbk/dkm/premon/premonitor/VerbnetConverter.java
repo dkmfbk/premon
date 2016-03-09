@@ -408,7 +408,7 @@ public class VerbnetConverter extends Converter {
                 addStatementToSink(predURI, RDF.TYPE, NIF.ANNOTATION_C, EXAMPLE_GRAPH);
                 addStatementToSink(annotationSetURI, PMO.ITEM, predURI, EXAMPLE_GRAPH);
                 addStatementToSink(exampleURI, NIF.ANNOTATION_P, predURI, EXAMPLE_GRAPH);
-                addStatementToSink(predURI, PMO.VALUE_OBJ, frameURI, EXAMPLE_GRAPH);
+                addStatementToSink(predURI, PMO.VALUE_OBJ, classURI, EXAMPLE_GRAPH);
 
                 for (String role : syntaxArrayLogic.getRoles()) {
                     String rolePart = formatArg(role);

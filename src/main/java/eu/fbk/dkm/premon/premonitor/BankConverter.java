@@ -465,7 +465,7 @@ public abstract class BankConverter extends Converter {
                                             }
 
                                             URI argumentURI = addExampleArgToSink(argType, argName, markableURI,
-                                                    nf.getF(), rolesetID);
+                                                    nf.getF(), rolesetID, annotationURI);
                                             addStatementToSink(annotationURI, PMO.VALUE_OBJ, argumentURI,
                                                     EXAMPLE_GRAPH);
                                         }
@@ -551,7 +551,7 @@ public abstract class BankConverter extends Converter {
     abstract Type getType(String code);
 
     protected abstract URI addExampleArgToSink(Type argType, String argName, URI markableURI,
-            String f, String rolesetID);
+            String f, String rolesetID, URI asURI);
 
     protected abstract void addRelToSink(Type argType, String argName, URI markableURI);
 

@@ -24,6 +24,9 @@ public final class PMO {
     /** Class pmo:Conceptualization. */
     public static final URI CONCEPTUALIZATION = createURI("Conceptualization");
 
+    /** Class pmo:ImplicitAnnotation. */
+    public static final URI IMPLICIT_ANNOTATION = createURI("ImplicitAnnotation");
+
     /** Class pmo:Example. */
     public static final URI EXAMPLE_C = createURI("Example");
 

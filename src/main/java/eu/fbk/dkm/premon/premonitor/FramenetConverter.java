@@ -538,6 +538,7 @@ public class FramenetConverter extends Converter {
                                     // Load example
 
                                     boolean hasTarget = false;
+                                    URI asURI = null;
                                     totalCount++;
 
                                     String id = example.getAttribute("ID");
@@ -619,18 +620,27 @@ public class FramenetConverter extends Converter {
                                             }
 
                                             hasTarget = true;
+                                            asURI = createURI(exampleURI + "_annSet_" + targetStart);
+                                            addStatementToSink(asURI, RDF.TYPE, PMO.ANNOTATION_SET, EXAMPLE_GRAPH);
 
-                                            URI labelURI = createURI(
-                                                    exampleURI + String.format("#char=%d,%d", targetStart, targetEnd));
+                                            URI markableURI = uriForMarkable(exampleURI, targetStart, targetEnd);
                                             String anchor = text.substring(targetStart, targetEnd);
 
-                                            addStatementToSink(labelURI, RDF.TYPE, PMOFN.MARKABLE_CLASS);
-                                            addStatementToSink(labelURI, NIF.ANCHOR_OF, anchor);
-                                            addStatementToSink(labelURI, NIF.ANNOTATION_P, frameURI);
-                                            addStatementToSink(labelURI, NIF.ANNOTATION_P, luURI);
-                                            addStatementToSink(labelURI, NIF.BEGIN_INDEX, targetStart);
-                                            addStatementToSink(labelURI, NIF.END_INDEX, targetEnd);
-                                            addStatementToSink(labelURI, NIF.REFERENCE_CONTEXT, exampleURI);
+                                            URI aURI = createURI(asURI + "_pred");
+                                            addStatementToSink(aURI, RDF.TYPE, NIF.ANNOTATION_C, EXAMPLE_GRAPH);
+                                            addStatementToSink(asURI, PMO.ITEM, aURI, EXAMPLE_GRAPH);
+                                            addStatementToSink(aURI, PMO.VALUE_OBJ, frameURI, EXAMPLE_GRAPH);
+                                            addStatementToSink(aURI, PMO.VALUE_OBJ, lus.get(luID), EXAMPLE_GRAPH);
+                                            addStatementToSink(exampleURI, NIF.ANNOTATION_P, aURI, EXAMPLE_GRAPH);
+
+                                            addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.ANCHOR_OF, anchor, EXAMPLE_GRAPH);
+//                                            addStatementToSink(markableURI, NIF.ANNOTATION_P, frameURI);
+//                                            addStatementToSink(markableURI, NIF.ANNOTATION_P, luURI);
+                                            addStatementToSink(markableURI, NIF.ANNOTATION_P, aURI, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.BEGIN_INDEX, targetStart, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.END_INDEX, targetEnd, EXAMPLE_GRAPH);
+                                            addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI, EXAMPLE_GRAPH);
                                         }
                                     }
 
@@ -641,10 +651,11 @@ public class FramenetConverter extends Converter {
 
                                     addStatementToSink(exampleURI, RDF.TYPE, PMOFN.EXAMPLE_CLASS);
                                     addStatementToSink(exampleURI, NIF.IS_STRING, text);
-                                    addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI);
-                                    addStatementToSink(luURI, PMO.EXAMPLE_P, exampleURI);
+//                                    addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI);
+//                                    addStatementToSink(luURI, PMO.EXAMPLE_P, exampleURI);
 
                                     // Loop for FE
+                                    int i = 0;
                                     for (Element layer : layers) {
                                         String layerName = layer.getAttribute("name");
 
@@ -656,7 +667,7 @@ public class FramenetConverter extends Converter {
                                             Match labels = JOOX.$(layer.getElementsByTagName("label"));
                                             for (Element label : labels) {
                                                 String roleName = label.getAttribute("name");
-                                                URI roleURI = uriForArgument(frameName.toLowerCase(),
+                                                URI argumentURI = uriForArgument(frameName.toLowerCase(),
                                                         roleName.toLowerCase());
 
                                                 String anchor = null;
@@ -686,21 +697,26 @@ public class FramenetConverter extends Converter {
                                                     continue;
                                                 }
 
+                                                i++;
+
+                                                URI aURI = createURI(asURI + "_arg" + i);
+                                                addStatementToSink(asURI, PMO.ITEM, aURI, EXAMPLE_GRAPH);
+                                                addStatementToSink(aURI, RDF.TYPE, NIF.ANNOTATION_C, EXAMPLE_GRAPH);
+                                                addStatementToSink(aURI, PMO.VALUE_OBJ, argumentURI, EXAMPLE_GRAPH);
+                                                addStatementToSink(exampleURI, NIF.ANNOTATION_P, aURI, EXAMPLE_GRAPH);
+
                                                 if (anchor == null) {
-                                                    addStatementToSink(roleURI, PMO.IMPLICIT_IN, exampleURI);
+                                                    addStatementToSink(aURI, RDF.TYPE, PMO.IMPLICIT_ANNOTATION, EXAMPLE_GRAPH);
                                                 } else {
-                                                    addStatementToSink(roleURI, PMO.EXAMPLE_P, exampleURI);
 
-                                                    URI labelURI = createURI(
-                                                            exampleURI + String
-                                                                    .format("#char=%d,%d", start, end));
+                                                    URI markableURI = uriForMarkable(exampleURI, start, end);
 
-                                                    addStatementToSink(labelURI, RDF.TYPE, PMOFN.MARKABLE_CLASS);
-                                                    addStatementToSink(labelURI, NIF.ANCHOR_OF, anchor);
-                                                    addStatementToSink(labelURI, NIF.ANNOTATION_P, roleURI);
-                                                    addStatementToSink(labelURI, NIF.BEGIN_INDEX, start);
-                                                    addStatementToSink(labelURI, NIF.END_INDEX, end);
-                                                    addStatementToSink(labelURI, NIF.REFERENCE_CONTEXT, exampleURI);
+                                                    addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS);
+                                                    addStatementToSink(markableURI, NIF.ANCHOR_OF, anchor);
+                                                    addStatementToSink(markableURI, NIF.ANNOTATION_P, aURI);
+                                                    addStatementToSink(markableURI, NIF.BEGIN_INDEX, start);
+                                                    addStatementToSink(markableURI, NIF.END_INDEX, end);
+                                                    addStatementToSink(markableURI, NIF.REFERENCE_CONTEXT, exampleURI);
                                                 }
                                             }
                                         }
@@ -839,7 +855,7 @@ public class FramenetConverter extends Converter {
         }
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
-        builder.append("lexicalunit");
+        builder.append(CONCEPTUALIZATION_PREFIX);
         builder.append(separator);
         builder.append(pos);
         builder.append(separator);

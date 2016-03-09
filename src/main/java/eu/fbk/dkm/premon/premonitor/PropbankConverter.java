@@ -196,22 +196,22 @@ public class PropbankConverter extends BankConverter {
     }
 
     @Override protected URI addExampleArgToSink(Type argType, String argName, URI markableURI,
-            String f, String rolesetID) {
+            String f, String rolesetID, URI asURI) {
         URI argumentURI = uriForArgument(rolesetID, argName);
 
         switch (argType) {
         case NUMERIC:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI, EXAMPLE_GRAPH);
-            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapF.get(argName), EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
+//            addStatementToSink(asURI, PMOPB.FUNCTION_TAG, PMOPB.mapF.get(argName), EXAMPLE_GRAPH);
             addStatementForSecondType(markableURI, f);
             break;
         case M_FUNCTION:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI, EXAMPLE_GRAPH);
-            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
+            addStatementToSink(asURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
             break;
         case AGENT:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI, EXAMPLE_GRAPH);
-            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.ARGA, EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
+            addStatementToSink(asURI, PMOPB.FUNCTION_TAG, PMOPB.ARGA, EXAMPLE_GRAPH);
             break;
         default:
             //todo: should never happen, but it happens
