@@ -94,22 +94,6 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 
 
-###  http://premon.fbk.eu/ontology/pb#functionTag
-
-:functionTag rdf:type owl:FunctionalProperty ,
-                      owl:ObjectProperty ;
-             
-             rdfs:label "function tag" ;
-             
-             rdfs:range [ rdf:type owl:Class ;
-                          owl:unionOf ( :Modifier
-                                        :Tag
-                                        ontolex:LexicalEntry
-                                      )
-                        ] .
-
-
-
 ###  http://premon.fbk.eu/ontology/pb#inflection
 
 :inflection rdf:type owl:FunctionalProperty ,
@@ -133,6 +117,22 @@ Subclasses of Example and Markable are introduced to model the specificities of 
         rdfs:domain :Inflection ;
         
         rdfs:range :Person .
+
+
+
+###  http://premon.fbk.eu/ontology/pb#tag
+
+:tag rdf:type owl:FunctionalProperty ,
+              owl:ObjectProperty ;
+     
+     rdfs:label "function tag" ;
+     
+     rdfs:range [ rdf:type owl:Class ;
+                  owl:unionOf ( :Modifier
+                                :Tag
+                                ontolex:LexicalEntry
+                              )
+                ] .
 
 
 
