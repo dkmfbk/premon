@@ -652,8 +652,8 @@ public class FramenetConverter extends Converter {
                                         keep = false;
                                     }
 
-                                    addStatementToSink(exampleURI, RDF.TYPE, PMOFN.EXAMPLE_CLASS);
-                                    addStatementToSink(exampleURI, NIF.IS_STRING, text);
+                                    addStatementToSink(exampleURI, RDF.TYPE, PMOFN.EXAMPLE_CLASS, EXAMPLE_GRAPH);
+                                    addStatementToSink(exampleURI, NIF.IS_STRING, text, EXAMPLE_GRAPH);
 //                                    addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI);
 //                                    addStatementToSink(luURI, PMO.EXAMPLE_P, exampleURI);
 
