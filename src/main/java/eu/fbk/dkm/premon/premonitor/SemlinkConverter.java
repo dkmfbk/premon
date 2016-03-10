@@ -35,6 +35,7 @@ public class SemlinkConverter extends Converter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SemlinkConverter.class);
     private static final Pattern VN_PATTERN = Pattern.compile("([^-]+)-(.*)");
+    private static final Pattern VN_SC_PATTERN = Pattern.compile("(.*)-[0-9]+");
 
 //    private static final Pattern WN_PATTERN = Pattern.compile("#([^#]+)$");
 //    private static final String LINK_PATTERN = "http://verbs.colorado.edu/verb-index/vn/%s.php";
@@ -171,6 +172,7 @@ public class SemlinkConverter extends Converter {
 
             LOGGER.debug("Processing {} ...", vnFnMappings);
             HashMultimap<String, String> vnfnMap = HashMultimap.create();
+            HashMultimap<String, String> vnfnLemmaMap = HashMultimap.create();
             document = dbf.newDocumentBuilder().parse(vnFnMappings);
             final Match vnClasses = JOOX.$(document.getElementsByTagName("vncls"));
 
@@ -180,8 +182,11 @@ public class SemlinkConverter extends Converter {
                 String uriLemma = BankConverter.getLemmaFromPredicateName(lemma);
 
                 String frame = vnClass.getAttribute("fnframe");
+                frame = frame.toLowerCase();
 
                 vnfnMap.put(vnCls, frame);
+                vnfnLemmaMap.put(vnCls + "-" + frame, uriLemma);
+                LOGGER.trace("{} -> {}", vnCls, frame);
 
                 String vnID = vnMap.get(vnCls);
                 if (vnID == null) {
@@ -190,12 +195,20 @@ public class SemlinkConverter extends Converter {
                 }
                 vnID = vnID + "-" + vnCls;
 
-                frame = frame.toLowerCase();
+                Matcher matcher = VN_SC_PATTERN.matcher(vnCls);
+                while (matcher.find()) {
+                    String newVnCls = matcher.group(1);
+                    vnfnMap.put(newVnCls, frame);
+                    vnfnLemmaMap.put(newVnCls + "-" + frame, uriLemma);
+                    LOGGER.trace("{} -> {}", newVnCls, frame);
+                    matcher = VN_SC_PATTERN.matcher(newVnCls);
+                }
 
                 addMapping(fnLinks, vnLinks, uriLemma, frame, vnID);
             }
 
             LOGGER.debug("Processing {} ...", vnFnMappingsRole);
+            int notFound = 0;
             document = dbf.newDocumentBuilder().parse(vnFnMappingsRole);
             final Match vnClasses2 = JOOX.$(document.getElementsByTagName("vncls"));
 
@@ -213,40 +226,51 @@ public class SemlinkConverter extends Converter {
                 vnID = vnID + "-" + vnCls;
 
                 // Check
-//                Set<String> frames = vnfnMap.get(vnCls);
-//                if (!frames.contains(frame)) {
-//                    LOGGER.error("Mapping not found: {} -> {}", vnCls, frame);
-//                    continue;
-//                }
+                Set<String> frames = vnfnMap.get(vnCls);
+                if (!frames.contains(frame)) {
+                    LOGGER.error("Mapping not found: {} -> {}", vnCls, frame);
+                    notFound++;
+                    continue;
+                }
+
+                Set<String> lemmas = vnfnLemmaMap.get(vnCls + "-" + frame);
+                if (lemmas.size() == 0) {
+                    LOGGER.error("No lemmas for {}", vnCls + "-" + frame);
+                }
 
                 final Match roles = JOOX.$(vnClass.getElementsByTagName("role"));
                 for (Element role : roles) {
-                    String vnrole = role.getAttribute("vnrole");
+                    String vnTheta = role.getAttribute("vnrole");
                     String fnrole = role.getAttribute("fnrole");
 
-                    vnrole = vnrole.toLowerCase();
+                    vnTheta = vnTheta.toLowerCase();
                     fnrole = fnrole.toLowerCase();
 
                     for (String fnLink : fnLinks) {
                         for (String vnLink : vnLinks) {
-                            URI vnURI = uriForArgument(vnID, vnrole, vnLink);
 
-                            // todo: Really bad!
-                            argumentSeparator = "@";
-                            URI fnURI = uriForArgument(frame, fnrole, fnLink);
-                            argumentSeparator = "-";
+                            for (String lemma : lemmas) {
+                                // todo: Really bad!
+                                argumentSeparator = "@";
+                                URI fnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
+                                        frame, fnrole, fnLink);
+                                argumentSeparator = "-";
 
-                            TreeSet<URI> cluster = new URITreeSet();
-                            cluster.add(vnURI);
-                            cluster.add(fnURI);
-                            addMappingToSink(cluster, DEFAULT_ARG_SUFFIX);
+                                URI vnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
+                                        vnID, vnTheta, vnLink);
+
+                                TreeSet<URI> cluster = new URITreeSet();
+                                cluster.add(fnArgConceptualizationURI);
+                                cluster.add(vnArgConceptualizationURI);
+                                addMappingToSink(cluster, DEFAULT_ARG_SUFFIX);
+
+                            }
                         }
-
                     }
-
                 }
-
             }
+
+            LOGGER.info("Roles not mapped: {}", notFound);
 
         } catch (final Exception ex) {
             throw new IOException(ex);
