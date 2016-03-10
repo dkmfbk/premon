@@ -5,6 +5,7 @@ import eu.fbk.dkm.premon.premonitor.propbank.*;
 import eu.fbk.dkm.premon.util.NF;
 import eu.fbk.dkm.premon.util.PropBankResource;
 import eu.fbk.dkm.premon.vocab.*;
+import eu.fbk.dkm.utils.FrequencyHashSet;
 import org.joox.JOOX;
 import org.joox.Match;
 import org.openrdf.model.URI;
@@ -65,7 +66,6 @@ public abstract class BankConverter extends Converter {
         bugMap.put("@", "2"); // overburden-v.xml
         bugMap.put("av", "adv"); // turn-v.xml (turn.15)
         bugMap.put("ds", "dis"); // assume-v.xml
-        //		bugMap.put("a", "agent"); // evolve-v.xml
         bugMap.put("pred", "prd"); // flatten-v.xml
         bugMap.put("o", "0"); // be.xml (be.04)
         bugMap.put("emitter of hoot", "0"); // hoot.xml
@@ -161,6 +161,9 @@ public abstract class BankConverter extends Converter {
         addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
 
         //todo: the first tour is not necessary any more
+
+        int noArgCount = 0;
+        int noStringFound = 0;
 
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Frameset.class);
@@ -275,6 +278,7 @@ public abstract class BankConverter extends Converter {
 
                                                 if (argName == null) {
                                                     //todo: this should never happen; however it happens
+                                                    noArgCount++;
                                                     continue;
                                                 }
 
@@ -380,6 +384,7 @@ public abstract class BankConverter extends Converter {
                                             if (start == -1) {
                                                 //todo: fix these
                                                 // LOGGER.error("Rel string not found in {}: {}", rolesetID, value);
+                                                noStringFound++;
                                                 continue exampleLoop;
                                             }
                                             int end = start + value.length();
@@ -476,6 +481,9 @@ public abstract class BankConverter extends Converter {
                     }
                 }
             }
+
+            LOGGER.info("No arg found: {}", noArgCount);
+            LOGGER.info("No string found: {}", noStringFound);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -491,7 +499,7 @@ public abstract class BankConverter extends Converter {
 
     protected abstract URI getExternalLink(String lemma, String type);
 
-    protected String getLemmaFromPredicateName(String lemmaFromPredicate) {
+    public static String getLemmaFromPredicateName(String lemmaFromPredicate) {
         String lemma = lemmaFromPredicate.replace('_', '+')
                 .replace(' ', '+');
         if (lemmaToTransform.keySet().contains(lemma)) {

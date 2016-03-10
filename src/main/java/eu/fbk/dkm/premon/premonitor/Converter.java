@@ -380,11 +380,15 @@ public abstract class Converter {
         return createURI(builder.toString());
     }
 
-    protected URI uriForArgument(String rolesetID, String argName) {
+    protected URI uriForArgument(String rolesetID, String argName, @Nullable String prefix) {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
-        builder.append(argPart(rolesetID, argName));
+        builder.append(argPart(rolesetID, argName, prefix));
         return createURI(builder.toString());
+    }
+
+    protected URI uriForArgument(String rolesetID, String argName) {
+        return uriForArgument(rolesetID, argName, null);
     }
 
     public String getArgLabel() {
