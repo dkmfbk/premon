@@ -421,7 +421,15 @@ public abstract class Converter {
 
         URI mappingURI = uriForMapping(mapping, suffix);
 
-        addStatementToSink(mappingURI, RDF.TYPE, PMO.MAPPING);
+        if (suffix.equals(DEFAULT_ARG_SUFFIX)) {
+            addStatementToSink(mappingURI, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING);
+        }
+        else if (suffix.equals(DEFAULT_PRED_SUFFIX)) {
+            addStatementToSink(mappingURI, RDF.TYPE, PMO.SEMANTIC_CLASS_MAPPING);
+        }
+        else {
+            LOGGER.error("Suffix {} is not valid", suffix);
+        }
         for (URI uri : mapping) {
             addStatementToSink(mappingURI, PMO.ITEM, uri);
         }

@@ -118,11 +118,6 @@ public abstract class BankConverter extends Converter {
                         }
                     }
                 }
-
-                for (String key : vnMap.keySet()) {
-                    System.out.println(key + " -> " + vnMap.get(key));
-                }
-
             }
         }
 

@@ -33,6 +33,12 @@ public final class PMO {
     /** Class pmo:Mapping. */
     public static final URI MAPPING = createURI("Mapping");
 
+    /** Class pmo:SemanticClassMapping. */
+    public static final URI SEMANTIC_CLASS_MAPPING = createURI("SemanticClassMapping");
+
+    /** Class pmo:SemanticRoleMapping. */
+    public static final URI SEMANTIC_ROLE_MAPPING = createURI("SemanticRoleMapping");
+
     /** Class pmo:Markable. */
     public static final URI MARKABLE = createURI("Markable");
 
