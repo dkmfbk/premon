@@ -442,7 +442,6 @@ public abstract class Converter {
         return createURI(builder.toString());
     }
 
-
     protected String formatArg(String arg) {
         return arg;
     }
@@ -463,9 +462,7 @@ public abstract class Converter {
     }
 
     public static URI uriForMarkable(URI base, int start, int end) {
-        URI markableURI = createURI(String.format(
-                "%s#char=%d,%d", base.toString(), start,
-                end));
+        URI markableURI = createURI(String.format("%s?char=%d,%d", base.toString(), start, end));
         return markableURI;
     }
 

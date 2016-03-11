@@ -49,7 +49,7 @@ public abstract class BankConverter extends Converter {
     protected ArrayList<String> fnLinks = new ArrayList<>();
     protected ArrayList<String> vnLinks = new ArrayList<>();
     protected Map<String, String> vnMap = new HashMap<>();
-    protected static final Pattern VN_PATTERN = Pattern.compile("(.*[^0-9]?)-([0-9\\.-]*)");
+    protected static final Pattern VN_PATTERN = Pattern.compile("([^-]*)-([0-9\\.-]*)");
 
     static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
 
@@ -117,6 +117,10 @@ public abstract class BankConverter extends Converter {
                             ex.printStackTrace();
                         }
                     }
+                }
+
+                for (String key : vnMap.keySet()) {
+                    System.out.println(key + " -> " + vnMap.get(key));
                 }
 
             }

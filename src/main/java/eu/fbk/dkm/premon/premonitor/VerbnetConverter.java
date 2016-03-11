@@ -80,7 +80,7 @@ public class VerbnetConverter extends Converter {
 
                         // todo: Remove it!
 //                        String id = thisClass.getAttribute("ID");
-//                        if (!id.equals("continue-55.3")) {
+//                        if (!id.equals("other_cos-45.4")) {
 //                            continue;
 //                        }
 

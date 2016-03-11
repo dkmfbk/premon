@@ -41,6 +41,7 @@ public class FramenetConverter extends Converter {
 
     //    private static final String ONE_FRAME = "Locative_relation.xml";
     private static final String ONE_FRAME = null;
+    private static final Set<String> bugMap = new HashSet<>();
 
     public FramenetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
         super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
@@ -50,6 +51,9 @@ public class FramenetConverter extends Converter {
         paths.put("luIndex", new File(this.path.getAbsolutePath() + File.separator + "luIndex.xml"));
         paths.put("semTypes", new File(this.path.getAbsolutePath() + File.separator + "semTypes.xml"));
         paths.put("frRelation", new File(this.path.getAbsolutePath() + File.separator + "frRelation.xml"));
+
+        bugMap.add("Test35");
+        bugMap.add("Test_the_test");
 
         argumentSeparator = "@";
 
@@ -355,6 +359,10 @@ public class FramenetConverter extends Converter {
 
                                 for (Element relatedFrame : relatedFrames) {
                                     String relatedFrameName = relatedFrame.getTextContent();
+
+                                    if (bugMap.contains(relatedFrameName)) {
+                                        continue;
+                                    }
                                     addStatementToSink(frameURI, typeURI,
                                             uriForRoleset(relatedFrameName.toLowerCase()));
                                     typesFreqs.add(typeURI);
