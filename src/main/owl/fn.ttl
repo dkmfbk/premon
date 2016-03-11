@@ -85,6 +85,8 @@
                
                rdfs:label "frame relation"@en ;
                
+               rdfs:subPropertyOf pmo:classRel ;
+               
                rdfs:domain :Frame ;
                
                rdfs:range :Frame .
@@ -383,11 +385,11 @@
            
            rdfs:subClassOf [ rdf:type owl:Restriction ;
                              owl:onProperty pmo:item ;
-                             owl:allValuesFrom :FrameElement
+                             owl:minCardinality "2"^^xsd:nonNegativeInteger
                            ] ,
                            [ rdf:type owl:Restriction ;
                              owl:onProperty pmo:item ;
-                             owl:minCardinality "2"^^xsd:nonNegativeInteger
+                             owl:allValuesFrom :FrameElement
                            ] .
 
 
@@ -400,13 +402,13 @@
        
        rdfs:subClassOf pmo:SemanticClass ,
                        [ rdf:type owl:Restriction ;
+                         owl:onProperty pmo:semRole ;
+                         owl:allValuesFrom :FrameElement
+                       ] ,
+                       [ rdf:type owl:Restriction ;
                          owl:onProperty [ owl:inverseOf pmo:evokedConcept
                                         ] ;
                          owl:allValuesFrom :LexicalUnit
-                       ] ,
-                       [ rdf:type owl:Restriction ;
-                         owl:onProperty pmo:semRole ;
-                         owl:allValuesFrom :FrameElement
                        ] .
 
 
