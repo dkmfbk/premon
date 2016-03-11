@@ -881,7 +881,7 @@ public class FramenetConverter extends Converter {
         builder.append(separator);
         builder.append(pos);
         builder.append(separator);
-        builder.append(luName.replaceAll("[^a-zA-Z0-9-_]", ""));
+        builder.append(luName.replaceAll("[^a-zA-Z0-9-_+]", ""));
         builder.append(separator);
         builder.append(rolesetPart(frameName, prefix));
         return createURI(builder.toString());

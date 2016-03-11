@@ -80,7 +80,7 @@ public class VerbnetConverter extends Converter {
 
                         // todo: Remove it!
 //                        String id = thisClass.getAttribute("ID");
-//                        if (!id.equals("other_cos-45.4")) {
+//                        if (!id.equals("admire-31.2")) {
 //                            continue;
 //                        }
 
@@ -208,8 +208,8 @@ public class VerbnetConverter extends Converter {
 
                     addStatementToSink(wnConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
                     addStatementToSink(wnConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
-                    addStatementToSink(wnConceptualizationURI, PMO.EVOKED_CONCEPT, reference);
-                    addStatementToSink(wnConceptualizationURI, RDFS.SEEALSO, wnURI);
+                    addStatementToSink(wnConceptualizationURI, RDFS.SEEALSO, reference);
+                    addStatementToSink(wnConceptualizationURI, PMO.EVOKED_CONCEPT, wnURI);
 //                    addStatementToSink(conceptualizationURI, SKOS.CLOSE_MATCH, wnConceptualizationURI);
 //                    addStatementToSink(wnConceptualizationURI, SKOS.CLOSE_MATCH, conceptualizationURI);
                     mapping.add(wnConceptualizationURI);

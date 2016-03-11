@@ -107,7 +107,7 @@ public abstract class BankConverter extends Converter {
                                 String id = thisClass.getAttribute("ID");
                                 Matcher mID = VN_PATTERN.matcher(id);
                                 if (mID.find()) {
-                                    vnMap.put(mID.group(2), mID.group(1));
+                                    vnMap.put(mID.group(2), mID.group(1) + "-" + mID.group(2));
                                 } else {
                                     LOGGER.error("Unable to parse {}", id);
                                 }

@@ -291,6 +291,7 @@ public class PropbankConverter extends BankConverter {
                         continue;
                     }
                 }
+
                 vnClasses.add(realVnClass);
             }
         }
