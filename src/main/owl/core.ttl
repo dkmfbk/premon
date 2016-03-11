@@ -311,12 +311,12 @@ pmo:AnnotationSet rdf:type owl:Class ;
                   
                   rdfs:subClassOf [ rdf:type owl:Restriction ;
                                     owl:onProperty pmo:item ;
-                                    owl:allValuesFrom nif:Annotation
+                                    owl:onClass nif:Annotation ;
+                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                   ] ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty pmo:item ;
-                                    owl:onClass nif:Annotation ;
-                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                    owl:allValuesFrom nif:Annotation
                                   ] ;
                   
                   rdfs:comment "Represent each annotation of a predicate, togheter with its arguments, in an example"@en .
@@ -416,6 +416,23 @@ pmo:SemanticClass rdf:type owl:Class ;
 
 
 
+###  http://premon.fbk.eu/ontology/core#SemanticClassMapping
+
+pmo:SemanticClassMapping rdf:type owl:Class ;
+                         
+                         rdfs:subClassOf pmo:Mapping ,
+                                         [ rdf:type owl:Restriction ;
+                                           owl:onProperty pmo:item ;
+                                           owl:allValuesFrom [ rdf:type owl:Restriction ;
+                                                               owl:onProperty pmo:evokedConcept ;
+                                                               owl:allValuesFrom pmo:SemanticClass
+                                                             ]
+                                         ] ;
+                         
+                         rdfs:comment "An individual of this class represents a mapping between skos:Conceptualization, where the evokedConcept is a SemanticClass"@en .
+
+
+
 ###  http://premon.fbk.eu/ontology/core#SemanticRole
 
 pmo:SemanticRole rdf:type owl:Class ;
@@ -424,6 +441,23 @@ pmo:SemanticRole rdf:type owl:Class ;
                             "semantic role"@en ;
                  
                  rdfs:subClassOf ontolex:LexicalConcept .
+
+
+
+###  http://premon.fbk.eu/ontology/core#SemanticRoleMapping
+
+pmo:SemanticRoleMapping rdf:type owl:Class ;
+                        
+                        rdfs:subClassOf pmo:Mapping ,
+                                        [ rdf:type owl:Restriction ;
+                                          owl:onProperty pmo:item ;
+                                          owl:allValuesFrom [ rdf:type owl:Restriction ;
+                                                              owl:onProperty pmo:evokedConcept ;
+                                                              owl:allValuesFrom pmo:SemanticRole
+                                                            ]
+                                        ] ;
+                        
+                        rdfs:comment "An individual of this class represents a mapping between skos:Conceptualization, where the evokedConcept is a SemanticRole"@en .
 
 
 
