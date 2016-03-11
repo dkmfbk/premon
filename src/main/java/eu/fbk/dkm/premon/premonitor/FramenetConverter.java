@@ -39,7 +39,7 @@ public class FramenetConverter extends Converter {
 
     private static final Pattern TOKEN_REGEX = Pattern.compile("[^\\s]+");
 
-    //    private static final String ONE_FRAME = "Locative_relation.xml";
+    //        private static final String ONE_FRAME = "Measurable_attributes.xml";
     private static final String ONE_FRAME = null;
     private static final Set<String> bugMap = new HashSet<>();
 
@@ -463,9 +463,11 @@ public class FramenetConverter extends Converter {
 
                                 if (incorporatedFE != null && incorporatedFE.trim().length() > 0) {
                                     incorporatedFE = incorporatedFE.trim();
-                                    URI argumentURI = uriForArgument(frameName.toLowerCase(),
-                                            incorporatedFE.toLowerCase());
-                                    addStatementToSink(luURI, PMOFN.INCORPORATED_FRAME_ELEMENT, argumentURI);
+                                    if (FEs.contains(incorporatedFE)) {
+                                        URI argumentURI = uriForArgument(frameName.toLowerCase(),
+                                                incorporatedFE.toLowerCase());
+                                        addStatementToSink(luURI, PMOFN.INCORPORATED_FRAME_ELEMENT, argumentURI);
+                                    }
                                 }
                             }
 

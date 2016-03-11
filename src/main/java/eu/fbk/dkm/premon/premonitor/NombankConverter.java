@@ -20,8 +20,6 @@ import java.util.regex.Pattern;
 
 public class NombankConverter extends BankConverter {
 
-    ArrayList<String> pbLinks = new ArrayList<>();
-    Pattern PB_PATTERN = Pattern.compile("^verb-((.*)\\.[0-9]+)$");
     private static String LINK_PATTERN = "http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0/frames/%s.xml";
 
     public NombankConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
@@ -31,15 +29,6 @@ public class NombankConverter extends BankConverter {
         this.isOntoNotes = false;
         this.noDef = !properties.getProperty("extractdefinitions", "0").equals("1");
         this.defaultType = "n";
-
-        String pbLinksString = properties.getProperty("linkpb");
-        if (pbLinksString != null) {
-            for (String link : pbLinksString.split(",")) {
-                pbLinks.add(link.trim().toLowerCase());
-            }
-        }
-
-        LOGGER.info("Links to: {}", pbLinks.toString());
     }
 
     @Override protected URI addExampleArgToSink(Type argType, String argName, URI markableURI,
@@ -126,11 +115,9 @@ public class NombankConverter extends BankConverter {
 
         addArgumentToSink(key, keyURI, argumentURI, lemma, type, rolesetID, lexicalEntryURI, role);
 
+        // todo: bad! this should be merged with the addExternalLinks method
         URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
         ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
-
-        TreeSet<URI> cluster = new URITreeSet();
-        cluster.add(argConceptualizationURI);
 
         for (Matcher matcher : matchers) {
             String pbLemma = matcher.group(2);
@@ -146,12 +133,9 @@ public class NombankConverter extends BankConverter {
                 pbLemma = getLemmaFromPredicateName(pbLemma);
                 URI argPropBankConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, key,
                         pbLink);
-//                addStatementToSink(argConceptualizationURI, SKOS.CLOSE_MATCH, argPropBankConceptualizationURI);
-                cluster.add(argPropBankConceptualizationURI);
+                addSingleMapping(DEFAULT_ARG_SUFFIX, argConceptualizationURI, argPropBankConceptualizationURI);
             }
         }
-
-        addMappingToSink(cluster, DEFAULT_ARG_SUFFIX);
     }
 
     @Override Type getType(String code) {
@@ -182,49 +166,4 @@ public class NombankConverter extends BankConverter {
         return Type.NULL;
     }
 
-    private ArrayList<Matcher> getPropBankPredicates(Roleset roleset) {
-
-        ArrayList<Matcher> ret = new ArrayList<>();
-
-        String source = roleset.getSource();
-        if (source != null && source.length() > 0) {
-
-            String[] parts = source.split("\\s+");
-            for (String part : parts) {
-                if (part.trim().length() == 0) {
-                    continue;
-                }
-
-                Matcher matcher = PB_PATTERN.matcher(source);
-                if (!matcher.find()) {
-                    continue;
-                }
-
-                ret.add(matcher);
-            }
-        }
-
-        return ret;
-    }
-
-    @Override protected void addConceptualizationLink(Roleset roleset, URI conceptualizationURI) {
-
-        TreeSet<URI> cluster = new URITreeSet();
-        cluster.add(conceptualizationURI);
-
-        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
-        for (Matcher matcher : matchers) {
-            String pbLemma = matcher.group(2);
-            String pbPredicate = matcher.group(1);
-
-            for (String pbLink : pbLinks) {
-                String lemma = getLemmaFromPredicateName(pbLemma);
-                URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
-//                addStatementToSink(conceptualizationURI, SKOS.CLOSE_MATCH, pbConceptURI);
-                cluster.add(pbConceptURI);
-            }
-        }
-
-        addMappingToSink(cluster, DEFAULT_PRED_SUFFIX);
-    }
 }

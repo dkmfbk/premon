@@ -4,8 +4,8 @@ import com.google.common.io.Files;
 import eu.fbk.dkm.premon.premonitor.propbank.*;
 import eu.fbk.dkm.premon.util.NF;
 import eu.fbk.dkm.premon.util.PropBankResource;
+import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.*;
-import eu.fbk.dkm.utils.FrequencyHashSet;
 import org.joox.JOOX;
 import org.joox.Match;
 import org.openrdf.model.URI;
@@ -48,10 +48,12 @@ public abstract class BankConverter extends Converter {
 
     protected ArrayList<String> fnLinks = new ArrayList<>();
     protected ArrayList<String> vnLinks = new ArrayList<>();
+    protected ArrayList<String> pbLinks = new ArrayList<>();
     protected Map<String, String> vnMap = new HashMap<>();
     protected static final Pattern VN_PATTERN = Pattern.compile("([^-]*)-([0-9\\.-]*)");
 
     static final Pattern ARG_NUM_PATTERN = Pattern.compile("^[012345]$");
+    Pattern PB_PATTERN = Pattern.compile("^verb-((.*)\\.[0-9]+)$");
 
     // Bugs!
     private static HashMap<String, String> bugMap = new HashMap<String, String>();
@@ -61,6 +63,8 @@ public abstract class BankConverter extends Converter {
     public enum Type {
         M_FUNCTION, ADDITIONAL, PREPOSITION, NUMERIC, AGENT, NULL
     }
+
+    String mapArgLabel = null;
 
     static {
         bugMap.put("@", "2"); // overburden-v.xml
@@ -125,6 +129,8 @@ public abstract class BankConverter extends Converter {
         LOGGER.info("Links to: {}", fnLinks.toString());
         addLinks(vnLinks, properties.getProperty("linkvn"));
         LOGGER.info("Links to: {}", vnLinks.toString());
+        addLinks(pbLinks, properties.getProperty("linkpb"));
+        LOGGER.info("Links to: {}", pbLinks.toString());
     }
 
     private static boolean discardFile(File file, boolean onlyVerbs, boolean isOntoNotes) {
@@ -246,8 +252,6 @@ public abstract class BankConverter extends Converter {
                                         lexicalEntryURI);
                                 addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT,
                                         rolesetURI);
-
-                                addConceptualizationLink((Roleset) roleset, conceptualizationURI);
 
                                 addExternalLinks((Roleset) roleset, conceptualizationURI, uriLemma, type);
 
@@ -488,12 +492,149 @@ public abstract class BankConverter extends Converter {
         }
     }
 
+    protected void addSingleMapping(String suffix, URI... uris) {
+        TreeSet<URI> cluster = new URITreeSet();
+        for (URI uri : uris) {
+            cluster.add(uri);
+        }
+
+        addMappingToSink(cluster, suffix);
+    }
+
     protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
-        // use for Links
+
+        // FrameNet
+        List<String> fnPredicates = new ArrayList<>();
+        if (roleset.getFramnet() != null) {
+            String[] tmpFnPreds = roleset.getFramnet().trim().toLowerCase()
+                    .split("\\s+");
+            for (String tmpClass : tmpFnPreds) {
+                tmpClass = tmpClass.trim();
+                if (tmpClass.length() > 1) {
+                    fnPredicates.add(tmpClass);
+                }
+            }
+        }
+
+        for (String fnPredicate : fnPredicates) {
+            for (String fnLink : fnLinks) {
+                URI fnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, fnPredicate, fnLink);
+                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, fnConcURI);
+            }
+        }
+
+        // VerbNet
+        List<String> vnClasses = getVnClasses(roleset.getVncls());
+        for (String vnClass : vnClasses) {
+            for (String vnLink : vnLinks) {
+                URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, vnLink);
+                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, vnConcURI);
+            }
+        }
+
+        // PropBank
+        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
+        for (Matcher matcher : matchers) {
+            String pbLemma = matcher.group(2);
+            String pbPredicate = matcher.group(1);
+
+            for (String pbLink : pbLinks) {
+                String lemma = getLemmaFromPredicateName(pbLemma);
+                URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
+                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, pbConceptURI);
+            }
+        }
+    }
+
+    protected ArrayList<Matcher> getPropBankPredicates(Roleset roleset) {
+
+        ArrayList<Matcher> ret = new ArrayList<>();
+
+        String source = roleset.getSource();
+        if (source != null && source.length() > 0) {
+
+            String[] parts = source.split("\\s+");
+            for (String part : parts) {
+                if (part.trim().length() == 0) {
+                    continue;
+                }
+
+                Matcher matcher = PB_PATTERN.matcher(source);
+                if (!matcher.find()) {
+                    continue;
+                }
+
+                ret.add(matcher);
+            }
+        }
+
+        return ret;
+    }
+
+    private List<String> getVnClasses(String vnList) {
+
+        List<String> vnClasses = new ArrayList<>();
+
+        if (vnList != null) {
+            vnList = vnList.replaceAll(",", " ");
+            vnList = vnList.trim();
+
+            String[] tmpClasses = vnList.split("\\s+");
+            for (String tmpClass : tmpClasses) {
+                tmpClass = tmpClass.trim();
+                if (tmpClass.length() == 0) {
+                    continue;
+                }
+                if (tmpClass.equals("-")) {
+                    continue;
+                }
+                if (tmpClass.endsWith(".")) {
+                    tmpClass = tmpClass.substring(0, tmpClass.length() - 1);
+                }
+
+                String realVnClass = vnMap.get(tmpClass);
+                if (realVnClass == null && vnMap.size() > 0) {
+                    Matcher matcher = VN_PATTERN.matcher(tmpClass);
+                    if (matcher.find()) {
+                        realVnClass = tmpClass;
+                    } else {
+                        LOGGER.warn("VerbNet class not found: {}", tmpClass);
+                        continue;
+                    }
+                }
+
+                vnClasses.add(realVnClass);
+            }
+        }
+
+        return vnClasses;
     }
 
     protected void addExternalLinks(Role role, URI argConceptualizationURI, String uriLemma, String type) {
-        // use for Links
+
+        List<Vnrole> vnroleList = role.getVnrole();
+        for (Vnrole vnrole : vnroleList) {
+            List<String> vnClasses = getVnClasses(vnrole.getVncls());
+
+            // todo: thetha is unique (information got by grepping the dataset)
+            String theta = vnrole.getVntheta();
+            theta = theta.replaceAll("[0-9]", "");
+            theta = theta.trim();
+            theta = theta.toLowerCase();
+
+            for (String vnClass : vnClasses) {
+                for (String vnLink : vnLinks) {
+
+                    // todo: bad!
+                    mapArgLabel = "";
+                    URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, theta, vnLink);
+                    mapArgLabel = null;
+
+                    addSingleMapping(DEFAULT_ARG_SUFFIX, argConceptualizationURI, vnConcURI);
+                }
+            }
+
+        }
     }
 
     protected abstract URI getExternalLink(String lemma, String type);
@@ -562,8 +703,6 @@ public abstract class BankConverter extends Converter {
 
     protected abstract void addRelToSink(Type argType, String argName, URI markableURI);
 
-    protected abstract void addConceptualizationLink(Roleset roleset, URI rolesetURI);
-
     @Override protected URI getPosURI(String textualPOS) {
         if (textualPOS == null) {
             return null;
@@ -580,5 +719,12 @@ public abstract class BankConverter extends Converter {
 
         LOGGER.error("POS not found: {}", textualPOS);
         return null;
+    }
+
+    @Override public String getArgLabel() {
+        if (mapArgLabel != null) {
+            return mapArgLabel;
+        }
+        return super.getArgLabel();
     }
 }

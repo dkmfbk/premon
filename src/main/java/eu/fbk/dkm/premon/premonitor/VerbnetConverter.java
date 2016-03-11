@@ -98,7 +98,7 @@ public class VerbnetConverter extends Converter {
 
     private void addClassToSink(Element thisClass, @Nullable URI superClass,
             @Nullable HashMap<String, Element> themRolesElements,
-            @Nullable HashSet<Element> framesElements) {
+            @Nullable HashSet<URI> framesElements) {
         String id = thisClass.getAttribute("ID");
 
         Matcher matcher = VN_PATTERN.matcher(id);
@@ -263,43 +263,50 @@ public class VerbnetConverter extends Converter {
                     PMOVN.ROLE_RESTRICTION_PROPERTY);
         }
 
-        HashSet<Element> thisFrameElements = new HashSet<>();
-        if (framesElements != null) {
-            thisFrameElements = new HashSet<>(framesElements);
-        }
         elements = JOOX.$(thisClass).xpath("FRAMES/FRAME");
 
-        int totalSize = elements.size() + thisFrameElements.size();
+        HashSet<URI> framesToPass = new HashSet<>();
 
-        addFrames(thisFrameElements, id, false, totalSize, 0);
-        addFrames(elements, id, true, totalSize, thisFrameElements.size());
-
-        for (Element element : elements) {
-            thisFrameElements.add(element);
+        if (framesElements != null) {
+            for (URI framesElement : framesElements) {
+                addStatementToSink(rolesetURI, PMOVN.FRAME, framesElement);
+            }
+            framesToPass.addAll(framesElements);
         }
+        Set<URI> thisClassFrames = addFrames(elements, id);
+        framesToPass.addAll(thisClassFrames);
 
         elements = JOOX.$(thisClass).xpath("SUBCLASSES/VNSUBCLASS");
         for (Element element : elements) {
-            addClassToSink(element, rolesetURI, thisThemRolesElements, thisFrameElements);
+            addClassToSink(element, rolesetURI, thisThemRolesElements, framesToPass);
         }
 
     }
 
-    private void addFrames(Iterable<Element> frames, String id, boolean definedHere, int totalSize, int thisSize) {
+    private Set<URI> addFrames(Match frames, String id) {
+
+        Set<URI> frameURIs = new HashSet<>();
+
+        int totalSize = frames.size();
         if (totalSize == 1) {
             URI frameURI = getFrameURI(id);
+            frameURIs.add(frameURI);
             for (Element element : frames) {
-                addFrameToSink(id, frameURI, element, definedHere);
+                addFrameToSink(id, frameURI, element);
             }
         }
         if (totalSize > 1) {
+            int thisSize = 0;
             for (Element element : frames) {
                 thisSize++;
 
                 URI frameURI = getFrameURI(id, thisSize);
-                addFrameToSink(id, frameURI, element, definedHere);
+                frameURIs.add(frameURI);
+                addFrameToSink(id, frameURI, element);
             }
         }
+
+        return frameURIs;
     }
 
     private void addRestrictions(String label1, String label2, URI startingURI, Element element, String suffix,
@@ -359,13 +366,11 @@ public class VerbnetConverter extends Converter {
         }
     }
 
-    private void addFrameToSink(String classID, URI frameURI, Element frameElement, boolean isDefinedByThisFrame) {
+    private void addFrameToSink(String classID, URI frameURI, Element frameElement) {
 
         URI classURI = uriForRoleset(classID);
         addStatementToSink(classURI, PMOVN.FRAME, frameURI);
-        if (isDefinedByThisFrame) {
-            addStatementToSink(classURI, PMOVN.DEFINES_FRAME, frameURI);
-        }
+        addStatementToSink(classURI, PMOVN.DEFINES_FRAME, frameURI);
 
         addStatementToSink(frameURI, RDF.TYPE, PMOVN.VERBNET_FRAME);
 
@@ -471,9 +476,12 @@ public class VerbnetConverter extends Converter {
             String value = element.getAttribute("value");
             pieces.add(value);
 
+            boolean questionMark = false;
+
             if (value.startsWith("?")) {
                 addStatementToSink(thisURI, RDF.TYPE, PMOVN.IMPLICIT_PRED_ARG);
                 value = value.substring(1);
+                questionMark = true;
             }
 
             addStatementToSink(thisURI, PMO.VALUE_DT, value);
@@ -494,11 +502,15 @@ public class VerbnetConverter extends Converter {
                 addStatementToSink(thisURI, RDF.TYPE, PMOVN.THEM_ROLE_PRED_ARG);
 
                 // todo: maybe use a Set, just to avoid duplicates?
-                String[] parts = value.split("\\+");
+                String[] parts = value.split("\\+|,");
                 for (String part : parts) {
                     part = part.replaceAll("_[ij]$", "");
-                    URI argumentURI = uriForArgument(rolesetID, part);
-                    addStatementToSink(thisURI, PMO.VALUE_OBJ, argumentURI);
+                    part = part.trim();
+//                    System.out.println(value + "---" + part);
+//                    URI argumentURI = uriForArgument(rolesetID, part);
+                    URI thematicRoleURI = PMOVN.lookup(PMOVN.THEMATIC_ROLE, part);
+//                    System.out.println(thematicRoleURI);
+                    addStatementToSink(thisURI, PMO.VALUE_OBJ, thematicRoleURI);
                 }
                 break;
             case "VerbSpecific":

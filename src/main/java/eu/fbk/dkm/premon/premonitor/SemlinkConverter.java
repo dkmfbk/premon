@@ -250,11 +250,13 @@ public class SemlinkConverter extends Converter {
                         for (String vnLink : vnLinks) {
 
                             for (String lemma : lemmas) {
+
                                 // todo: Really bad!
+                                String oldArgumentSeparator = argumentSeparator;
                                 argumentSeparator = "@";
                                 URI fnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
                                         frame, fnrole, fnLink);
-                                argumentSeparator = "-";
+                                argumentSeparator = oldArgumentSeparator;
 
                                 URI vnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
                                         vnID, vnTheta, vnLink);
