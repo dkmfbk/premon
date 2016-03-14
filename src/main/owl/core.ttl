@@ -423,9 +423,13 @@ pmo:SemanticClassMapping rdf:type owl:Class ;
                          rdfs:subClassOf pmo:Mapping ,
                                          [ rdf:type owl:Restriction ;
                                            owl:onProperty pmo:item ;
-                                           owl:allValuesFrom [ rdf:type owl:Restriction ;
-                                                               owl:onProperty pmo:evokedConcept ;
-                                                               owl:allValuesFrom pmo:SemanticClass
+                                           owl:allValuesFrom [ rdf:type owl:Class ;
+                                                               owl:unionOf ( pmo:SemanticClass
+                                                                             [ rdf:type owl:Restriction ;
+                                                                               owl:onProperty pmo:evokedConcept ;
+                                                                               owl:allValuesFrom pmo:SemanticClass
+                                                                             ]
+                                                                           )
                                                              ]
                                          ] ;
                          
@@ -451,9 +455,13 @@ pmo:SemanticRoleMapping rdf:type owl:Class ;
                         rdfs:subClassOf pmo:Mapping ,
                                         [ rdf:type owl:Restriction ;
                                           owl:onProperty pmo:item ;
-                                          owl:allValuesFrom [ rdf:type owl:Restriction ;
-                                                              owl:onProperty pmo:evokedConcept ;
-                                                              owl:allValuesFrom pmo:SemanticRole
+                                          owl:allValuesFrom [ rdf:type owl:Class ;
+                                                              owl:unionOf ( pmo:SemanticRole
+                                                                            [ rdf:type owl:Restriction ;
+                                                                              owl:onProperty pmo:evokedConcept ;
+                                                                              owl:allValuesFrom pmo:SemanticRole
+                                                                            ]
+                                                                          )
                                                             ]
                                         ] ;
                         
