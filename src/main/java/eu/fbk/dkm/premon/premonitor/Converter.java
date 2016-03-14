@@ -2,6 +2,7 @@ package eu.fbk.dkm.premon.premonitor;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.sun.org.apache.regexp.internal.RE;
 import eu.fbk.dkm.premon.vocab.*;
 import eu.fbk.rdfpro.util.Hash;
 import org.openrdf.model.Resource;
@@ -9,6 +10,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
@@ -31,8 +33,14 @@ public abstract class Converter {
     public static final String NAMESPACE = "http://premon.fbk.eu/resource/";
 
     static final URI LE_GRAPH = PM.ENTRIES;
-    static final URI EXAMPLE_GRAPH = PM.EXAMPLES;
+    //    static final URI EXAMPLE_GRAPH = PM.EXAMPLES;
+    protected URI website = null;
+    protected String baseResource = null;
+
     protected URI DEFAULT_GRAPH;
+    protected URI EXAMPLE_GRAPH;
+    protected URI BASE_RESOURCE;
+    protected URI RESOURCE;
 
     public String prefix;
     boolean extractExamples = false;
@@ -100,10 +108,16 @@ public abstract class Converter {
         this.properties = Objects.requireNonNull(properties);
         this.language = language;
         this.wnInfo = wnInfo;
+        this.website = createURI(properties.getProperty("web"));
+        this.baseResource = properties.getProperty("resource");
 
         this.onlyOne = properties.getProperty("only-one");
         this.prefix = resource;
-        this.DEFAULT_GRAPH = createURI(NAMESPACE, resource);
+
+        this.RESOURCE = createURI(NAMESPACE, resource);
+        this.DEFAULT_GRAPH = this.RESOURCE;
+        this.EXAMPLE_GRAPH = createURI(NAMESPACE, resource + "-ex");
+        this.BASE_RESOURCE = createURI(NAMESPACE, baseResource);
 
         this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
     }
@@ -423,11 +437,9 @@ public abstract class Converter {
 
         if (suffix.equals(DEFAULT_ARG_SUFFIX)) {
             addStatementToSink(mappingURI, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING);
-        }
-        else if (suffix.equals(DEFAULT_PRED_SUFFIX)) {
+        } else if (suffix.equals(DEFAULT_PRED_SUFFIX)) {
             addStatementToSink(mappingURI, RDF.TYPE, PMO.SEMANTIC_CLASS_MAPPING);
-        }
-        else {
+        } else {
             LOGGER.error("Suffix {} is not valid", suffix);
         }
         for (URI uri : mapping) {
@@ -484,6 +496,23 @@ public abstract class Converter {
             builder.append(separator).append(addendum);
         }
         return createURI(builder.toString());
+    }
+
+    protected void addMetaToSink() {
+        addStatementToSink(getLexicon(), RDF.TYPE, ONTOLEX.LEXICON, LE_GRAPH);
+        addStatementToSink(getLexicon(), ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
+        addStatementToSink(getLexicon(), DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
+
+        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, RESOURCE, PM.META);
+        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, RESOURCE, PM.META);
+
+        if (website != null) {
+            addStatementToSink(BASE_RESOURCE, DCTERMS.SOURCE, website);
+        }
+        addStatementToSink(RESOURCE, DCTERMS.IS_VERSION_OF, BASE_RESOURCE);
+        addStatementToSink(EXAMPLE_GRAPH, DCTERMS.REQUIRES, RESOURCE);
+        addStatementToSink(RESOURCE, RDF.TYPE, PM.RESOURCE);
+        addStatementToSink(EXAMPLE_GRAPH, RDF.TYPE, PM.EXAMPLE);
     }
 
 }
