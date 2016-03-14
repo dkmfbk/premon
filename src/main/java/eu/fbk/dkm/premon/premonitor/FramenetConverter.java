@@ -304,7 +304,7 @@ public class FramenetConverter extends Converter {
                                             addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName), uriForArgument(parts[0], parts[1], retroMappings));
                                         }
                                         else {
-                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName), uriForArgument(lcFeName, lcFeName, retroMappings));
+                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName), uriForArgument(lcFrameName, lcFeName, retroMappings));
                                         }
                                     }
                                 }
