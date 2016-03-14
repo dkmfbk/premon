@@ -50,6 +50,7 @@ public abstract class Converter {
     public static final String FORM_PREFIX = "form";
     public static final String CONCEPTUALIZATION_PREFIX = "conceptualization";
     protected Map<String, URI> wnInfo;
+    protected static final String DEFAULT_SENSE_SUFFIX = "sense";
     protected static final String DEFAULT_PRED_SUFFIX = "pred";
     protected static final String DEFAULT_ARG_SUFFIX = "arg";
     protected static final String DEFAULT_ANNSET_SUFFIX = "annotationSet";
@@ -440,6 +441,7 @@ public abstract class Converter {
     protected void addMappingToSink(TreeSet<URI> mapping, String suffix) {
 
         if (mapping.size() <= 1) {
+            LOGGER.warn("Mapping involves only 1 concept! - " + mapping);
             return;
         }
 
@@ -450,7 +452,8 @@ public abstract class Converter {
         } else if (suffix.equals(DEFAULT_PRED_SUFFIX)) {
             addStatementToSink(mappingURI, RDF.TYPE, PMO.SEMANTIC_CLASS_MAPPING);
         } else {
-            LOGGER.error("Suffix {} is not valid", suffix);
+            addStatementToSink(mappingURI, RDF.TYPE, PMO.MAPPING);
+            // LOGGER.error("Suffix {} is not valid", suffix);
         }
         for (URI uri : mapping) {
             addStatementToSink(mappingURI, PMO.ITEM, uri);

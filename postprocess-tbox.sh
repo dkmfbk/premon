@@ -10,14 +10,15 @@ rdfpro @read src/main/owl/core.ttl \
              src/main/owl/decomp.owl \
              src/main/owl/nif-core.owl \
              src/main/owl/semiotics.owl \
-       @tbox \
        @transform '-o owl:Thing owl:topDataProperty owl:topObjectProperty' \
+       @transform '=c <http://premon.fbk.eu/resource/tbox>' \
        @unique \
-       @write src/main/resources/eu/fbk/dkm/premon/premonitor/tbox.ttl
+       @write src/main/resources/eu/fbk/dkm/premon/premonitor/tbox.ttl \
+       @write tbox.tql.gz
 
 # generate multiple tbox RDF and HTML representations
 rm src/site/resources/ontology/*.nt src/site/resources/ontology/*.ttl src/site/resources/ontology/*.owl
-for f in {core,pb,nb}; do
+for f in {core,pb,nb,vn,fn}; do
     rdfpro @read src/main/owl/$f.ttl @unique @write src/site/resources/ontology/${f}.nt
     rdfpro @read src/main/owl/prefixes.ttl src/site/resources/ontology/${f}.nt @write src/site/resources/ontology/${f}.ttl @write src/site/resources/ontology/${f}.owl
     curl -F "module=owlapi" -F "caller=http://www.essepuntato.it/lode" -F "filename=$f.ttl" -F "file=@src/site/resources/ontology/$f.ttl" http://www.essepuntato.it/store.php -o src/site/resources/ontology/temp.html -v -H "Expect:" -L
@@ -34,15 +35,15 @@ done
 rm src/site/resources/ontology/temp.html
 
 # generate a tql.gz file with all tbox definitions in their own graph
-rdfpro @read src/main/owl/core.ttl \
-             src/main/owl/pb.ttl \
-             src/main/owl/nb.ttl \
-             src/main/owl/vn.ttl \
-             src/main/owl/fn.ttl \
-             src/main/owl/ontolex.owl \
-             src/main/owl/decomp.owl \
-             src/main/owl/nif-core.owl \
-             src/main/owl/semiotics.owl \
-       @unique \
-       @transform '=c <http://premon.fbk.eu/resource/tbox>' \
-       @write tbox.tql.gz
+# rdfpro @read src/main/owl/core.ttl \
+#             src/main/owl/pb.ttl \
+#             src/main/owl/nb.ttl \
+#             src/main/owl/vn.ttl \
+#             src/main/owl/fn.ttl \
+#             src/main/owl/ontolex.owl \
+#             src/main/owl/decomp.owl \
+#             src/main/owl/nif-core.owl \
+#             src/main/owl/semiotics.owl \
+#       @unique \
+#       @transform '=c <http://premon.fbk.eu/resource/tbox>' \
+#       @write tbox.tql.gz
