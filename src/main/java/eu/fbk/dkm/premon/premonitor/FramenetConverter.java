@@ -33,6 +33,7 @@ public class FramenetConverter extends Converter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FramenetConverter.class);
     HashMap<String, File> paths = new HashMap<>();
+    private String retroMappings = null;
 
     // 01/28/2002 04:30:50 PST Mon
     private static final DateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss z E", Locale.ENGLISH);
@@ -51,11 +52,14 @@ public class FramenetConverter extends Converter {
         paths.put("luIndex", new File(this.path.getAbsolutePath() + File.separator + "luIndex.xml"));
         paths.put("semTypes", new File(this.path.getAbsolutePath() + File.separator + "semTypes.xml"));
         paths.put("frRelation", new File(this.path.getAbsolutePath() + File.separator + "frRelation.xml"));
+        paths.put("retroMappings", new File(this.path.getAbsolutePath() + File.separator + "miscXML/DifferencesR1.5-R16.xml"));
 
         bugMap.add("Test35");
         bugMap.add("Test_the_test");
 
         argumentSeparator = "@";
+
+        retroMappings = properties.getProperty("retromappings");
 
         LOGGER.info("Starting dataset: {}", prefix);
     }
@@ -76,6 +80,45 @@ public class FramenetConverter extends Converter {
         try {
 
             Document document;
+            HashSet<String> added = new HashSet<>();
+            HashMap<String, String> changed = new HashMap<>();
+
+            // Retro Mappings
+            if (retroMappings != null) {
+                LOGGER.info("Extracting diff file");
+                document = dbf.newDocumentBuilder().parse(paths.get("retroMappings"));
+
+                Match diffs;
+
+                diffs = JOOX.$(document).xpath("FrameDiff/Added/Frame");
+                for (Element diff : diffs) {
+                    added.add(diff.getTextContent().toLowerCase());
+                }
+                diffs = JOOX.$(document).xpath("FrameDiff/Changed/Frame");
+                for (Element diff : diffs) {
+                    String r15 = JOOX.$(diff.getElementsByTagName("r1-5")).text().toLowerCase();
+                    String r16 = JOOX.$(diff.getElementsByTagName("r1-6")).text().toLowerCase();
+                    changed.put(r16, r15);
+                }
+
+                diffs = JOOX.$(document).xpath("FrameElementDiff/Added/FrameElement");
+                for (Element diff : diffs) {
+                    added.add(diff.getAttribute("FrameName").toLowerCase() + argumentSeparator + diff.getTextContent().toLowerCase());
+                }
+                diffs = JOOX.$(document).xpath("Changed/FrameElement");
+                for (Element diff : diffs) {
+                    String f16 = diff.getAttribute("FrameName").toLowerCase();
+                    String f15 = diff.getAttribute("r1-5_FrameName");
+                    if (f15 == null || f15.length() == 0) {
+                        f15 = f16;
+                    }
+                    f15 = f15.toLowerCase();
+                    String r15 = JOOX.$(diff.getElementsByTagName("r1-5")).text().toLowerCase();
+                    String r16 = JOOX.$(diff.getElementsByTagName("r1-6")).text().toLowerCase();
+                    changed.put(f16 + argumentSeparator + r16, f15 + argumentSeparator + r15);
+                }
+
+            }
 
             // luIndex
             LOGGER.info("Extracting luIndex");
@@ -183,6 +226,8 @@ public class FramenetConverter extends Converter {
             // frame
             LOGGER.info("Extracting frames");
             int luCount = 0;
+            int mapCount = 0;
+            int mapRoleCount = 0;
             FrequencyHashSet<URI> semTypesFreq = new FrequencyHashSet<>();
             FrequencyHashSet<URI> semTypesForFrame = new FrequencyHashSet<>();
             HashMap<String, URI> lus = new HashMap<>();
@@ -206,7 +251,22 @@ public class FramenetConverter extends Converter {
                             String identifier = frame.attr("ID");
                             String frameName = frame.attr("name");
 
-                            URI frameURI = uriForRoleset(frameName.toLowerCase());
+                            String lcFrameName = frameName.toLowerCase();
+
+                            URI frameURI = uriForRoleset(lcFrameName);
+
+                            if (retroMappings != null) {
+                                if (!added.contains(lcFrameName)) {
+                                    String toMap = changed.get(lcFrameName);
+                                    mapCount++;
+                                    if (toMap != null) {
+                                        addSingleMapping(DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName), uriForRoleset(toMap, retroMappings));
+                                    }
+                                    else {
+                                        addSingleMapping(DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName), uriForRoleset(lcFrameName, retroMappings));
+                                    }
+                                }
+                            }
 
                             Date date = format.parse(cDate);
 
@@ -232,6 +292,21 @@ public class FramenetConverter extends Converter {
                                 String feName = fe.getAttribute("name");
                                 if (FEs.contains(feName)) {
                                     continue;
+                                }
+                                String lcFeName = feName.toLowerCase();
+                                if (retroMappings != null) {
+                                    String completeRole = lcFrameName + argumentSeparator + lcFeName;
+                                    if (!added.contains(completeRole)) {
+                                        String toMap = changed.get(completeRole);
+                                        mapRoleCount++;
+                                        if (toMap != null) {
+                                            String[] parts = toMap.split("@");
+                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName), uriForArgument(parts[0], parts[1], retroMappings));
+                                        }
+                                        else {
+                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName), uriForArgument(lcFeName, lcFeName, retroMappings));
+                                        }
+                                    }
                                 }
 
                                 FEs.add(feName);
@@ -474,6 +549,8 @@ public class FramenetConverter extends Converter {
             }
 
             LOGGER.info("Extracted {} lexical units", luCount);
+            LOGGER.info("Extracted {} class mappings", mapCount);
+            LOGGER.info("Extracted {} role mappings", mapRoleCount);
 
             int semTypesCount = 0;
             for (URI uri : semTypesFreq.keySet()) {
