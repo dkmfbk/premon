@@ -35,6 +35,9 @@ public final class PM {
 
     /** Class pm:examples. */
     public static final URI EXAMPLES = createURI("examples");
+    
+    /** Class pm:tbox. */
+    public static final URI TBOX = createURI("tbox");
 
     // Utility methods
 

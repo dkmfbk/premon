@@ -37,9 +37,6 @@ public final class PMOVN {
     /** Class pmovn:ThematicRole. */
     public static final URI THEMATIC_ROLE = createURI("ThematicRole");
 
-    /** Class pmovn:Example. */
-    public static final URI EXAMPLE = createURI("Example");
-
     /** Class pmovn:VerbNetFrame. */
     public static final URI VERBNET_FRAME = createURI("VerbNetFrame");
 
@@ -168,7 +165,7 @@ public final class PMOVN {
     public static final URI RESTRICTION_P = createURI("restriction");
 
     /** Object property pmovn:subclass. */
-    public static final URI SUBCLASS = createURI("subclass");
+    public static final URI SUBCLASS_OF = createURI("subclassOf");
 
     // Datatype properties
 
@@ -467,7 +464,8 @@ public final class PMOVN {
     public static final URI PLANT_RRP = createURI("plant_rrp", ROLE_RESTRICTION_PROPERTY, "plant");
 
     /** Individual pmovn:plural_rrp (a pmovn:RoleRestrictionProperty). */
-    public static final URI PLURAL_RRP = createURI("plural_rrp", ROLE_RESTRICTION_PROPERTY, "plural");
+    public static final URI PLURAL_RRP = createURI("plural_rrp", ROLE_RESTRICTION_PROPERTY,
+            "plural");
 
     /** Individual pmovn:pointy_rrp (a pmovn:RoleRestrictionProperty). */
     public static final URI POINTY_RRP = createURI("pointy_rrp", ROLE_RESTRICTION_PROPERTY,
@@ -681,9 +679,9 @@ public final class PMOVN {
     public static final URI POS_ING_SYRP = createURI("pos_ing_syrp",
             SYNTACTIC_RESTRICTION_PROPERTY, "pos_ing");
 
-//    /** Individual pmovn:plural_syrp (a pmovn:SyntacticRestrictionProperty). */
-//    public static final URI PLURAL_SYRP = createURI("plural_syrp",
-//            SYNTACTIC_RESTRICTION_PROPERTY, "plural");
+    //    /** Individual pmovn:plural_syrp (a pmovn:SyntacticRestrictionProperty). */
+    //    public static final URI PLURAL_SYRP = createURI("plural_syrp",
+    //            SYNTACTIC_RESTRICTION_PROPERTY, "plural");
 
     // Utility methods
 
