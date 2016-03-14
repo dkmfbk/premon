@@ -1,29 +1,62 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import com.google.common.base.Strings;
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Constructor;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import eu.fbk.dkm.premon.vocab.*;
-import eu.fbk.dkm.utils.CommandLine;
-import eu.fbk.rdfpro.*;
-import eu.fbk.rdfpro.util.Namespaces;
-import eu.fbk.rdfpro.util.Statements;
-import eu.fbk.rdfpro.util.Tracker;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.Sets;
+
+import org.openrdf.model.BNode;
+import org.openrdf.model.Namespace;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.Constructor;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import eu.fbk.dkm.premon.util.ProcessorUndoRDFS;
+import eu.fbk.dkm.premon.vocab.DECOMP;
+import eu.fbk.dkm.premon.vocab.FB;
+import eu.fbk.dkm.premon.vocab.LEXINFO;
+import eu.fbk.dkm.premon.vocab.ONTOLEX;
+import eu.fbk.dkm.premon.vocab.PM;
+import eu.fbk.dkm.premon.vocab.PMO;
+import eu.fbk.dkm.premon.vocab.PMONB;
+import eu.fbk.dkm.premon.vocab.PMOPB;
+import eu.fbk.dkm.utils.CommandLine;
+import eu.fbk.rdfpro.AbstractRDFHandler;
+import eu.fbk.rdfpro.RDFHandlers;
+import eu.fbk.rdfpro.RDFProcessor;
+import eu.fbk.rdfpro.RDFProcessors;
+import eu.fbk.rdfpro.RDFSource;
+import eu.fbk.rdfpro.RDFSources;
+import eu.fbk.rdfpro.RuleEngine;
+import eu.fbk.rdfpro.Ruleset;
+import eu.fbk.rdfpro.SetOperator;
+import eu.fbk.rdfpro.util.IO;
+import eu.fbk.rdfpro.util.QuadModel;
+import eu.fbk.rdfpro.util.Statements;
+import eu.fbk.rdfpro.util.Tracker;
 
 /**
  * Premonitor command line tool for converting predicate resources to the PreMOn model
@@ -31,9 +64,9 @@ import java.util.regex.Pattern;
 public class Premonitor {
 
     private static final String DEFAULT_PATH = ".";
-    private static final String DEFAULT_PROPERTIES_FILE = "default.properties";
-    private static final String DEFAULT_OUTPUT_BASE = "premon";
-    private static final String DEFAULT_OUTPUT_FORMATS = "tql.gz";
+    private static final String DEFAULT_PROPERTIES_FILE = "premonitor.properties";
+    private static final String DEFAULT_OUTPUT_BASE = "output/premon";
+    private static final String DEFAULT_OUTPUT_FORMATS = "trig.gz,tql.gz,tql.gz";
 
     private static final Pattern PROPERTIES_RESOURCES_PATTERN = Pattern
             .compile("^resource([0-9]+)\\.(.*)$");
@@ -73,9 +106,12 @@ public class Premonitor {
                             CommandLine.Type.FILE_EXISTING, true, false, false)
                     .withOption(null, "wordnet-sensekeys", "WordNet senseKey mapping", "FILE",
                             CommandLine.Type.FILE_EXISTING, true, false, false)
-                    .withOption("d", "divide", "Emits one dataset for each resource converted")
-                    .withOption("c", "closure", "Emits also the RDFS closure of produced datasets")
-                    .withOption("x", "stats", "Generates also VOID statistics for each dataset")
+                    .withOption("r", "omit-owl2rl",
+                            "Omit OWL2RL inference, use RDFS instead (faster)")
+                    .withOption("x", "omit-stats",
+                            "Omit generation of VOID statistics for each dataset (faster)")
+                    .withOption("m", "omit-filter-mappings", "Omit filtering illegal mappings " //
+                            + "referring to non-existing conceptualizations (faster)")
                     .withLogger(LoggerFactory.getLogger("eu.fbk")).parse(args);
 
             // Input/output
@@ -94,14 +130,14 @@ public class Premonitor {
             final HashMap<String, URI> wnInfo = new HashMap<>();
 
             if (cmd.hasOption("wordnet-sensekeys")) {
-                List<String> allLines = Files
-                        .readAllLines(cmd.getOptionValue("wordnet-sensekeys", File.class).toPath());
+                final List<String> allLines = Files.readAllLines(cmd.getOptionValue(
+                        "wordnet-sensekeys", File.class).toPath());
                 for (String line : allLines) {
                     line = line.trim();
-                    String[] parts = line.split("\\s+");
+                    final String[] parts = line.split("\\s+");
                     if (parts.length >= 2) {
                         String senseKey = parts[0];
-                        String synsetID = parts[1];
+                        final String synsetID = parts[1];
                         senseKey = senseKey.replaceAll(":[^:]*:[^:]*$", "");
                         wnInfo.put(senseKey, Converter.createURI(WN_PREFIX, synsetID));
                     }
@@ -125,47 +161,47 @@ public class Premonitor {
                                     && statement.getObject().equals(LEMON_LEXICAL_ENTRY)) {
                                 if (statement.getSubject() instanceof URI) {
                                     synchronized (wnInfo) {
-                                        wnInfo.put(statement.getSubject().stringValue(), (URI) statement.getSubject());
+                                        wnInfo.put(statement.getSubject().stringValue(),
+                                                (URI) statement.getSubject());
                                     }
                                 }
                             }
 
                             // Really really bad!
                             if (statement.getPredicate().equals(LEMON_REFERENCE)) {
-                                if (statement.getSubject() instanceof URI &&
-                                        statement.getObject() instanceof URI) {
+                                if (statement.getSubject() instanceof URI
+                                        && statement.getObject() instanceof URI) {
                                     synchronized (wnInfo) {
-                                        wnInfo
-                                                .put(statement.getObject().stringValue(), (URI) statement.getSubject());
+                                        wnInfo.put(statement.getObject().stringValue(),
+                                                (URI) statement.getSubject());
                                     }
                                 }
                             }
 
-//                            if (statement.getPredicate().equals(WN_OLD_SENSE)) {
-//                                synchronized (wnOldURIs) {
-//                                    if (statement.getSubject() instanceof URI) {
-//                                        String o = statement.getObject().stringValue();
-//                                        URI s = (URI) statement.getSubject();
-//                                        wnOldURIs.put(o, s);
-//
-//                                        // todo: Remove last :: in the IDs, is ok?
-//                                        o = o.replaceAll(":[^:]*:[^:]*$", "");
-//                                        wnOldURIs.put(o, s);
-//                                    }
-//                                }
-//                            }
-//
+                            //                            if (statement.getPredicate().equals(WN_OLD_SENSE)) {
+                            //                                synchronized (wnOldURIs) {
+                            //                                    if (statement.getSubject() instanceof URI) {
+                            //                                        String o = statement.getObject().stringValue();
+                            //                                        URI s = (URI) statement.getSubject();
+                            //                                        wnOldURIs.put(o, s);
+                            //
+                            //                                        // todo: Remove last :: in the IDs, is ok?
+                            //                                        o = o.replaceAll(":[^:]*:[^:]*$", "");
+                            //                                        wnOldURIs.put(o, s);
+                            //                                    }
+                            //                                }
+                            //                            }
+                            //
                         }
                     }, 1);
 
-//                    LOGGER.info("Loaded {} URIs", wnURIs.size());
+                    //                    LOGGER.info("Loaded {} URIs", wnURIs.size());
                     LOGGER.info("Loaded {} URIs", wnInfo.size());
                 }
             }
 
             // Load properties
             final HashMap<Integer, Properties> multiProperties = new HashMap<>();
-            final HashMap<String, List<Statement>> multiStatements = new HashMap<>();
 
             if (propertiesFile.exists()) {
                 final Properties tmpProp = new Properties();
@@ -187,10 +223,11 @@ public class Premonitor {
                 }
             }
 
+            final Map<String, Map<URI, QuadModel>> models = new HashMap<>();
             for (final Integer id : multiProperties.keySet()) {
                 final Properties properties = multiProperties.get(id);
 
-                boolean active = properties.getProperty("active", "0").equals("1");
+                final boolean active = properties.getProperty("active", "0").equals("1");
                 if (!active) {
                     LOGGER.info("Resource {} is not active", id);
                     continue;
@@ -203,8 +240,6 @@ public class Premonitor {
                 }
 
                 LOGGER.info("Processing {}", properties.getProperty("label"));
-                final List<Statement> statements = new ArrayList<>();
-                final RDFHandler handler = RDFHandlers.wrap(statements);
 
                 // Check class
                 final String className = properties.getProperty("class");
@@ -233,23 +268,72 @@ public class Premonitor {
                 }
 
                 try {
-                    final Class<?> cls = Class.forName(className);
+                    // Build an RDFHandler that populates a NS map and a QuadModel for each graph
+                    final AtomicInteger numQuads = new AtomicInteger();
+                    final Map<String, String> namespaces = Maps.newHashMap();
+                    final Map<URI, QuadModel> graphModels = new HashMap<>();
+                    models.put(source, graphModels);
+                    final RDFHandler handler = new AbstractRDFHandler() {
 
-                    Constructor<?> constructor = cls.getConstructor(
-                            File.class, RDFHandler.class, Properties.class, Map.class);
-                    final Object converter = constructor.newInstance(folder, handler, properties, wnInfo);
+                        @Override
+                        public void handleNamespace(final String prefix, final String uri) {
+                            namespaces.put(prefix, uri);
+                        }
+
+                        @Override
+                        public synchronized void handleStatement(final Statement stmt) {
+                            numQuads.incrementAndGet();
+                            URI graph;
+                            try {
+                                graph = (URI) stmt.getContext();
+                            } catch (final ClassCastException ex) {
+                                LOGGER.warn("Unexpected non-URI graph: " + stmt.getContext());
+                                return;
+                            }
+                            QuadModel graphModel = graphModels.get(graph);
+                            if (graphModel == null) {
+                                graphModel = QuadModel.create();
+                                graphModels.put(graph, graphModel);
+                            }
+                            graphModel.add(stmt.getSubject(), stmt.getPredicate(),
+                                    stmt.getObject());
+                        }
+
+                    };
+
+                    // Create and invoke Converter using reflection
+                    final Class<?> cls = Class.forName(className);
+                    final Constructor<?> constructor = cls.getConstructor(File.class,
+                            RDFHandler.class, Properties.class, Map.class);
+                    final Object converter = constructor.newInstance(folder, handler, properties,
+                            wnInfo);
                     if (converter instanceof Converter) {
                         ((Converter) converter).convert();
                     }
 
-                    multiStatements.put(source, statements);
+                    // Apply default + Converter namespaces to all the graphs collected
+                    int numUniqueQuads = 0;
+                    for (final QuadModel model : graphModels.values()) {
+                        numUniqueQuads += model.size();
+                        for (final Map.Entry<String, String> entry : namespaces.entrySet()) {
+                            model.setNamespace(entry.getKey(), entry.getValue());
+                        }
+                        model.setNamespace(PM.PREFIX, PM.NAMESPACE);
+                        model.setNamespace(PMO.PREFIX, PMO.NAMESPACE);
+                        model.setNamespace(PMOPB.PREFIX, PMOPB.NAMESPACE);
+                        model.setNamespace(PMONB.PREFIX, PMONB.NAMESPACE);
+                        model.setNamespace(ONTOLEX.PREFIX, ONTOLEX.NAMESPACE);
+                        model.setNamespace(DECOMP.PREFIX, DECOMP.NAMESPACE);
+                        model.setNamespace(LEXINFO.PREFIX, LEXINFO.NAMESPACE);
+                        model.setNamespace(FB.PREFIX, FB.NAMESPACE);
+                    }
 
-                    // todo: remove!
-//                    for (Statement statement : statements) {
-//                        System.out.println(statement);
-//                    }
+                    // Log the number of triples extracted
+                    LOGGER.info("Extracted {} quads ({} before deduplication)", numUniqueQuads,
+                            numQuads.get());
 
                 } catch (final ClassNotFoundException e) {
+                    // Log and ignore
                     LOGGER.error("Class {} not found", className);
                 }
             }
@@ -266,12 +350,12 @@ public class Premonitor {
                 }
 
                 // Extract flags controlling output generation
-                final boolean divide = cmd.hasOption("d");
-                final boolean closure = cmd.hasOption("c");
-                final boolean statistics = cmd.hasOption("x");
+                final boolean owl2rl = !cmd.hasOption("r");
+                final boolean statistics = !cmd.hasOption("x");
+                final boolean filterMappings = !cmd.hasOption("m");
 
                 // Emit the output based on previous settings
-                emit(base, formats, multiStatements, divide, closure, statistics);
+                emit(base, formats, models, owl2rl, statistics, filterMappings);
 
             } catch (final Exception ex) {
                 // Wrap and propagate
@@ -283,92 +367,267 @@ public class Premonitor {
         } catch (final Throwable ex) {
             CommandLine.fail(ex);
         }
-
     }
 
     private static void emit(final String base, final String[] formats,
-            Map<String, List<Statement>> map, final boolean divide, final boolean closure,
-            final boolean statistics) throws RDFHandlerException {
+            final Map<String, Map<URI, QuadModel>> models, final boolean owl2rl,
+            final boolean statistics, final boolean filterMappings) throws RDFHandlerException {
 
-        // Merge all statements if not dividing by resource
-        if (!divide) {
-            final List<Statement> allStmts = new ArrayList<>();
-            for (final List<Statement> stmts : map.values()) {
-                allStmts.addAll(stmts);
+        // Load TBox
+        final QuadModel tbox = QuadModel.create();
+        RDFSources.read(false, true, null, null,
+                "classpath:/eu/fbk/dkm/premon/premonitor/tbox.ttl")
+                .emit(RDFHandlers.wrap(tbox), 1);
+        LOGGER.info("TBox loaded - {} quads", tbox.size());
+
+        // Close TBox
+        final Ruleset tboxRuleset = Ruleset
+                .fromRDF("classpath:/eu/fbk/dkm/premon/premonitor/ruleset.ttl");
+        RuleEngine.create(tboxRuleset).eval(tbox);
+        LOGGER.info("TBox closed - {} quads", tbox.size());
+
+        // Initialize ABox rule engine
+        final Ruleset aboxRuleset = (owl2rl ? tboxRuleset : Ruleset.RDFS).getABoxRuleset(tbox);
+        final RuleEngine aboxEngine = RuleEngine.create(aboxRuleset);
+        LOGGER.info("ABox rule engine initialized - {}", aboxEngine);
+
+        // Perform ABox inference
+        for (final Map.Entry<String, Map<URI, QuadModel>> entry1 : models.entrySet()) {
+            for (final Map.Entry<URI, QuadModel> entry2 : entry1.getValue().entrySet()) {
+                final int sizeBefore = entry2.getValue().size();
+                aboxEngine.eval(entry2.getValue());
+                final int sizeAfter = entry2.getValue().size();
+                LOGGER.info("ABox closed for {}, graph {}: from {} to {} quads", entry1.getKey(),
+                        entry2.getKey(), sizeBefore, sizeAfter);
             }
-            map = ImmutableMap.of("", allStmts);
         }
 
-        // Build the namespace->prefix map used to write RDF data.
-        final Map<String, String> prefixMap = new HashMap<>(Namespaces.DEFAULT.prefixMap());
-        prefixMap.put(PM.NAMESPACE, PM.PREFIX);
-        prefixMap.put(PMO.NAMESPACE, PMO.PREFIX);
-        prefixMap.put(PMOPB.NAMESPACE, PMOPB.PREFIX);
-        prefixMap.put(PMONB.NAMESPACE, PMONB.PREFIX);
-        prefixMap.put(ONTOLEX.NAMESPACE, ONTOLEX.PREFIX);
-        prefixMap.put(DECOMP.NAMESPACE, DECOMP.PREFIX);
-        prefixMap.put(LEXINFO.NAMESPACE, LEXINFO.PREFIX);
-        prefixMap.put(FB.NAMESPACE, FB.PREFIX);
+        // Remove redundant quads (i.e., type quads of pm:entries from other graphs, and type
+        // quads of pm:entries and resource graphs from pm:examples)
+        for (final Map.Entry<String, Map<URI, QuadModel>> entry1 : models.entrySet()) {
+            final String source = entry1.getKey();
+            final Map<URI, QuadModel> sourceModels = entry1.getValue();
+            final QuadModel entriesModel = sourceModels.get(PM.ENTRIES);
+            for (final Map.Entry<URI, QuadModel> entry2 : sourceModels.entrySet()) {
+                final URI graph = entry2.getKey();
+                final boolean isEntries = graph.equals(PM.ENTRIES);
+                final boolean isExamples = graph.equals(PM.EXAMPLES);
+                final QuadModel filteredModel = QuadModel.create();
+                outer: for (final Statement stmt : entry2.getValue()) {
+                    if (stmt.getPredicate().getNamespace().equals("sys:")) {
+                        continue;
+                    } else if (stmt.getPredicate().equals(RDF.TYPE)) {
+                        if (stmt.getObject() instanceof BNode) {
+                            continue;
+                        } else if (stmt.getObject() instanceof URI
+                                && ((URI) stmt.getObject()).getNamespace().equals("sys:")) {
+                            continue;
+                        } else if (isExamples) {
+                            for (final QuadModel model : sourceModels.values()) {
+                                if (model != entry2.getValue() && model.contains(stmt)) {
+                                    continue outer;
+                                }
+                            }
+                        } else if (!isEntries) {
+                            if (entriesModel.contains(stmt)) {
+                                continue;
+                            }
+                        }
+                    }
+                    filteredModel.add(stmt);
+                }
+                final int sizeBefore = entry2.getValue().size();
+                entry2.setValue(filteredModel);
+                final int sizeAfter = entry2.getValue().size();
+                LOGGER.info("ABox filtered for {}, graph {}: from {} to {} quads", source,
+                        entry2.getKey(), sizeBefore, sizeAfter);
+            }
+        }
 
-        // Process one source / statement list pair at a time
-        for (final Map.Entry<String, List<Statement>> entry : map.entrySet()) {
+        // Remove illegal mappings
+        if (filterMappings) {
+            filterMappings(models);
+        }
 
-            // Retrieve list of statements, source name and associated -suffix
-            final List<Statement> stmts = entry.getValue();
+        // Emit data, separating examples from other graphs
+        LOGGER.info("Emitting datasets ...");
+        for (final Map.Entry<String, Map<URI, QuadModel>> entry : models.entrySet()) {
             final String source = entry.getKey();
-            final String suffix = Strings.isNullOrEmpty(source) ? "" : "-" + source;
+            final Map<URI, QuadModel> graphModels = Maps.newHashMap(entry.getValue());
+            if (graphModels.containsKey(PM.EXAMPLES)) {
+                final QuadModel examples = graphModels.remove(PM.EXAMPLES);
+                emit(base, source + "-examples", formats, ImmutableMap.of(PM.EXAMPLES, examples),
+                        tbox, statistics);
+            }
+            if (!graphModels.isEmpty()) {
+                emit(base, source, formats, graphModels, tbox, statistics);
+            }
+        }
+    }
 
-            // Log progress
-            LOGGER.info("Writing files for {} dataset", Strings.isNullOrEmpty(source) ? "merged"
-                    : source);
+    private static void emit(final String base, final String classifier, final String[] formats,
+            final Map<URI, QuadModel> models, @Nullable final QuadModel tbox,
+            final boolean statistics) throws RDFHandlerException {
 
-            // Assemble RDFpro pipeline - starting with deduplication and enrichment with prefixes
-            final List<RDFProcessor> processors = Lists.newArrayList();
-            processors.add(RDFProcessors.unique(false));
-            processors.add(RDFProcessors.prefix(prefixMap));
-            processors.add(RDFProcessors.track(new Tracker(LOGGER, null,
-                    "%d quads without inference", null)));
+        // Log progress
+        LOGGER.info("Writing files for {} dataset", classifier);
 
-            // Add emission of deduplicated dataset (without inferences), in all requested formats
+        // Assemble RDFpro pipeline - starting with emitting closed data in all configured formats
+        final List<RDFProcessor> processors = Lists.newArrayList();
+        for (final String format : formats) {
+            final String location = base + "-" + classifier + "-inf." + format;
+            processors.add(RDFProcessors.write(null, 1000, location));
+        }
+        processors.add(RDFProcessors.track(new Tracker(LOGGER, null, classifier
+                + "-inf - %d quads", null)));
+
+        // Compute and emit statistics if enabled
+        if (statistics) {
+            final List<RDFProcessor> statsProcessors = Lists.newArrayList();
+            statsProcessors.add(RDFProcessors.stats(null, null, null, null, false));
             for (final String format : formats) {
-                final String location = base + "-noinf" + suffix + "." + format;
+                final String location = base + "-" + classifier + "-inf-stats." + format;
+                statsProcessors.add(RDFProcessors.write(null, 1000, location));
+            }
+            statsProcessors.add(RDFProcessors.track(new Tracker(LOGGER, null, classifier
+                    + "-inf-stats - %d quads", null)));
+            statsProcessors.add(RDFProcessors.NIL);
+            processors.add(RDFProcessors.parallel(SetOperator.UNION_MULTISET,
+                    RDFProcessors.IDENTITY,
+                    RDFProcessors.sequence(statsProcessors.toArray(new RDFProcessor[0]))));
+        }
+
+        // TODO: remove inferrable triples, write, compute statistics, write
+        if (tbox != null) {
+            processors.add(new ProcessorUndoRDFS(RDFSources.wrap(tbox)));
+            for (final String format : formats) {
+                final String location = base + "-" + classifier + "-noinf." + format;
                 processors.add(RDFProcessors.write(null, 1000, location));
             }
+            processors.add(RDFProcessors.track(new Tracker(LOGGER, null, classifier
+                    + "-noinf - %d quads", null)));
+            processors.add(RDFProcessors.stats(null, null, null, null, false));
+            for (final String format : formats) {
+                final String location = base + "-" + classifier + "-noinf-stats." + format;
+                processors.add(RDFProcessors.write(null, 1000, location));
+            }
+            processors.add(RDFProcessors.track(new Tracker(LOGGER, null, classifier
+                    + "-noinf-stats - %d quads", null)));
+        }
 
-            // Add inference if required (statistics or closure enabled)
-            if (closure || statistics) {
-                final RDFSource tbox = RDFSources.read(false, true, null, null,
-                        "classpath:/eu/fbk/dkm/premon/premonitor/tbox.ttl");
-                processors.add(RDFProcessors.rdfs(tbox, null, true, true, "rdfs4a", "rdfs4b",
-                        "rdfs8"));
-                processors.add(RDFProcessors.unique(false));
-                processors.add(RDFProcessors.track(new Tracker(LOGGER, null,
-                        "%d quads with inference", null)));
+        // Build the resulting sequence processor
+        final RDFProcessor processor = RDFProcessors.sequence(processors
+                .toArray(new RDFProcessor[processors.size()]));
+
+        // Apply the processor
+        final RDFHandler handler = processor.wrap(RDFHandlers.NIL);
+        try {
+            // Start
+            handler.startRDF();
+
+            // Emit namespaces first
+            final Set<Namespace> namespaces = Sets.newHashSet();
+            for (final QuadModel model : models.values()) {
+                namespaces.addAll(model.getNamespaces());
+            }
+            for (final Namespace namespace : Ordering.natural().sortedCopy(namespaces)) {
+                handler.handleNamespace(namespace.getPrefix(), namespace.getName());
             }
 
-            // Add emission of closed dataset, if enabled
-            if (closure) {
-                for (final String format : formats) {
-                    final String location = base + "-inf" + suffix + "." + format;
-                    processors.add(RDFProcessors.write(null, 1000, location));
+            // Emit data, one graph at a time and starting with pm:meta and pm:entries
+            final List<URI> sortedGraphs = Lists.newArrayList();
+            if (models.containsKey(PM.META)) {
+                sortedGraphs.add(PM.META);
+            }
+            if (models.containsKey(PM.ENTRIES)) {
+                sortedGraphs.add(PM.ENTRIES);
+            }
+            for (final URI graph : Ordering.from(Statements.valueComparator()).sortedCopy(
+                    models.keySet())) {
+                if (!graph.equals(PM.META) && !graph.equals(PM.ENTRIES)) {
+                    sortedGraphs.add(graph);
                 }
             }
-
-            // Add emission of statistics, if enabled
-            if (statistics) {
-                processors.add(RDFProcessors.stats(null, null, null, null, false));
-                processors.add(RDFProcessors.track(new Tracker(LOGGER, null,
-                        "%d quads of statistics", null)));
-                for (final String format : formats) {
-                    final String location = base + "-inf" + suffix + ".stats." + format;
-                    processors.add(RDFProcessors.write(null, 1000, location));
+            for (final URI graph : sortedGraphs) {
+                for (final Statement stmt : models.get(graph)) {
+                    handler.handleStatement(new ContextStatementImpl(stmt.getSubject(), stmt
+                            .getPredicate(), stmt.getObject(), graph));
                 }
             }
+        } catch (final Throwable ex) {
+            LOGGER.error("File generation failed", ex);
 
-            // Build and evaluate the resulting sequence processor
-            final RDFProcessor processor = RDFProcessors.sequence(processors
-                    .toArray(new RDFProcessor[processors.size()]));
-            processor.apply(RDFSources.wrap(stmts), RDFHandlers.NIL, 1);
+        } finally {
+            // End and release allocated resources
+            handler.endRDF();
+            IO.closeQuietly(handler);
+        }
+    }
+
+    private static void filterMappings(final Map<String, Map<URI, QuadModel>> models) {
+
+        LOGGER.info("Removing illegal mappings...");
+
+        final Set<URI> validConceptualizations = Sets.newHashSet();
+        for (final Map<URI, QuadModel> map : models.values()) {
+            for (final QuadModel model : map.values()) {
+                for (final Resource c : model.filter(null, RDF.TYPE, PMO.CONCEPTUALIZATION)
+                        .subjects()) {
+                    validConceptualizations.add((URI) c);
+                }
+            }
+        }
+
+        for (final Map<URI, QuadModel> map : models.values()) {
+            for (final Map.Entry<URI, QuadModel> entry : map.entrySet()) {
+                final QuadModel model = entry.getValue();
+                int numMappings = 0;
+                int numMappingsToDelete = 0;
+                final Map<String, Integer> numMappingsPerSource = Maps.newHashMap();
+                final List<Statement> stmtsToDelete = Lists.newArrayList();
+                for (final URI type : new URI[] { PMO.SEMANTIC_CLASS_MAPPING,
+                        PMO.SEMANTIC_ROLE_MAPPING }) {
+                    for (final Resource m : model.filter(null, RDF.TYPE, type).subjects()) {
+                        ++numMappings;
+                        final List<Statement> stmts = ImmutableList.copyOf(model.filter(m, null,
+                                null));
+                        boolean valid = true;
+                        for (final Statement stmt : stmts) {
+                            if (stmt.getPredicate().equals(PMO.ITEM)
+                                    && !validConceptualizations.contains(stmt.getObject())) {
+                                ++numMappingsToDelete;
+                                final String str = stmt.getObject().stringValue();
+                                for (final String source : models.keySet()) {
+                                    if (str.contains("-" + source + "-")) {
+                                        numMappingsPerSource.put(source,
+                                                1 + numMappingsPerSource.getOrDefault(source, 0));
+                                    }
+                                }
+                                if (numMappingsToDelete <= 10) {
+                                    LOGGER.warn("Removing illegal mapping {} - missing {}", m,
+                                            stmt.getObject());
+                                } else if (numMappingsToDelete == 11) {
+                                    LOGGER.warn("Omitting further illegal mappings ....");
+                                }
+                                valid = false;
+                                break;
+                            }
+                        }
+                        if (!valid) {
+                            stmtsToDelete.addAll(stmts);
+                        }
+                    }
+                    if (numMappingsToDelete > 0) {
+                        for (final Statement stmt : stmtsToDelete) {
+                            model.remove(stmt);
+                        }
+                        LOGGER.warn("{}/{} illegal {} mappings {} removed from {}",
+                                numMappingsToDelete, numMappings, type
+                                        .equals(PMO.SEMANTIC_CLASS_MAPPING) ? "semantic class"
+                                        : "semantic role", numMappingsPerSource, entry.getKey());
+                    }
+                }
+            }
         }
     }
 
