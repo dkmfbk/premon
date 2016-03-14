@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  */
 public class Premonitor {
 
-    private static final String DEFAULT_PATH = ".";
+    private static final String DEFAULT_PATH = "./resources";
     private static final String DEFAULT_PROPERTIES_FILE = "default.properties";
     private static final String DEFAULT_OUTPUT_BASE = "premon";
     private static final String DEFAULT_OUTPUT_FORMATS = "tql.gz";
