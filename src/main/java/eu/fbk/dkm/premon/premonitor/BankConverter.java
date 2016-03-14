@@ -486,15 +486,6 @@ public abstract class BankConverter extends Converter {
         }
     }
 
-    protected void addSingleMapping(String suffix, URI... uris) {
-        TreeSet<URI> cluster = new URITreeSet();
-        for (URI uri : uris) {
-            cluster.add(uri);
-        }
-
-        addMappingToSink(cluster, suffix);
-    }
-
     protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
 
         // FrameNet

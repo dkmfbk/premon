@@ -3,6 +3,7 @@ package eu.fbk.dkm.premon.premonitor;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.sun.org.apache.regexp.internal.RE;
+import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.*;
 import eu.fbk.rdfpro.util.Hash;
 import org.openrdf.model.Resource;
@@ -425,6 +426,15 @@ public abstract class Converter {
         builder.append(getArgLabel());
         builder.append(formatArg(argName));
         return builder.toString();
+    }
+
+    protected void addSingleMapping(String suffix, URI... uris) {
+        TreeSet<URI> cluster = new URITreeSet();
+        for (URI uri : uris) {
+            cluster.add(uri);
+        }
+
+        addMappingToSink(cluster, suffix);
     }
 
     protected void addMappingToSink(TreeSet<URI> mapping, String suffix) {
