@@ -21,6 +21,12 @@ public final class PM {
 
     // Classes
 
+    /** Class pm:Resource. */
+    public static final URI RESOURCE = createURI("Resource");
+
+    /** Class pm:Example. */
+    public static final URI EXAMPLE = createURI("Example");
+
     /** Class pm:meta. */
     public static final URI META = createURI("meta");
 

@@ -103,13 +103,7 @@ public class SemlinkConverter extends Converter {
 
     @Override public void convert() throws IOException {
 
-        // Lexicon
-        addStatementToSink(getLexicon(), RDF.TYPE, ONTOLEX.LEXICON, LE_GRAPH);
-        addStatementToSink(getLexicon(), ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
-        addStatementToSink(getLexicon(), DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
-
-        addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
-        addStatementToSink(LE_GRAPH, DCTERMS.SOURCE, createURI(NAMESPACE, resource), PM.META);
+        addMetaToSink();
 
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 

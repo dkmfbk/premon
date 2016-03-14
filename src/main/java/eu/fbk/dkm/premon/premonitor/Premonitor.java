@@ -63,7 +63,7 @@ import eu.fbk.rdfpro.util.Tracker;
  */
 public class Premonitor {
 
-    private static final String DEFAULT_PATH = ".";
+    private static final String DEFAULT_PATH = "./resources";
     private static final String DEFAULT_PROPERTIES_FILE = "premonitor.properties";
     private static final String DEFAULT_OUTPUT_BASE = "output/premon";
     private static final String DEFAULT_OUTPUT_FORMATS = "trig.gz,tql.gz,tql.gz";
