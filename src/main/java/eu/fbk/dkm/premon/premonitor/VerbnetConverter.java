@@ -745,7 +745,7 @@ public class VerbnetConverter extends Converter {
 
         addStatementToSink(annotationSetURI, RDF.TYPE, PMO.ANNOTATION_SET, this.EXAMPLE_GRAPH);
 
-        addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI, this.EXAMPLE_GRAPH);
+//        addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI, this.EXAMPLE_GRAPH);
         addStatementToSink(exampleURI, RDF.TYPE, PMO.EXAMPLE_C, this.EXAMPLE_GRAPH);
         addStatementToSink(exampleURI, NIF.IS_STRING, example.getTextContent(), this.EXAMPLE_GRAPH);
 
