@@ -487,50 +487,7 @@ public abstract class BankConverter extends Converter {
         }
     }
 
-    protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
-
-        // FrameNet
-        List<String> fnPredicates = new ArrayList<>();
-        if (roleset.getFramnet() != null) {
-            String[] tmpFnPreds = roleset.getFramnet().trim().toLowerCase()
-                    .split("\\s+");
-            for (String tmpClass : tmpFnPreds) {
-                tmpClass = tmpClass.trim();
-                if (tmpClass.length() > 1) {
-                    fnPredicates.add(tmpClass);
-                }
-            }
-        }
-
-        for (String fnPredicate : fnPredicates) {
-            for (String fnLink : fnLinks) {
-                URI fnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, fnPredicate, fnLink);
-                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, fnConcURI);
-            }
-        }
-
-        // VerbNet
-        List<String> vnClasses = getVnClasses(roleset.getVncls());
-        for (String vnClass : vnClasses) {
-            for (String vnLink : vnLinks) {
-                URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, vnLink);
-                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, vnConcURI);
-            }
-        }
-
-        // PropBank
-        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
-        for (Matcher matcher : matchers) {
-            String pbLemma = matcher.group(2);
-            String pbPredicate = matcher.group(1);
-
-            for (String pbLink : pbLinks) {
-                String lemma = getLemmaFromPredicateName(pbLemma);
-                URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
-                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, pbConceptURI);
-            }
-        }
-    }
+    protected abstract void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type);
 
     protected ArrayList<Matcher> getPropBankPredicates(Roleset roleset) {
 
@@ -557,7 +514,7 @@ public abstract class BankConverter extends Converter {
         return ret;
     }
 
-    private List<String> getVnClasses(String vnList) {
+    protected List<String> getVnClasses(String vnList) {
 
         List<String> vnClasses = new ArrayList<>();
 

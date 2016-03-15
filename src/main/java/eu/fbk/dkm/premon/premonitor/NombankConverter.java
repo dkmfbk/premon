@@ -7,6 +7,7 @@ import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.PMONB;
 import org.openrdf.model.URI;
+import org.openrdf.query.algebra.Str;
 import org.openrdf.rio.RDFHandler;
 
 import java.io.File;
@@ -166,4 +167,34 @@ public class NombankConverter extends BankConverter {
         return Type.NULL;
     }
 
+    protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
+
+        Set<String> lemmas = new HashSet<>();
+
+        // PropBank
+        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
+        for (Matcher matcher : matchers) {
+            String pbLemma = matcher.group(2);
+            String lemma = getLemmaFromPredicateName(pbLemma);
+            lemmas.add(lemma);
+            String pbPredicate = matcher.group(1);
+
+            for (String pbLink : pbLinks) {
+                URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
+                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, pbConceptURI);
+            }
+        }
+
+        // VerbNet
+        List<String> vnClasses = getVnClasses(roleset.getVncls());
+        for (String vnClass : vnClasses) {
+            for (String vnLink : vnLinks) {
+                for (String lemma : lemmas) {
+                    URI vnConcURI = uriForConceptualizationWithPrefix(lemma, "v", vnClass, vnLink);
+                    addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, vnConcURI);
+                }
+            }
+        }
+
+    }
 }
