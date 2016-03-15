@@ -202,6 +202,7 @@ public abstract class BankConverter extends Converter {
 
                 String type = resource.getType();
                 String origLemma = resource.getLemma();
+                String uriOrigLemma = getLemmaFromPredicateName(origLemma);
 
                 List<Object> noteOrPredicate = frameset.getNoteOrPredicate();
 
@@ -239,7 +240,7 @@ public abstract class BankConverter extends Converter {
                                 addStatementToSink(rolesetURI, RDFS.LABEL, rolesetID, false);
                                 addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, rolesetURI);
 
-                                URI conceptualizationURI = uriForConceptualization(uriLemma, type, rolesetID);
+                                URI conceptualizationURI = uriForConceptualization(uriOrigLemma, type, rolesetID);
                                 addStatementToSink(conceptualizationURI, RDF.TYPE,
                                         PMO.CONCEPTUALIZATION);
                                 addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY,
