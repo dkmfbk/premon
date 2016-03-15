@@ -570,7 +570,7 @@ public abstract class BankConverter extends Converter {
 
                     // todo: bad!
                     mapArgLabel = "";
-                    URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, theta, vnLink);
+                    URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, "v", vnClass, theta, vnLink);
                     mapArgLabel = null;
 
                     addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, argConceptualizationURI, vnConcURI);
