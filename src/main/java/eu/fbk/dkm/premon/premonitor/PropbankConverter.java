@@ -8,6 +8,7 @@ import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
 import eu.fbk.dkm.premon.premonitor.propbank.Vnrole;
 import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.NIF;
+import eu.fbk.dkm.premon.vocab.PM;
 import eu.fbk.dkm.premon.vocab.PMOPB;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
@@ -165,7 +166,7 @@ public class PropbankConverter extends BankConverter {
             }
 
             addStatementToSink(exampleURI, PMOPB.INFLECTION_P, inflectionURI, EXAMPLE_GRAPH);
-            addStatementToSink(inflectionURI, RDF.TYPE, PMOPB.INFLECTION_C, EXAMPLE_GRAPH);
+            addStatementToSink(inflectionURI, RDF.TYPE, PMOPB.INFLECTION_C, PM.TBOX);
         }
     }
 
