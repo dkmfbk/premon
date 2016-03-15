@@ -52,7 +52,8 @@ public class FramenetConverter extends Converter {
         paths.put("luIndex", new File(this.path.getAbsolutePath() + File.separator + "luIndex.xml"));
         paths.put("semTypes", new File(this.path.getAbsolutePath() + File.separator + "semTypes.xml"));
         paths.put("frRelation", new File(this.path.getAbsolutePath() + File.separator + "frRelation.xml"));
-        paths.put("retroMappings", new File(this.path.getAbsolutePath() + File.separator + "miscXML/DifferencesR1.5-R16.xml"));
+        paths.put("retroMappings",
+                new File(this.path.getAbsolutePath() + File.separator + "miscXML/DifferencesR1.5-R16.xml"));
 
         bugMap.add("Test35");
         bugMap.add("Test_the_test");
@@ -103,7 +104,8 @@ public class FramenetConverter extends Converter {
 
                 diffs = JOOX.$(document).xpath("FrameElementDiff/Added/FrameElement");
                 for (Element diff : diffs) {
-                    added.add(diff.getAttribute("FrameName").toLowerCase() + argumentSeparator + diff.getTextContent().toLowerCase());
+                    added.add(diff.getAttribute("FrameName").toLowerCase() + argumentSeparator + diff.getTextContent()
+                            .toLowerCase());
                 }
                 diffs = JOOX.$(document).xpath("Changed/FrameElement");
                 for (Element diff : diffs) {
@@ -260,10 +262,11 @@ public class FramenetConverter extends Converter {
                                     String toMap = changed.get(lcFrameName);
                                     mapCount++;
                                     if (toMap != null) {
-                                        addSingleMapping(DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName), uriForRoleset(toMap, retroMappings));
-                                    }
-                                    else {
-                                        addSingleMapping(DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName), uriForRoleset(lcFrameName, retroMappings));
+                                        addSingleMapping(DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
+                                                uriForRoleset(toMap, retroMappings));
+                                    } else {
+                                        addSingleMapping(DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
+                                                uriForRoleset(lcFrameName, retroMappings));
                                     }
                                 }
                             }
@@ -301,10 +304,15 @@ public class FramenetConverter extends Converter {
                                         mapRoleCount++;
                                         if (toMap != null) {
                                             String[] parts = toMap.split("@");
-                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName), uriForArgument(parts[0], parts[1], retroMappings));
-                                        }
-                                        else {
-                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName), uriForArgument(lcFrameName, lcFeName, retroMappings));
+                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName),
+                                                    uriForArgument(parts[0], parts[1], retroMappings));
+                                        } else {
+                                            String f = lcFrameName;
+                                            if (changed.containsKey(f)) {
+                                                f = changed.get(f);
+                                            }
+                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName),
+                                                    uriForArgument(f, lcFeName, retroMappings));
                                         }
                                     }
                                 }

@@ -1,42 +1,16 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.Constructor;
-import java.nio.file.Files;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Table;
-
-import org.openrdf.model.BNode;
-import org.openrdf.model.Namespace;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
+import com.google.common.collect.*;
+import eu.fbk.dkm.premon.util.ProcessorUndoRDFS;
+import eu.fbk.dkm.premon.vocab.*;
+import eu.fbk.dkm.utils.CommandLine;
+import eu.fbk.rdfpro.*;
+import eu.fbk.rdfpro.util.IO;
+import eu.fbk.rdfpro.util.QuadModel;
+import eu.fbk.rdfpro.util.Statements;
+import eu.fbk.rdfpro.util.Tracker;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
@@ -47,29 +21,16 @@ import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.fbk.dkm.premon.util.ProcessorUndoRDFS;
-import eu.fbk.dkm.premon.vocab.DECOMP;
-import eu.fbk.dkm.premon.vocab.FB;
-import eu.fbk.dkm.premon.vocab.LEXINFO;
-import eu.fbk.dkm.premon.vocab.ONTOLEX;
-import eu.fbk.dkm.premon.vocab.PM;
-import eu.fbk.dkm.premon.vocab.PMO;
-import eu.fbk.dkm.premon.vocab.PMONB;
-import eu.fbk.dkm.premon.vocab.PMOPB;
-import eu.fbk.dkm.utils.CommandLine;
-import eu.fbk.rdfpro.AbstractRDFHandler;
-import eu.fbk.rdfpro.RDFHandlers;
-import eu.fbk.rdfpro.RDFProcessor;
-import eu.fbk.rdfpro.RDFProcessors;
-import eu.fbk.rdfpro.RDFSource;
-import eu.fbk.rdfpro.RDFSources;
-import eu.fbk.rdfpro.RuleEngine;
-import eu.fbk.rdfpro.Ruleset;
-import eu.fbk.rdfpro.SetOperator;
-import eu.fbk.rdfpro.util.IO;
-import eu.fbk.rdfpro.util.QuadModel;
-import eu.fbk.rdfpro.util.Statements;
-import eu.fbk.rdfpro.util.Tracker;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Constructor;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Premonitor command line tool for converting predicate resources to the PreMOn model
@@ -105,25 +66,25 @@ public class Premonitor {
                     .withOption("i", "input",
                             String.format("input folder (default %s)", DEFAULT_PATH), "FOLDER",
                             CommandLine.Type.DIRECTORY_EXISTING, true, false, false)
-                            .withOption("b", "output-base", "Output base path/name (default 'premon')",
-                                    "PATH", CommandLine.Type.FILE, true, false, false)
-                                    .withOption("f", "output-formats",
-                                            "Comma-separated list of output formats (default 'tql.gz')", "FMTS",
-                                            CommandLine.Type.STRING, true, false, false)
-                                            .withOption("p", "properties",
-                                                    String.format("Property file (default %s)", DEFAULT_PROPERTIES_FILE),
-                                                    "FILE", CommandLine.Type.FILE, true, false, false)
-                                                    .withOption("s", "single", "Extract single lemma (apply to all resources)",
-                                                            "LEMMA", CommandLine.Type.STRING, true, false, false)
-                                                            .withOption(null, "wordnet", "WordNet RDF triple file", "FILE",
-                                                                    CommandLine.Type.FILE_EXISTING, true, false, false)
-                                                                    .withOption(null, "wordnet-sensekeys", "WordNet senseKey mapping", "FILE",
-                                                                            CommandLine.Type.FILE_EXISTING, true, false, false)
-                                                                            .withOption("r", "omit-owl2rl", "Omit OWL2RL reasoning (faster)")
-                                                                            .withOption("x", "omit-stats", "Omit generation of statistics (faster)")
-                                                                            .withOption("m", "omit-filter-mappings", "Omit filtering illegal mappings " //
-                                                                                    + "referring to non-existing conceptualizations (faster)")
-                                                                                    .withLogger(LoggerFactory.getLogger("eu.fbk")).parse(args);
+                    .withOption("b", "output-base", "Output base path/name (default 'premon')",
+                            "PATH", CommandLine.Type.FILE, true, false, false)
+                    .withOption("f", "output-formats",
+                            "Comma-separated list of output formats (default 'tql.gz')", "FMTS",
+                            CommandLine.Type.STRING, true, false, false)
+                    .withOption("p", "properties",
+                            String.format("Property file (default %s)", DEFAULT_PROPERTIES_FILE),
+                            "FILE", CommandLine.Type.FILE, true, false, false)
+                    .withOption("s", "single", "Extract single lemma (apply to all resources)",
+                            "LEMMA", CommandLine.Type.STRING, true, false, false)
+                    .withOption(null, "wordnet", "WordNet RDF triple file", "FILE",
+                            CommandLine.Type.FILE_EXISTING, true, false, false)
+                    .withOption(null, "wordnet-sensekeys", "WordNet senseKey mapping", "FILE",
+                            CommandLine.Type.FILE_EXISTING, true, false, false)
+                    .withOption("r", "omit-owl2rl", "Omit OWL2RL reasoning (faster)")
+                    .withOption("x", "omit-stats", "Omit generation of statistics (faster)")
+                    .withOption("m", "omit-filter-mappings", "Omit filtering illegal mappings " //
+                            + "referring to non-existing conceptualizations (faster)")
+                    .withLogger(LoggerFactory.getLogger("eu.fbk")).parse(args);
 
             // Input/output
             File inputFolder = new File(DEFAULT_PATH);
@@ -214,6 +175,7 @@ public class Premonitor {
             // Load properties
             final HashMap<Integer, Properties> multiProperties = new HashMap<>();
 
+            LOGGER.info("Loading properties file: {}", propertiesFile.getAbsolutePath());
             if (propertiesFile.exists()) {
                 final Properties tmpProp = new Properties();
                 tmpProp.load(new FileInputStream(propertiesFile));
@@ -425,7 +387,8 @@ public class Premonitor {
                     final boolean isEntries = graph.equals(PM.ENTRIES);
                     final boolean isExamples = isExampleGraph(graph);
                     final QuadModel filteredModel = QuadModel.create();
-                    outer: for (final Statement stmt : entry2.getValue()) {
+                    outer:
+                    for (final Statement stmt : entry2.getValue()) {
                         if (stmt.getPredicate().getNamespace().equals("sys:")) {
                             continue;
                         } else if (stmt.getPredicate().equals(RDF.TYPE)) {
@@ -726,7 +689,7 @@ public class Premonitor {
                         }
                         LOGGER.warn("{}/{} illegal {} mappings {} removed from {}",
                                 numMappingsToDelete, numMappings, type
-                                .equals(PMO.SEMANTIC_CLASS_MAPPING) ? "semantic class"
+                                        .equals(PMO.SEMANTIC_CLASS_MAPPING) ? "semantic class"
                                         : "semantic role", numMappingsPerSource, entry.getKey());
                     }
                 }
@@ -855,8 +818,8 @@ public class Premonitor {
 
                     final Table<String, String, AtomicInteger> table = model.contains(mapping,
                             RDF.TYPE, PMO.SEMANTIC_CLASS_MAPPING) ? this.classMappings
-                                    : model.contains(mapping, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING) ? this.roleMappings
-                                            : this.otherMappings;
+                            : model.contains(mapping, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING) ? this.roleMappings
+                            : this.otherMappings;
 
                     final Set<String> mappedSources = Sets.newHashSet();
                     for (final Value item : model.filter(mapping, PMO.ITEM, null).objects()) {
