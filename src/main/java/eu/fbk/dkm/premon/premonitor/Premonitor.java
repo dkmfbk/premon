@@ -214,6 +214,7 @@ public class Premonitor {
             // Load properties
             final HashMap<Integer, Properties> multiProperties = new HashMap<>();
 
+            LOGGER.info("Loading properties file: {}", propertiesFile.getAbsolutePath());
             if (propertiesFile.exists()) {
                 final Properties tmpProp = new Properties();
                 tmpProp.load(new FileInputStream(propertiesFile));
