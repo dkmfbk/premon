@@ -219,6 +219,20 @@ pmo:semRole rdf:type owl:ObjectProperty ;
 
 
 
+###  http://premon.fbk.eu/ontology/core#semRoleMapping
+
+pmo:semRoleMapping rdf:type owl:ObjectProperty ;
+                   
+                   rdfs:range pmo:SemanticRoleMapping ;
+                   
+                   rdfs:domain [ rdf:type owl:Class ;
+                                 owl:unionOf ( pmo:ConceptualizationMapping
+                                               pmo:SemanticClassMapping
+                                             )
+                               ] .
+
+
+
 ###  http://premon.fbk.eu/ontology/core#valueObj
 
 pmo:valueObj rdf:type owl:ObjectProperty ;
@@ -331,15 +345,27 @@ pmo:Conceptualization rdf:type owl:Class ;
                       
                       rdfs:subClassOf skos:Concept ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokedConcept ;
-                                        owl:onClass ontolex:LexicalConcept ;
-                                        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                      ] ,
-                                      [ rdf:type owl:Restriction ;
                                         owl:onProperty pmo:evokingEntry ;
                                         owl:onClass ontolex:LexicalEntry ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty pmo:evokedConcept ;
+                                        owl:onClass ontolex:LexicalConcept ;
+                                        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] .
+
+
+
+###  http://premon.fbk.eu/ontology/core#ConceptualizationMapping
+
+pmo:ConceptualizationMapping rdf:type owl:Class ;
+                             
+                             rdfs:subClassOf pmo:Mapping ,
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty pmo:item ;
+                                               owl:allValuesFrom pmo:Conceptualization
+                                             ] .
 
 
 
@@ -396,12 +422,12 @@ pmo:Markable rdf:type owl:Class ;
              rdfs:subClassOf nif:RFC5147String ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:onClass pmo:Example ;
-                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               owl:allValuesFrom pmo:Example
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:allValuesFrom pmo:Example
+                               owl:onClass pmo:Example ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] .
 
 
@@ -423,14 +449,7 @@ pmo:SemanticClassMapping rdf:type owl:Class ;
                          rdfs:subClassOf pmo:Mapping ,
                                          [ rdf:type owl:Restriction ;
                                            owl:onProperty pmo:item ;
-                                           owl:allValuesFrom [ rdf:type owl:Class ;
-                                                               owl:unionOf ( pmo:SemanticClass
-                                                                             [ rdf:type owl:Restriction ;
-                                                                               owl:onProperty pmo:evokedConcept ;
-                                                                               owl:allValuesFrom pmo:SemanticClass
-                                                                             ]
-                                                                           )
-                                                             ]
+                                           owl:allValuesFrom pmo:SemanticClass
                                          ] ;
                          
                          rdfs:comment "An individual of this class represents a mapping between skos:Conceptualization, where the evokedConcept is a SemanticClass"@en .
@@ -444,7 +463,7 @@ pmo:SemanticRole rdf:type owl:Class ;
                  rdfs:label "semantic argument"@en ,
                             "semantic role"@en ;
                  
-                 rdfs:subClassOf ontolex:LexicalConcept .
+                 rdfs:subClassOf skos:Concept .
 
 
 
@@ -455,14 +474,12 @@ pmo:SemanticRoleMapping rdf:type owl:Class ;
                         rdfs:subClassOf pmo:Mapping ,
                                         [ rdf:type owl:Restriction ;
                                           owl:onProperty pmo:item ;
-                                          owl:allValuesFrom [ rdf:type owl:Class ;
-                                                              owl:unionOf ( pmo:SemanticRole
-                                                                            [ rdf:type owl:Restriction ;
-                                                                              owl:onProperty pmo:evokedConcept ;
-                                                                              owl:allValuesFrom pmo:SemanticRole
-                                                                            ]
-                                                                          )
-                                                            ]
+                                          owl:allValuesFrom pmo:SemanticRole
+                                        ] ,
+                                        [ rdf:type owl:Restriction ;
+                                          owl:onProperty [ owl:inverseOf pmo:semRoleMapping
+                                                         ] ;
+                                          owl:someValuesFrom owl:Thing
                                         ] ;
                         
                         rdfs:comment "An individual of this class represents a mapping between skos:Conceptualization, where the evokedConcept is a SemanticRole"@en .

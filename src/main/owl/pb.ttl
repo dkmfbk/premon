@@ -184,7 +184,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
                                             )
                               ] ;
           
-          rdfs:subClassOf ontolex:LexicalConcept .
+          rdfs:subClassOf skos:Concept .
 
 
 
@@ -330,13 +330,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
               
               rdfs:subClassOf pmo:SemanticRole ,
                               [ rdf:type owl:Restriction ;
-                                owl:onProperty :argument ;
-                                owl:someValuesFrom :Argument
-                              ] ,
-                              [ rdf:type owl:Restriction ;
                                 owl:onProperty [ owl:inverseOf pmo:semRole
                                                ] ;
                                 owl:allValuesFrom :Roleset
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :argument ;
+                                owl:someValuesFrom :Argument
                               ] .
 
 
