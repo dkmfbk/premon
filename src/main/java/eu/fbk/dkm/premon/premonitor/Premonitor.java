@@ -1,42 +1,18 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.Constructor;
-import java.nio.file.Files;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
+import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Table;
-
-import org.openrdf.model.BNode;
-import org.openrdf.model.Namespace;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
+import com.google.common.collect.*;
+import com.google.common.io.Resources;
+import eu.fbk.dkm.premon.util.ProcessorUndoRDFS;
+import eu.fbk.dkm.premon.vocab.*;
+import eu.fbk.dkm.utils.CommandLine;
+import eu.fbk.rdfpro.*;
+import eu.fbk.rdfpro.util.IO;
+import eu.fbk.rdfpro.util.QuadModel;
+import eu.fbk.rdfpro.util.Statements;
+import eu.fbk.rdfpro.util.Tracker;
+import org.openrdf.model.*;
 import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
@@ -47,29 +23,17 @@ import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.fbk.dkm.premon.util.ProcessorUndoRDFS;
-import eu.fbk.dkm.premon.vocab.DECOMP;
-import eu.fbk.dkm.premon.vocab.FB;
-import eu.fbk.dkm.premon.vocab.LEXINFO;
-import eu.fbk.dkm.premon.vocab.ONTOLEX;
-import eu.fbk.dkm.premon.vocab.PM;
-import eu.fbk.dkm.premon.vocab.PMO;
-import eu.fbk.dkm.premon.vocab.PMONB;
-import eu.fbk.dkm.premon.vocab.PMOPB;
-import eu.fbk.dkm.utils.CommandLine;
-import eu.fbk.rdfpro.AbstractRDFHandler;
-import eu.fbk.rdfpro.RDFHandlers;
-import eu.fbk.rdfpro.RDFProcessor;
-import eu.fbk.rdfpro.RDFProcessors;
-import eu.fbk.rdfpro.RDFSource;
-import eu.fbk.rdfpro.RDFSources;
-import eu.fbk.rdfpro.RuleEngine;
-import eu.fbk.rdfpro.Ruleset;
-import eu.fbk.rdfpro.SetOperator;
-import eu.fbk.rdfpro.util.IO;
-import eu.fbk.rdfpro.util.QuadModel;
-import eu.fbk.rdfpro.util.Statements;
-import eu.fbk.rdfpro.util.Tracker;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Premonitor command line tool for converting predicate resources to the PreMOn model
@@ -80,6 +44,7 @@ public class Premonitor {
     private static final String DEFAULT_PROPERTIES_FILE = "premonitor.properties";
     private static final String DEFAULT_OUTPUT_BASE = "output/premon";
     private static final String DEFAULT_OUTPUT_FORMATS = "trig.gz,tql.gz,ttl.gz";
+    private static final String DEFAULT_WORDNET_FILE = "wordnet-3.1/wn31.nt.gz";
 
     private static final Pattern PROPERTIES_RESOURCES_PATTERN = Pattern
             .compile("^resource([0-9]+)\\.(.*)$");
@@ -115,7 +80,8 @@ public class Premonitor {
                             "FILE", CommandLine.Type.FILE, true, false, false)
                     .withOption("s", "single", "Extract single lemma (apply to all resources)",
                             "LEMMA", CommandLine.Type.STRING, true, false, false)
-                    .withOption(null, "wordnet", "WordNet RDF triple file", "FILE",
+                    .withOption(null, "wordnet",
+                            String.format("WordNet RDF triple file (default: %s)", DEFAULT_WORDNET_FILE), "FILE",
                             CommandLine.Type.FILE_EXISTING, true, false, false)
                     .withOption(null, "wordnet-sensekeys", "WordNet senseKey mapping", "FILE",
                             CommandLine.Type.FILE_EXISTING, true, false, false)
@@ -140,9 +106,17 @@ public class Premonitor {
             // WordNet
             final HashMap<String, URI> wnInfo = new HashMap<>();
 
+            URL resource = ClassLoader.getSystemClassLoader()
+                    .getResource("eu/fbk/dkm/premon/premonitor/wn30-senseKeys.tsv");
+            List<String> allLines = null;
+            if (resource != null) {
+                allLines = Resources.readLines(resource, Charsets.UTF_8);
+            }
+
             if (cmd.hasOption("wordnet-sensekeys")) {
-                final List<String> allLines = Files.readAllLines(cmd.getOptionValue(
-                        "wordnet-sensekeys", File.class).toPath());
+                allLines = Files.readAllLines(cmd.getOptionValue("wordnet-sensekeys", File.class).toPath());
+            }
+            if (allLines != null) {
                 for (String line : allLines) {
                     line = line.trim();
                     final String[] parts = line.split("\\s+");
@@ -157,7 +131,7 @@ public class Premonitor {
 
             if (cmd.hasOption("wordnet")) {
                 final File wnRDF = cmd.getOptionValue("wordnet", File.class);
-                if (wnRDF != null) {
+                if (wnRDF != null && wnRDF.exists()) {
                     LOGGER.info("Loading WordNet");
                     final RDFSource source = RDFSources.read(true, true, null, null,
                             wnRDF.getAbsolutePath());
@@ -188,25 +162,9 @@ public class Premonitor {
                                     }
                                 }
                             }
-
-                            //                            if (statement.getPredicate().equals(WN_OLD_SENSE)) {
-                            //                                synchronized (wnOldURIs) {
-                            //                                    if (statement.getSubject() instanceof URI) {
-                            //                                        String o = statement.getObject().stringValue();
-                            //                                        URI s = (URI) statement.getSubject();
-                            //                                        wnOldURIs.put(o, s);
-                            //
-                            //                                        // todo: Remove last :: in the IDs, is ok?
-                            //                                        o = o.replaceAll(":[^:]*:[^:]*$", "");
-                            //                                        wnOldURIs.put(o, s);
-                            //                                    }
-                            //                                }
-                            //                            }
-                            //
                         }
                     }, 1);
 
-                    //                    LOGGER.info("Loaded {} URIs", wnURIs.size());
                     LOGGER.info("Loaded {} URIs", wnInfo.size());
                 }
             }
@@ -430,7 +388,8 @@ public class Premonitor {
                     final boolean isEntries = graph.equals(PM.ENTRIES);
                     final boolean isExamples = isExampleGraph(graph);
                     final QuadModel filteredModel = QuadModel.create();
-                    outer: for (final Statement stmt : entry2.getValue()) {
+                    outer:
+                    for (final Statement stmt : entry2.getValue()) {
                         if (stmt.getPredicate().getNamespace().equals("sys:")) {
                             continue;
                         } else if (stmt.getPredicate().equals(RDF.TYPE)) {
@@ -870,7 +829,7 @@ public class Premonitor {
                     final Table<String, String, AtomicInteger> table = model.contains(mapping,
                             RDF.TYPE, PMO.SEMANTIC_CLASS_MAPPING) ? this.classMappings
                             : model.contains(mapping, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING) ? this.roleMappings
-                                    : this.otherMappings;
+                            : this.otherMappings;
 
                     final Set<String> mappedSources = Sets.newHashSet();
                     for (final Value item : model.filter(mapping, PMO.ITEM, null).objects()) {
