@@ -356,7 +356,7 @@ public abstract class BankConverter extends Converter {
                                         URI exampleURI = uriForExample(rolesetID, exampleCount++);
                                         URI annotationSetURI = uriForAnnotationSet(exampleURI, null);
 
-                                        addStatementToSink(exampleURI, RDF.TYPE, PMO.EXAMPLE_C, EXAMPLE_GRAPH);
+                                        addStatementToSink(exampleURI, RDF.TYPE, PMO.EXAMPLE, EXAMPLE_GRAPH);
                                         addStatementToSink(annotationSetURI, RDF.TYPE, PMO.ANNOTATION_SET,
                                                 EXAMPLE_GRAPH);
 
@@ -593,7 +593,7 @@ public abstract class BankConverter extends Converter {
 
     protected void addArgumentToSink(String key, URI keyURI, URI argumentURI, String lemma,
             String type, String rolesetID, URI lexicalEntryURI, @Nullable Role role) {
-        addStatementToSink(argumentURI, PMO.ROLE, keyURI);
+        addStatementToSink(argumentURI, getRoleToArgumentProperty(), keyURI);
         addStatementToSink(uriForRoleset(rolesetID), PMO.SEM_ROLE, argumentURI);
 
         URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
@@ -605,7 +605,8 @@ public abstract class BankConverter extends Converter {
             addExternalLinks(role, argConceptualizationURI, lemma, type);
         }
     }
-
+    
+    
     // URIs
 
     private URI uriForExample(String rolesetID, int exampleCount) {
@@ -632,6 +633,8 @@ public abstract class BankConverter extends Converter {
 
     abstract URI getSemanticArgument();
 
+    abstract URI getRoleToArgumentProperty();
+    
     abstract HashMap<String, URI> getFunctionMap();
 
     abstract void addInflectionToSink(URI exampleURI, Inflection inflection);

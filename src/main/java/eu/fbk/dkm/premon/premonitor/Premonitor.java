@@ -742,7 +742,7 @@ public class Premonitor {
             for (final QuadModel model : models) {
                 classes.addAll(model.filter(null, RDF.TYPE, PMO.SEMANTIC_CLASS).subjects());
                 roles.addAll(model.filter(null, PMO.SEM_ROLE, null).objects());
-                examples.addAll(model.filter(null, RDF.TYPE, PMO.EXAMPLE_C).subjects());
+                examples.addAll(model.filter(null, RDF.TYPE, PMO.EXAMPLE).subjects());
                 annotationSets.addAll(model.filter(null, RDF.TYPE, PMO.ANNOTATION_SET).subjects());
                 classRels.addAll(model.filter(null, PMO.CLASS_REL, null));
                 roleRels.addAll(model.filter(null, PMO.ROLE_REL, null));

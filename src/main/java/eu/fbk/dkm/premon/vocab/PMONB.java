@@ -23,6 +23,9 @@ public final class PMONB {
 
     // Classes
 
+    /** Class pmonb:Argument. */
+    public static final URI ARGUMENT_C = createURI("Argument");
+
     /** Class pmonb:Modifier. */
     public static final URI MODIFIER = createURI("Modifier");
 
@@ -35,13 +38,13 @@ public final class PMONB {
     /** Class pmonb:SemanticRole. */
     public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
 
-    /** Class pmonb:Argument. */
-    public static final URI ARGUMENT = createURI("Argument");
-
     /** Class pmonb:Tag. */
     public static final URI TAG_C = createURI("Tag");
 
     // Object properties
+
+    /** Object property pmonb:argument. */
+    public static final URI ARGUMENT_P = createURI("argument");
 
     /** Object property pmonb:tag. */
     public static final URI TAG_P = createURI("tag");

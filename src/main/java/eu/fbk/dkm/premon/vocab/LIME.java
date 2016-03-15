@@ -21,6 +21,9 @@ public final class LIME {
 
     // Classes
 
+    /** Class lime:Lexicon. */
+    public static final URI LEXICON = createURI("Lexicon");
+
     /** Class lime:LexicalizationSet. */
     public static final URI LEXICALIZATION_SET = createURI("LexicalizationSet");
 
@@ -28,6 +31,9 @@ public final class LIME {
     public static final URI LEXICAL_LINKSET = createURI("LexicalLinkset");
 
     // Object properties
+
+    /** Object property lime:entry. */
+    public static final URI ENTRY = createURI("entry");
 
     /** Object property lime:conceptualDataset. */
     public static final URI CONCEPTUAL_DATASET = createURI("conceptualDataset");
@@ -60,6 +66,9 @@ public final class LIME {
 
     /** Datatype property lime:concepts. */
     public static final URI CONCEPTS = createURI("concepts");
+
+    /** Datatype property lime:language. */
+    public static final URI LANGUAGE = createURI("language");
 
     /** Datatype property lime:lexicalEntries. */
     public static final URI LEXICAL_ENTRIES = createURI("lexicalEntries");

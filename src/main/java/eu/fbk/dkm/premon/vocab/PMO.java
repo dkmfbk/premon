@@ -21,43 +21,40 @@ public final class PMO {
 
     // Classes
 
+    /** Class pmo:AnnotationSet. */
+    public static final URI ANNOTATION_SET = createURI("AnnotationSet");
+
     /** Class pmo:Conceptualization. */
     public static final URI CONCEPTUALIZATION = createURI("Conceptualization");
 
-    /** Class pmo:ImplicitAnnotation. */
-    public static final URI IMPLICIT_ANNOTATION = createURI("ImplicitAnnotation");
+    /** Class pmo:ConceptualizationMapping. */
+    public static final URI CONCEPTUALIZATION_MAPPING = createURI("ConceptualizationMapping");
 
     /** Class pmo:Example. */
-    public static final URI EXAMPLE_C = createURI("Example");
+    public static final URI EXAMPLE = createURI("Example");
 
     /** Class pmo:Mapping. */
     public static final URI MAPPING = createURI("Mapping");
 
-    /** Class pmo:SemanticClassMapping. */
-    public static final URI SEMANTIC_CLASS_MAPPING = createURI("SemanticClassMapping");
-
-    /** Class pmo:SemanticRoleMapping. */
-    public static final URI SEMANTIC_ROLE_MAPPING = createURI("SemanticRoleMapping");
-
     /** Class pmo:Markable. */
     public static final URI MARKABLE = createURI("Markable");
-
-    /** Class pmo:AnnotationSet. */
-    public static final URI ANNOTATION_SET = createURI("AnnotationSet");
 
     /** Class pmo:SemanticClass. */
     public static final URI SEMANTIC_CLASS = createURI("SemanticClass");
 
+    /** Class pmo:SemanticClassMapping. */
+    public static final URI SEMANTIC_CLASS_MAPPING = createURI("SemanticClassMapping");
+
     /** Class pmo:SemanticRole. */
     public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
 
+    /** Class pmo:SemanticRoleMapping. */
+    public static final URI SEMANTIC_ROLE_MAPPING = createURI("SemanticRoleMapping");
+
     // Object properties
 
-    /** Object property pmo:roleRel. */
-    public static final URI ROLE_REL = createURI("roleRel");
-
-    /** Object property pmo:example. */
-    public static final URI EXAMPLE_P = createURI("example");
+    /** Object property pmo:classRel. */
+    public static final URI CLASS_REL = createURI("classRel");
 
     /** Object property pmo:evokedConcept. */
     public static final URI EVOKED_CONCEPT = createURI("evokedConcept");
@@ -74,31 +71,25 @@ public final class PMO {
     /** Object property pmo:next. */
     public static final URI NEXT = createURI("next");
 
-    /** Object property pmo:classRel. */
-    public static final URI CLASS_REL = createURI("classRel");
-
-    /** Object property pmo:role. */
-    public static final URI ROLE = createURI("role");
+    /** Object property pmo:roleRel. */
+    public static final URI ROLE_REL = createURI("roleRel");
 
     /** Object property pmo:semRole. */
     public static final URI SEM_ROLE = createURI("semRole");
 
-    /** Object property pmo:semType. */
-    public static final URI SEM_TYPE = createURI("semType");
+    /** Object property pmo:semRoleMapping. */
+    public static final URI SEM_ROLE_MAPPING = createURI("semRoleMapping");
 
-    /** Object property pmo:typeRel. */
-    public static final URI TYPE_REL = createURI("typeRel");
+    /** Object property pmo:semType. */
+    public static final URI SEM_TYPE = createURI("semType"); // TODO
 
     /** Object property pmo:valueObj. */
     public static final URI VALUE_OBJ = createURI("valueObj");
 
-    /** Object property pmo:implicitIn. */
-    public static final URI IMPLICIT_IN = createURI("implicitIn");
-
     // Datatype properties
 
     /** Datatype property pmo:core. */
-    public static final URI CORE = createURI("core");
+    public static final URI CORE = createURI("core"); // TODO
 
     /** Datatype property pmo:valueDt. */
     public static final URI VALUE_DT = createURI("valueDt");

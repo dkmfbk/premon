@@ -243,7 +243,7 @@ public class VerbnetConverter extends Converter {
 
             addStatementToSink(rolesetURI, PMO.SEM_ROLE, argumentURI);
             addStatementToSink(argumentURI, RDF.TYPE, PMOVN.SEMANTIC_ROLE);
-            addStatementToSink(argumentURI, PMO.ROLE, PMOVN.lookup(PMOVN.THEMATIC_ROLE, argName));
+            addStatementToSink(argumentURI, PMOVN.THEMATIC_ROLE_P, PMOVN.lookup(PMOVN.THEMATIC_ROLE_C, argName));
             for (final String lemma : lemmas.keySet()) {
                 final URI lemmaURI = lemmas.get(lemma);
                 addStatementToSink(lemmaURI, ONTOLEX.EVOKES, argumentURI);
@@ -514,7 +514,7 @@ public class VerbnetConverter extends Converter {
                     part = part.trim();
                     //                    System.out.println(value + "---" + part);
                     //                    URI argumentURI = uriForArgument(rolesetID, part);
-                    final URI thematicRoleURI = PMOVN.lookup(PMOVN.THEMATIC_ROLE, part);
+                    final URI thematicRoleURI = PMOVN.lookup(PMOVN.THEMATIC_ROLE_C, part);
                     //                    System.out.println(thematicRoleURI);
                     addStatementToSink(thisURI, PMO.VALUE_OBJ, thematicRoleURI);
                 }
@@ -746,7 +746,7 @@ public class VerbnetConverter extends Converter {
         addStatementToSink(annotationSetURI, RDF.TYPE, PMO.ANNOTATION_SET, this.EXAMPLE_GRAPH);
 
 //        addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI, this.EXAMPLE_GRAPH);
-        addStatementToSink(exampleURI, RDF.TYPE, PMO.EXAMPLE_C, this.EXAMPLE_GRAPH);
+        addStatementToSink(exampleURI, RDF.TYPE, PMO.EXAMPLE, this.EXAMPLE_GRAPH);
         addStatementToSink(exampleURI, NIF.IS_STRING, example.getTextContent(), this.EXAMPLE_GRAPH);
 
         return annotationSetURI;

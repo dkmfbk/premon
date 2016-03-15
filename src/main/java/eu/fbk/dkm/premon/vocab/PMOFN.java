@@ -27,40 +27,34 @@ public final class PMOFN {
     // Classes - Main
 
     /** Class pmofn:LUStatus. */
-    public static final URI LUSTATUS_CLASS = createURI("LUStatus");
+    public static final URI LUSTATUS = createURI("LUStatus");
 
     /** Class pmofn:CoreFrameElement. */
-    public static final URI CORE_FRAME_ELEMENT_CLASS = createURI("CoreFrameElement");
+    public static final URI CORE_FRAME_ELEMENT = createURI("CoreFrameElement");
 
     /** Class pmofn:CoreUnexpressedFrameElement. */
-    public static final URI CORE_UNEXPRESSED_FRAME_ELEMENT_CLASS = createURI("CoreUnexpressedFrameElement");
-
-    /** Class pmofn:Example. */
-    public static final URI EXAMPLE_CLASS = createURI("Example");
+    public static final URI CORE_UNEXPRESSED_FRAME_ELEMENT = createURI("CoreUnexpressedFrameElement");
 
     /** Class pmofn:ExtraThematicFrameElement. */
-    public static final URI EXTRA_THEMATIC_FRAME_ELEMENT_CLASS = createURI("ExtraThematicFrameElement");
+    public static final URI EXTRA_THEMATIC_FRAME_ELEMENT = createURI("ExtraThematicFrameElement");
 
     /** Class pmofn:FECoreSet. */
-    public static final URI FE_CORE_SET_CLASS = createURI("FECoreSet");
+    public static final URI FE_CORE_SET_C = createURI("FECoreSet");
 
     /** Class pmofn:SemType. */
-    public static final URI SEM_TYPE_CLASS = createURI("SemType");
+    public static final URI SEM_TYPE = createURI("SemType");
 
     /** Class pmofn:Frame. */
-    public static final URI FRAME_CLASS = createURI("Frame");
+    public static final URI FRAME = createURI("Frame");
 
     /** Class pmofn:FrameElement. */
-    public static final URI FRAME_ELEMENT_CLASS = createURI("FrameElement");
+    public static final URI FRAME_ELEMENT = createURI("FrameElement");
 
     /** Class pmofn:LexicalUnit. */
-    public static final URI LEXICAL_UNIT_CLASS = createURI("LexicalUnit");
-
-    /** Class pmofn:Markable. */
-    public static final URI MARKABLE_CLASS = createURI("Markable");
+    public static final URI LEXICAL_UNIT = createURI("LexicalUnit");
 
     /** Class pmofn:PeripheralFrameElement. */
-    public static final URI PERIPHERAL_FRAME_ELEMENT_CLASS = createURI("PeripheralFrameElement");
+    public static final URI PERIPHERAL_FRAME_ELEMENT = createURI("PeripheralFrameElement");
 
     // Object properties
 
@@ -68,7 +62,7 @@ public final class PMOFN {
     public static final URI EXCLUDES_FRAME_ELEMENT = createURI("excludesFrameElement");
 
     /** Object property pmovn:feCoreSet. */
-    public static final URI FE_CORE_SET = createURI("feCoreSet");
+    public static final URI FE_CORE_SET_P = createURI("feCoreSet");
 
     /** Object property pmovn:frameRelation. */
     public static final URI FRAME_RELATION = createURI("frameRelation");
@@ -82,23 +76,38 @@ public final class PMOFN {
     /** Object property pmovn:inheritsFrom. */
     public static final URI INHERITS_FROM = createURI("inheritsFrom");
 
+    /** Object property pmovn:inheritsFromFER. */
+    public static final URI INHERITS_FROM_FER = createURI("inheritsFromFER");
+
     /** Object property pmovn:isCausativeOf. */
     public static final URI IS_CAUSATIVE_OF = createURI("isCausativeOf");
+
+    /** Object property pmovn:isCausativeOfFER. */
+    public static final URI IS_CAUSATIVE_OF_FER = createURI("isCausativeOfFER");
 
     /** Object property pmovn:isInchoativeOf. */
     public static final URI IS_INCHOATIVE_OF = createURI("isInchoativeOf");
 
-    /** Object property pmovn:mapsToFrameElement. */
-    public static final URI MAPS_TO_FRAME_ELEMENT = createURI("mapsToFrameElement");
+    /** Object property pmovn:isInchoativeOfFER. */
+    public static final URI IS_INCHOATIVE_OF_FER = createURI("isInchoativeOfFER");
 
     /** Object property pmovn:perspectiveOn. */
     public static final URI PERSPECTIVE_ON = createURI("perspectiveOn");
 
-    /** Object property pmovn:reFrameMapping. */
-    public static final URI REFRAME_MAPPING = createURI("reFrameMapping");
+    /** Object property pmovn:perspectiveOnFER. */
+    public static final URI PERSPECTIVE_ON_FER = createURI("perspectiveOnFER");
 
     /** Object property pmovn:precedes. */
     public static final URI PRECEDES = createURI("precedes");
+
+    /** Object property pmovn:precedesFER. */
+    public static final URI PRECEDES_FER = createURI("precedesFER");
+
+    /** Object property pmovn:reFrameMapping. */
+    public static final URI REFRAME_MAPPING = createURI("reFrameMapping");
+
+    /** Object property pmovn:reFrameMappingFER. */
+    public static final URI REFRAME_MAPPING_FEr = createURI("reFrameMappingFER");
 
     /** Object property pmovn:requiresFrameElement. */
     public static final URI REQUIRES_FRAME_ELEMENT = createURI("requiresFrameElement");
@@ -106,14 +115,20 @@ public final class PMOFN {
     /** Object property pmovn:seeAlso. */
     public static final URI SEE_ALSO = createURI("seeAlso");
 
+    /** Object property pmovn:seeAlsoFER. */
+    public static final URI SEE_ALSO_FER = createURI("seeAlsoFER");
+
     /** Object property pmovn:status. */
     public static final URI STATUS = createURI("status");
 
-    /** Object property pmovn:subTypeOf. */
-    public static final URI SUB_TYPE_OF = createURI("subTypeOf");
-
     /** Object property pmovn:subframeOf. */
     public static final URI SUBFRAME_OF = createURI("subframeOf");
+
+    /** Object property pmovn:subframeOfFER. */
+    public static final URI SUBFRAME_OF_FER = createURI("subframeOfFER");
+
+    /** Object property pmovn:subTypeOf. */
+    public static final URI SUB_TYPE_OF = createURI("subTypeOf");
 
     /** Object property pmovn:uses. */
     public static final URI USES = createURI("uses");

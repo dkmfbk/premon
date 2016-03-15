@@ -281,7 +281,7 @@ public class FramenetConverter extends Converter {
 
                             URI cbyURI = addCBy(cBy);
 
-                            addStatementToSink(frameURI, RDF.TYPE, PMOFN.FRAME_CLASS);
+                            addStatementToSink(frameURI, RDF.TYPE, PMOFN.FRAME);
                             addStatementToSink(frameURI, RDFS.LABEL, frameName, false);
                             addStatementToSink(frameURI, DCTERMS.CREATOR, cbyURI);
                             addStatementToSink(frameURI, DCTERMS.CREATED, date);
@@ -332,20 +332,20 @@ public class FramenetConverter extends Converter {
                                 String feDefText = Jsoup.parse(feDefinition.text()).text().trim();
 
                                 URI argumentURI = uriForArgument(frameName.toLowerCase(), feName.toLowerCase());
-                                addStatementToSink(argumentURI, RDF.TYPE, PMOFN.FRAME_ELEMENT_CLASS);
+                                addStatementToSink(argumentURI, RDF.TYPE, PMOFN.FRAME_ELEMENT);
                                 switch (coreType) {
                                 case "Core":
-                                    addStatementToSink(argumentURI, RDF.TYPE, PMOFN.CORE_FRAME_ELEMENT_CLASS);
+                                    addStatementToSink(argumentURI, RDF.TYPE, PMOFN.CORE_FRAME_ELEMENT);
                                     break;
                                 case "Peripheral":
-                                    addStatementToSink(argumentURI, RDF.TYPE, PMOFN.PERIPHERAL_FRAME_ELEMENT_CLASS);
+                                    addStatementToSink(argumentURI, RDF.TYPE, PMOFN.PERIPHERAL_FRAME_ELEMENT);
                                     break;
                                 case "Extra-Thematic":
-                                    addStatementToSink(argumentURI, RDF.TYPE, PMOFN.EXTRA_THEMATIC_FRAME_ELEMENT_CLASS);
+                                    addStatementToSink(argumentURI, RDF.TYPE, PMOFN.EXTRA_THEMATIC_FRAME_ELEMENT);
                                     break;
                                 case "Core-Unexpressed":
                                     addStatementToSink(argumentURI, RDF.TYPE,
-                                            PMOFN.CORE_UNEXPRESSED_FRAME_ELEMENT_CLASS);
+                                            PMOFN.CORE_UNEXPRESSED_FRAME_ELEMENT);
                                     break;
                                 }
 
@@ -385,8 +385,8 @@ public class FramenetConverter extends Converter {
                                 coreset++;
 
                                 URI coresetURI = createURI(frameURI.toString() + "_coreSet" + coreset);
-                                addStatementToSink(frameURI, PMOFN.FE_CORE_SET, coresetURI);
-                                addStatementToSink(coresetURI, RDF.TYPE, PMOFN.FE_CORE_SET_CLASS);
+                                addStatementToSink(frameURI, PMOFN.FE_CORE_SET_P, coresetURI);
+                                addStatementToSink(coresetURI, RDF.TYPE, PMOFN.FE_CORE_SET_C);
 
                                 Match memberFEs = JOOX.$(members.getElementsByTagName("memberFE"));
                                 for (Element memberFE : memberFEs) {
@@ -512,7 +512,7 @@ public class FramenetConverter extends Converter {
                                 Match stElements = JOOX.$(lexUnit).children("semType");
                                 addSemTypes(stElements, semTypesFreq, semTypesForFrame, luURI, frameURI);
 
-                                addStatementToSink(luURI, RDF.TYPE, PMOFN.LEXICAL_UNIT_CLASS);
+                                addStatementToSink(luURI, RDF.TYPE, PMOFN.LEXICAL_UNIT);
                                 addStatementToSink(luURI, PMO.EVOKED_CONCEPT, frameURI);
                                 addStatementToSink(luURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
                                 addStatementToSink(luURI, LEXINFO.PART_OF_SPEECH_P, getPosURI(pos));
@@ -724,7 +724,7 @@ public class FramenetConverter extends Converter {
                                             addStatementToSink(aURI, PMO.VALUE_OBJ, lus.get(luID), EXAMPLE_GRAPH);
                                             addStatementToSink(exampleURI, NIF.ANNOTATION_P, aURI, EXAMPLE_GRAPH);
 
-                                            addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS,
+                                            addStatementToSink(markableURI, RDF.TYPE, PMO.MARKABLE,
                                                     EXAMPLE_GRAPH);
                                             addStatementToSink(markableURI, NIF.ANCHOR_OF, anchor, EXAMPLE_GRAPH);
 //                                            addStatementToSink(markableURI, NIF.ANNOTATION_P, frameURI);
@@ -743,7 +743,7 @@ public class FramenetConverter extends Converter {
                                         keep = false;
                                     }
 
-                                    addStatementToSink(exampleURI, RDF.TYPE, PMOFN.EXAMPLE_CLASS, EXAMPLE_GRAPH);
+                                    addStatementToSink(exampleURI, RDF.TYPE, PMO.EXAMPLE, EXAMPLE_GRAPH);
                                     addStatementToSink(exampleURI, NIF.IS_STRING, text, EXAMPLE_GRAPH);
 //                                    addStatementToSink(frameURI, PMO.EXAMPLE_P, exampleURI);
 //                                    addStatementToSink(luURI, PMO.EXAMPLE_P, exampleURI);
@@ -803,13 +803,12 @@ public class FramenetConverter extends Converter {
                                                             EXAMPLE_GRAPH);
 
                                                     if (anchor == null) {
-                                                        addStatementToSink(aURI, RDF.TYPE, PMO.IMPLICIT_ANNOTATION,
-                                                                EXAMPLE_GRAPH);
+                                                        // addStatementToSink(aURI, RDF.TYPE, PMO.IMPLICIT_ANNOTATION, EXAMPLE_GRAPH);
                                                     } else {
 
                                                         URI markableURI = uriForMarkable(exampleURI, start, end);
 
-                                                        addStatementToSink(markableURI, RDF.TYPE, PMOFN.MARKABLE_CLASS,
+                                                        addStatementToSink(markableURI, RDF.TYPE, PMO.MARKABLE,
                                                                 EXAMPLE_GRAPH);
                                                         addStatementToSink(markableURI, NIF.ANCHOR_OF, anchor,
                                                                 EXAMPLE_GRAPH);
@@ -907,7 +906,7 @@ public class FramenetConverter extends Converter {
 
         URI semTypeURI = getSemTypeURI(name);
 
-        addStatementToSink(semTypeURI, RDF.TYPE, PMOFN.SEM_TYPE_CLASS);
+        addStatementToSink(semTypeURI, RDF.TYPE, PMOFN.SEM_TYPE);
         addStatementToSink(semTypeURI, DCTERMS.IDENTIFIER, Integer.parseInt(id));
         addStatementToSink(semTypeURI, RDFS.LABEL, name, false);
         addStatementToSink(semTypeURI, SKOS.DEFINITION, definition);
@@ -946,7 +945,7 @@ public class FramenetConverter extends Converter {
         String description = statusType.getAttribute("description");
 
         URI statusURI = getStatusURI(name);
-        addStatementToSink(statusURI, RDF.TYPE, PMOFN.LUSTATUS_CLASS);
+        addStatementToSink(statusURI, RDF.TYPE, PMOFN.LUSTATUS);
         addStatementToSink(statusURI, RDFS.LABEL, name, false);
         addStatementToSink(statusURI, SKOS.DEFINITION, description);
     }

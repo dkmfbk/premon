@@ -39,9 +39,6 @@ public final class ONTOLEX {
     /** Class ontolex:LexicalSense. */
     public static final URI LEXICAL_SENSE = createURI("LexicalSense");
 
-    /** Class ontolex:Lexicon. */
-    public static final URI LEXICON = createURI("Lexicon");
-
     /** Class ontolex:MultiWordExpression. */
     public static final URI MULTI_WORD_EXPRESSION = createURI("MultiWordExpression");
 
@@ -58,9 +55,6 @@ public final class ONTOLEX {
 
     /** Object property ontolex:denotes. */
     public static final URI DENOTES = createURI("denotes");
-
-    /** Object property ontolex:entry. */
-    public static final URI ENTRY = createURI("entry");
 
     /** Object property ontolex:evokes. */
     public static final URI EVOKES = createURI("evokes");
@@ -105,9 +99,6 @@ public final class ONTOLEX {
     public static final URI USAGE = createURI("usage");
 
     // Datatype properties
-
-    /** Datatype property ontolex:language. */
-    public static final URI LANGUAGE = createURI("language");
 
     /** Datatype property ontolex:phoneticRep. */
     public static final URI PHONETIC_REP = createURI("phoneticRep");

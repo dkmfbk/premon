@@ -35,7 +35,7 @@ public final class PMOVN {
     public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
 
     /** Class pmovn:ThematicRole. */
-    public static final URI THEMATIC_ROLE = createURI("ThematicRole");
+    public static final URI THEMATIC_ROLE_C = createURI("ThematicRole");
 
     /** Class pmovn:VerbNetFrame. */
     public static final URI VERBNET_FRAME = createURI("VerbNetFrame");
@@ -167,6 +167,9 @@ public final class PMOVN {
     /** Object property pmovn:subclass. */
     public static final URI SUBCLASS_OF = createURI("subclassOf");
 
+    /** Object property pmovn:thematicRole. */
+    public static final URI THEMATIC_ROLE_P = createURI("thematicRole");
+
     // Datatype properties
 
     /** Datatype property pmovn:frameDescNumber. */
@@ -190,119 +193,120 @@ public final class PMOVN {
     // Individuals - Thematic roles
 
     /** Individual pmovn:actor (a pmovn:ThematicRole). */
-    public static final URI ACTOR = createURI("actor", THEMATIC_ROLE, "Actor");
+    public static final URI ACTOR = createURI("actor", THEMATIC_ROLE_C, "Actor");
 
     /** Individual pmovn:agent (a pmovn:ThematicRole). */
-    public static final URI AGENT = createURI("agent", THEMATIC_ROLE, "Agent");
+    public static final URI AGENT = createURI("agent", THEMATIC_ROLE_C, "Agent");
 
     /** Individual pmovn:asset (a pmovn:ThematicRole). */
-    public static final URI ASSET = createURI("asset", THEMATIC_ROLE, "Asset");
+    public static final URI ASSET = createURI("asset", THEMATIC_ROLE_C, "Asset");
 
     /** Individual pmovn:attribute (a pmovn:ThematicRole). */
-    public static final URI ATTRIBUTE = createURI("attribute", THEMATIC_ROLE, "Attribute");
+    public static final URI ATTRIBUTE = createURI("attribute", THEMATIC_ROLE_C, "Attribute");
 
     /** Individual pmovn:beneficiary (a pmovn:ThematicRole). */
-    public static final URI BENEFICIARY = createURI("beneficiary", THEMATIC_ROLE, "Beneficiary");
+    public static final URI BENEFICIARY = createURI("beneficiary", THEMATIC_ROLE_C, "Beneficiary");
 
     /** Individual pmovn:cause (a pmovn:ThematicRole). */
-    public static final URI CAUSE = createURI("cause", THEMATIC_ROLE, "Cause");
+    public static final URI CAUSE = createURI("cause", THEMATIC_ROLE_C, "Cause");
 
     /** Individual pmovn:coAgent (a pmovn:ThematicRole). */
-    public static final URI CO_AGENT = createURI("coAgent", THEMATIC_ROLE, "Co-Agent");
+    public static final URI CO_AGENT = createURI("coAgent", THEMATIC_ROLE_C, "Co-Agent");
 
     /** Individual pmovn:coPatient (a pmovn:ThematicRole). */
-    public static final URI CO_PATIENT = createURI("coPatient", THEMATIC_ROLE, "Co-Patient");
+    public static final URI CO_PATIENT = createURI("coPatient", THEMATIC_ROLE_C, "Co-Patient");
 
     /** Individual pmovn:coTheme (a pmovn:ThematicRole). */
-    public static final URI CO_THEME = createURI("coTheme", THEMATIC_ROLE, "Co-Theme");
+    public static final URI CO_THEME = createURI("coTheme", THEMATIC_ROLE_C, "Co-Theme");
 
     /** Individual pmovn:destination (a pmovn:ThematicRole). */
-    public static final URI DESTINATION = createURI("destination", THEMATIC_ROLE, "Destination");
+    public static final URI DESTINATION = createURI("destination", THEMATIC_ROLE_C, "Destination");
 
     /** Individual pmovn:duration (a pmovn:ThematicRole). */
-    public static final URI DURATION = createURI("duration", THEMATIC_ROLE, "Duration");
+    public static final URI DURATION = createURI("duration", THEMATIC_ROLE_C, "Duration");
 
     /** Individual pmovn:experiencer (a pmovn:ThematicRole). */
-    public static final URI EXPERIENCER = createURI("experiencer", THEMATIC_ROLE, "Experiencer");
+    public static final URI EXPERIENCER = createURI("experiencer", THEMATIC_ROLE_C, "Experiencer");
 
     /** Individual pmovn:extent (a pmovn:ThematicRole). */
-    public static final URI EXTENT = createURI("extent", THEMATIC_ROLE, "Extent");
+    public static final URI EXTENT = createURI("extent", THEMATIC_ROLE_C, "Extent");
 
     /** Individual pmovn:finalTime (a pmovn:ThematicRole). */
-    public static final URI FINAL_TIME = createURI("finalTime", THEMATIC_ROLE, "Final_Time");
+    public static final URI FINAL_TIME = createURI("finalTime", THEMATIC_ROLE_C, "Final_Time");
 
     /** Individual pmovn:frequency (a pmovn:ThematicRole). */
-    public static final URI FREQUENCY = createURI("frequency", THEMATIC_ROLE, "Frequency");
+    public static final URI FREQUENCY = createURI("frequency", THEMATIC_ROLE_C, "Frequency");
 
     /** Individual pmovn:goal (a pmovn:ThematicRole). */
-    public static final URI GOAL = createURI("goal", THEMATIC_ROLE, "Goal");
+    public static final URI GOAL = createURI("goal", THEMATIC_ROLE_C, "Goal");
 
     /** Individual pmovn:initialLocation (a pmovn:ThematicRole). */
-    public static final URI INITIAL_LOCATION = createURI("initialLocation", THEMATIC_ROLE,
+    public static final URI INITIAL_LOCATION = createURI("initialLocation", THEMATIC_ROLE_C,
             "Initial_Location");
 
     /** Individual pmovn:initialTime (a pmovn:ThematicRole). */
-    public static final URI INITIAL_TIME = createURI("initialTime", THEMATIC_ROLE, "Initial_Time");
+    public static final URI INITIAL_TIME = createURI("initialTime", THEMATIC_ROLE_C,
+            "Initial_Time");
 
     /** Individual pmovn:instrument (a pmovn:ThematicRole). */
-    public static final URI INSTRUMENT = createURI("instrument", THEMATIC_ROLE, "Instrument");
+    public static final URI INSTRUMENT = createURI("instrument", THEMATIC_ROLE_C, "Instrument");
 
     /** Individual pmovn:location (a pmovn:ThematicRole). */
-    public static final URI LOCATION = createURI("location", THEMATIC_ROLE, "Location");
+    public static final URI LOCATION = createURI("location", THEMATIC_ROLE_C, "Location");
 
     /** Individual pmovn:material (a pmovn:ThematicRole). */
-    public static final URI MATERIAL = createURI("material", THEMATIC_ROLE, "Material");
+    public static final URI MATERIAL = createURI("material", THEMATIC_ROLE_C, "Material");
 
     /** Individual pmovn:participant (a pmovn:ThematicRole). */
-    public static final URI PARTICIPANT = createURI("participant", THEMATIC_ROLE, "Participant");
+    public static final URI PARTICIPANT = createURI("participant", THEMATIC_ROLE_C, "Participant");
 
     /** Individual pmovn:patient (a pmovn:ThematicRole). */
-    public static final URI PATIENT = createURI("patient", THEMATIC_ROLE, "Patient");
+    public static final URI PATIENT = createURI("patient", THEMATIC_ROLE_C, "Patient");
 
     /** Individual pmovn:pivot (a pmovn:ThematicRole). */
-    public static final URI PIVOT = createURI("pivot", THEMATIC_ROLE, "Pivot");
+    public static final URI PIVOT = createURI("pivot", THEMATIC_ROLE_C, "Pivot");
 
     /** Individual pmovn:place (a pmovn:ThematicRole). */
-    public static final URI PLACE = createURI("place", THEMATIC_ROLE, "Place");
+    public static final URI PLACE = createURI("place", THEMATIC_ROLE_C, "Place");
 
     /** Individual pmovn:predicate (a pmovn:ThematicRole). */
-    public static final URI PREDICATE = createURI("predicate", THEMATIC_ROLE, "Predicate");
+    public static final URI PREDICATE = createURI("predicate", THEMATIC_ROLE_C, "Predicate");
 
     /** Individual pmovn:product (a pmovn:ThematicRole). */
-    public static final URI PRODUCT = createURI("product", THEMATIC_ROLE, "Product");
+    public static final URI PRODUCT = createURI("product", THEMATIC_ROLE_C, "Product");
 
     /** Individual pmovn:recipient (a pmovn:ThematicRole). */
-    public static final URI RECIPIENT = createURI("recipient", THEMATIC_ROLE, "Recipient");
+    public static final URI RECIPIENT = createURI("recipient", THEMATIC_ROLE_C, "Recipient");
 
     /** Individual pmovn:reflexive (a pmovn:ThematicRole). */
-    public static final URI REFLEXIVE = createURI("reflexive", THEMATIC_ROLE, "Reflexive");
+    public static final URI REFLEXIVE = createURI("reflexive", THEMATIC_ROLE_C, "Reflexive");
 
     /** Individual pmovn:result (a pmovn:ThematicRole). */
-    public static final URI RESULT = createURI("result", THEMATIC_ROLE, "Result");
+    public static final URI RESULT = createURI("result", THEMATIC_ROLE_C, "Result");
 
     /** Individual pmovn:source (a pmovn:ThematicRole). */
-    public static final URI SOURCE = createURI("source", THEMATIC_ROLE, "Source");
+    public static final URI SOURCE = createURI("source", THEMATIC_ROLE_C, "Source");
 
     /** Individual pmovn:stimulus (a pmovn:ThematicRole). */
-    public static final URI STIMULUS = createURI("stimulus", THEMATIC_ROLE, "Stimulus");
+    public static final URI STIMULUS = createURI("stimulus", THEMATIC_ROLE_C, "Stimulus");
 
     /** Individual pmovn:theme (a pmovn:ThematicRole). */
-    public static final URI THEME = createURI("theme", THEMATIC_ROLE, "Theme");
+    public static final URI THEME = createURI("theme", THEMATIC_ROLE_C, "Theme");
 
     /** Individual pmovn:time (a pmovn:ThematicRole). */
-    public static final URI TIME = createURI("time", THEMATIC_ROLE, "Time");
+    public static final URI TIME = createURI("time", THEMATIC_ROLE_C, "Time");
 
     /** Individual pmovn:topic (a pmovn:ThematicRole). */
-    public static final URI TOPIC = createURI("topic", THEMATIC_ROLE, "Topic");
+    public static final URI TOPIC = createURI("topic", THEMATIC_ROLE_C, "Topic");
 
     /** Individual pmovn:trajectory (a pmovn:ThematicRole). */
-    public static final URI TRAJECTORY = createURI("trajectory", THEMATIC_ROLE, "Trajectory");
+    public static final URI TRAJECTORY = createURI("trajectory", THEMATIC_ROLE_C, "Trajectory");
 
     /** Individual pmovn:undergoer (a pmovn:ThematicRole). */
-    public static final URI UNDERGOER = createURI("undergoer", THEMATIC_ROLE, "Undergoer");
+    public static final URI UNDERGOER = createURI("undergoer", THEMATIC_ROLE_C, "Undergoer");
 
     /** Individual pmovn:value (a pmovn:ThematicRole). */
-    public static final URI VALUE = createURI("value", THEMATIC_ROLE, "Value");
+    public static final URI VALUE = createURI("value", THEMATIC_ROLE_C, "Value");
 
     // Individuals - Auxiliary NP types
 
@@ -462,10 +466,6 @@ public final class PMOVN {
 
     /** Individual pmovn:plant_rrp (a pmovn:RoleRestrictionProperty). */
     public static final URI PLANT_RRP = createURI("plant_rrp", ROLE_RESTRICTION_PROPERTY, "plant");
-
-    /** Individual pmovn:plural_rrp (a pmovn:RoleRestrictionProperty). */
-    public static final URI PLURAL_RRP = createURI("plural_rrp", ROLE_RESTRICTION_PROPERTY,
-            "plural");
 
     /** Individual pmovn:pointy_rrp (a pmovn:RoleRestrictionProperty). */
     public static final URI POINTY_RRP = createURI("pointy_rrp", ROLE_RESTRICTION_PROPERTY,

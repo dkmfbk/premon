@@ -1,22 +1,26 @@
 package eu.fbk.dkm.premon.premonitor;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Matcher;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
-import eu.fbk.dkm.premon.premonitor.propbank.Role;
-import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
-import eu.fbk.dkm.premon.premonitor.propbank.Vnrole;
-import eu.fbk.dkm.premon.util.URITreeSet;
-import eu.fbk.dkm.premon.vocab.NIF;
-import eu.fbk.dkm.premon.vocab.PM;
-import eu.fbk.dkm.premon.vocab.PMOPB;
+
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFHandler;
 
-import java.io.File;
-import java.util.*;
-import java.util.regex.Matcher;
+import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
+import eu.fbk.dkm.premon.premonitor.propbank.Role;
+import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
+import eu.fbk.dkm.premon.vocab.NIF;
+import eu.fbk.dkm.premon.vocab.PM;
+import eu.fbk.dkm.premon.vocab.PMOPB;
 
 /**
  * Created by alessio on 28/10/15.
@@ -48,9 +52,6 @@ public class PropbankConverter extends BankConverter {
             }
             if (PMOPB.mapO.containsKey(code)) {
                 return Type.ADDITIONAL;
-            }
-            if (PMOPB.mapP.containsKey(code)) {
-                return Type.PREPOSITION;
             }
 
             Matcher matcher = ARG_NUM_PATTERN.matcher(code);
@@ -178,6 +179,10 @@ public class PropbankConverter extends BankConverter {
         return PMOPB.SEMANTIC_ROLE;
     }
 
+    @Override URI getRoleToArgumentProperty() {
+        return PMOPB.ARGUMENT_P;
+    }
+    
     @Override HashMap<String, URI> getFunctionMap() {
         return PMOPB.mapM;
     }
@@ -215,14 +220,14 @@ public class PropbankConverter extends BankConverter {
         }
         switch (secondType) {
         case M_FUNCTION:
-            addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(f));
+            addStatementToSink(argumentURI, PMOPB.TAG_C, PMOPB.mapM.get(f));
             break;
         case ADDITIONAL:
-            addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, PMOPB.mapO.get(f));
+            addStatementToSink(argumentURI, PMOPB.TAG_C, PMOPB.mapO.get(f));
             break;
         case PREPOSITION:
             URI lexicalEntry = addLexicalEntry(f, f, null, null, "prep", getLexicon());
-            addStatementToSink(argumentURI, PMOPB.FUNCTION_TAG, lexicalEntry);
+            addStatementToSink(argumentURI, PMOPB.TAG_C, lexicalEntry);
             break;
         }
     }
@@ -234,7 +239,7 @@ public class PropbankConverter extends BankConverter {
     @Override protected void addRelToSink(Type argType, String argName, URI markableURI) {
         switch (argType) {
         case M_FUNCTION:
-            addStatementToSink(markableURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, PMOPB.TAG_C, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
             break;
         default:
             //todo: should never happen (and strangely it really never happens)
@@ -253,11 +258,11 @@ public class PropbankConverter extends BankConverter {
             break;
         case M_FUNCTION:
             addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
-            addStatementToSink(asURI, PMOPB.FUNCTION_TAG, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
+            addStatementToSink(asURI, PMOPB.TAG_C, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
             break;
         case AGENT:
             addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
-            addStatementToSink(asURI, PMOPB.FUNCTION_TAG, PMOPB.ARGA, EXAMPLE_GRAPH);
+            addStatementToSink(asURI, PMOPB.TAG_C, PMOPB.ARGA, EXAMPLE_GRAPH);
             break;
         default:
             //todo: should never happen, but it happens

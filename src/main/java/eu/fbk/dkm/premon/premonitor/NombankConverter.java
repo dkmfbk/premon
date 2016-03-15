@@ -6,6 +6,8 @@ import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
 import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.PMONB;
+import eu.fbk.dkm.premon.vocab.PMOPB;
+
 import org.openrdf.model.URI;
 import org.openrdf.query.algebra.Str;
 import org.openrdf.rio.RDFHandler;
@@ -82,6 +84,10 @@ public class NombankConverter extends BankConverter {
         return PMONB.SEMANTIC_ROLE;
     }
 
+    @Override URI getRoleToArgumentProperty() {
+        return PMONB.ARGUMENT_P;
+    }
+    
     @Override HashMap<String, URI> getFunctionMap() {
         return PMONB.mapM;
     }

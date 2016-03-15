@@ -288,12 +288,12 @@ public abstract class Converter {
 
         addStatementToSink(leURI, RDF.TYPE, ONTOLEX.LEXICAL_ENTRY, LE_GRAPH);
         addStatementToSink(leURI, LEXINFO.PART_OF_SPEECH_P, posURI, LE_GRAPH);
-        addStatementToSink(lexiconURI, ONTOLEX.ENTRY, leURI, LE_GRAPH);
+        addStatementToSink(lexiconURI, LIME.ENTRY, leURI, LE_GRAPH);
         addStatementToSink(formURI, RDF.TYPE, ONTOLEX.FORM, LE_GRAPH);
         addStatementToSink(leURI, ONTOLEX.CANONICAL_FORM, formURI, LE_GRAPH);
         addStatementToSink(formURI, ONTOLEX.WRITTEN_REP, goodLemma, LE_GRAPH);
         addStatementToSink(leURI, RDFS.LABEL, goodLemma, LE_GRAPH);
-        addStatementToSink(leURI, ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
+        addStatementToSink(leURI, LIME.LANGUAGE, language, false, LE_GRAPH);
 
         if (wnInfo.size() > 0 && posURI != null) {
             String wnPos = wnMap.get(posURI);
@@ -513,8 +513,8 @@ public abstract class Converter {
     }
 
     protected void addMetaToSink() {
-        addStatementToSink(getLexicon(), RDF.TYPE, ONTOLEX.LEXICON, LE_GRAPH);
-        addStatementToSink(getLexicon(), ONTOLEX.LANGUAGE, language, false, LE_GRAPH);
+        addStatementToSink(getLexicon(), RDF.TYPE, LIME.LEXICON, LE_GRAPH);
+        addStatementToSink(getLexicon(), LIME.LANGUAGE, language, false, LE_GRAPH);
         addStatementToSink(getLexicon(), DCTERMS.LANGUAGE, LANGUAGE_CODES_TO_URIS.get(language), LE_GRAPH);
 
         addStatementToSink(DEFAULT_GRAPH, DCTERMS.SOURCE, RESOURCE, PM.META);

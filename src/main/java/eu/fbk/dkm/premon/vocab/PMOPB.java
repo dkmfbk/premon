@@ -23,8 +23,8 @@ public final class PMOPB {
 
     // Classes
 
-    /** Class pmopb:SecondaryAgent. */
-    public static final URI SECONDARY_AGENT = createURI("SecondaryAgent");
+    /** Class pmopb:Argument. */
+    public static final URI ARGUMENT_C = createURI("Argument");
 
     /** Class pmopb:Aspect. */
     public static final URI ASPECT_C = createURI("Aspect");
@@ -47,17 +47,14 @@ public final class PMOPB {
     /** Class pmopb:Roleset. */
     public static final URI ROLESET = createURI("Roleset");
 
-    /** Class pmopb:Preposition. */
-    public static final URI PREPOSITION = createURI("Preposition");
+    /** Class pmopb:SecondaryAgent. */
+    public static final URI SECONDARY_AGENT = createURI("SecondaryAgent");
 
     /** Class pmopb:SemanticRole. */
     public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
 
-    /** Class pmopb:Argument. */
-    public static final URI ARGUMENT = createURI("Argument");
-
     /** Class pmopb:Tag. */
-    public static final URI TAG = createURI("Tag");
+    public static final URI TAG_C = createURI("Tag");
 
     /** Class pmopb:Tense. */
     public static final URI TENSE_C = createURI("Tense");
@@ -67,20 +64,23 @@ public final class PMOPB {
 
     // Object properties
 
+    /** Object property pmopb:argument. */
+    public static final URI ARGUMENT_P = createURI("argument");
+
     /** Object property pmopb:aspect. */
     public static final URI ASPECT_P = createURI("aspect");
 
     /** Object property pmopb:form. */
     public static final URI FORM_P = createURI("form");
 
-    /** Object property pmopb:functionTag. */
-    public static final URI FUNCTION_TAG = createURI("functionTag");
-
     /** Object property pmopb:inflection. */
     public static final URI INFLECTION_P = createURI("inflection");
 
     /** Object property pmopb:person. */
     public static final URI PERSON_P = createURI("person");
+
+    /** Object property pmopb:tag. */
+    public static final URI TAG_P = createURI("tag");
 
     /** Object property pmopb:tense. */
     public static final URI TENSE_P = createURI("tense");
@@ -222,54 +222,11 @@ public final class PMOPB {
     /** Individual pmopb:progressive (a pmopb:Aspect). */
     public static final URI PROGRESSIVE = createURI("progressive");
 
-    /** Individual pmopb:from (a pmopb:Preposition). */
-    public static final URI FROM = createURI("from");
-
-    /** Individual pmopb:on (a pmopb:Preposition). */
-    public static final URI ON = createURI("on");
-
-    /** Individual pmopb:to (a pmopb:Preposition). */
-    public static final URI TO = createURI("to");
-
-    /** Individual pmopb:as (a pmopb:Preposition). */
-    public static final URI AS = createURI("as");
-
-    /** Individual pmopb:at (a pmopb:Preposition). */
-    public static final URI AT = createURI("at");
-
-    /** Individual pmopb:by (a pmopb:Preposition). */
-    public static final URI BY = createURI("by");
-
-    /** Individual pmopb:for (a pmopb:Preposition). */
-    public static final URI FOR = createURI("for");
-
-    /** Individual pmopb:in (a pmopb:Preposition). */
-    public static final URI IN = createURI("in");
-
-    /** Individual pmopb:of (a pmopb:Preposition). */
-    public static final URI OF = createURI("of");
-
-    /** Individual pmopb:with (a pmopb:Preposition). */
-    public static final URI WITH = createURI("with");
-
-    /** Individual pmopb:with (a pmopb:Preposition). */
-    public static final URI UPON = createURI("upon");
-
-    /** Individual pmopb:with (a pmopb:Preposition). */
-    public static final URI INTO = createURI("into");
-
-    /** Individual pmopb:with (a pmopb:Preposition). */
-    public static final URI AROUND = createURI("around");
-
-    /** Individual pmopb:with (a pmopb:Preposition). */
-    public static final URI ABOUT = createURI("about");
-
     // Maps
 
     public static HashMap<String, URI> mapM = new HashMap<>();
     public static HashMap<String, URI> mapF = new HashMap<>();
     public static HashMap<String, URI> mapO = new HashMap<>();
-    public static HashMap<String, URI> mapP = new HashMap<>();
 
     public static HashMap<String, URI> mapAspect = new HashMap<>();
     public static HashMap<String, URI> mapForm = new HashMap<>();
@@ -310,21 +267,6 @@ public final class PMOPB {
         mapF.put("3", ARG3);
         mapF.put("4", ARG4);
         mapF.put("5", ARG5);
-
-        mapP.put("from", FROM);
-        mapP.put("on", ON);
-        mapP.put("to", TO);
-        mapP.put("as", AS);
-        mapP.put("at", AT);
-        mapP.put("by", BY);
-        mapP.put("for", FOR);
-        mapP.put("in", IN);
-        mapP.put("of", OF);
-        mapP.put("with", WITH);
-        mapP.put("upon", UPON);
-        mapP.put("into", INTO);
-        mapP.put("around", AROUND);
-        mapP.put("about", ABOUT);
 
         mapAspect.put("perfect", PERFECT);
         mapAspect.put("progressive", PROGRESSIVE);
