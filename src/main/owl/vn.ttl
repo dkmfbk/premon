@@ -58,12 +58,6 @@ Subclasses of Predicate, SemanticArgument and SemanticRole of the core module ar
 #################################################################
 
 
-###  http://premon.fbk.eu/ontology/vn#subclass
-
-pmovn:subclass rdf:type owl:AnnotationProperty .
-
-
-
 ###  http://www.w3.org/2004/02/skos/core#broader
 
 skos:broader rdf:type owl:AnnotationProperty .
@@ -613,11 +607,11 @@ pmovn:PrepositionSelectionalRestriction rdf:type owl:Class ;
 
 pmovn:Restriction rdf:type owl:Class ;
                   
-                  owl:disjointUnionOf ( pmovn:SelectionalRestriction
-                                        pmovn:SyntacticRestriction
-                                      ) ,
-                                      ( pmovn:AtomicRestriction
+                  owl:disjointUnionOf ( pmovn:AtomicRestriction
                                         pmovn:CompoundRestriction
+                                      ) ,
+                                      ( pmovn:SelectionalRestriction
+                                        pmovn:SyntacticRestriction
                                       ) .
 
 
