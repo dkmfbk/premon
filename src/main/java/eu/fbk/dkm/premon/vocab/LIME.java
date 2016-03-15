@@ -30,13 +30,16 @@ public final class LIME {
     /** Class lime:LexicalLinkset. */
     public static final URI LEXICAL_LINKSET = createURI("LexicalLinkset");
 
-    // Object properties
+    /** Class lime:ConceptualizationSet. */
+    public static final URI CONCEPTUALIZATION_SET = createURI("ConceptualizationSet");
 
-    /** Object property lime:entry. */
-    public static final URI ENTRY = createURI("entry");
+    // Object properties
 
     /** Object property lime:conceptualDataset. */
     public static final URI CONCEPTUAL_DATASET = createURI("conceptualDataset");
+
+    /** Object property lime:entry. */
+    public static final URI ENTRY = createURI("entry");
 
     /** Object property lime:lexicalizationModel. */
     public static final URI LEXICALIZATION_MODEL = createURI("lexicalizationModel");
@@ -44,8 +47,8 @@ public final class LIME {
     /** Object property lime:lexiconDataset. */
     public static final URI LEXICON_DATASET = createURI("lexiconDataset");
 
-    /** Object property lime:linguisticModel. */
-    public static final URI LINGUISTIC_MODEL = createURI("linguisticModel");
+    /** Object property lime:linguisticCatalog. */
+    public static final URI LINGUISTIC_CATALOG = createURI("linguisticCatalog");
 
     /** Object property lime:partition. */
     public static final URI PARTITION = createURI("partition");
@@ -58,14 +61,23 @@ public final class LIME {
 
     // Datatype properties
 
+    /** Datatype property lime:avgAmbiguity. */
+    public static final URI AVG_AMBIGUITY = createURI("avgAmbiguity");
+
     /** Datatype property lime:avgNumOfLexicalizations. */
     public static final URI AVG_NUM_OF_LEXICALIZATIONS = createURI("avgNumOfLexicalizations");
 
     /** Datatype property lime:avgNumOfLinks. */
     public static final URI AVG_NUM_OF_LINKS = createURI("avgNumOfLinks");
 
+    /** Datatype property lime:avgSynonymy. */
+    public static final URI AVG_SYNONYMY = createURI("avgSynonymy");
+
     /** Datatype property lime:concepts. */
     public static final URI CONCEPTS = createURI("concepts");
+
+    /** Datatype property lime:conceptualizations. */
+    public static final URI CONCEPTUALIZATIONS = createURI("conceptualizations");
 
     /** Datatype property lime:language. */
     public static final URI LANGUAGE = createURI("language");
