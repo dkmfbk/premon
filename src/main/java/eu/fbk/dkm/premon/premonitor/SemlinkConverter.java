@@ -152,10 +152,7 @@ public class SemlinkConverter extends Converter {
                                 URI vnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
                                         vnID, vnTheta, vnLink);
 
-                                TreeSet<URI> cluster = new URITreeSet();
-                                cluster.add(pbArgConceptualizationURI);
-                                cluster.add(vnArgConceptualizationURI);
-                                addMappingToSink(cluster, DEFAULT_ARG_SUFFIX);
+                                addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, pbArgConceptualizationURI, vnArgConceptualizationURI);
                             }
                         }
                     }
@@ -255,11 +252,7 @@ public class SemlinkConverter extends Converter {
                                 URI vnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
                                         vnID, vnTheta, vnLink);
 
-                                TreeSet<URI> cluster = new URITreeSet();
-                                cluster.add(fnArgConceptualizationURI);
-                                cluster.add(vnArgConceptualizationURI);
-                                addMappingToSink(cluster, DEFAULT_ARG_SUFFIX);
-
+                                addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, fnArgConceptualizationURI, vnArgConceptualizationURI);
                             }
                         }
                     }
@@ -279,10 +272,7 @@ public class SemlinkConverter extends Converter {
                 URI firstConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, DEFAULT_TYPE, p1, link1);
                 URI secondConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, DEFAULT_TYPE, p2, link2);
 
-                TreeSet<URI> cluster = new URITreeSet();
-                cluster.add(firstConceptualizationURI);
-                cluster.add(secondConceptualizationURI);
-                addMappingToSink(cluster, DEFAULT_PRED_SUFFIX);
+                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, firstConceptualizationURI, secondConceptualizationURI);
             }
         }
     }

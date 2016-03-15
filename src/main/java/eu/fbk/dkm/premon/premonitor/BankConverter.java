@@ -374,18 +374,18 @@ public abstract class BankConverter extends Converter {
                                         for (int i = 0; i < myRels.size(); i++) {
                                             Rel rel = myRels.get(i);
 
-                                            String origValue = rel.getvalue()
+                                            String origValue = rel.getvalue().toLowerCase()
                                                     .replaceAll("\\s+", " ").trim();
-                                            String value = origValue.toLowerCase();
+//                                            String value = origValue.toLowerCase();
 
-                                            int start = text.indexOf(value);
+                                            int start = text.indexOf(origValue);
                                             if (start == -1) {
                                                 //todo: fix these
                                                 // LOGGER.error("Rel string not found in {}: {}", rolesetID, value);
                                                 noStringFound++;
                                                 continue exampleLoop;
                                             }
-                                            int end = start + value.length();
+                                            int end = start + origValue.length();
 
                                             URI markableURI = uriForMarkable(exampleURI, start, end);
                                             URI annotationURI = createURI(annotationSetURI.toString() + "-rel-" + i);
@@ -573,7 +573,7 @@ public abstract class BankConverter extends Converter {
                     URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, theta, vnLink);
                     mapArgLabel = null;
 
-                    addSingleMapping(DEFAULT_ARG_SUFFIX, argConceptualizationURI, vnConcURI);
+                    addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, argConceptualizationURI, vnConcURI);
                 }
             }
 

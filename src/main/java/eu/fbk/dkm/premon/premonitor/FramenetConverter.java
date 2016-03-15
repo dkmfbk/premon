@@ -262,10 +262,10 @@ public class FramenetConverter extends Converter {
                                     String toMap = changed.get(lcFrameName);
                                     mapCount++;
                                     if (toMap != null) {
-                                        addSingleMapping(DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
+                                        addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
                                                 uriForRoleset(toMap, retroMappings));
                                     } else {
-                                        addSingleMapping(DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
+                                        addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
                                                 uriForRoleset(lcFrameName, retroMappings));
                                     }
                                 }
@@ -304,14 +304,16 @@ public class FramenetConverter extends Converter {
                                         mapRoleCount++;
                                         if (toMap != null) {
                                             String[] parts = toMap.split("@");
-                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName),
+                                            addSingleMapping(prefix, DEFAULT_ARG_SUFFIX,
+                                                    uriForArgument(lcFrameName, lcFeName),
                                                     uriForArgument(parts[0], parts[1], retroMappings));
                                         } else {
                                             String f = lcFrameName;
                                             if (changed.containsKey(f)) {
                                                 f = changed.get(f);
                                             }
-                                            addSingleMapping(DEFAULT_ARG_SUFFIX, uriForArgument(lcFrameName, lcFeName),
+                                            addSingleMapping(prefix, DEFAULT_ARG_SUFFIX,
+                                                    uriForArgument(lcFrameName, lcFeName),
                                                     uriForArgument(f, lcFeName, retroMappings));
                                         }
                                     }
@@ -888,6 +890,7 @@ public class FramenetConverter extends Converter {
     private URI uriForExample(String exampleID) {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
+        builder.append(prefix).append(separator);
         builder.append("example_");
         builder.append(exampleID);
         return createURI(builder.toString());

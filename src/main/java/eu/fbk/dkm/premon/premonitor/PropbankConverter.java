@@ -84,7 +84,7 @@ public class PropbankConverter extends BankConverter {
         for (String fnPredicate : fnPredicates) {
             for (String fnLink : fnLinks) {
                 URI fnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, fnPredicate, fnLink);
-                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, fnConcURI);
+                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, fnConcURI);
             }
         }
 
@@ -93,7 +93,7 @@ public class PropbankConverter extends BankConverter {
         for (String vnClass : vnClasses) {
             for (String vnLink : vnLinks) {
                 URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, vnLink);
-                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, vnConcURI);
+                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, vnConcURI);
             }
         }
 
@@ -106,7 +106,7 @@ public class PropbankConverter extends BankConverter {
             for (String pbLink : pbLinks) {
                 String lemma = getLemmaFromPredicateName(pbLemma);
                 URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
-                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, pbConceptURI);
+                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, pbConceptURI);
             }
         }
     }

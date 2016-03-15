@@ -429,23 +429,23 @@ public abstract class Converter {
         return builder.toString();
     }
 
-    protected void addSingleMapping(String suffix, URI... uris) {
+    protected void addSingleMapping(String prefix, String suffix, URI... uris) {
         TreeSet<URI> cluster = new URITreeSet();
         for (URI uri : uris) {
             cluster.add(uri);
         }
 
-        addMappingToSink(cluster, suffix);
+        addMappingToSink(cluster, suffix, prefix);
     }
 
-    protected void addMappingToSink(TreeSet<URI> mapping, String suffix) {
+    protected void addMappingToSink(TreeSet<URI> mapping, String suffix, String prefix) {
 
         if (mapping.size() <= 1) {
             LOGGER.warn("Mapping involves only 1 concept! - " + mapping);
             return;
         }
 
-        URI mappingURI = uriForMapping(mapping, suffix);
+        URI mappingURI = uriForMapping(mapping, suffix, prefix);
 
         if (suffix.equals(DEFAULT_ARG_SUFFIX)) {
             addStatementToSink(mappingURI, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING);
@@ -460,11 +460,12 @@ public abstract class Converter {
         }
     }
 
-    protected URI uriForMapping(TreeSet<URI> mapping, String suffix) {
+    protected URI uriForMapping(TreeSet<URI> mapping, String suffix, String prefix) {
         TreeSet<String> strings = new TreeSet<>();
         for (URI uri : mapping) {
             strings.add(uri.toString());
         }
+        strings.add(prefix);
         String hash = Hash.murmur3(String.join("|", strings)).toString();
 
         StringBuilder builder = new StringBuilder();

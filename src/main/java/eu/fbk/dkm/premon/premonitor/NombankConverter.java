@@ -134,7 +134,7 @@ public class NombankConverter extends BankConverter {
                 pbLemma = getLemmaFromPredicateName(pbLemma);
                 URI argPropBankConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, key,
                         pbLink);
-                addSingleMapping(DEFAULT_ARG_SUFFIX, argConceptualizationURI, argPropBankConceptualizationURI);
+                addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, argConceptualizationURI, argPropBankConceptualizationURI);
             }
         }
     }
@@ -181,7 +181,7 @@ public class NombankConverter extends BankConverter {
 
             for (String pbLink : pbLinks) {
                 URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
-                addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, pbConceptURI);
+                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, pbConceptURI);
             }
         }
 
@@ -191,7 +191,7 @@ public class NombankConverter extends BankConverter {
             for (String vnLink : vnLinks) {
                 for (String lemma : lemmas) {
                     URI vnConcURI = uriForConceptualizationWithPrefix(lemma, "v", vnClass, vnLink);
-                    addSingleMapping(DEFAULT_PRED_SUFFIX, conceptualizationURI, vnConcURI);
+                    addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, vnConcURI);
                 }
             }
         }

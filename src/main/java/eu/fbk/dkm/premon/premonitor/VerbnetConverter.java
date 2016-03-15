@@ -1,23 +1,8 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nullable;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import com.google.common.io.Files;
-
+import eu.fbk.dkm.premon.util.URITreeSet;
+import eu.fbk.dkm.premon.vocab.*;
 import org.joox.JOOX;
 import org.joox.Match;
 import org.openrdf.model.URI;
@@ -31,12 +16,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import eu.fbk.dkm.premon.util.URITreeSet;
-import eu.fbk.dkm.premon.vocab.LEXINFO;
-import eu.fbk.dkm.premon.vocab.NIF;
-import eu.fbk.dkm.premon.vocab.ONTOLEX;
-import eu.fbk.dkm.premon.vocab.PMO;
-import eu.fbk.dkm.premon.vocab.PMOVN;
+import javax.annotation.Nullable;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * Problems on version 3.2b - Apparently useless examples.desktop and localmachine files -
@@ -234,7 +220,7 @@ public class VerbnetConverter extends Converter {
             }
 
             // Added only whether there is more than one URI in the Set
-            addMappingToSink(mapping, DEFAULT_SENSE_SUFFIX);
+            addMappingToSink(mapping, DEFAULT_SENSE_SUFFIX, prefix);
         }
 
         // Load thematic roles
@@ -490,8 +476,7 @@ public class VerbnetConverter extends Converter {
             this.rolesetID = rolesetID;
         }
 
-        @Override
-        void addToSink(final Element element, final URI thisURI) {
+        @Override void addToSink(final Element element, final URI thisURI) {
             addStatementToSink(thisURI, RDF.TYPE, PMOVN.PRED_ARG);
             final String type = element.getAttribute("type");
             String value = element.getAttribute("value");
@@ -540,8 +525,7 @@ public class VerbnetConverter extends Converter {
             }
         }
 
-        @Override
-        String getSuffix() {
+        @Override String getSuffix() {
             return DEFAULT_ARG_SUFFIX;
         }
     }
@@ -565,13 +549,11 @@ public class VerbnetConverter extends Converter {
             this.rolesetID = rolesetID;
         }
 
-        @Override
-        String getSuffix() {
+        @Override String getSuffix() {
             return DEFAULT_PRED_SUFFIX;
         }
 
-        @Override
-        void addToSink(final Element element, final URI thisURI) {
+        @Override void addToSink(final Element element, final URI thisURI) {
             final String value = element.getAttribute("value");
             final URI obj = PMOVN.createURI(value + "_pred");
 
@@ -631,13 +613,11 @@ public class VerbnetConverter extends Converter {
             return this.roles;
         }
 
-        @Override
-        String getSuffix() {
+        @Override String getSuffix() {
             return DEFAULT_SYNITEM_SUFFIX;
         }
 
-        @Override
-        void addToSink(final Element element, final URI thisURI) {
+        @Override void addToSink(final Element element, final URI thisURI) {
             final String tagName = element.getTagName();
 
             final String value = element.getAttribute("value");
