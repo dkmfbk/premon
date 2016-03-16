@@ -24,6 +24,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -41,6 +42,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ContextStatementImpl;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
@@ -54,6 +56,7 @@ import eu.fbk.dkm.premon.util.ProcessorUndoRDFS;
 import eu.fbk.dkm.premon.vocab.DECOMP;
 import eu.fbk.dkm.premon.vocab.FB;
 import eu.fbk.dkm.premon.vocab.LEXINFO;
+import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.ONTOLEX;
 import eu.fbk.dkm.premon.vocab.PM;
 import eu.fbk.dkm.premon.vocab.PMO;
@@ -109,29 +112,29 @@ public class Premonitor {
                     .withOption("i", "input",
                             String.format("input folder (default %s)", DEFAULT_PATH), "FOLDER",
                             CommandLine.Type.DIRECTORY_EXISTING, true, false, false)
-                            .withOption("b", "output-base", "Output base path/name (default 'premon')",
-                                    "PATH", CommandLine.Type.FILE, true, false, false)
-                                    .withOption("f", "output-formats",
-                                            "Comma-separated list of output formats (default 'tql.gz')", "FMTS",
-                                            CommandLine.Type.STRING, true, false, false)
-                                            .withOption("p", "properties",
-                                                    String.format("Property file (default %s)", DEFAULT_PROPERTIES_FILE),
-                                                    "FILE", CommandLine.Type.FILE, true, false, false)
-                                                    .withOption("s", "single", "Extract single lemma (apply to all resources)",
-                                                            "LEMMA", CommandLine.Type.STRING, true, false, false)
-                                                            .withOption(
-                                                                    null,
-                                                                    "wordnet",
-                                                                    String.format("WordNet RDF triple file (default: %s)",
-                                                                            DEFAULT_WORDNET_FILE), "FILE", CommandLine.Type.FILE_EXISTING,
-                                                                            true, false, false)
-                                                                            .withOption(null, "wordnet-sensekeys", "WordNet senseKey mapping", "FILE",
-                                                                                    CommandLine.Type.FILE_EXISTING, true, false, false)
-                                                                                    .withOption("r", "omit-owl2rl", "Omit OWL2RL reasoning (faster)")
-                                                                                    .withOption("x", "omit-stats", "Omit generation of statistics (faster)")
-                                                                                    .withOption("m", "omit-filter-mappings", "Omit filtering illegal mappings " //
-                                                                                            + "referring to non-existing conceptualizations (faster)")
-                                                                                            .withLogger(LoggerFactory.getLogger("eu.fbk")).parse(args);
+                    .withOption("b", "output-base", "Output base path/name (default 'premon')",
+                            "PATH", CommandLine.Type.FILE, true, false, false)
+                    .withOption("f", "output-formats",
+                            "Comma-separated list of output formats (default 'tql.gz')", "FMTS",
+                            CommandLine.Type.STRING, true, false, false)
+                    .withOption("p", "properties",
+                            String.format("Property file (default %s)", DEFAULT_PROPERTIES_FILE),
+                            "FILE", CommandLine.Type.FILE, true, false, false)
+                    .withOption("s", "single", "Extract single lemma (apply to all resources)",
+                            "LEMMA", CommandLine.Type.STRING, true, false, false)
+                    .withOption(
+                            null,
+                            "wordnet",
+                            String.format("WordNet RDF triple file (default: %s)",
+                                    DEFAULT_WORDNET_FILE), "FILE", CommandLine.Type.FILE_EXISTING,
+                            true, false, false)
+                    .withOption(null, "wordnet-sensekeys", "WordNet senseKey mapping", "FILE",
+                            CommandLine.Type.FILE_EXISTING, true, false, false)
+                    .withOption("r", "omit-owl2rl", "Omit OWL2RL reasoning (faster)")
+                    .withOption("x", "omit-stats", "Omit generation of statistics (faster)")
+                    .withOption("m", "omit-filter-mappings", "Omit filtering illegal mappings " //
+                            + "referring to non-existing conceptualizations (faster)")
+                    .withLogger(LoggerFactory.getLogger("eu.fbk")).parse(args);
 
             // Input/output
             File inputFolder = new File(DEFAULT_PATH);
@@ -386,11 +389,21 @@ public class Premonitor {
             final Map<String, Map<URI, QuadModel>> models, final boolean owl2rl,
             final boolean statistics, final boolean filterMappings) throws RDFHandlerException {
 
-        // Load TBox
+        // Load TBox and get rid of unwanted classes
         final QuadModel tbox = QuadModel.create();
         RDFSources.read(false, true, null, null,
                 "classpath:/eu/fbk/dkm/premon/premonitor/tbox.ttl")
                 .emit(RDFHandlers.wrap(tbox), 1);
+        final String semNS = "http://www.ontologydesignpatterns.org/cp/owl/semiotics.owl#";
+        final Set<URI> unwantedConcepts = ImmutableSet.of(NIF.URISCHEME, NIF.RFC5147_STRING,
+                NIF.CSTRING, new URIImpl(semNS + "InformationEntity"), new URIImpl(semNS
+                        + "Expression"), new URIImpl(semNS + "Meaning"));
+        for (final Statement stmt : ImmutableList.copyOf(tbox)) {
+            if (unwantedConcepts.contains(stmt.getSubject())
+                    || unwantedConcepts.contains(stmt.getObject())) {
+                tbox.remove(stmt);
+            }
+        }
         LOGGER.info("TBox loaded - {} quads", tbox.size());
 
         // Close TBox
@@ -547,7 +560,7 @@ public class Premonitor {
                             LOGGER.info(String.format(
                                     "  %-10s %-10s %-10s %-9d %-9d %-9d %-9d %-9d %-9d %-9d %-9d",
                                     from, to, resource, nx, nc, nr, no, nxb - nx, ncb - nc, nrb
-                                    - nr, nob - no));
+                                            - nr, nob - no));
                         }
                     }
                 }
@@ -690,11 +703,12 @@ public class Premonitor {
         final Set<URI> validItems = Sets.newHashSet();
         for (final Map<URI, QuadModel> map : models.values()) {
             for (final QuadModel model : map.values()) {
-                for (final URI type : new URI[] { PMO.CONCEPTUALIZATION, PMO.SEMANTIC_CLASS,
-                        PMO.SEMANTIC_ROLE }) {
-                    for (final Resource c : model.filter(null, RDF.TYPE, type).subjects()) {
-                        validItems.add((URI) c);
-                    }
+                for (final Statement stmt : model.filter(null, PMO.EVOKED_CONCEPT, null)) {
+                    validItems.add((URI) stmt.getSubject()); // conceptualizations
+                    validItems.add((URI) stmt.getObject()); // semantic class
+                }
+                for (final Statement stmt : model.filter(null, PMO.SEM_ROLE, null)) {
+                    validItems.add((URI) stmt.getObject()); // semantic roles
                 }
             }
         }
@@ -750,7 +764,7 @@ public class Premonitor {
                                 type.equals(PMO.SEMANTIC_CLASS_MAPPING) ? "semantic class"
                                         : type.equals(PMO.CONCEPTUALIZATION_MAPPING) ? "conceptualization"
                                                 : "semantic role", numMappingsPerSource, entry
-                                                .getKey());
+                                        .getKey());
                     }
                 }
             }

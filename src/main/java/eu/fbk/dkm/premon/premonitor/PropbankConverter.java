@@ -170,7 +170,7 @@ public class PropbankConverter extends BankConverter {
 
             for (URI key : inflections.keySet()) {
                 for (URI uri : inflections.get(key)) {
-                    addStatementToSink(inflectionURI, key, uri);
+                    addStatementToSink(inflectionURI, key, uri, PM.TBOX);
                 }
             }
 

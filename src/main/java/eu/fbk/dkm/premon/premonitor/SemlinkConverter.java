@@ -153,7 +153,7 @@ public class SemlinkConverter extends Converter {
                                 s.add(uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, vnID, vnLink));
                                 URI parentMappingURI = uriForMapping(s, DEFAULT_CON_SUFFIX, prefix); 
                                 URI pbArgURI = uriForArgument(pbRoleset, pbArg, pbLink);
-                                URI vnArgURI = uriForArgument(vnClass, vnTheta, vnLink);
+                                URI vnArgURI = uriForArgument(vnID, vnTheta, vnLink);
                                 
                                 addSingleMapping(parentMappingURI, prefix, DEFAULT_ARG_SUFFIX, pbArgURI, vnArgURI);
                                 
