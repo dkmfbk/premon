@@ -1,11 +1,15 @@
 package eu.fbk.dkm.premon.premonitor;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import com.google.common.io.Files;
+
 import eu.fbk.dkm.premon.premonitor.propbank.*;
 import eu.fbk.dkm.premon.util.NF;
 import eu.fbk.dkm.premon.util.PropBankResource;
 import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.*;
+
 import org.joox.JOOX;
 import org.joox.Match;
 import org.openrdf.model.URI;
@@ -24,6 +28,7 @@ import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -295,7 +300,7 @@ public abstract class BankConverter extends Converter {
 
                                                 URI argumentURI = uriForArgument(rolesetID, argName);
                                                 addStatementToSink(argumentURI, RDF.TYPE, getSemanticArgument());
-                                                addStatementToSink(argumentURI, PMO.CORE, true);
+                                                addStatementToSink(argumentURI, getCoreProperty(), true);
                                                 if (!noDef) {
                                                     addStatementToSink(argumentURI, SKOS.DEFINITION, descr);
                                                 }
@@ -553,8 +558,8 @@ public abstract class BankConverter extends Converter {
         return vnClasses;
     }
 
-    protected void addExternalLinks(Role role, URI argConceptualizationURI, String uriLemma, String type) {
-
+    protected void addExternalLinks(Role role, URI argURI, String uriLemma, String type, String rolesetID) {
+        
         List<Vnrole> vnroleList = role.getVnrole();
         for (Vnrole vnrole : vnroleList) {
             List<String> vnClasses = getVnClasses(vnrole.getVncls());
@@ -570,10 +575,15 @@ public abstract class BankConverter extends Converter {
 
                     // todo: bad!
                     mapArgLabel = "";
-                    URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, "v", vnClass, theta, vnLink);
+                    URITreeSet s = new URITreeSet();
+                    s.add(uriForConceptualizationWithPrefix(uriLemma, "v", vnClass, vnLink));
+                    s.add(uriForConceptualization(uriLemma, type, rolesetID));
+                    URI parentMappingURI = uriForMapping(s, DEFAULT_CON_SUFFIX, prefix); 
+                    URI vnArgURI = uriForArgument(vnClass, theta, vnLink);
+                    // URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, "v", vnClass, theta, vnLink);
                     mapArgLabel = null;
 
-                    addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, argConceptualizationURI, vnConcURI);
+                    addSingleMapping(parentMappingURI, prefix, DEFAULT_ARG_SUFFIX, argURI, vnArgURI);
                 }
             }
 
@@ -596,13 +606,13 @@ public abstract class BankConverter extends Converter {
         addStatementToSink(argumentURI, getRoleToArgumentProperty(), keyURI);
         addStatementToSink(uriForRoleset(rolesetID), PMO.SEM_ROLE, argumentURI);
 
-        URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
-        addStatementToSink(argConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
-        addStatementToSink(argConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
-        addStatementToSink(argConceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
-
+        //    URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
+        //    addStatementToSink(argConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
+        //    addStatementToSink(argConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
+        //    addStatementToSink(argConceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
+        
         if (role != null) {
-            addExternalLinks(role, argConceptualizationURI, lemma, type);
+            addExternalLinks(role, argumentURI, lemma, type, rolesetID);
         }
     }
     
@@ -634,6 +644,8 @@ public abstract class BankConverter extends Converter {
     abstract URI getSemanticArgument();
 
     abstract URI getRoleToArgumentProperty();
+    
+    abstract URI getCoreProperty();
     
     abstract HashMap<String, URI> getFunctionMap();
 

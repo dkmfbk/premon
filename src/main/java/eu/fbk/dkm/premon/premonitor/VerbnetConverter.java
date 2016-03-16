@@ -220,7 +220,9 @@ public class VerbnetConverter extends Converter {
             }
 
             // Added only whether there is more than one URI in the Set
-            addMappingToSink(mapping, DEFAULT_SENSE_SUFFIX, prefix);
+            if (mapping.size() >= 2) {
+                addMappingToSink(null, mapping, DEFAULT_SENSE_SUFFIX, prefix);
+            }
         }
 
         // Load thematic roles
@@ -244,16 +246,16 @@ public class VerbnetConverter extends Converter {
             addStatementToSink(rolesetURI, PMO.SEM_ROLE, argumentURI);
             addStatementToSink(argumentURI, RDF.TYPE, PMOVN.SEMANTIC_ROLE);
             addStatementToSink(argumentURI, PMOVN.THEMATIC_ROLE_P, PMOVN.lookup(PMOVN.THEMATIC_ROLE_C, argName));
-            for (final String lemma : lemmas.keySet()) {
-                final URI lemmaURI = lemmas.get(lemma);
-                addStatementToSink(lemmaURI, ONTOLEX.EVOKES, argumentURI);
-
-                final URI conceptualizationURI = uriForConceptualization(lemma, "v",
-                        argPart(id, argName, ""));
-                addStatementToSink(conceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
-                addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lemmaURI);
-                addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
-            }
+            //    for (final String lemma : lemmas.keySet()) {
+            //        final URI lemmaURI = lemmas.get(lemma);
+            //        addStatementToSink(lemmaURI, ONTOLEX.EVOKES, argumentURI);
+            //
+            //        final URI conceptualizationURI = uriForConceptualization(lemma, "v",
+            //                argPart(id, argName, ""));
+            //        addStatementToSink(conceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
+            //        addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lemmaURI);
+            //        addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
+            //    }
 
             addRestrictions("SELRESTRS", "SELRESTR", argumentURI, element, "srs",
                     PMOVN.ROLE_SELECTIONAL_RESTRICTION, PMOVN.ROLE_RESTRICTION_PROPERTY);

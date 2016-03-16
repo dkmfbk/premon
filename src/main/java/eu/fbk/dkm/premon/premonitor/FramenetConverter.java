@@ -257,15 +257,16 @@ public class FramenetConverter extends Converter {
 
                             URI frameURI = uriForRoleset(lcFrameName);
 
+                            URI classMappingURI = null;
                             if (retroMappings != null) {
                                 if (!added.contains(lcFrameName)) {
                                     String toMap = changed.get(lcFrameName);
                                     mapCount++;
                                     if (toMap != null) {
-                                        addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
+                                        classMappingURI = addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
                                                 uriForRoleset(toMap, retroMappings));
                                     } else {
-                                        addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
+                                        classMappingURI = addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
                                                 uriForRoleset(lcFrameName, retroMappings));
                                     }
                                 }
@@ -304,7 +305,7 @@ public class FramenetConverter extends Converter {
                                         mapRoleCount++;
                                         if (toMap != null) {
                                             String[] parts = toMap.split("@");
-                                            addSingleMapping(prefix, DEFAULT_ARG_SUFFIX,
+                                            addSingleMapping(classMappingURI, prefix, DEFAULT_ARG_SUFFIX,
                                                     uriForArgument(lcFrameName, lcFeName),
                                                     uriForArgument(parts[0], parts[1], retroMappings));
                                         } else {
@@ -312,7 +313,7 @@ public class FramenetConverter extends Converter {
                                             if (changed.containsKey(f)) {
                                                 f = changed.get(f);
                                             }
-                                            addSingleMapping(prefix, DEFAULT_ARG_SUFFIX,
+                                            addSingleMapping(classMappingURI, prefix, DEFAULT_ARG_SUFFIX,
                                                     uriForArgument(lcFrameName, lcFeName),
                                                     uriForArgument(f, lcFeName, retroMappings));
                                         }
@@ -530,15 +531,15 @@ public class FramenetConverter extends Converter {
                                 addStatementToSink(luURI, DCTERMS.CREATED, leDate);
                                 addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, frameURI);
 
-                                for (String fe : FEs) {
-                                    URI argumentURI = uriForArgument(frameName.toLowerCase(), fe.toLowerCase());
-                                    URI conceptualizationURI = uriForConceptualization(uriLemma, pos,
-                                            frameName.toLowerCase(), fe.toLowerCase());
-                                    addStatementToSink(conceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
-                                    addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
-                                    addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
-                                    addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, argumentURI);
-                                }
+                                //    for (String fe : FEs) {
+                                //        URI argumentURI = uriForArgument(frameName.toLowerCase(), fe.toLowerCase());
+                                //        URI conceptualizationURI = uriForConceptualization(uriLemma, pos,
+                                //                frameName.toLowerCase(), fe.toLowerCase());
+                                //        addStatementToSink(conceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
+                                //        addStatementToSink(conceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
+                                //        addStatementToSink(conceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
+                                //        addStatementToSink(lexicalEntryURI, ONTOLEX.EVOKES, argumentURI);
+                                //    }
 
                                 if (incorporatedFE != null && incorporatedFE.trim().length() > 0) {
                                     incorporatedFE = incorporatedFE.trim();
@@ -865,7 +866,7 @@ public class FramenetConverter extends Converter {
                 LUSemTypeURI = getSemTypeURI(LUSemType);
             }
             if (LUSemTypeURI != null) {
-                addStatementToSink(baseURI, PMO.SEM_TYPE, LUSemTypeURI);
+                addStatementToSink(baseURI, PMOFN.SEM_TYPE_P, LUSemTypeURI);
                 semTypesFreq.add(LUSemTypeURI);
                 semTypesForFrame.add(frameURI);
             }
@@ -906,7 +907,7 @@ public class FramenetConverter extends Converter {
 
         URI semTypeURI = getSemTypeURI(name);
 
-        addStatementToSink(semTypeURI, RDF.TYPE, PMOFN.SEM_TYPE);
+        addStatementToSink(semTypeURI, RDF.TYPE, PMOFN.SEM_TYPE_C);
         addStatementToSink(semTypeURI, DCTERMS.IDENTIFIER, Integer.parseInt(id));
         addStatementToSink(semTypeURI, RDFS.LABEL, name, false);
         addStatementToSink(semTypeURI, SKOS.DEFINITION, definition);

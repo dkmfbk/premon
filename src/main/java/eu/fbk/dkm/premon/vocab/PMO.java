@@ -80,16 +80,10 @@ public final class PMO {
     /** Object property pmo:semRoleMapping. */
     public static final URI SEM_ROLE_MAPPING = createURI("semRoleMapping");
 
-    /** Object property pmo:semType. */
-    public static final URI SEM_TYPE = createURI("semType"); // TODO
-
     /** Object property pmo:valueObj. */
     public static final URI VALUE_OBJ = createURI("valueObj");
 
     // Datatype properties
-
-    /** Datatype property pmo:core. */
-    public static final URI CORE = createURI("core"); // TODO
 
     /** Datatype property pmo:valueDt. */
     public static final URI VALUE_DT = createURI("valueDt");

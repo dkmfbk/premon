@@ -1,11 +1,11 @@
 package eu.fbk.dkm.premon.vocab;
 
+import java.util.HashMap;
+
 import org.openrdf.model.Namespace;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
-
-import java.util.HashMap;
 
 /**
  * Vocabulary constants for the PreMOn Ontology - NomBank module (PMONB).
@@ -48,6 +48,11 @@ public final class PMONB {
 
     /** Object property pmonb:tag. */
     public static final URI TAG_P = createURI("tag");
+
+    // Datatype properties
+
+    /** Datatype property pmonb:core. */
+    public static final URI CORE = createURI("core");
 
     // Individuals
 

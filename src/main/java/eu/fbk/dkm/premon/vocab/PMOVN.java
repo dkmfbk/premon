@@ -467,6 +467,10 @@ public final class PMOVN {
     /** Individual pmovn:plant_rrp (a pmovn:RoleRestrictionProperty). */
     public static final URI PLANT_RRP = createURI("plant_rrp", ROLE_RESTRICTION_PROPERTY, "plant");
 
+    /** Individual pmovn:plural_rrp (a pmovn:RoleRestrictionProperty). */
+    public static final URI PLURAL_RRP = createURI("plural_rrp", ROLE_RESTRICTION_PROPERTY,
+            "plural");
+
     /** Individual pmovn:pointy_rrp (a pmovn:RoleRestrictionProperty). */
     public static final URI POINTY_RRP = createURI("pointy_rrp", ROLE_RESTRICTION_PROPERTY,
             "pointy");

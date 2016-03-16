@@ -461,6 +461,14 @@ pmovn:OrCompoundRestriction rdf:type owl:Class ;
 pmovn:Pred rdf:type owl:Class ;
            
            rdfs:subClassOf [ rdf:type owl:Restriction ;
+                             owl:onProperty pmo:item ;
+                             owl:someValuesFrom pmovn:PredArg
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty pmo:valueObj ;
+                             owl:allValuesFrom pmovn:PredType
+                           ] ,
+                           [ rdf:type owl:Restriction ;
                              owl:onProperty pmo:first ;
                              owl:onClass pmovn:PredArg ;
                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
@@ -468,14 +476,6 @@ pmovn:Pred rdf:type owl:Class ;
                            [ rdf:type owl:Restriction ;
                              owl:onProperty pmo:valueObj ;
                              owl:someValuesFrom owl:Thing
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty pmo:valueObj ;
-                             owl:allValuesFrom pmovn:PredType
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty pmo:item ;
-                             owl:someValuesFrom pmovn:PredArg
                            ] .
 
 
@@ -517,6 +517,21 @@ pmovn:PredType rdf:type owl:Class .
 pmovn:PrepSynItem rdf:type owl:Class ;
                   
                   rdfs:subClassOf pmovn:SynItem ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmo:valueObj ;
+                                    owl:allValuesFrom [ rdf:type owl:Class ;
+                                                        owl:intersectionOf ( ontolex:LexicalEntry
+                                                                             [ rdf:type owl:Restriction ;
+                                                                               owl:onProperty lexinfo:partOfSpeech ;
+                                                                               owl:hasValue lexinfo:preposition
+                                                                             ]
+                                                                           )
+                                                      ]
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmovn:restriction ;
+                                    owl:allValuesFrom pmovn:PrepositionSelectionalRestriction
+                                  ] ,
                                   [ rdf:type owl:Class ;
                                     owl:unionOf ( [ rdf:type owl:Class ;
                                                     owl:intersectionOf ( [ rdf:type owl:Class ;
@@ -545,21 +560,6 @@ pmovn:PrepSynItem rdf:type owl:Class ;
                                                                        )
                                                   ]
                                                 )
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmo:valueObj ;
-                                    owl:allValuesFrom [ rdf:type owl:Class ;
-                                                        owl:intersectionOf ( ontolex:LexicalEntry
-                                                                             [ rdf:type owl:Restriction ;
-                                                                               owl:onProperty lexinfo:partOfSpeech ;
-                                                                               owl:hasValue lexinfo:preposition
-                                                                             ]
-                                                                           )
-                                                      ]
-                                  ] ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmovn:restriction ;
-                                    owl:allValuesFrom pmovn:PrepositionSelectionalRestriction
                                   ] ;
                   
                   skos:closeMatch <http://www.lexinfo.net/lexinfo#Preposition> .
@@ -607,11 +607,11 @@ pmovn:PrepositionSelectionalRestriction rdf:type owl:Class ;
 
 pmovn:Restriction rdf:type owl:Class ;
                   
-                  owl:disjointUnionOf ( pmovn:AtomicRestriction
-                                        pmovn:CompoundRestriction
-                                      ) ,
-                                      ( pmovn:SelectionalRestriction
+                  owl:disjointUnionOf ( pmovn:SelectionalRestriction
                                         pmovn:SyntacticRestriction
+                                      ) ,
+                                      ( pmovn:AtomicRestriction
+                                        pmovn:CompoundRestriction
                                       ) .
 
 
@@ -764,12 +764,12 @@ pmovn:SyntacticRestriction rdf:type owl:Class ;
                            
                            rdfs:subClassOf pmovn:Restriction ,
                                            [ rdf:type owl:Restriction ;
-                                             owl:onProperty pmo:item ;
-                                             owl:allValuesFrom pmovn:SyntacticRestriction
-                                           ] ,
-                                           [ rdf:type owl:Restriction ;
                                              owl:onProperty pmo:valueObj ;
                                              owl:allValuesFrom pmovn:SyntacticRestrictionProperty
+                                           ] ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty pmo:item ;
+                                             owl:allValuesFrom pmovn:SyntacticRestriction
                                            ] .
 
 
@@ -834,11 +834,11 @@ pmovn:ThemRolePredArg rdf:type owl:Class ;
                       rdfs:subClassOf pmovn:PredArg ,
                                       [ rdf:type owl:Restriction ;
                                         owl:onProperty pmo:valueObj ;
-                                        owl:cardinality "1"^^xsd:nonNegativeInteger
+                                        owl:allValuesFrom pmovn:SemanticRole
                                       ] ,
                                       [ rdf:type owl:Restriction ;
                                         owl:onProperty pmo:valueObj ;
-                                        owl:allValuesFrom pmovn:SemanticRole
+                                        owl:cardinality "1"^^xsd:nonNegativeInteger
                                       ] .
 
 
@@ -874,6 +874,11 @@ pmovn:VerbNetFrame rdf:type owl:Class ;
                    rdfs:label "VerbNet frame"@en ;
                    
                    rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                     owl:onProperty pmo:first ;
+                                     owl:onClass pmovn:SynItem ;
+                                     owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
                                      owl:onProperty pmo:item ;
                                      owl:allValuesFrom [ rdf:type owl:Class ;
                                                          owl:unionOf ( pmovn:Pred
@@ -884,11 +889,6 @@ pmovn:VerbNetFrame rdf:type owl:Class ;
                                    [ rdf:type owl:Restriction ;
                                      owl:onProperty pmo:item ;
                                      owl:onClass pmovn:VerbSynItem ;
-                                     owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty pmo:first ;
-                                     owl:onClass pmovn:SynItem ;
                                      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                    ] .
 
@@ -1742,6 +1742,15 @@ pmovn:plant_rrp rdf:type pmovn:RoleRestrictionProperty ,
 ###  http://premon.fbk.eu/ontology/vn#plural_prp
 
 pmovn:plural_prp rdf:type pmovn:PrepositionRestrictionProperty ,
+                          owl:NamedIndividual ;
+                 
+                 rdfs:label "plural" .
+
+
+
+###  http://premon.fbk.eu/ontology/vn#plural_rrp
+
+pmovn:plural_rrp rdf:type pmovn:RoleRestrictionProperty ,
                           owl:NamedIndividual ;
                  
                  rdfs:label "plural" .

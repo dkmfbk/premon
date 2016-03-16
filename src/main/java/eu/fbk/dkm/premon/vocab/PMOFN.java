@@ -42,7 +42,7 @@ public final class PMOFN {
     public static final URI FE_CORE_SET_C = createURI("FECoreSet");
 
     /** Class pmofn:SemType. */
-    public static final URI SEM_TYPE = createURI("SemType");
+    public static final URI SEM_TYPE_C = createURI("SemType");
 
     /** Class pmofn:Frame. */
     public static final URI FRAME = createURI("Frame");
@@ -58,79 +58,82 @@ public final class PMOFN {
 
     // Object properties
 
-    /** Object property pmovn:excludesFrameElement. */
+    /** Object property pmofn:excludesFrameElement. */
     public static final URI EXCLUDES_FRAME_ELEMENT = createURI("excludesFrameElement");
 
-    /** Object property pmovn:feCoreSet. */
+    /** Object property pmofn:feCoreSet. */
     public static final URI FE_CORE_SET_P = createURI("feCoreSet");
 
-    /** Object property pmovn:frameRelation. */
+    /** Object property pmofn:frameRelation. */
     public static final URI FRAME_RELATION = createURI("frameRelation");
 
-    /** Object property pmovn:implicitIn. */
+    /** Object property pmofn:implicitIn. */
     public static final URI IMPLICIT_IN = createURI("implicitIn");
 
-    /** Object property pmovn:incorporatedFrameElement. */
+    /** Object property pmofn:incorporatedFrameElement. */
     public static final URI INCORPORATED_FRAME_ELEMENT = createURI("incorporatedFrameElement");
 
-    /** Object property pmovn:inheritsFrom. */
+    /** Object property pmofn:inheritsFrom. */
     public static final URI INHERITS_FROM = createURI("inheritsFrom");
 
-    /** Object property pmovn:inheritsFromFER. */
+    /** Object property pmofn:inheritsFromFER. */
     public static final URI INHERITS_FROM_FER = createURI("inheritsFromFER");
 
-    /** Object property pmovn:isCausativeOf. */
+    /** Object property pmofn:isCausativeOf. */
     public static final URI IS_CAUSATIVE_OF = createURI("isCausativeOf");
 
-    /** Object property pmovn:isCausativeOfFER. */
+    /** Object property pmofn:isCausativeOfFER. */
     public static final URI IS_CAUSATIVE_OF_FER = createURI("isCausativeOfFER");
 
-    /** Object property pmovn:isInchoativeOf. */
+    /** Object property pmofn:isInchoativeOf. */
     public static final URI IS_INCHOATIVE_OF = createURI("isInchoativeOf");
 
-    /** Object property pmovn:isInchoativeOfFER. */
+    /** Object property pmofn:isInchoativeOfFER. */
     public static final URI IS_INCHOATIVE_OF_FER = createURI("isInchoativeOfFER");
 
-    /** Object property pmovn:perspectiveOn. */
+    /** Object property pmofn:perspectiveOn. */
     public static final URI PERSPECTIVE_ON = createURI("perspectiveOn");
 
-    /** Object property pmovn:perspectiveOnFER. */
+    /** Object property pmofn:perspectiveOnFER. */
     public static final URI PERSPECTIVE_ON_FER = createURI("perspectiveOnFER");
 
-    /** Object property pmovn:precedes. */
+    /** Object property pmofn:precedes. */
     public static final URI PRECEDES = createURI("precedes");
 
-    /** Object property pmovn:precedesFER. */
+    /** Object property pmofn:precedesFER. */
     public static final URI PRECEDES_FER = createURI("precedesFER");
 
-    /** Object property pmovn:reFrameMapping. */
+    /** Object property pmofn:reFrameMapping. */
     public static final URI REFRAME_MAPPING = createURI("reFrameMapping");
 
-    /** Object property pmovn:reFrameMappingFER. */
+    /** Object property pmofn:reFrameMappingFER. */
     public static final URI REFRAME_MAPPING_FEr = createURI("reFrameMappingFER");
 
-    /** Object property pmovn:requiresFrameElement. */
+    /** Object property pmofn:requiresFrameElement. */
     public static final URI REQUIRES_FRAME_ELEMENT = createURI("requiresFrameElement");
 
-    /** Object property pmovn:seeAlso. */
+    /** Object property pmofn:seeAlso. */
     public static final URI SEE_ALSO = createURI("seeAlso");
 
-    /** Object property pmovn:seeAlsoFER. */
+    /** Object property pmofn:seeAlsoFER. */
     public static final URI SEE_ALSO_FER = createURI("seeAlsoFER");
 
-    /** Object property pmovn:status. */
+    /** Object property pmofn:semType. */
+    public static final URI SEM_TYPE_P = createURI("semType");
+
+    /** Object property pmofn:status. */
     public static final URI STATUS = createURI("status");
 
-    /** Object property pmovn:subframeOf. */
+    /** Object property pmofn:subframeOf. */
     public static final URI SUBFRAME_OF = createURI("subframeOf");
 
-    /** Object property pmovn:subframeOfFER. */
+    /** Object property pmofn:subframeOfFER. */
     public static final URI SUBFRAME_OF_FER = createURI("subframeOfFER");
 
-    /** Object property pmovn:subTypeOf. */
+    /** Object property pmofn:subTypeOf. */
     public static final URI SUB_TYPE_OF = createURI("subTypeOf");
 
-    /** Object property pmovn:uses. */
+    /** Object property pmofn:uses. */
     public static final URI USES = createURI("uses");
 
     // Datatype properties

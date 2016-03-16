@@ -1,19 +1,48 @@
 package eu.fbk.dkm.premon.premonitor;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.nio.file.Files;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
+
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.*;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
 import com.google.common.io.Resources;
-import eu.fbk.dkm.premon.util.ProcessorUndoRDFS;
-import eu.fbk.dkm.premon.vocab.*;
-import eu.fbk.dkm.utils.CommandLine;
-import eu.fbk.rdfpro.*;
-import eu.fbk.rdfpro.util.IO;
-import eu.fbk.rdfpro.util.QuadModel;
-import eu.fbk.rdfpro.util.Statements;
-import eu.fbk.rdfpro.util.Tracker;
-import org.openrdf.model.*;
+
+import org.openrdf.model.BNode;
+import org.openrdf.model.Namespace;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.ContextStatementImpl;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
@@ -23,17 +52,30 @@ import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import eu.fbk.dkm.premon.util.ProcessorUndoRDFS;
+import eu.fbk.dkm.premon.vocab.DECOMP;
+import eu.fbk.dkm.premon.vocab.FB;
+import eu.fbk.dkm.premon.vocab.LEXINFO;
+import eu.fbk.dkm.premon.vocab.NIF;
+import eu.fbk.dkm.premon.vocab.ONTOLEX;
+import eu.fbk.dkm.premon.vocab.PM;
+import eu.fbk.dkm.premon.vocab.PMO;
+import eu.fbk.dkm.premon.vocab.PMONB;
+import eu.fbk.dkm.premon.vocab.PMOPB;
+import eu.fbk.dkm.utils.CommandLine;
+import eu.fbk.rdfpro.AbstractRDFHandler;
+import eu.fbk.rdfpro.RDFHandlers;
+import eu.fbk.rdfpro.RDFProcessor;
+import eu.fbk.rdfpro.RDFProcessors;
+import eu.fbk.rdfpro.RDFSource;
+import eu.fbk.rdfpro.RDFSources;
+import eu.fbk.rdfpro.RuleEngine;
+import eu.fbk.rdfpro.Ruleset;
+import eu.fbk.rdfpro.SetOperator;
+import eu.fbk.rdfpro.util.IO;
+import eu.fbk.rdfpro.util.QuadModel;
+import eu.fbk.rdfpro.util.Statements;
+import eu.fbk.rdfpro.util.Tracker;
 
 /**
  * Premonitor command line tool for converting predicate resources to the PreMOn model
@@ -80,9 +122,12 @@ public class Premonitor {
                             "FILE", CommandLine.Type.FILE, true, false, false)
                     .withOption("s", "single", "Extract single lemma (apply to all resources)",
                             "LEMMA", CommandLine.Type.STRING, true, false, false)
-                    .withOption(null, "wordnet",
-                            String.format("WordNet RDF triple file (default: %s)", DEFAULT_WORDNET_FILE), "FILE",
-                            CommandLine.Type.FILE_EXISTING, true, false, false)
+                    .withOption(
+                            null,
+                            "wordnet",
+                            String.format("WordNet RDF triple file (default: %s)",
+                                    DEFAULT_WORDNET_FILE), "FILE", CommandLine.Type.FILE_EXISTING,
+                            true, false, false)
                     .withOption(null, "wordnet-sensekeys", "WordNet senseKey mapping", "FILE",
                             CommandLine.Type.FILE_EXISTING, true, false, false)
                     .withOption("r", "omit-owl2rl", "Omit OWL2RL reasoning (faster)")
@@ -106,15 +151,16 @@ public class Premonitor {
             // WordNet
             final HashMap<String, URI> wnInfo = new HashMap<>();
 
-            URL resource = ClassLoader.getSystemClassLoader()
-                    .getResource("eu/fbk/dkm/premon/premonitor/wn30-senseKeys.tsv");
+            final URL resource = ClassLoader.getSystemClassLoader().getResource(
+                    "eu/fbk/dkm/premon/premonitor/wn30-senseKeys.tsv");
             List<String> allLines = null;
             if (resource != null) {
                 allLines = Resources.readLines(resource, Charsets.UTF_8);
             }
 
             if (cmd.hasOption("wordnet-sensekeys")) {
-                allLines = Files.readAllLines(cmd.getOptionValue("wordnet-sensekeys", File.class).toPath());
+                allLines = Files.readAllLines(cmd.getOptionValue("wordnet-sensekeys", File.class)
+                        .toPath());
             }
             if (allLines != null) {
                 for (String line : allLines) {
@@ -343,11 +389,21 @@ public class Premonitor {
             final Map<String, Map<URI, QuadModel>> models, final boolean owl2rl,
             final boolean statistics, final boolean filterMappings) throws RDFHandlerException {
 
-        // Load TBox
+        // Load TBox and get rid of unwanted classes
         final QuadModel tbox = QuadModel.create();
         RDFSources.read(false, true, null, null,
                 "classpath:/eu/fbk/dkm/premon/premonitor/tbox.ttl")
                 .emit(RDFHandlers.wrap(tbox), 1);
+        final String semNS = "http://www.ontologydesignpatterns.org/cp/owl/semiotics.owl#";
+        final Set<URI> unwantedConcepts = ImmutableSet.of(NIF.URISCHEME, NIF.RFC5147_STRING,
+                NIF.CSTRING, new URIImpl(semNS + "InformationEntity"), new URIImpl(semNS
+                        + "Expression"), new URIImpl(semNS + "Meaning"));
+        for (final Statement stmt : ImmutableList.copyOf(tbox)) {
+            if (unwantedConcepts.contains(stmt.getSubject())
+                    || unwantedConcepts.contains(stmt.getObject())) {
+                tbox.remove(stmt);
+            }
+        }
         LOGGER.info("TBox loaded - {} quads", tbox.size());
 
         // Close TBox
@@ -388,8 +444,7 @@ public class Premonitor {
                     final boolean isEntries = graph.equals(PM.ENTRIES);
                     final boolean isExamples = isExampleGraph(graph);
                     final QuadModel filteredModel = QuadModel.create();
-                    outer:
-                    for (final Statement stmt : entry2.getValue()) {
+                    outer: for (final Statement stmt : entry2.getValue()) {
                         if (stmt.getPredicate().getNamespace().equals("sys:")) {
                             continue;
                         } else if (stmt.getPredicate().equals(RDF.TYPE)) {
@@ -480,29 +535,32 @@ public class Premonitor {
                     s.numLexicalEntries, s.numExamples, s.numAnnotationSets, s.numClassRels,
                     s.numRoleRels, s.numCoreTriples));
             LOGGER.info("Mapping statistics");
-            LOGGER.info(String.format("  %-32s %-29s %-29s", "sources", "# good mappings",
+            LOGGER.info(String.format("  %-32s %-39s %-39s", "sources", "# good mappings",
                     "# invalid mappings"));
-            LOGGER.info(String.format("  %-10s %-10s %-10s %-9s %-9s %-9s %-9s %-9s %-9s", "from",
-                    "to", "resource", "class", "role", "other", "class", "role", "other"));
+            LOGGER.info(String.format(
+                    "  %-10s %-10s %-10s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s", "from", "to",
+                    "resource", "con", "class", "role", "other", "con", "class", "role", "other"));
             for (final String from : sourceKeys) {
-                final AtomicInteger zero = new AtomicInteger(0);
+                final AtomicInteger z = new AtomicInteger(0);
                 for (final String to : sourceKeys) {
-                    for (final String resource : models.keySet()) {
+                    for (final String resource : Iterables.concat(models.keySet(),
+                            ImmutableList.of("all"))) {
                         final MappingStatistics ms = msAfter.get(resource);
                         final MappingStatistics msb = msBefore.get(resource);
-                        final int nc, nr, no, ncb, nrb, nob;
-                        nc = MoreObjects.firstNonNull(ms.classMappings.get(from, to), zero).get();
-                        nr = MoreObjects.firstNonNull(ms.roleMappings.get(from, to), zero).get();
-                        no = MoreObjects.firstNonNull(ms.otherMappings.get(from, to), zero).get();
-                        ncb = MoreObjects.firstNonNull(msb.classMappings.get(from, to), zero)
-                                .get();
-                        nrb = MoreObjects.firstNonNull(msb.roleMappings.get(from, to), zero).get();
-                        nob = MoreObjects.firstNonNull(msb.otherMappings.get(from, to), zero)
-                                .get();
-                        if (ncb + nrb + nob > 0) {
+                        final int nx, nc, nr, no, nxb, ncb, nrb, nob;
+                        nx = MoreObjects.firstNonNull(ms.conMappings.get(from, to), z).get();
+                        nc = MoreObjects.firstNonNull(ms.classMappings.get(from, to), z).get();
+                        nr = MoreObjects.firstNonNull(ms.roleMappings.get(from, to), z).get();
+                        no = MoreObjects.firstNonNull(ms.otherMappings.get(from, to), z).get();
+                        nxb = MoreObjects.firstNonNull(msb.conMappings.get(from, to), z).get();
+                        ncb = MoreObjects.firstNonNull(msb.classMappings.get(from, to), z).get();
+                        nrb = MoreObjects.firstNonNull(msb.roleMappings.get(from, to), z).get();
+                        nob = MoreObjects.firstNonNull(msb.otherMappings.get(from, to), z).get();
+                        if (nxb + ncb + nrb + nob > 0) {
                             LOGGER.info(String.format(
-                                    "  %-10s %-10s %-10s %-9d %-9d %-9d %-9d %-9d %-9d", from, to,
-                                    resource, nc, nr, no, ncb - nc, nrb - nr, nob - no));
+                                    "  %-10s %-10s %-10s %-9d %-9d %-9d %-9d %-9d %-9d %-9d %-9d",
+                                    from, to, resource, nx, nc, nr, no, nxb - nx, ncb - nc, nrb
+                                            - nr, nob - no));
                         }
                     }
                 }
@@ -645,11 +703,12 @@ public class Premonitor {
         final Set<URI> validItems = Sets.newHashSet();
         for (final Map<URI, QuadModel> map : models.values()) {
             for (final QuadModel model : map.values()) {
-                for (final URI type : new URI[] { PMO.CONCEPTUALIZATION, PMO.SEMANTIC_CLASS,
-                        PMO.SEMANTIC_ROLE }) {
-                    for (final Resource c : model.filter(null, RDF.TYPE, type).subjects()) {
-                        validItems.add((URI) c);
-                    }
+                for (final Statement stmt : model.filter(null, PMO.EVOKED_CONCEPT, null)) {
+                    validItems.add((URI) stmt.getSubject()); // conceptualizations
+                    validItems.add((URI) stmt.getObject()); // semantic class
+                }
+                for (final Statement stmt : model.filter(null, PMO.SEM_ROLE, null)) {
+                    validItems.add((URI) stmt.getObject()); // semantic roles
                 }
             }
         }
@@ -657,8 +716,8 @@ public class Premonitor {
         for (final Map<URI, QuadModel> map : models.values()) {
             for (final Map.Entry<URI, QuadModel> entry : map.entrySet()) {
                 final QuadModel model = entry.getValue();
-                for (final URI type : new URI[] { PMO.SEMANTIC_CLASS_MAPPING,
-                        PMO.SEMANTIC_ROLE_MAPPING }) {
+                for (final URI type : new URI[] { PMO.CONCEPTUALIZATION_MAPPING,
+                        PMO.SEMANTIC_CLASS_MAPPING, PMO.SEMANTIC_ROLE_MAPPING }) {
                     int numMappingsToDelete = 0;
                     int numMappings = 0;
                     final Map<String, Integer> numMappingsPerSource = Maps.newHashMap();
@@ -674,7 +733,8 @@ public class Premonitor {
                                 ++numMappingsToDelete;
                                 final String str = stmt.getObject().stringValue();
                                 for (final String source : models.keySet()) {
-                                    if (str.contains("-" + source + "-")) {
+                                    if (str.contains("-" + source + "-")
+                                            || str.contains("/" + source + "-")) {
                                         numMappingsPerSource.put(source,
                                                 1 + numMappingsPerSource.getOrDefault(source, 0));
                                     }
@@ -697,10 +757,14 @@ public class Premonitor {
                         for (final Statement stmt : stmtsToDelete) {
                             model.remove(stmt);
                         }
-                        LOGGER.warn("{}/{} illegal {} mappings {} removed from {}",
-                                numMappingsToDelete, numMappings, type
-                                        .equals(PMO.SEMANTIC_CLASS_MAPPING) ? "semantic class"
-                                        : "semantic role", numMappingsPerSource, entry.getKey());
+                        LOGGER.warn(
+                                "{}/{} illegal {} mappings {} removed from {}",
+                                numMappingsToDelete,
+                                numMappings,
+                                type.equals(PMO.SEMANTIC_CLASS_MAPPING) ? "semantic class"
+                                        : type.equals(PMO.CONCEPTUALIZATION_MAPPING) ? "conceptualization"
+                                                : "semantic role", numMappingsPerSource, entry
+                                        .getKey());
                     }
                 }
             }
@@ -806,18 +870,21 @@ public class Premonitor {
 
     private static final class MappingStatistics {
 
-        final Table<String, String, AtomicInteger> otherMappings;
+        final Table<String, String, AtomicInteger> conMappings;
 
         final Table<String, String, AtomicInteger> classMappings;
 
         final Table<String, String, AtomicInteger> roleMappings;
 
+        final Table<String, String, AtomicInteger> otherMappings;
+
         public MappingStatistics(final Iterable<? extends QuadModel> models,
                 final Iterable<String> sources) {
 
-            this.otherMappings = HashBasedTable.create();
+            this.conMappings = HashBasedTable.create();
             this.classMappings = HashBasedTable.create();
             this.roleMappings = HashBasedTable.create();
+            this.otherMappings = HashBasedTable.create();
 
             final List<String> sourceKeys = ImmutableList.copyOf(sources);
             final List<Pattern> sourcePatterns = ImmutableList.copyOf(sourceKeys.stream()
@@ -826,10 +893,16 @@ public class Premonitor {
             for (final QuadModel model : models) {
                 for (final Resource mapping : model.filter(null, RDF.TYPE, PMO.MAPPING).subjects()) {
 
-                    final Table<String, String, AtomicInteger> table = model.contains(mapping,
-                            RDF.TYPE, PMO.SEMANTIC_CLASS_MAPPING) ? this.classMappings
-                            : model.contains(mapping, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING) ? this.roleMappings
-                            : this.otherMappings;
+                    final Table<String, String, AtomicInteger> table;
+                    if (model.contains(mapping, RDF.TYPE, PMO.CONCEPTUALIZATION_MAPPING)) {
+                        table = this.conMappings;
+                    } else if (model.contains(mapping, RDF.TYPE, PMO.SEMANTIC_CLASS_MAPPING)) {
+                        table = this.classMappings;
+                    } else if (model.contains(mapping, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING)) {
+                        table = this.roleMappings;
+                    } else {
+                        table = this.otherMappings;
+                    }
 
                     final Set<String> mappedSources = Sets.newHashSet();
                     for (final Value item : model.filter(mapping, PMO.ITEM, null).objects()) {

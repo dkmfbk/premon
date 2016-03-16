@@ -147,12 +147,22 @@ public class SemlinkConverter extends Converter {
 
                         for (String pbLink : pbLinks) {
                             for (String vnLink : vnLinks) {
-                                URI pbArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
-                                        pbRoleset, pbArg, pbLink);
-                                URI vnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
-                                        vnID, vnTheta, vnLink);
-
-                                addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, pbArgConceptualizationURI, vnArgConceptualizationURI);
+                                
+                                URITreeSet s = new URITreeSet();
+                                s.add(uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, pbRoleset, pbLink));
+                                s.add(uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, vnID, vnLink));
+                                URI parentMappingURI = uriForMapping(s, DEFAULT_CON_SUFFIX, prefix); 
+                                URI pbArgURI = uriForArgument(pbRoleset, pbArg, pbLink);
+                                URI vnArgURI = uriForArgument(vnID, vnTheta, vnLink);
+                                
+                                addSingleMapping(parentMappingURI, prefix, DEFAULT_ARG_SUFFIX, pbArgURI, vnArgURI);
+                                
+                                //    URI pbArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
+                                //            pbRoleset, pbArg, pbLink);
+                                //    URI vnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
+                                //            vnID, vnTheta, vnLink);
+                                //
+                                //    addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, pbArgConceptualizationURI, vnArgConceptualizationURI);
                             }
                         }
                     }
@@ -241,18 +251,30 @@ public class SemlinkConverter extends Converter {
                         for (String vnLink : vnLinks) {
 
                             for (String lemma : lemmas) {
-
-                                // todo: Really bad!
+                                
+                                URITreeSet s = new URITreeSet();
+                                s.add(uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, frame, fnLink));
+                                s.add(uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, vnID, vnLink));
+                                URI parentMappingURI = uriForMapping(s, DEFAULT_CON_SUFFIX, prefix);
                                 String oldArgumentSeparator = argumentSeparator;
                                 argumentSeparator = "@";
-                                URI fnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
-                                        frame, fnrole, fnLink);
+                                URI fnArgURI = uriForArgument(frame, fnrole, fnLink);
                                 argumentSeparator = oldArgumentSeparator;
+                                URI vnArgURI = uriForArgument(vnID, vnTheta, vnLink);
+                                
+                                addSingleMapping(parentMappingURI, prefix, DEFAULT_ARG_SUFFIX, fnArgURI, vnArgURI);
 
-                                URI vnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
-                                        vnID, vnTheta, vnLink);
-
-                                addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, fnArgConceptualizationURI, vnArgConceptualizationURI);
+                                // todo: Really bad!
+                                //    String oldArgumentSeparator = argumentSeparator;
+                                //    argumentSeparator = "@";
+                                //    URI fnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
+                                //            frame, fnrole, fnLink);
+                                //    argumentSeparator = oldArgumentSeparator;
+                                //
+                                //    URI vnArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
+                                //            vnID, vnTheta, vnLink);
+                                //
+                                //    addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, fnArgConceptualizationURI, vnArgConceptualizationURI);
                             }
                         }
                     }
@@ -272,7 +294,7 @@ public class SemlinkConverter extends Converter {
                 URI firstConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, DEFAULT_TYPE, p1, link1);
                 URI secondConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, DEFAULT_TYPE, p2, link2);
 
-                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, firstConceptualizationURI, secondConceptualizationURI);
+                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, firstConceptualizationURI, secondConceptualizationURI);
             }
         }
     }
