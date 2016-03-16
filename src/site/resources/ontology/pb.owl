@@ -43,6 +43,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 	<rdfs:isDefinedBy rdf:resource="http://premon.fbk.eu/ontology/pb.ttl"/>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#core">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+	<rdfs:domain rdf:resource="http://premon.fbk.eu/ontology/core#SemanticRole"/>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#argument">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
@@ -53,16 +60,16 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#Argument">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PropBank semantic role</rdfs:label>
-	<owl:equivalentClass rdf:nodeID="node1adsvaj33x5"/>
-	<rdfs:subClassOf rdf:resource="http://www.w3.org/ns/lemon/ontolex#LexicalConcept"/>
+	<owl:equivalentClass rdf:nodeID="node1advdq8rqx5"/>
+	<rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#SemanticRole">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PropBank semantic argument</rdfs:label>
 	<rdfs:subClassOf rdf:resource="http://premon.fbk.eu/ontology/core#SemanticRole"/>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x50"/>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x51"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx50"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx52"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#aspect">
@@ -75,7 +82,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#Aspect">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">aspect</rdfs:label>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x9"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx9"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#Inflection">
@@ -94,7 +101,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#Form">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">form</rdfs:label>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x12"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx12"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#inflection">
@@ -116,13 +123,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#Person">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">person</rdfs:label>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x46"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx46"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#tag">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-	<rdfs:range rdf:nodeID="node1adsvaj33x1"/>
+	<rdfs:range rdf:nodeID="node1advdq8rqx1"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">function tag</rdfs:label>
 </rdf:Description>
 
@@ -130,7 +137,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PropBank modifier role</rdfs:label>
 	<rdfs:subClassOf rdf:resource="http://premon.fbk.eu/ontology/pb#Argument"/>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x17"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx17"/>
 	<owl:disjointWith rdf:resource="http://premon.fbk.eu/ontology/pb#NumberedArgument"/>
 	<owl:disjointWith rdf:resource="http://premon.fbk.eu/ontology/pb#SecondaryAgent"/>
 </rdf:Description>
@@ -151,7 +158,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#Tense">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">tense</rdfs:label>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x53"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx53"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#voice">
@@ -165,14 +172,14 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#Voice">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">voice</rdfs:label>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x57"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx57"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#NumberedArgument">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PropBank numbered role</rdfs:label>
 	<rdfs:subClassOf rdf:resource="http://premon.fbk.eu/ontology/pb#Argument"/>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x39"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx39"/>
 	<owl:disjointWith rdf:resource="http://premon.fbk.eu/ontology/pb#SecondaryAgent"/>
 </rdf:Description>
 
@@ -361,7 +368,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PropBank predicate</rdfs:label>
 	<rdfs:subClassOf rdf:resource="http://premon.fbk.eu/ontology/core#SemanticClass"/>
-	<rdfs:subClassOf rdf:nodeID="node1adsvaj33x49"/>
+	<rdfs:subClassOf rdf:nodeID="node1advdq8rqx49"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/pb#future">
@@ -409,301 +416,301 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 	<rdf:type rdf:resource="http://premon.fbk.eu/ontology/pb#Tag"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x1">
+<rdf:Description rdf:nodeID="node1advdq8rqx1">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:unionOf rdf:nodeID="node1adsvaj33x2"/>
+	<owl:unionOf rdf:nodeID="node1advdq8rqx2"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x10">
+<rdf:Description rdf:nodeID="node1advdq8rqx10">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#perfect"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x11"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx11"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x11">
+<rdf:Description rdf:nodeID="node1advdq8rqx11">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#progressive"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x12">
+<rdf:Description rdf:nodeID="node1advdq8rqx12">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:oneOf rdf:nodeID="node1adsvaj33x13"/>
+	<owl:oneOf rdf:nodeID="node1advdq8rqx13"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x13">
+<rdf:Description rdf:nodeID="node1advdq8rqx13">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#gerund"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x14"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx14"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x14">
+<rdf:Description rdf:nodeID="node1advdq8rqx14">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#full"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x15"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx15"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x15">
+<rdf:Description rdf:nodeID="node1advdq8rqx15">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#participle"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x16"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx16"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x16">
+<rdf:Description rdf:nodeID="node1advdq8rqx16">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#infinitive"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x17">
+<rdf:Description rdf:nodeID="node1advdq8rqx17">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:oneOf rdf:nodeID="node1adsvaj33x18"/>
+	<owl:oneOf rdf:nodeID="node1advdq8rqx18"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x18">
+<rdf:Description rdf:nodeID="node1advdq8rqx18">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-lvb"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x19"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx19"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x19">
+<rdf:Description rdf:nodeID="node1advdq8rqx19">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-cau"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x20"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx20"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x2">
+<rdf:Description rdf:nodeID="node1advdq8rqx2">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#Modifier"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x3"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx3"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x20">
+<rdf:Description rdf:nodeID="node1advdq8rqx20">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-tmp"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x21"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx21"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x21">
+<rdf:Description rdf:nodeID="node1advdq8rqx21">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-rcl"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x22"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx22"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x22">
+<rdf:Description rdf:nodeID="node1advdq8rqx22">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-loc"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x23"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx23"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x23">
+<rdf:Description rdf:nodeID="node1advdq8rqx23">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-gol"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x24"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx24"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x24">
+<rdf:Description rdf:nodeID="node1advdq8rqx24">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-mod"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x25"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx25"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x25">
+<rdf:Description rdf:nodeID="node1advdq8rqx25">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-prd"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x26"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx26"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x26">
+<rdf:Description rdf:nodeID="node1advdq8rqx26">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-com"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x27"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx27"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x27">
+<rdf:Description rdf:nodeID="node1advdq8rqx27">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-dsp"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x28"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx28"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x28">
+<rdf:Description rdf:nodeID="node1advdq8rqx28">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-ext"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x29"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx29"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x29">
+<rdf:Description rdf:nodeID="node1advdq8rqx29">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-adj"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x30"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx30"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x3">
+<rdf:Description rdf:nodeID="node1advdq8rqx3">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#Tag"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x4"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx4"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x30">
+<rdf:Description rdf:nodeID="node1advdq8rqx30">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-pnc"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x31"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx31"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x31">
+<rdf:Description rdf:nodeID="node1advdq8rqx31">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-slc"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x32"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx32"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x32">
+<rdf:Description rdf:nodeID="node1advdq8rqx32">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-neg"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x33"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx33"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x33">
+<rdf:Description rdf:nodeID="node1advdq8rqx33">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-rec"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x34"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx34"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x34">
+<rdf:Description rdf:nodeID="node1advdq8rqx34">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-dis"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x35"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx35"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x35">
+<rdf:Description rdf:nodeID="node1advdq8rqx35">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-prp"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x36"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx36"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x36">
+<rdf:Description rdf:nodeID="node1advdq8rqx36">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-dir"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x37"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx37"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x37">
+<rdf:Description rdf:nodeID="node1advdq8rqx37">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-adv"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x38"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx38"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x38">
+<rdf:Description rdf:nodeID="node1advdq8rqx38">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#argm-mnr"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x39">
+<rdf:Description rdf:nodeID="node1advdq8rqx39">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:oneOf rdf:nodeID="node1adsvaj33x40"/>
+	<owl:oneOf rdf:nodeID="node1advdq8rqx40"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x4">
+<rdf:Description rdf:nodeID="node1advdq8rqx4">
 	<rdf:first rdf:resource="http://www.w3.org/ns/lemon/ontolex#LexicalEntry"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x40">
+<rdf:Description rdf:nodeID="node1advdq8rqx40">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#arg4"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x41"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx41"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x41">
+<rdf:Description rdf:nodeID="node1advdq8rqx41">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#arg3"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x42"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx42"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x42">
+<rdf:Description rdf:nodeID="node1advdq8rqx42">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#arg2"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x43"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx43"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x43">
+<rdf:Description rdf:nodeID="node1advdq8rqx43">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#arg1"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x44"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx44"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x44">
+<rdf:Description rdf:nodeID="node1advdq8rqx44">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#arg0"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x45"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx45"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x45">
+<rdf:Description rdf:nodeID="node1advdq8rqx45">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#arg5"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x46">
+<rdf:Description rdf:nodeID="node1advdq8rqx46">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:oneOf rdf:nodeID="node1adsvaj33x47"/>
+	<owl:oneOf rdf:nodeID="node1advdq8rqx47"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x47">
+<rdf:Description rdf:nodeID="node1advdq8rqx47">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#other"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x48"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx48"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x48">
+<rdf:Description rdf:nodeID="node1advdq8rqx48">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#third"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x49">
+<rdf:Description rdf:nodeID="node1advdq8rqx49">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://premon.fbk.eu/ontology/core#semRole"/>
 	<owl:allValuesFrom rdf:resource="http://premon.fbk.eu/ontology/pb#SemanticRole"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x5">
+<rdf:Description rdf:nodeID="node1advdq8rqx5">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:unionOf rdf:nodeID="node1adsvaj33x6"/>
+	<owl:unionOf rdf:nodeID="node1advdq8rqx6"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x50">
+<rdf:Description rdf:nodeID="node1advdq8rqx50">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+	<owl:onProperty rdf:nodeID="node1advdq8rqx51"/>
+	<owl:allValuesFrom rdf:resource="http://premon.fbk.eu/ontology/pb#Roleset"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1advdq8rqx51">
+	<owl:inverseOf rdf:resource="http://premon.fbk.eu/ontology/core#semRole"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1advdq8rqx52">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://premon.fbk.eu/ontology/pb#argument"/>
 	<owl:someValuesFrom rdf:resource="http://premon.fbk.eu/ontology/pb#Argument"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x51">
-	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
-	<owl:onProperty rdf:nodeID="node1adsvaj33x52"/>
-	<owl:allValuesFrom rdf:resource="http://premon.fbk.eu/ontology/pb#Roleset"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1adsvaj33x52">
-	<owl:inverseOf rdf:resource="http://premon.fbk.eu/ontology/core#semRole"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1adsvaj33x53">
+<rdf:Description rdf:nodeID="node1advdq8rqx53">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:oneOf rdf:nodeID="node1adsvaj33x54"/>
+	<owl:oneOf rdf:nodeID="node1advdq8rqx54"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x54">
+<rdf:Description rdf:nodeID="node1advdq8rqx54">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#future"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x55"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx55"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x55">
+<rdf:Description rdf:nodeID="node1advdq8rqx55">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#past"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x56"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx56"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x56">
+<rdf:Description rdf:nodeID="node1advdq8rqx56">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#present"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x57">
+<rdf:Description rdf:nodeID="node1advdq8rqx57">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:oneOf rdf:nodeID="node1adsvaj33x58"/>
+	<owl:oneOf rdf:nodeID="node1advdq8rqx58"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x58">
+<rdf:Description rdf:nodeID="node1advdq8rqx58">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#passive"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x59"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx59"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x59">
+<rdf:Description rdf:nodeID="node1advdq8rqx59">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#active"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x6">
+<rdf:Description rdf:nodeID="node1advdq8rqx6">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#Modifier"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x7"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx7"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x7">
+<rdf:Description rdf:nodeID="node1advdq8rqx7">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#NumberedArgument"/>
-	<rdf:rest rdf:nodeID="node1adsvaj33x8"/>
+	<rdf:rest rdf:nodeID="node1advdq8rqx8"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x8">
+<rdf:Description rdf:nodeID="node1advdq8rqx8">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/pb#SecondaryAgent"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1adsvaj33x9">
+<rdf:Description rdf:nodeID="node1advdq8rqx9">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:oneOf rdf:nodeID="node1adsvaj33x10"/>
+	<owl:oneOf rdf:nodeID="node1advdq8rqx10"/>
 </rdf:Description>
 
 </rdf:RDF>
