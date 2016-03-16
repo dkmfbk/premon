@@ -20,6 +20,7 @@ import eu.fbk.dkm.premon.premonitor.propbank.Role;
 import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
 import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.PM;
+import eu.fbk.dkm.premon.vocab.PMONB;
 import eu.fbk.dkm.premon.vocab.PMOPB;
 
 /**
@@ -181,6 +182,10 @@ public class PropbankConverter extends BankConverter {
 
     @Override URI getRoleToArgumentProperty() {
         return PMOPB.ARGUMENT_P;
+    }
+    
+    @Override URI getCoreProperty() {
+        return PMOPB.CORE;
     }
     
     @Override HashMap<String, URI> getFunctionMap() {

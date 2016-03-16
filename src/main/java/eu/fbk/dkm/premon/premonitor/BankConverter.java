@@ -295,7 +295,7 @@ public abstract class BankConverter extends Converter {
 
                                                 URI argumentURI = uriForArgument(rolesetID, argName);
                                                 addStatementToSink(argumentURI, RDF.TYPE, getSemanticArgument());
-                                                addStatementToSink(argumentURI, PMO.CORE, true);
+                                                addStatementToSink(argumentURI, getCoreProperty(), true);
                                                 if (!noDef) {
                                                     addStatementToSink(argumentURI, SKOS.DEFINITION, descr);
                                                 }
@@ -634,6 +634,8 @@ public abstract class BankConverter extends Converter {
     abstract URI getSemanticArgument();
 
     abstract URI getRoleToArgumentProperty();
+    
+    abstract URI getCoreProperty();
     
     abstract HashMap<String, URI> getFunctionMap();
 

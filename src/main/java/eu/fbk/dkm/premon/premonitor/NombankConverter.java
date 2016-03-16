@@ -88,6 +88,10 @@ public class NombankConverter extends BankConverter {
         return PMONB.ARGUMENT_P;
     }
     
+    @Override URI getCoreProperty() {
+        return PMONB.CORE;
+    }
+    
     @Override HashMap<String, URI> getFunctionMap() {
         return PMONB.mapM;
     }

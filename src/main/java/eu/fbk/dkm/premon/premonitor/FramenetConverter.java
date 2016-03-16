@@ -865,7 +865,7 @@ public class FramenetConverter extends Converter {
                 LUSemTypeURI = getSemTypeURI(LUSemType);
             }
             if (LUSemTypeURI != null) {
-                addStatementToSink(baseURI, PMO.SEM_TYPE, LUSemTypeURI);
+                addStatementToSink(baseURI, PMOFN.SEM_TYPE_P, LUSemTypeURI);
                 semTypesFreq.add(LUSemTypeURI);
                 semTypesForFrame.add(frameURI);
             }
@@ -906,7 +906,7 @@ public class FramenetConverter extends Converter {
 
         URI semTypeURI = getSemTypeURI(name);
 
-        addStatementToSink(semTypeURI, RDF.TYPE, PMOFN.SEM_TYPE);
+        addStatementToSink(semTypeURI, RDF.TYPE, PMOFN.SEM_TYPE_C);
         addStatementToSink(semTypeURI, DCTERMS.IDENTIFIER, Integer.parseInt(id));
         addStatementToSink(semTypeURI, RDFS.LABEL, name, false);
         addStatementToSink(semTypeURI, SKOS.DEFINITION, definition);
