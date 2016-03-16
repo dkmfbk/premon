@@ -523,13 +523,14 @@ public class Premonitor {
                     "#classrel", "#rolerel", "#corestmt"));
             for (final Map.Entry<String, Map<URI, QuadModel>> entry : models.entrySet()) {
                 final String source = entry.getKey();
-                final InstanceStatistics s = new InstanceStatistics(entry.getValue().values());
+                final InstanceStatistics s = new InstanceStatistics(entry.getValue().values(),
+                        tbox);
                 LOGGER.info(String.format("  %-10s %-9d %-9d %-9d %-9d %-9d %-9d %-9d %-9d %-9d",
                         source, s.numSemanticClasses, s.numSemanticRoles, s.numConceptualizations,
                         s.numLexicalEntries, s.numExamples, s.numAnnotationSets, s.numClassRels,
                         s.numRoleRels, s.numCoreTriples));
             }
-            final InstanceStatistics s = new InstanceStatistics(quadModels);
+            final InstanceStatistics s = new InstanceStatistics(quadModels, tbox);
             LOGGER.info(String.format("  %-10s %-9d %-9d %-9d %-9d %-9d %-9d %-9d %-9d %-9d",
                     "all", s.numSemanticClasses, s.numSemanticRoles, s.numConceptualizations,
                     s.numLexicalEntries, s.numExamples, s.numAnnotationSets, s.numClassRels,
@@ -795,7 +796,15 @@ public class Premonitor {
 
         final int numCoreTriples;
 
-        public InstanceStatistics(final Iterable<? extends QuadModel> models) {
+        public InstanceStatistics(final Iterable<? extends QuadModel> models, final QuadModel tbox) {
+
+            final Set<URI> roleRelProperties = Sets.newHashSet();
+            for (final Resource rel : tbox.filter(null, RDFS.SUBPROPERTYOF, PMO.ROLE_REL)
+                    .subjects()) {
+                if (rel instanceof URI && !rel.equals(PMO.ROLE_REL)) {
+                    roleRelProperties.add((URI) rel);
+                }
+            }
 
             final Set<Value> classes = Sets.newHashSet();
             final Set<Value> roles = Sets.newHashSet();
@@ -804,12 +813,21 @@ public class Premonitor {
             final Set<Statement> classRels = Sets.newHashSet();
             final Set<Statement> roleRels = Sets.newHashSet();
             for (final QuadModel model : models) {
-                classes.addAll(model.filter(null, RDF.TYPE, PMO.SEMANTIC_CLASS).subjects());
+                for (final Resource c : model.filter(null, RDF.TYPE, PMO.SEMANTIC_CLASS)
+                        .subjects()) {
+                    if (model.contains(null, PMO.EVOKED_CONCEPT, c)
+                            || model.contains(c, PMO.CLASS_REL, null)
+                            || model.contains(null, PMO.CLASS_REL, c)) {
+                        classes.add(c);
+                    }
+                }
                 roles.addAll(model.filter(null, PMO.SEM_ROLE, null).objects());
                 examples.addAll(model.filter(null, RDF.TYPE, PMO.EXAMPLE).subjects());
                 annotationSets.addAll(model.filter(null, RDF.TYPE, PMO.ANNOTATION_SET).subjects());
                 classRels.addAll(model.filter(null, PMO.CLASS_REL, null));
-                roleRels.addAll(model.filter(null, PMO.ROLE_REL, null));
+                for (final URI roleRelProperty : roleRelProperties) {
+                    roleRels.addAll(model.filter(null, roleRelProperty, null));
+                }
             }
             this.numSemanticClasses = classes.size();
             this.numSemanticRoles = roles.size();
