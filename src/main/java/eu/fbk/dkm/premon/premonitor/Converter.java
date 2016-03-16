@@ -1,11 +1,14 @@
 package eu.fbk.dkm.premon.premonitor;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.sun.org.apache.regexp.internal.RE;
+
 import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.*;
 import eu.fbk.rdfpro.util.Hash;
+
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -21,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -53,6 +57,7 @@ public abstract class Converter {
     protected static final String DEFAULT_SENSE_SUFFIX = "sense";
     protected static final String DEFAULT_PRED_SUFFIX = "pred";
     protected static final String DEFAULT_ARG_SUFFIX = "arg";
+    protected static final String DEFAULT_CON_SUFFIX = "con";
     protected static final String DEFAULT_ANNSET_SUFFIX = "annotationSet";
 
     static final Map<URI, String> wnMap = Maps.newHashMap();
@@ -429,35 +434,45 @@ public abstract class Converter {
         return builder.toString();
     }
 
-    protected void addSingleMapping(String prefix, String suffix, URI... uris) {
+    protected URI addSingleMapping(@Nullable URI parentMapping, String prefix, String suffix, URI... uris) {
         TreeSet<URI> cluster = new URITreeSet();
         for (URI uri : uris) {
             cluster.add(uri);
         }
 
-        addMappingToSink(cluster, suffix, prefix);
+        return addMappingToSink(parentMapping, cluster, suffix, prefix);
     }
 
-    protected void addMappingToSink(TreeSet<URI> mapping, String suffix, String prefix) {
+    protected URI addMappingToSink(@Nullable URI parentMapping, TreeSet<URI> mapping, String suffix, String prefix) {
 
         if (mapping.size() <= 1) {
             LOGGER.warn("Mapping involves only 1 concept! - " + mapping);
-            return;
+            return null;
         }
 
         URI mappingURI = uriForMapping(mapping, suffix, prefix);
 
         if (suffix.equals(DEFAULT_ARG_SUFFIX)) {
+            Preconditions.checkArgument(parentMapping != null);
             addStatementToSink(mappingURI, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING);
+            addStatementToSink(parentMapping, PMO.SEM_ROLE_MAPPING, mappingURI);
         } else if (suffix.equals(DEFAULT_PRED_SUFFIX)) {
+            Preconditions.checkArgument(parentMapping == null);
             addStatementToSink(mappingURI, RDF.TYPE, PMO.SEMANTIC_CLASS_MAPPING);
+        } else if (suffix.equals(DEFAULT_CON_SUFFIX)) {
+            Preconditions.checkArgument(parentMapping == null);
+            addStatementToSink(mappingURI, RDF.TYPE, PMO.CONCEPTUALIZATION_MAPPING);
         } else {
+            Preconditions.checkArgument(parentMapping == null);
             addStatementToSink(mappingURI, RDF.TYPE, PMO.MAPPING);
             // LOGGER.error("Suffix {} is not valid", suffix);
         }
+        
         for (URI uri : mapping) {
             addStatementToSink(mappingURI, PMO.ITEM, uri);
         }
+        
+        return mappingURI;
     }
 
     protected URI uriForMapping(TreeSet<URI> mapping, String suffix, String prefix) {

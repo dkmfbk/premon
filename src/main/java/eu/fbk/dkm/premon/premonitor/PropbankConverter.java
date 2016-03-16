@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
 import org.openrdf.model.URI;
@@ -20,7 +22,6 @@ import eu.fbk.dkm.premon.premonitor.propbank.Role;
 import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
 import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.PM;
-import eu.fbk.dkm.premon.vocab.PMONB;
 import eu.fbk.dkm.premon.vocab.PMOPB;
 
 /**
@@ -30,6 +31,9 @@ import eu.fbk.dkm.premon.vocab.PMOPB;
 public class PropbankConverter extends BankConverter {
 
     private static String LINK_PATTERN = "http://verbs.colorado.edu/propbank/framesets-english/%s-%s.html";
+
+    private static Set<String> PREPOSITIONS = ImmutableSet.of("from", "on", "to", "as", "at",
+            "by", "for", "in", "of", "with", "upon", "into", "around", "about");
 
     public PropbankConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
         super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
@@ -54,7 +58,10 @@ public class PropbankConverter extends BankConverter {
             if (PMOPB.mapO.containsKey(code)) {
                 return Type.ADDITIONAL;
             }
-
+            if (PREPOSITIONS.contains(code)) {
+                return Type.PREPOSITION;
+            }
+            
             Matcher matcher = ARG_NUM_PATTERN.matcher(code);
             if (matcher.find()) {
                 return Type.NUMERIC;
@@ -87,7 +94,7 @@ public class PropbankConverter extends BankConverter {
         for (String fnPredicate : fnPredicates) {
             for (String fnLink : fnLinks) {
                 URI fnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, fnPredicate, fnLink);
-                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, fnConcURI);
+                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, fnConcURI);
             }
         }
 
@@ -96,7 +103,7 @@ public class PropbankConverter extends BankConverter {
         for (String vnClass : vnClasses) {
             for (String vnLink : vnLinks) {
                 URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, vnLink);
-                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, vnConcURI);
+                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, vnConcURI);
             }
         }
 
@@ -109,7 +116,7 @@ public class PropbankConverter extends BankConverter {
             for (String pbLink : pbLinks) {
                 String lemma = getLemmaFromPredicateName(pbLemma);
                 URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
-                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, pbConceptURI);
+                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, pbConceptURI);
             }
         }
     }
@@ -225,15 +232,17 @@ public class PropbankConverter extends BankConverter {
         }
         switch (secondType) {
         case M_FUNCTION:
-            addStatementToSink(argumentURI, PMOPB.TAG_C, PMOPB.mapM.get(f));
+            addStatementToSink(argumentURI, PMOPB.TAG_P, PMOPB.mapM.get(f));
             break;
         case ADDITIONAL:
-            addStatementToSink(argumentURI, PMOPB.TAG_C, PMOPB.mapO.get(f));
+            addStatementToSink(argumentURI, PMOPB.TAG_P, PMOPB.mapO.get(f));
             break;
         case PREPOSITION:
             URI lexicalEntry = addLexicalEntry(f, f, null, null, "prep", getLexicon());
-            addStatementToSink(argumentURI, PMOPB.TAG_C, lexicalEntry);
+            addStatementToSink(argumentURI, PMOPB.TAG_P, lexicalEntry);
             break;
+        default:
+            // FC: it happens, don't know whether it's ok or not :-)
         }
     }
 
@@ -244,7 +253,7 @@ public class PropbankConverter extends BankConverter {
     @Override protected void addRelToSink(Type argType, String argName, URI markableURI) {
         switch (argType) {
         case M_FUNCTION:
-            addStatementToSink(markableURI, PMOPB.TAG_C, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
+            addStatementToSink(markableURI, PMOPB.TAG_P, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
             break;
         default:
             //todo: should never happen (and strangely it really never happens)
@@ -263,11 +272,11 @@ public class PropbankConverter extends BankConverter {
             break;
         case M_FUNCTION:
             addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
-            addStatementToSink(asURI, PMOPB.TAG_C, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
+            addStatementToSink(asURI, PMOPB.TAG_P, PMOPB.mapM.get(argName), EXAMPLE_GRAPH);
             break;
         case AGENT:
             addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
-            addStatementToSink(asURI, PMOPB.TAG_C, PMOPB.ARGA, EXAMPLE_GRAPH);
+            addStatementToSink(asURI, PMOPB.TAG_P, PMOPB.ARGA, EXAMPLE_GRAPH);
             break;
         default:
             //todo: should never happen, but it happens

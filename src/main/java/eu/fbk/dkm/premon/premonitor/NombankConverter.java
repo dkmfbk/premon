@@ -1,21 +1,24 @@
 package eu.fbk.dkm.premon.premonitor;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Matcher;
+
+import org.openrdf.model.URI;
+import org.openrdf.rio.RDFHandler;
+
 import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
 import eu.fbk.dkm.premon.premonitor.propbank.Role;
 import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
 import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.PMONB;
-import eu.fbk.dkm.premon.vocab.PMOPB;
-
-import org.openrdf.model.URI;
-import org.openrdf.query.algebra.Str;
-import org.openrdf.rio.RDFHandler;
-
-import java.io.File;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by alessio on 03/11/15.
@@ -57,6 +60,8 @@ public class NombankConverter extends BankConverter {
             case ADDITIONAL:
                 addStatementToSink(asURI, PMONB.TAG_P, PMONB.mapO.get(f), EXAMPLE_GRAPH);
                 break;
+            default:
+                // FC: it happens, don't know if it is OK
             }
             break;
         case M_FUNCTION:
@@ -127,7 +132,7 @@ public class NombankConverter extends BankConverter {
         addArgumentToSink(key, keyURI, argumentURI, lemma, type, rolesetID, lexicalEntryURI, role);
 
         // todo: bad! this should be merged with the addExternalLinks method
-        URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
+        // URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
         ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
 
         for (Matcher matcher : matchers) {
@@ -142,9 +147,16 @@ public class NombankConverter extends BankConverter {
 
             for (String pbLink : pbLinks) {
                 pbLemma = getLemmaFromPredicateName(pbLemma);
-                URI argPropBankConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, key,
-                        pbLink);
-                addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, argConceptualizationURI, argPropBankConceptualizationURI);
+                // URI argPropBankConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, key, pbLink);
+                
+                URITreeSet s = new URITreeSet();
+                s.add(uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, pbLink));
+                s.add(uriForConceptualization(lemma, type, rolesetID));
+                URI parentMappingURI = uriForMapping(s, DEFAULT_CON_SUFFIX, prefix); 
+                
+                URI pbArgumentURI = uriForArgument(pbPredicate, key, pbLink);
+                addSingleMapping(parentMappingURI, prefix, DEFAULT_ARG_SUFFIX, argumentURI, pbArgumentURI);
+                // addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, argConceptualizationURI, argPropBankConceptualizationURI);
             }
         }
     }
@@ -191,7 +203,7 @@ public class NombankConverter extends BankConverter {
 
             for (String pbLink : pbLinks) {
                 URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
-                addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, pbConceptURI);
+                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, pbConceptURI);
             }
         }
 
@@ -201,7 +213,7 @@ public class NombankConverter extends BankConverter {
             for (String vnLink : vnLinks) {
                 for (String lemma : lemmas) {
                     URI vnConcURI = uriForConceptualizationWithPrefix(lemma, "v", vnClass, vnLink);
-                    addSingleMapping(prefix, DEFAULT_PRED_SUFFIX, conceptualizationURI, vnConcURI);
+                    addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, vnConcURI);
                 }
             }
         }
