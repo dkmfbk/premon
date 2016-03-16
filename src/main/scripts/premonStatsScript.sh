@@ -35,12 +35,13 @@ print(){
 }
 
 
-echo "Statistics" > $stats
+
+print "Statistics" "" $stats
 
 
 #PB17
-echo "" >> $stats
-echo "PB17" >> $stats
+print "" "" $stats
+print "PB17" "" $stats
 file=$(ls $pb17/*.xml | wc -l)
 print "pb17 Frame files = " $file $stats
 
@@ -63,8 +64,8 @@ print "pb17 examples = " $exa $stats
 
 
 #PBON5
-echo "" >> $stats
-echo "PBON5" >> $stats
+print "" "" $stats
+print "PBON5" "" $stats
 file=$(ls $pbon5/*.xml | wc -l)
 print "pbon5 Frame files = " $file $stats
 
@@ -103,8 +104,8 @@ print "pbon5 examples (only verbs) = " $exa $stats
 
 
 #NB10
-echo "" >> $stats
-echo "NB10" >> $stats
+print "" "" $stats
+print "NB10" "" $stats
 file=$(ls $nb10/frames/*.xml | wc -l)
 print "nb10 Frame files = " $file $stats
 
@@ -124,8 +125,8 @@ exa=$(grep '<example ' $nb10/frames/*.xml | wc -l)
 print "nb10 examples = " $exa $stats
 
 ##VN32
-echo "" >> $stats
-echo "VN32" >> $stats
+print "" "" $stats
+print "WN32" "" $stats
 file=$(ls $vn32/*.xml | wc -l)
 print "vn32 Frame files = " $file $stats
 
@@ -147,8 +148,8 @@ crel=$(grep "<VNSUBCLASS " $vn32/*.xml | wc -l)
 print "vn32 subclass rels = " $crel $stats
 
 #FN15
-echo "" >> $stats
-echo "FN15" >> $stats
+print "" "" $stats
+print "FN15" "" $stats
 file=$(ls $fn15/frame/*.xml | wc -l)
 print "fn15 Frame files = " $file $stats
 
@@ -173,8 +174,8 @@ FErel=$(grep '<FERelation ' $fn15/frRelation.xml | wc -l)
 print "fn15 FE relations = " $FErel $stats
 
 #FN16
-echo "" >> $stats
-echo "FN16" >> $stats
+print "" "" $stats
+print "FN16" "" $stats
 file=$(ls $fn16/frame/*.xml | wc -l)
 print "fn16 Frame files = " $file $stats
 
@@ -197,3 +198,80 @@ print "fn16 frame relations = " $frel $stats
 
 FErel=$(grep '<FERelation ' $fn16/frRelation.xml | wc -l)
 print "fn16 FE relations = " $FErel $stats
+
+
+
+#MAPPINGS
+print "" "" $stats
+print "MAPPINGS" "" $stats
+
+print "" "" $stats
+print "from PB17" "" $stats
+mclass=$(grep "<roleset " $pb17/*.xml | grep -o ' vncls=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| wc -l)
+print "pb17-vn = " $mclass $stats
+
+mrole=$(grep "<vnrole " $pb17/*.xml | grep -o ' vntheta=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| wc -l)
+print "pb17-vn roles = " $mrole $stats
+
+mclass=$(grep "<roleset " $pb17/*.xml | grep -o ' framnet=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| wc -l)
+print "pb17-fn = " $mclass $stats
+
+
+print "" "" $stats
+print "from PBON5" "" $stats
+mclass=$(grep "<roleset " $pbon5/*.xml | grep -o ' vncls=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| wc -l)
+print "pbon5-vn = " $mclass $stats
+
+mrole=$(grep "<vnrole " $pbon5/*.xml | grep -o ' vntheta=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| wc -l)
+print "pbon5-vn roles = " $mrole $stats
+
+mclass=$(grep "<roleset " $pbon5/*.xml | grep -o ' framnet=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| wc -l)
+print "pbon5-fn = " $mclass $stats
+
+
+print "" "" $stats
+print "from NB10" "" $stats
+mclass=$(grep "<roleset " $nb10/frames/*.xml | grep -o ' vncls=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| wc -l)
+print "nb10-vn = " $mclass $stats
+
+mrole=$(grep "<vnrole " $nb10/frames/*.xml | grep -o ' vntheta=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| wc -l)
+print "nb10-vn roles = " $mrole $stats
+
+mclass=$(grep "<roleset " $nb10/frames/*.xml | grep -o ' source=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| wc -l)
+print "nb10-pb = " $mclass $stats
+
+#as now, every roles is mapped....
+mrole=$(grep "<role " $nb10/frames/*.xml | wc -l)
+print "nb10-pb roles = " $mrole $stats
+
+print "" "" $stats
+print "from VN32" "" $stats
+mclass=$(grep "<MEMBER " $vn32/*.xml | grep -o ' wn=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| grep -o "%" | wc -l)
+print "vn32-wn = " $mclass $stats
+
+mclass=$(grep "<MEMBER " $vn32/*.xml | grep -o ' grouping=\"[^\"]*\"' | grep -v '"-"' | grep -v '""'| grep -o "\." | wc -l)
+print "vn32-on5 = " $mclass $stats
+
+
+print "" "" $stats
+print "from SemLink" "" $stats
+mclass=$(grep '<vncls class=' $sl122/vn-fn/VNC-FNF.s | wc -l)
+print "vn32-fn15 = " $mclass $stats
+
+mrole=$(grep '<role ' $sl122/vn-fn/VN-FNRoleMapping.txt | wc -l)
+print "vn32-fn15 roles = " $mrole $stats
+
+mclass=$(grep '<argmap ' $sl122/vn-pb/vnpbMappings | wc -l)
+print "vn32-pb17 = " $mclass $stats
+
+mrole=$(grep '<role ' $sl122/vn-pb/vnpbMappings | wc -l)
+print "vn32-pb17 roles = " $mrole $stats
+
+
+print "" "" $stats
+print "from FN16" "" $stats
+mclass=$(grep '<Frame ID=' $fn16/miscXML/DifferencesR1.5-R16.xml | wc -l)
+print "fn15-fn16 lower bound= " $mclass $stats
+
+mrole=$(grep '<FrameElement ID=' $fn16/miscXML/DifferencesR1.5-R16.xml | wc -l)
+print "fn15-fn16 fe lower bound = " $mrole $stats
