@@ -83,6 +83,26 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 #################################################################
 #
+#    Data properties
+#
+#################################################################
+
+
+###  http://premon.fbk.eu/ontology/nb#core
+
+:core rdf:type owl:DatatypeProperty ,
+               owl:FunctionalProperty ;
+      
+      rdfs:domain :SemanticRole ;
+      
+      rdfs:range xsd:boolean .
+
+
+
+
+
+#################################################################
+#
 #    Classes
 #
 #################################################################
@@ -171,13 +191,13 @@ Subclasses of Example and Markable are introduced to model the specificities of 
               
               rdfs:subClassOf pmo:SemanticRole ,
                               [ rdf:type owl:Restriction ;
+                                owl:onProperty :argument ;
+                                owl:someValuesFrom :Argument
+                              ] ,
+                              [ rdf:type owl:Restriction ;
                                 owl:onProperty [ owl:inverseOf pmo:semRole
                                                ] ;
                                 owl:allValuesFrom :Roleset
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :argument ;
-                                owl:someValuesFrom :Argument
                               ] .
 
 

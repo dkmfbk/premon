@@ -279,6 +279,22 @@
 
 
 
+###  http://premon.fbk.eu/ontology/fn#semType
+
+:semType rdf:type owl:FunctionalProperty ,
+                  owl:ObjectProperty ;
+         
+         rdfs:range :SemType ;
+         
+         rdfs:domain [ rdf:type owl:Class ;
+                       owl:unionOf ( :Frame
+                                     :FrameElement
+                                     :LexicalUnit
+                                   )
+                     ] .
+
+
+
 ###  http://premon.fbk.eu/ontology/fn#status
 
 :status rdf:type owl:FunctionalProperty ,
