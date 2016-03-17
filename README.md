@@ -1,6 +1,6 @@
 # PREMON
 
-PREMON is a tool to convert PropBank-style resources (and other ones, stay tuned) to RDF, using the [Lemon model](http://lemon-model.net/index.php).
+[Premon](http://premon.fbk.eu) is a [Lemon model](http://lemon-model.net/index.php) Extension for Exposing Predicate Models as Linked Data.
 
 ## Installation
 
