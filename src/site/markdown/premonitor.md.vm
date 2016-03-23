@@ -10,10 +10,12 @@ Download
 A `tar.gz` archive with the compiled binaries of the last stable version of the tool is available [here](${site-download}premon-bin.tar.gz).
 
 Once downloaded, you should extract with 
+
 ```
 tar xf premon-*-bin.tar.gz # the * refers to the version
 cd premon
 ```
+
 in the directory you prefer.
 
 
@@ -23,6 +25,7 @@ Compile
 The Java sources of PreMOnitor are available on [GitHub](https://github.com/dkmfbk/premon). Under the `master` branch you can find the sources of the latest stable version, while the `develop` branch contains the latest (unstable) code we are working on.
 
 To checkout the code from GitHub, open a terminal (on Linux/Mac OS) in the parent directory where you want to download the code, and type:
+
 ```
 git checkout https://github.com/dkmfbk/premon.git
 cd premon
@@ -31,11 +34,13 @@ cd premon
 ```
 
 PreMOnitor is built using Maven. To compile the tool from sources, enter the `premon` directory and type:
+
 ```
 mvn clean package -DskipTests -Prelease
 ```
 
 This will produce the same `tar.gz` file with the binaries we distribute on this website. To use it, extract the `tar.gz` archive with:
+
 ```
 cd target
 tar xf premon-*-bin.tar.gz # the * refers to the version
@@ -49,9 +54,11 @@ Run
 Starting from a downloaded or compiled version, you should use the `./premonitor` executable to run the tool.
 
 The default configuration of the tool, contained in `premonitor.properties`, expect to find the resources to convert under the directory `resources` and its sub-directories. It is enough to populate the sub-directories for the resources you want to convert (or replacing these sub-directories with symlinks to the paths where containing the required files), and then execute
+
 ```
 ./premonitor
 ```
+
 Here is the list of available sub-directories with the indication of what to place under each of them:
 
   * `framenet-1.5` - put here the contents of the `fndata-1.5` folder in the archive obtainable from this  [page](https://framenet.icsi.berkeley.edu/fndrupal/framenet_request_data)
