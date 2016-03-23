@@ -14,6 +14,7 @@ The following named graphs are available, with their content included by default
  `pm:fn16` for FrameNet 1.6 data;
  `pm:sl122c` for SemLink 1.2.2c data.
 
+To run the query, hit the triangle button on the top right corner of the query form.
 
 <link href='//cdn.jsdelivr.net/g/yasqe@2.2(yasqe.min.css),yasr@2.4(yasr.min.css)' rel='stylesheet' type='text/css'/>
 <div id="yasqe"></div>

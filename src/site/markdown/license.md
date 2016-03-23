@@ -3,7 +3,8 @@ License
 
 PreMOn artefacts are freely available using two different licenses.
 
-PreMOn ontologies, datasets and this web site are licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
+PreMOn ontologies, datasets and this web site are licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/). You are allowed to copy and redistribute this material provided you give appropriate credit, and you can build derived resources from this material provided you redistribute them under the same Creative Commons Attribution-ShareAlike 4.0 International License (or compatible license).
+
 
 PreMOn software is licensed under the [Apache License, Version 2](http://www.apache.org/licenses/LICENSE-2.0).
 You are allowed to use the software for any purpose, to distribute it, to modify it, and to distribute modified versions of the software, provided you preserve the copyright notice and disclaimer according to the license.
