@@ -39,7 +39,7 @@ rdfpro @read src/main/owl/core.ttl \
              src/main/owl/pb.ttl \
              src/main/owl/nb.ttl \
              src/main/owl/fn.ttl \
-             src/main/owl/vn.ttl \             
+             src/main/owl/vn.ttl \
              src/main/owl/ontolex.owl \
              src/main/owl/decomp.owl \
              src/main/owl/nif-core.owl \
