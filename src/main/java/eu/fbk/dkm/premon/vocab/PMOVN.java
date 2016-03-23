@@ -155,6 +155,9 @@ public final class PMOVN {
     /** Object property pmovn:frame. */
     public static final URI FRAME = createURI("frame");
 
+    /** Object property pmovn:frameExample. */
+    public static final URI FRAME_EXAMPLE = createURI("frameExample");
+
     /** Object property pmovn:definesFrame. */
     public static final URI DEFINES_FRAME = createURI("definesFrame");
 

@@ -1,19 +1,14 @@
 package eu.fbk.dkm.premon.vocab;
 
-import com.google.common.collect.Maps;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
-import java.util.Map;
-
 /**
  * Vocabulary constants for the PreMOn Ontology - FrameNet module (PMOFN).
  */
 public final class PMOFN {
-
-    private static Map<URI, Map<String, URI>> INDEX = Maps.newHashMap();
 
     /** Recommended prefix for the vocabulary namespace: "pmofn". */
     public static final String PREFIX = "pmofn";

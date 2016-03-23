@@ -416,6 +416,8 @@ public class VerbnetConverter extends Converter {
             for (final URI exampleURI : exampleURIs.keySet()) {
                 final URI annotationSetURI = exampleURIs.get(exampleURI);
 
+                addStatementToSink(frameURI, PMOVN.FRAME_EXAMPLE, exampleURI, this.EXAMPLE_GRAPH);
+                
                 final URI predURI = createURI(annotationSetURI.toString() + "-pred");
                 addStatementToSink(predURI, RDF.TYPE, NIF.ANNOTATION_C, this.EXAMPLE_GRAPH);
                 addStatementToSink(annotationSetURI, PMO.ITEM, predURI, this.EXAMPLE_GRAPH);
