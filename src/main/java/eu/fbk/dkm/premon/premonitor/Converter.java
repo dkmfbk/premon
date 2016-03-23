@@ -1,13 +1,22 @@
 package eu.fbk.dkm.premon.premonitor;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.TreeSet;
+
+import javax.annotation.Nullable;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.sun.org.apache.regexp.internal.RE;
-
-import eu.fbk.dkm.premon.util.URITreeSet;
-import eu.fbk.dkm.premon.vocab.*;
-import eu.fbk.rdfpro.util.Hash;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -23,11 +32,14 @@ import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import eu.fbk.dkm.premon.util.URITreeSet;
+import eu.fbk.dkm.premon.vocab.DECOMP;
+import eu.fbk.dkm.premon.vocab.LEXINFO;
+import eu.fbk.dkm.premon.vocab.LIME;
+import eu.fbk.dkm.premon.vocab.ONTOLEX;
+import eu.fbk.dkm.premon.vocab.PM;
+import eu.fbk.dkm.premon.vocab.PMO;
+import eu.fbk.rdfpro.util.Hash;
 
 public abstract class Converter {
 
@@ -52,7 +64,7 @@ public abstract class Converter {
     public String separator = "-";
     public String argumentSeparator = "-";
     public static final String FORM_PREFIX = "form";
-    public static final String CONCEPTUALIZATION_PREFIX = "conceptualization";
+    public static final String CONCEPTUALIZATION_PREFIX = "co";
     protected Map<String, URI> wnInfo;
     protected static final String DEFAULT_SENSE_SUFFIX = "sense";
     protected static final String DEFAULT_PRED_SUFFIX = "pred";
@@ -370,9 +382,9 @@ public abstract class Converter {
         return builder.toString();
     }
 
-    protected URI uriForConceptualization(String lemma, String type, String rolesetID, String argName) {
-        return uriForConceptualizationGen(lemma, type, argPart(rolesetID, argName));
-    }
+//    protected URI uriForConceptualization(String lemma, String type, String rolesetID, String argName) {
+//        return uriForConceptualizationGen(lemma, type, argPart(rolesetID, argName));
+//    }
 
     protected URI uriForConceptualization(String lemma, String type, String rolesetID) {
         return uriForConceptualizationGen(lemma, type, rolesetPart(rolesetID));
@@ -382,10 +394,10 @@ public abstract class Converter {
         return uriForConceptualizationGen(lemma, type, rolesetPart(rolesetID, prefix));
     }
 
-    protected URI uriForConceptualizationWithPrefix(String lemma, String type, String rolesetID, String argName,
-            String prefix) {
-        return uriForConceptualizationGen(lemma, type, argPart(rolesetID, argName, prefix));
-    }
+//    protected URI uriForConceptualizationWithPrefix(String lemma, String type, String rolesetID, String argName,
+//            String prefix) {
+//        return uriForConceptualizationGen(lemma, type, argPart(rolesetID, argName, prefix));
+//    }
 
     private URI uriForConceptualizationGen(String lemma, String type, String rolesetID) {
 
@@ -434,6 +446,39 @@ public abstract class Converter {
         return builder.toString();
     }
 
+    protected void addMappings(URI class1, URI class2, @Nullable URI conceptualization1,
+            @Nullable URI conceptualization2) {
+
+        Preconditions.checkNotNull(class1);
+        Preconditions.checkNotNull(class2);
+
+        addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, class1, class2);
+
+        if (conceptualization1 != null && conceptualization2 != null) {
+            addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualization1,
+                    conceptualization2);
+        }
+    }
+
+    protected void addMappings(URI class1, URI class2, @Nullable URI conceptualization1,
+            @Nullable URI conceptualization2, URI argument1, URI argument2) {
+
+        Preconditions.checkNotNull(class1);
+        Preconditions.checkNotNull(class2);
+        Preconditions.checkNotNull(argument1);
+        Preconditions.checkNotNull(argument2);
+
+        URI classMapping = addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, class1, class2);
+        addSingleMapping(classMapping, prefix, DEFAULT_ARG_SUFFIX, argument1, argument2);
+
+        if (conceptualization1 != null && conceptualization2 != null) {
+            URI conceptualizationMapping = addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX,
+                    conceptualization1, conceptualization2);
+            addSingleMapping(conceptualizationMapping, prefix, DEFAULT_ARG_SUFFIX, argument1,
+                    argument2);
+        }
+    }
+    
     protected URI addSingleMapping(@Nullable URI parentMapping, String prefix, String suffix, URI... uris) {
         TreeSet<URI> cluster = new URITreeSet();
         for (URI uri : uris) {

@@ -10,6 +10,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import javax.annotation.Nullable;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFHandler;
 
@@ -129,12 +134,21 @@ public class NombankConverter extends BankConverter {
             return;
         }
 
-        addArgumentToSink(key, keyURI, argumentURI, lemma, type, rolesetID, lexicalEntryURI, role);
+        List<String> vnLemmas = Lists.newArrayList();
+        for (Matcher matcher : getPropBankPredicates(roleset)) {
+            vnLemmas.add(getLemmaFromPredicateName(matcher.group(2)));
+        }
+
+        
+        addArgumentToSink(key, keyURI, argumentURI, lemma, type, rolesetID, lexicalEntryURI, role, vnLemmas);
 
         // todo: bad! this should be merged with the addExternalLinks method
         // URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
         ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
 
+        URI rolesetURI = uriForRoleset(rolesetID);
+        URI conceptualizationURI = uriForConceptualization(lemma, type, rolesetID);
+        
         for (Matcher matcher : matchers) {
             String pbLemma = matcher.group(2);
             String pbPredicate = matcher.group(1);
@@ -148,19 +162,17 @@ public class NombankConverter extends BankConverter {
             for (String pbLink : pbLinks) {
                 pbLemma = getLemmaFromPredicateName(pbLemma);
                 // URI argPropBankConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, key, pbLink);
-                
-                URITreeSet s = new URITreeSet();
-                s.add(uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, pbLink));
-                s.add(uriForConceptualization(lemma, type, rolesetID));
-                URI parentMappingURI = uriForMapping(s, DEFAULT_CON_SUFFIX, prefix); 
-                
-                URI pbArgumentURI = uriForArgument(pbPredicate, key, pbLink);
-                addSingleMapping(parentMappingURI, prefix, DEFAULT_ARG_SUFFIX, argumentURI, pbArgumentURI);
                 // addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, argConceptualizationURI, argPropBankConceptualizationURI);
+                
+                URI pbRolesetURI = uriForRoleset(pbPredicate, pbLink);
+                URI pbConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, pbLink);
+                URI pbArgumentURI = uriForArgument(pbPredicate, key, pbLink);
+                
+                addMappings(rolesetURI, pbRolesetURI, conceptualizationURI, pbConceptualizationURI, argumentURI, pbArgumentURI);
             }
         }
     }
-
+    
     @Override Type getType(String code) {
         if (code != null) {
             if (PMONB.mapM.containsKey(code)) {
@@ -193,6 +205,9 @@ public class NombankConverter extends BankConverter {
 
         Set<String> lemmas = new HashSet<>();
 
+        String rolesetID = ((Roleset) roleset).getId();
+        URI rolesetURI = uriForRoleset(rolesetID);
+        
         // PropBank
         ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
         for (Matcher matcher : matchers) {
@@ -202,8 +217,9 @@ public class NombankConverter extends BankConverter {
             String pbPredicate = matcher.group(1);
 
             for (String pbLink : pbLinks) {
-                URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
-                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, pbConceptURI);
+                URI pbRolesetURI = uriForRoleset(pbPredicate, pbLink);
+                URI pbConceptualizationURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
+                addMappings(rolesetURI, pbRolesetURI, conceptualizationURI, pbConceptualizationURI);
             }
         }
 
@@ -212,8 +228,9 @@ public class NombankConverter extends BankConverter {
         for (String vnClass : vnClasses) {
             for (String vnLink : vnLinks) {
                 for (String lemma : lemmas) {
-                    URI vnConcURI = uriForConceptualizationWithPrefix(lemma, "v", vnClass, vnLink);
-                    addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, vnConcURI);
+                    URI vnClassURI = uriForRoleset(vnClass, vnLink);
+                    URI vnConceptualizationURI = uriForConceptualizationWithPrefix(lemma, "v", vnClass, vnLink);
+                    addMappings(rolesetURI, vnClassURI, conceptualizationURI, vnConceptualizationURI);
                 }
             }
         }

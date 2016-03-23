@@ -1,14 +1,21 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
-import com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import eu.fbk.dkm.premon.premonitor.propbank.*;
-import eu.fbk.dkm.premon.util.NF;
-import eu.fbk.dkm.premon.util.PropBankResource;
-import eu.fbk.dkm.premon.util.URITreeSet;
-import eu.fbk.dkm.premon.vocab.*;
+import javax.annotation.Nullable;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import com.google.common.io.Files;
 
 import org.joox.JOOX;
 import org.joox.Match;
@@ -24,16 +31,24 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.annotation.Nullable;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import eu.fbk.dkm.premon.premonitor.propbank.Arg;
+import eu.fbk.dkm.premon.premonitor.propbank.Example;
+import eu.fbk.dkm.premon.premonitor.propbank.Frameset;
+import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
+import eu.fbk.dkm.premon.premonitor.propbank.Predicate;
+import eu.fbk.dkm.premon.premonitor.propbank.Rel;
+import eu.fbk.dkm.premon.premonitor.propbank.Role;
+import eu.fbk.dkm.premon.premonitor.propbank.Roles;
+import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
+import eu.fbk.dkm.premon.premonitor.propbank.Text;
+import eu.fbk.dkm.premon.premonitor.propbank.Vnrole;
+import eu.fbk.dkm.premon.util.NF;
+import eu.fbk.dkm.premon.util.PropBankResource;
+import eu.fbk.dkm.premon.vocab.LEXINFO;
+import eu.fbk.dkm.premon.vocab.NIF;
+import eu.fbk.dkm.premon.vocab.ONTOLEX;
+import eu.fbk.dkm.premon.vocab.PMO;
+import eu.fbk.rdfpro.util.Hash;
 
 /**
  * Created by alessio on 28/10/15.
@@ -262,7 +277,7 @@ public abstract class BankConverter extends Converter {
                                 for (String key : functionMap.keySet()) {
                                     URI argumentURI = uriForArgument(rolesetID, key);
                                     addArgumentToSink(key, functionMap.get(key), argumentURI,
-                                            uriLemma, type, rolesetID, lexicalEntryURI, null);
+                                            uriLemma, type, rolesetID, lexicalEntryURI, null, null);
                                 }
 
                                 List<Example> examples = new ArrayList<Example>();
@@ -322,7 +337,7 @@ public abstract class BankConverter extends Converter {
                                         });
 
                                 //todo: shall we start from 0?
-                                int exampleCount = 0;
+                                //int exampleCount = 0;
 
                                 exampleLoop:
                                 for (Example example : examples) {
@@ -358,7 +373,8 @@ public abstract class BankConverter extends Converter {
 
                                     if (text != null && text.length() > 0) {
 
-                                        URI exampleURI = uriForExample(rolesetID, exampleCount++);
+                                        // URI exampleURI = uriForExample(rolesetID, exampleCount++);
+                                        URI exampleURI = uriForExample(rolesetID, text);
                                         URI annotationSetURI = uriForAnnotationSet(exampleURI, null);
 
                                         addStatementToSink(exampleURI, RDF.TYPE, PMO.EXAMPLE, EXAMPLE_GRAPH);
@@ -558,7 +574,10 @@ public abstract class BankConverter extends Converter {
         return vnClasses;
     }
 
-    protected void addExternalLinks(Role role, URI argURI, String uriLemma, String type, String rolesetID) {
+    protected void addExternalLinks(Role role, URI argumentURI, String uriLemma, String type, String rolesetID, Iterable<String> vnLemmas) {
+        
+        URI rolesetURI = uriForRoleset(rolesetID);
+        URI conceptualizationURI = uriForConceptualization(uriLemma, type, rolesetID);
         
         List<Vnrole> vnroleList = role.getVnrole();
         for (Vnrole vnrole : vnroleList) {
@@ -572,18 +591,20 @@ public abstract class BankConverter extends Converter {
 
             for (String vnClass : vnClasses) {
                 for (String vnLink : vnLinks) {
+                    for (String vnLemma : vnLemmas) {
 
-                    // todo: bad!
-                    mapArgLabel = "";
-                    URITreeSet s = new URITreeSet();
-                    s.add(uriForConceptualizationWithPrefix(uriLemma, "v", vnClass, vnLink));
-                    s.add(uriForConceptualization(uriLemma, type, rolesetID));
-                    URI parentMappingURI = uriForMapping(s, DEFAULT_CON_SUFFIX, prefix); 
-                    URI vnArgURI = uriForArgument(vnClass, theta, vnLink);
-                    // URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, "v", vnClass, theta, vnLink);
-                    mapArgLabel = null;
+                        // todo: bad!
+                        mapArgLabel = "";
+                        URI vnClassURI = uriForRoleset(vnClass, vnLink);
+                        URI vnConceptualizationURI = uriForConceptualizationWithPrefix(vnLemma,
+                                "v", vnClass, vnLink);
+                        URI vnArgumentURI = uriForArgument(vnClass, theta, vnLink);
+                        mapArgLabel = null;
 
-                    addSingleMapping(parentMappingURI, prefix, DEFAULT_ARG_SUFFIX, argURI, vnArgURI);
+                        addMappings(rolesetURI, vnClassURI, conceptualizationURI,
+                                vnConceptualizationURI, argumentURI, vnArgumentURI);
+
+                    }
                 }
             }
 
@@ -602,7 +623,7 @@ public abstract class BankConverter extends Converter {
     }
 
     protected void addArgumentToSink(String key, URI keyURI, URI argumentURI, String lemma,
-            String type, String rolesetID, URI lexicalEntryURI, @Nullable Role role) {
+            String type, String rolesetID, URI lexicalEntryURI, @Nullable Role role, @Nullable Iterable<String> vnLemmas) {
         addStatementToSink(argumentURI, getRoleToArgumentProperty(), keyURI);
         addStatementToSink(uriForRoleset(rolesetID), PMO.SEM_ROLE, argumentURI);
 
@@ -612,30 +633,40 @@ public abstract class BankConverter extends Converter {
         //    addStatementToSink(argConceptualizationURI, PMO.EVOKED_CONCEPT, argumentURI);
         
         if (role != null) {
-            addExternalLinks(role, argumentURI, lemma, type, rolesetID);
+            addExternalLinks(role, argumentURI, lemma, type, rolesetID, vnLemmas);
         }
     }
     
     
     // URIs
-
-    private URI uriForExample(String rolesetID, int exampleCount) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(NAMESPACE);
-        builder.append(examplePart(rolesetID, exampleCount));
-        return createURI(builder.toString());
+    
+    private URI uriForExample(String rolesetID, String exampleText) {
+        return createURI(NAMESPACE
+                + rolesetPart(rolesetID)
+                + separator
+                + EXAMPLE_PREFIX
+                + "_"
+                + Hash.murmur3(exampleText).toString().replace("_", "").replace("-", "")
+                        .substring(0, 8));
     }
+
+//    private URI uriForExample(String rolesetID, int exampleCount) {
+//        StringBuilder builder = new StringBuilder();
+//        builder.append(NAMESPACE);
+//        builder.append(examplePart(rolesetID, exampleCount));
+//        return createURI(builder.toString());
+//    }
 
     // Parts
 
-    private String examplePart(String rolesetID, Integer exampleCount) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(rolesetPart(rolesetID));
-        builder.append(separator);
-        builder.append(EXAMPLE_PREFIX);
-        builder.append(exampleCount);
-        return builder.toString();
-    }
+//    private String examplePart(String rolesetID, Integer exampleCount) {
+//        StringBuilder builder = new StringBuilder();
+//        builder.append(rolesetPart(rolesetID));
+//        builder.append(separator);
+//        builder.append(EXAMPLE_PREFIX);
+//        builder.append(exampleCount);
+//        return builder.toString();
+//    }
 
     // Abstract methods
 

@@ -1,28 +1,30 @@
 package eu.fbk.dkm.premon.premonitor;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.io.Files;
-import eu.fbk.dkm.premon.util.URITreeSet;
-import eu.fbk.dkm.premon.vocab.LEXINFO;
-import eu.fbk.dkm.premon.vocab.ONTOLEX;
-import eu.fbk.dkm.premon.vocab.PM;
+
 import org.joox.JOOX;
 import org.joox.Match;
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.DCTERMS;
-import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import eu.fbk.dkm.premon.vocab.LEXINFO;
 
 /*
     Problems on version 3.2b
@@ -132,7 +134,8 @@ public class SemlinkConverter extends Converter {
                     String vnID = vnMap.get(vnClass);
                     if (vnID == null) {
                         LOGGER.error("VerbNet ID {} not found", vnClass);
-                        continue;
+                        vnID = "INVALID"; // FC: will counted as invalid and dropped later 
+//                        continue;
                     }
                     vnID = vnID + "-" + vnClass;
 
@@ -147,15 +150,16 @@ public class SemlinkConverter extends Converter {
 
                         for (String pbLink : pbLinks) {
                             for (String vnLink : vnLinks) {
-                                
-                                URITreeSet s = new URITreeSet();
-                                s.add(uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, pbRoleset, pbLink));
-                                s.add(uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, vnID, vnLink));
-                                URI parentMappingURI = uriForMapping(s, DEFAULT_CON_SUFFIX, prefix); 
+
+                                URI pbRolesetURI = uriForRoleset(pbRoleset, pbLink);
+                                URI pbConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, pbRoleset, pbLink);
                                 URI pbArgURI = uriForArgument(pbRoleset, pbArg, pbLink);
+                                
+                                URI vnClassURI = uriForRoleset(vnID, vnLink);
+                                URI vnConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, vnID, vnLink);
                                 URI vnArgURI = uriForArgument(vnID, vnTheta, vnLink);
                                 
-                                addSingleMapping(parentMappingURI, prefix, DEFAULT_ARG_SUFFIX, pbArgURI, vnArgURI);
+                                addMappings(vnClassURI, pbRolesetURI, vnConceptualizationURI, pbConceptualizationURI, vnArgURI, pbArgURI);
                                 
                                 //    URI pbArgConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE,
                                 //            pbRoleset, pbArg, pbLink);
@@ -186,21 +190,23 @@ public class SemlinkConverter extends Converter {
                 frame = frame.toLowerCase();
 
                 vnfnMap.put(vnCls, frame);
-                vnfnLemmaMap.put(vnCls + "-" + frame, uriLemma);
-                LOGGER.trace("{} -> {}", vnCls, frame);
-
+                
                 String vnID = vnMap.get(vnCls);
                 if (vnID == null) {
                     LOGGER.error("VerbNet ID {} not found", vnCls);
-                    continue;
+                    vnID = "INVALID"; // FC: will counted as invalid and dropped later
+//                    continue;
                 }
                 vnID = vnID + "-" + vnCls;
+
+                vnfnLemmaMap.put(vnCls + "-" + frame, uriLemma + "|" + vnID);
+                LOGGER.trace("{} -> {}", vnCls, frame);
 
                 Matcher matcher = VN_SC_PATTERN.matcher(vnCls);
                 while (matcher.find()) {
                     String newVnCls = matcher.group(1);
                     vnfnMap.put(newVnCls, frame);
-                    vnfnLemmaMap.put(newVnCls + "-" + frame, uriLemma);
+                    vnfnLemmaMap.put(newVnCls + "-" + frame, uriLemma + "|" + vnID);
                     LOGGER.trace("{} -> {}", newVnCls, frame);
                     matcher = VN_SC_PATTERN.matcher(newVnCls);
                 }
@@ -250,19 +256,24 @@ public class SemlinkConverter extends Converter {
                     for (String fnLink : fnLinks) {
                         for (String vnLink : vnLinks) {
 
-                            for (String lemma : lemmas) {
+                            for (String l : lemmas) {
+                                         
+                                int index = l.indexOf('|');
+                                String lemma = l.substring(0, index);
+                                String vnSubClass = l.substring(index + 1);
                                 
-                                URITreeSet s = new URITreeSet();
-                                s.add(uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, frame, fnLink));
-                                s.add(uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, vnID, vnLink));
-                                URI parentMappingURI = uriForMapping(s, DEFAULT_CON_SUFFIX, prefix);
+                                URI fnFrameURI = uriForRoleset(frame, fnLink);
+                                URI fnConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, frame, fnLink);
                                 String oldArgumentSeparator = argumentSeparator;
                                 argumentSeparator = "@";
                                 URI fnArgURI = uriForArgument(frame, fnrole, fnLink);
                                 argumentSeparator = oldArgumentSeparator;
-                                URI vnArgURI = uriForArgument(vnID, vnTheta, vnLink);
                                 
-                                addSingleMapping(parentMappingURI, prefix, DEFAULT_ARG_SUFFIX, fnArgURI, vnArgURI);
+                                URI vnClassURI = uriForRoleset(vnSubClass, vnLink);
+                                URI vnConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, vnSubClass, vnLink);
+                                URI vnArgURI = uriForArgument(vnSubClass, vnTheta, vnLink);
+                                
+                                addMappings(vnClassURI, fnFrameURI, vnConceptualizationURI, fnConceptualizationURI, vnArgURI, fnArgURI);
 
                                 // todo: Really bad!
                                 //    String oldArgumentSeparator = argumentSeparator;
@@ -291,10 +302,12 @@ public class SemlinkConverter extends Converter {
     private void addMapping(ArrayList<String> links1, ArrayList<String> links2, String uriLemma, String p1, String p2) {
         for (String link1 : links1) {
             for (String link2 : links2) {
+                URI firstRolesetURI = uriForRoleset(p1, link1);
+                URI secondRolesetURI = uriForRoleset(p2, link2);
                 URI firstConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, DEFAULT_TYPE, p1, link1);
                 URI secondConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, DEFAULT_TYPE, p2, link2);
-
-                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, firstConceptualizationURI, secondConceptualizationURI);
+                addMappings(firstRolesetURI, secondRolesetURI, firstConceptualizationURI, secondConceptualizationURI);
+                // addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, firstConceptualizationURI, secondConceptualizationURI);
             }
         }
     }

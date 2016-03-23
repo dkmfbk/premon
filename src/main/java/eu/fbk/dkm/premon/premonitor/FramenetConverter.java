@@ -262,13 +262,15 @@ public class FramenetConverter extends Converter {
                                 if (!added.contains(lcFrameName)) {
                                     String toMap = changed.get(lcFrameName);
                                     mapCount++;
-                                    if (toMap != null) {
-                                        classMappingURI = addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
-                                                uriForRoleset(toMap, retroMappings));
-                                    } else {
-                                        classMappingURI = addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
-                                                uriForRoleset(lcFrameName, retroMappings));
-                                    }
+                                    URI oldFrameURI = uriForRoleset(toMap != null ? toMap : lcFrameName, retroMappings);
+                                    addMappings(frameURI, oldFrameURI, null, null);
+                                    //    if (toMap != null) {
+                                    //        classMappingURI = addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
+                                    //                uriForRoleset(toMap, retroMappings));
+                                    //    } else {
+                                    //        classMappingURI = addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, uriForRoleset(lcFrameName),
+                                    //                uriForRoleset(lcFrameName, retroMappings));
+                                    //    }
                                 }
                             }
 
@@ -288,7 +290,7 @@ public class FramenetConverter extends Converter {
                             addStatementToSink(frameURI, DCTERMS.CREATED, date);
                             addStatementToSink(frameURI, DCTERMS.IDENTIFIER, Integer.parseInt(identifier));
                             addStatementToSink(frameURI, SKOS.DEFINITION, defText);
-
+ 
                             HashSet<String> FEs = new HashSet<>();
                             final Match fes = JOOX.$(element.getElementsByTagName("FE"));
                             for (Element fe : fes) {
@@ -303,19 +305,26 @@ public class FramenetConverter extends Converter {
                                     if (!added.contains(completeRole)) {
                                         String toMap = changed.get(completeRole);
                                         mapRoleCount++;
+                                        URI argumentURI = uriForArgument(lcFrameName, lcFeName);
                                         if (toMap != null) {
                                             String[] parts = toMap.split("@");
-                                            addSingleMapping(classMappingURI, prefix, DEFAULT_ARG_SUFFIX,
-                                                    uriForArgument(lcFrameName, lcFeName),
-                                                    uriForArgument(parts[0], parts[1], retroMappings));
+                                            URI oldFrameURI = uriForRoleset(parts[0], retroMappings);
+                                            URI oldArgumentURI = uriForArgument(parts[0], parts[1], retroMappings);
+                                            addMappings(frameURI, oldFrameURI, null, null, argumentURI, oldArgumentURI);
+                                            //    addSingleMapping(classMappingURI, prefix, DEFAULT_ARG_SUFFIX,
+                                            //            uriForArgument(lcFrameName, lcFeName),
+                                            //            uriForArgument(parts[0], parts[1], retroMappings));
                                         } else {
                                             String f = lcFrameName;
                                             if (changed.containsKey(f)) {
                                                 f = changed.get(f);
                                             }
-                                            addSingleMapping(classMappingURI, prefix, DEFAULT_ARG_SUFFIX,
-                                                    uriForArgument(lcFrameName, lcFeName),
-                                                    uriForArgument(f, lcFeName, retroMappings));
+                                            URI oldFrameURI = uriForRoleset(f, retroMappings);
+                                            URI oldArgumentURI = uriForArgument(f, lcFeName, retroMappings);
+                                            addMappings(frameURI, oldFrameURI, null, null, argumentURI, oldArgumentURI);
+                                            //    addSingleMapping(classMappingURI, prefix, DEFAULT_ARG_SUFFIX,
+                                            //            uriForArgument(lcFrameName, lcFeName),
+                                            //            uriForArgument(f, lcFeName, retroMappings));
                                         }
                                     }
                                 }

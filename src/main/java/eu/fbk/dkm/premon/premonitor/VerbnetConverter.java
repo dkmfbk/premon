@@ -187,10 +187,11 @@ public class VerbnetConverter extends Converter {
                         continue;
                     }
 
-                    final URI reference = this.wnInfo.get(wnURI.toString());
+                    String lemma = wn.substring(0, wn.indexOf('%'));
+                    final URI reference = this.wnInfo.get(wnURI.toString() + "|" + lemma);
 
                     if (reference == null) {
-                        LOGGER.warn("No reference found for {}", wnURI.toString());
+                        LOGGER.warn("No reference found for {} / {}", wnURI.toString(), lemma);
                         continue;
                     }
 

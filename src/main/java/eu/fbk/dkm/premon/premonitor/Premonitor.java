@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
@@ -192,6 +193,7 @@ public class Premonitor {
                                     && statement.getObject().equals(LEMON_LEXICAL_ENTRY)) {
                                 if (statement.getSubject() instanceof URI) {
                                     synchronized (wnInfo) {
+                                        // required to establish owl:sameAs links
                                         wnInfo.put(statement.getSubject().stringValue(),
                                                 (URI) statement.getSubject());
                                     }
@@ -200,11 +202,21 @@ public class Premonitor {
 
                             // Really really bad!
                             if (statement.getPredicate().equals(LEMON_REFERENCE)) {
-                                if (statement.getSubject() instanceof URI
-                                        && statement.getObject() instanceof URI) {
+                                final Resource s = statement.getSubject();
+                                final Value o = statement.getObject();
+                                if (s instanceof URI && o instanceof URI) {
                                     synchronized (wnInfo) {
-                                        wnInfo.put(statement.getObject().stringValue(),
-                                                (URI) statement.getSubject());
+                                        // required to establish VN32 links
+                                        final String name = s.stringValue();
+                                        final int start = name.lastIndexOf('/') + 1;
+                                        final int end = name.lastIndexOf('-',
+                                                name.indexOf('#', start));
+                                        final String lemma = name.substring(start, end).replace(
+                                                '+', '_');
+                                        final String key = o.stringValue() + "|" + lemma;
+                                        final URI oldURI = wnInfo.put(key, (URI) s);
+                                        Preconditions.checkState(oldURI == null
+                                                || oldURI.equals(s));
                                     }
                                 }
                             }
@@ -399,8 +411,15 @@ public class Premonitor {
                 NIF.CSTRING, new URIImpl(semNS + "InformationEntity"), new URIImpl(semNS
                         + "Expression"), new URIImpl(semNS + "Meaning"));
         for (final Statement stmt : ImmutableList.copyOf(tbox)) {
-            if (unwantedConcepts.contains(stmt.getSubject())
-                    || unwantedConcepts.contains(stmt.getObject())) {
+            final Resource s = stmt.getSubject();
+            final URI p = stmt.getPredicate();
+            final Value o = stmt.getObject();
+            if (unwantedConcepts.contains(s)
+                    || unwantedConcepts.contains(o)
+                    || (s.equals(PMO.SEMANTIC_CLASS_MAPPING)
+                            || s.equals(PMO.SEMANTIC_ROLE_MAPPING) || s
+                                .equals(PMO.CONCEPTUALIZATION_MAPPING))
+                    && p.equals(RDFS.SUBCLASSOF) && o instanceof BNode) {
                 tbox.remove(stmt);
             }
         }
@@ -742,6 +761,9 @@ public class Premonitor {
                                 }
                                 if (numMappingsToDelete <= 10) {
                                     LOGGER.warn("Removing illegal mapping {} - missing {}", m,
+                                            stmt.getObject());
+                                } else if (LOGGER.isDebugEnabled()) {
+                                    LOGGER.debug("Removing illegal mapping {} - missing {}", m,
                                             stmt.getObject());
                                 } else if (numMappingsToDelete == 11) {
                                     LOGGER.warn("Omitting further illegal mappings ....");

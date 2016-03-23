@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 
@@ -78,6 +79,9 @@ public class PropbankConverter extends BankConverter {
 
     protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
 
+        String rolesetID = ((Roleset) roleset).getId();
+        URI rolesetURI = uriForRoleset(rolesetID);
+        
         // FrameNet
         List<String> fnPredicates = new ArrayList<>();
         if (roleset.getFramnet() != null) {
@@ -93,8 +97,9 @@ public class PropbankConverter extends BankConverter {
 
         for (String fnPredicate : fnPredicates) {
             for (String fnLink : fnLinks) {
-                URI fnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, fnPredicate, fnLink);
-                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, fnConcURI);
+                URI fnFrameURI = uriForRoleset(fnPredicate, fnLink);
+                URI fnConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, type, fnPredicate, fnLink);
+                addMappings(rolesetURI, fnFrameURI, conceptualizationURI, fnConceptualizationURI);
             }
         }
 
@@ -102,23 +107,25 @@ public class PropbankConverter extends BankConverter {
         List<String> vnClasses = getVnClasses(roleset.getVncls());
         for (String vnClass : vnClasses) {
             for (String vnLink : vnLinks) {
-                URI vnConcURI = uriForConceptualizationWithPrefix(uriLemma, type, vnClass, vnLink);
-                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, vnConcURI);
+                URI vnClassURI = uriForRoleset(vnClass, vnLink);
+                URI vnConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma, "v", vnClass, vnLink);
+                addMappings(rolesetURI, vnClassURI, conceptualizationURI, vnConceptualizationURI);
             }
         }
 
         // PropBank
-        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
-        for (Matcher matcher : matchers) {
-            String pbLemma = matcher.group(2);
-            String pbPredicate = matcher.group(1);
-
-            for (String pbLink : pbLinks) {
-                String lemma = getLemmaFromPredicateName(pbLemma);
-                URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
-                addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualizationURI, pbConceptURI);
-            }
-        }
+//        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
+//        for (Matcher matcher : matchers) {
+//            String pbLemma = matcher.group(2);
+//            String pbPredicate = matcher.group(1);
+//
+//            for (String pbLink : pbLinks) {
+//                String lemma = getLemmaFromPredicateName(pbLemma);
+//                URI pbRolesetURI = uriForRoleset(pbPredicate, pbLink);
+//                URI pbConceptualizationURI = uriForConceptualizationWithPrefix(lemma, type, pbPredicate, pbLink);
+//                addMappings(rolesetURI, pbRolesetURI, conceptualizationURI, pbConceptualizationURI);
+//            }
+//        }
     }
 
     @Override void addInflectionToSink(URI exampleURI, Inflection inflection) {
@@ -202,20 +209,21 @@ public class PropbankConverter extends BankConverter {
     @Override void addArgumentToSink(URI argumentURI, String argName, String f, Type argType,
             String lemma, String type, String rolesetID, URI lexicalEntryURI, Role role, Roleset roleset) {
         //todo: transform this double switch into an external class
+        List<String> vnLemmas = ImmutableList.of(lemma);
         switch (argType) {
         case NUMERIC:
             addArgumentToSink(argName, PMOPB.mapF.get(argName), argumentURI, lemma, type,
-                    rolesetID, lexicalEntryURI, role);
+                    rolesetID, lexicalEntryURI, role, vnLemmas);
             addStatementForSecondType(argumentURI, f);
             break;
         case M_FUNCTION:
             // Should be already there...
             addArgumentToSink(argName, PMOPB.mapM.get(argName), argumentURI, lemma, type,
-                    rolesetID, lexicalEntryURI, role);
+                    rolesetID, lexicalEntryURI, role, vnLemmas);
             break;
         case AGENT:
             addArgumentToSink("a", PMOPB.ARGA, argumentURI, lemma, type, rolesetID,
-                    lexicalEntryURI, role);
+                    lexicalEntryURI, role, vnLemmas);
             break;
         default:
             //todo: should never happen, but it happens
