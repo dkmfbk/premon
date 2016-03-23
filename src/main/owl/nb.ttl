@@ -18,23 +18,25 @@
 
 <http://premon.fbk.eu/ontology/nb> rdf:type owl:Ontology ;
                                    
-                                   dc:creator "Francesco Corcoglioniti" ;
+                                   dc:creator "Francesco Corcoglioniti" ,
+                                              "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
                                    
                                    vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/nb#" ;
                                    
                                    dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                    
-                                   rdfs:comment "The NomBank module of the PreMOn ontology extends the core module for representing concepts specific to NomBank: numbered/modifier roles, function tags, examples." ;
+                                   dcterms:title "Predicate Model for Ontologies (PreMOn) - NomBank ontology module"@en ;
                                    
-                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
-                                   
-                                   dcterms:title "Predicate Model for Ontologies (premon) - NomBank ontology module"@en ;
-                                   
-                                   dc:description """The NomBank module of the PreMOn ontology extends the core module with classes and properties specific to the NomBank predicate model. The modelling is based on the specification at <http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf>.
+                                   dc:description """The NomBank module of the PreMOn ontology defines **pmonb:Roleset** and **pmonb:SemanticRole** as subclasses of **pmo:SemanticClass** and **pmo:SemanticRole**, respectively.
 
-Subclasses of Predicate, SemanticArgument and SemanticRole of the core module are defined for representing elements specific to NomBank. Semantic roles are differentiated in two disjoint classes: NumberedRoles for arg0 to arg5; ModifierRole for the 11 modifier roles defined in NomBank (e.g., argm-tmp, 'ref' excluded).
+Each **pmonb:SemanticRole** instance is related (via property **pmonb:argument**) to exactly one **pmonb:Argument**, which is defined as the disjoint union of two subclasses: 
 
-Subclasses of Example and Markable are introduced to model the specificities of NomBank examples. Attribute name of frame file examples is mapped to property rdfs:comment. Support verbs in the examples are represented with a Markable tagged (property pmonb:tag) as pmonb:support. Numbered arguments tagged as REF or PRD are represented with Markables tagged (property pmonb:tag), respectively, with pmonb:ref and pmonb:prd."""@en ;
+* **pmonb:NumberedArgument**, containing the individuals corresponding to numbered argument (e.g., *Arg0*, *Arg1*); and, 
+* **pmonb:Modifier**, containing the individuals corresponding to modifiers (e.g., *ArgM-LOC*, *ArgM-TMP*).
+
+We also define class **pmonb:Tag** to capture (via property **pmonb:tag**) some specific annotations of markables (e.g., *PRD*, *REF*, *SUPPORT*) in the examples."""@en ;
+                                   
+                                   rdfs:comment "The NomBank module of the PreMOn ontology extends the core module for representing concepts specific to NomBank. The modelling is based on the [NomBank Specifications](http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf)."@en ;
                                    
                                    dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
                                    
@@ -63,6 +65,8 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 :argument rdf:type owl:FunctionalProperty ,
                    owl:ObjectProperty ;
           
+          rdfs:label "argument"@en ;
+          
           rdfs:range :Argument ;
           
           rdfs:domain :SemanticRole .
@@ -73,7 +77,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :tag rdf:type owl:ObjectProperty ;
      
-     rdfs:label "tag" ;
+     rdfs:label "tag"@en ;
      
      rdfs:range :Tag .
 
@@ -92,6 +96,10 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :core rdf:type owl:DatatypeProperty ,
                owl:FunctionalProperty ;
+      
+      rdfs:label "core"@en ;
+      
+      rdfs:comment "Set to true if the semantic role explicitly occurs in a frame file"@en ;
       
       rdfs:domain :SemanticRole ;
       
@@ -112,7 +120,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Argument rdf:type owl:Class ;
           
-          rdfs:label "NomBank semantic role" ;
+          rdfs:label "Argument (NB)"@en ;
           
           owl:equivalentClass [ rdf:type owl:Class ;
                                 owl:unionOf ( :Modifier
@@ -128,7 +136,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Modifier rdf:type owl:Class ;
           
-          rdfs:label "NomBank modifier role" ;
+          rdfs:label "Modifier (NB)"@en ;
           
           rdfs:subClassOf :Argument ,
                           [ rdf:type owl:Class ;
@@ -154,7 +162,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :NumberedArgument rdf:type owl:Class ;
                   
-                  rdfs:label "NomBank numbered role" ;
+                  rdfs:label "Numbered Argument (NB)"@en ;
                   
                   rdfs:subClassOf :Argument ,
                                   [ rdf:type owl:Class ;
@@ -173,7 +181,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Roleset rdf:type owl:Class ;
          
-         rdfs:label "NomBank predicate" ;
+         rdfs:label "Roleset (NB)"@en ;
          
          rdfs:subClassOf pmo:SemanticClass ,
                          [ rdf:type owl:Restriction ;
@@ -187,17 +195,17 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :SemanticRole rdf:type owl:Class ;
               
-              rdfs:label "NomBank semantic argument" ;
+              rdfs:label "Semantic Role (NB)"@en ;
               
               rdfs:subClassOf pmo:SemanticRole ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :argument ;
-                                owl:someValuesFrom :Argument
-                              ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty [ owl:inverseOf pmo:semRole
                                                ] ;
                                 owl:allValuesFrom :Roleset
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :argument ;
+                                owl:someValuesFrom :Argument
                               ] .
 
 
@@ -206,7 +214,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Tag rdf:type owl:Class ;
      
-     rdfs:label "tag" .
+     rdfs:label "Tag"@en .
 
 
 

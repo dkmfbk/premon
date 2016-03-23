@@ -18,27 +18,34 @@
 
 <http://premon.fbk.eu/ontology/pb> rdf:type owl:Ontology ;
                                    
-                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
+                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
                                    
                                    vann:preferredNamespacePrefix "pmopb" ;
                                    
                                    dc:creator "Francesco Corcoglioniti" ;
                                    
-                                   dcterms:title "Predicate Model for Ontologies (premon) - PropBank ontology module"@en ;
-                                   
                                    vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/pb#" ;
-                                   
-                                   rdfs:comment "The PropBank module of the PreMOn ontology extends the core module for representing concepts specific to PropBank: numbered/modifier/agentive roles, function tags, examples." ;
                                    
                                    dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                    
-                                   dc:description """The PropBank module of the PreMOn ontology extends the core module with classes and properties specific to the PropBank predicate model. The modelling is based on the specification at <http://clear.colorado.edu/compsem/documents/propbank_guidelines.pdf>.
-
-Subclasses of Predicate, SemanticArgument and SemanticRole of the core module are defined for representing elements specific of PropBank. Semantic roles are differentiated in three disjoint classes: NumberedRoles for arg0 to arg5; ModifierRole for the 21 modifier roles defined in PropBank (e.g., argm-tmp) and a singleton AgentiveRole for role 'a'. Property functionTag is introduced for modelling the attribute 'f' of semantic arguments in PropBank frame files when their main interpretation (attribute 'n') is a numbered role. Function tags can be Prepositions, ModifierRoles (e.g., arg0 with role argm-cau) or specific Tags (pag, ppt, vsp).
-
-Subclasses of Example and Markable are introduced to model the specificities of PropBank examples. Attributes name and src of frame file examples are mapped to properties rdfs:comment and dct:source. Inflections are modelled with a specific class, with dedicated properties to model the person, tense, voice, aspect and form of the verb inflection."""@en ;
+                                   dcterms:title "Predicate Model for Ontologies (PreMOn) - PropBank ontology module"@en ;
+                                   
+                                   rdfs:comment "The PropBank module of the PreMOn ontology extends the core module for representing concepts specific to PropBank. The modelling is based on the [PropBank guidelines] (http://clear.colorado.edu/compsem/documents/propbank_guidelines.pdf)."@en ;
                                    
                                    dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
+                                   
+                                   dc:description """We define classes **pmopb:Roleset** and **pmopb:SemanticRole** as subclasses of **pmo:SemanticClass** and **pmo:SemanticRole**, respectively.
+
+Each **pmopb:SemanticRole** instance is related (via property **pmopb:argument**) to exactly one **pmopb:Argument**, which is defined as the disjoint union of three subclasses: 
+
+* **pmopb:NumberedArgument**, containing the individuals corresponding to numbered arguments (e.g., *Arg0*, *Arg1*); 
+* **pmopb:Modifier**, containing the
+individuals corresponding to modifiers (e.g., *ArgM-LOC*, *ArgM-TMP*); and, 
+* **pmopb:SecondaryAgent**, containing the single individual annotating secondary agents (*ArgA*). While PB annotation guidelines define a single modifier (*ArgM*) with multiple function tags (e.g., *LOC*, *TMP*), we opt to specialize the modifier for each function tag, similarly to the way these arguments are actually annotated by state-of-the-art SRL tools.
+
+Property **pmopb:tag** enables associating possible tags, either a **pmopb:Modifier** or some additional tag defined in class **pmopb:Tag**, to **pmopb:SemanticRole**s, or **nif:Annotation**s of semantic roles in examples.
+
+Additional classes (and related properties) are defined to represent inflectional information about examples: **pmopb:Inflection**, **pmopb:Person**, **pmopb:Tense**, **pmopb:Aspect**, **pmopb:Voice**, and **pmopb:Form**."""@en ;
                                    
                                    dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
                                    
@@ -63,6 +70,8 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 :argument rdf:type owl:FunctionalProperty ,
                    owl:ObjectProperty ;
           
+          rdfs:label "argument"@en ;
+          
           rdfs:range :Argument ;
           
           rdfs:domain :SemanticRole .
@@ -73,7 +82,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :aspect rdf:type owl:ObjectProperty ;
         
-        rdfs:label "aspect" ;
+        rdfs:label "aspect"@en ;
         
         rdfs:range :Aspect ;
         
@@ -86,7 +95,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 :form rdf:type owl:FunctionalProperty ,
                owl:ObjectProperty ;
       
-      rdfs:label "form" ;
+      rdfs:label "form"@en ;
       
       rdfs:range :Form ;
       
@@ -99,7 +108,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 :inflection rdf:type owl:FunctionalProperty ,
                      owl:ObjectProperty ;
             
-            rdfs:label "inflection" ;
+            rdfs:label "inflection"@en ;
             
             rdfs:domain pmo:Example ;
             
@@ -112,7 +121,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 :person rdf:type owl:FunctionalProperty ,
                  owl:ObjectProperty ;
         
-        rdfs:label "person" ;
+        rdfs:label "person"@en ;
         
         rdfs:domain :Inflection ;
         
@@ -125,7 +134,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 :tag rdf:type owl:FunctionalProperty ,
               owl:ObjectProperty ;
      
-     rdfs:label "function tag" ;
+     rdfs:label "tag"@en ;
      
      rdfs:range [ rdf:type owl:Class ;
                   owl:unionOf ( :Modifier
@@ -141,7 +150,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 :tense rdf:type owl:FunctionalProperty ,
                 owl:ObjectProperty ;
        
-       rdfs:label "tense" ;
+       rdfs:label "tense"@en ;
        
        rdfs:domain :Inflection ;
        
@@ -154,7 +163,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 :voice rdf:type owl:FunctionalProperty ,
                 owl:ObjectProperty ;
        
-       rdfs:label "voice" ;
+       rdfs:label "voice"@en ;
        
        rdfs:domain :Inflection ;
        
@@ -176,6 +185,10 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 :core rdf:type owl:DatatypeProperty ,
                owl:FunctionalProperty ;
       
+      rdfs:label "core"@en ;
+      
+      rdfs:comment "Set to true if the semantic role explicitly occurs in a frame file"@en ;
+      
       rdfs:domain pmo:SemanticRole ;
       
       rdfs:range xsd:boolean .
@@ -195,7 +208,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Argument rdf:type owl:Class ;
           
-          rdfs:label "PropBank semantic role" ;
+          rdfs:label "Argument (PB)"@en ;
           
           owl:equivalentClass [ rdf:type owl:Class ;
                                 owl:unionOf ( :Modifier
@@ -212,7 +225,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Aspect rdf:type owl:Class ;
         
-        rdfs:label "aspect" ;
+        rdfs:label "Aspect"@en ;
         
         rdfs:subClassOf [ rdf:type owl:Class ;
                           owl:oneOf ( :perfect
@@ -226,7 +239,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Form rdf:type owl:Class ;
       
-      rdfs:label "form" ;
+      rdfs:label "Form"@en ;
       
       rdfs:subClassOf [ rdf:type owl:Class ;
                         owl:oneOf ( :gerund
@@ -242,7 +255,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Inflection rdf:type owl:Class ;
             
-            rdfs:label "inflection" .
+            rdfs:label "Inflection"@en .
 
 
 
@@ -250,7 +263,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Modifier rdf:type owl:Class ;
           
-          rdfs:label "PropBank modifier role" ;
+          rdfs:label "Modifier (PB)"@en ;
           
           rdfs:subClassOf :Argument ,
                           [ rdf:type owl:Class ;
@@ -287,7 +300,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :NumberedArgument rdf:type owl:Class ;
                   
-                  rdfs:label "PropBank numbered role" ;
+                  rdfs:label "Numbered Argument (PB)"@en ;
                   
                   rdfs:subClassOf :Argument ,
                                   [ rdf:type owl:Class ;
@@ -308,7 +321,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Person rdf:type owl:Class ;
         
-        rdfs:label "person" ;
+        rdfs:label "Person"@en ;
         
         rdfs:subClassOf [ rdf:type owl:Class ;
                           owl:oneOf ( :other
@@ -322,7 +335,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Roleset rdf:type owl:Class ;
          
-         rdfs:label "PropBank predicate" ;
+         rdfs:label "Roleset (PB)"@en ;
          
          rdfs:subClassOf pmo:SemanticClass ,
                          [ rdf:type owl:Restriction ;
@@ -336,7 +349,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :SecondaryAgent rdf:type owl:Class ;
                 
-                rdfs:label "PropBank agentive role" ;
+                rdfs:label "Secondary Agent"@en ;
                 
                 rdfs:subClassOf :Argument .
 
@@ -346,17 +359,17 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :SemanticRole rdf:type owl:Class ;
               
-              rdfs:label "PropBank semantic argument" ;
+              rdfs:label "Semantic Role (PB)"@en ;
               
               rdfs:subClassOf pmo:SemanticRole ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :argument ;
+                                owl:someValuesFrom :Argument
+                              ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty [ owl:inverseOf pmo:semRole
                                                ] ;
                                 owl:allValuesFrom :Roleset
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :argument ;
-                                owl:someValuesFrom :Argument
                               ] .
 
 
@@ -365,7 +378,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Tag rdf:type owl:Class ;
      
-     rdfs:label "PropBank function tag" .
+     rdfs:label "Tag"@en .
 
 
 
@@ -373,7 +386,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Tense rdf:type owl:Class ;
        
-       rdfs:label "tense" ;
+       rdfs:label "Tense"@en ;
        
        rdfs:subClassOf [ rdf:type owl:Class ;
                          owl:oneOf ( :future
@@ -388,7 +401,7 @@ Subclasses of Example and Markable are introduced to model the specificities of 
 
 :Voice rdf:type owl:Class ;
        
-       rdfs:label "voice" ;
+       rdfs:label "Voice"@en ;
        
        rdfs:subClassOf [ rdf:type owl:Class ;
                          owl:oneOf ( :passive

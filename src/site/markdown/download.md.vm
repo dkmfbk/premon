@@ -1,30 +1,52 @@
 Datasets download
 ===
 
-PreMOn datasets can be downloaded using the links in the table below.
-For each dataset, we provide three dumps in different RDF formats (trig.gz, tql.gz, ttl.gz):
+Each single component of the PreMOn Dataset can be downloaded using the links in the table below.
+For each dataset, we provide (*core* columns) separate RDF dumps (tql.gz - gzipped turtle format) containing:
 
   * the **base version** of the dataset, complete but without inferred RDF triples;
-  * the **closed version** of the dataset, which includes also triples derived by applying RDFS inference using PreMOn, lemon ontolex and NIF TBox definitions (recommended download);
-  * the **VOID statistics** associated to the dataset;
+  * the **closed version** of the dataset, which includes also triples derived by applying owl2rl inference using PreMOn, lemon ontolex and NIF TBox definitions (recommended download);
+  * the **VOID statistics** associated to the dataset.
+
+Triples about examples are provided in separate dumps (*example* columns) organized as above.
 
 All IRIs are placed in namespace `http://premon.fbk.eu/resource/` (prefix `pm`).
-Triples are placed in different named graphs (only for `trig.gz` and `tql.gz`) that can be used when querying to select information only from particular sources (e.g., in SPARQL FROM clauses):
+Triples are placed in different named graphs that can be used when querying to select information only from particular sources (e.g., in SPARQL FROM clauses):
 
   * **`pm:entries`** contains lexical entries, lexical forms and the `owl:sameAs` links to lexical entries in [WordNet 3.1](http://wordnet-rdf.princeton.edu/)
-  * **`pm:nb10`** contains predicates, arguments and examples specific to [NomBank 1.0](http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz)
-  * **`pm:pb17`** contains predicates, arguments and examples specific to [PropBank 1.7](http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz)
-  * **`pm:pbon5`** contains predicates, arguments and examples specific to [PropBank Ontonote 5](http://verbs.colorado.edu/propbank/frame_downloads/Ontonote5frames.tar.gz)
+  * **`pm:pb17`** contains semantic classes, semantic roles and examples specific to [PropBank 1.7](http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz)
+  * **`pm:pb215`** contains semantic classes, semantic roles and examples specific to [PropBank 2.1.5 from Ontonote 5](https://github.com/propbank/propbank-frames/tree/v2.1.5/frames)
+  * **`pm:nb10`** contains semantic classes, semantic roles and examples specific to [NomBank 1.0](http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz)
+  * **`pm:vb32`** contains semantic classes, semantic roles and examples specific to [VerbNet 3.2](http://verbs.colorado.edu/verb-index/vn/verbnet-3.2.tar.gz)
+  * **`pm:fn15`** contains semantic classes, semantic roles and examples specific to [FrameNet 1.5](https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex)
+  * **`pm:fn16`** contains semantic classes, semantic roles and examples specific to [FrameNet 1.6](https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex)
+  * **`pm:sl122`** contains mappings between conceptualizations and semantic roles provided by [SemLink 1.2.2c](https://verbs.colorado.edu/semlink/versions/1.2.2c.zip)
+
+Examples are placed in further separated graph obtained suffixing **`-ex`**  to the resource URI (e.g., **`pm:nb10-ex`**).
 
 <table>
 <thead>
 <tr>
-<th rowspan="2" style="width: 25%">Dataset</th>
-<th colspan="2" style="width: 25%">Base version</th>
-<th colspan="2" style="width: 25%">Closed version</th>
-<th colspan="2" style="width: 25%">VOID statistics</th>
+<th rowspan="3" style="width: 25%">Dataset</th>
+<th colspan="4" style="width: 25%">Base version</th>
+<th colspan="4" style="width: 25%">Closed version</th>
+<th colspan="4" style="width: 25%">VOID statistics</th>
 </tr>
 <tr>
+<th colspan="2" style="width: 12.5%">core</th>
+<th colspan="2" style="width: 12.5">examples</th>
+<th colspan="2" style="width: 12.5%">core</th>
+<th colspan="2" style="width: 12.5">examples</th>
+<th colspan="2" style="width: 12.5%">core</th>
+<th colspan="2" style="width: 12.5">examples</th>
+</tr>
+<tr>
+<th># Triples</th>
+<th>Files</th>
+<th># Triples</th>
+<th>Files</th>
+<th># Triples</th>
+<th>Files</th>
 <th># Triples</th>
 <th>Files</th>
 <th># Triples</th>
@@ -36,71 +58,121 @@ Triples are placed in different named graphs (only for `trig.gz` and `tql.gz`) t
 <tbody>
 
 <tr>
-<td>NomBank 1.0 (from <a href="http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz">here</a>)</td>
-<td>586606</td>
-<td>
-<a href="${site-download}latest/premon-noinf-nb10.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-noinf-nb10.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-noinf-nb10.ttl.gz">ttl.gz</a>
-</td>
-<td>1419615</td>
-<td>
-<a href="${site-download}latest/premon-inf-nb10.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-nb10.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-nb10.ttl.gz">ttl.gz</a>
-</td>
-<td>881</td>
-<td>
-<a href="${site-download}latest/premon-inf-nb10.stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-nb10.stats.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-nb10.stats.gz">ttl.gz</a>
-</td>
-</tr>
-
-<tr>
 <td>PropBank 1.7 (from <a href="http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz">here</a>)</td>
-<td>859729</td>
-<td>
-<a href="${site-download}latest/premon-noinf-pb17.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-noinf-pb17.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-noinf-pb17.ttl.gz">ttl.gz</a>
-</td>
-<td>2242655</td>
-<td>
-<a href="${site-download}latest/premon-inf-pb17.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-pb17.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-pb17.ttl.gz">ttl.gz</a>
-</td>
-<td>1007</td>
-<td>
-<a href="${site-download}latest/premon-inf-pb17.stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-pb17.stats.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-pb17.stats.ttl.gz">ttl.gz</a>
-</td>
+<td>629932</td>
+<td><a href="${site-download}latest/premon-pb17-noinf.tql.gz">tql.gz</a></td>
+<td>429953</td>
+<td><a href="${site-download}latest/premon-pb17-examples-noinf.tql.gz">tql.gz</a></td>
+<td>970855</td>
+<td><a href="${site-download}latest/premon-pb17-inf.tql.gz">tql.gz</a></td>
+<td>460616</td>
+<td><a href="${site-download}latest/premon-pb17-examples-inf.tql.gz">tql.gz</a></td>
+<td>732</td>
+<td><a href="${site-download}latest/premon-pb17-stats.tql.gz">tql.gz</a></td>
+<td>310</td>
+<td><a href="${site-download}latest/premon-pb17-examples-stats.tql.gz">tql.gz</a></td>
 </tr>
 
 <tr>
-<td>PropBank Ontonote 5 (from <a href="http://verbs.colorado.edu/propbank/frame_downloads/Ontonote5frames.tar.gz">here</a>)</td>
-<td>1275846</td>
-<td>
-<a href="${site-download}latest/premon-noinf-pbon5.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-noinf-pbon5.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-noinf-pbon5.ttl.gz">ttl.gz</a>
-</td>
-<td>3297080</td>
-<td>
-<a href="${site-download}latest/premon-inf-pbon5.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-pbon5.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-pbon5.ttl.gz">ttl.gz</a>
-</td>
-<td>1003</td>
-<td>
-<a href="${site-download}latest/premon-inf-pbon5.stats.trig.gz">trig.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-pbon5.stats.tql.gz">tql.gz</a>&nbsp;&nbsp;
-<a href="${site-download}latest/premon-inf-pbon5.stats.ttl.gz">ttl.gz</a>
-</td>
+<td>PropBank 2.1.5 from Ontonote 5 (from <a href="http://verbs.colorado.edu/propbank/frame_downloads/Ontonote5frames.tar.gz">here</a>)</td>
+<td>926466</td>
+<td><a href="${site-download}latest/premon-pb215-noinf.tql.gz">tql.gz</a></td>
+<td>653266</td>
+<td><a href="${site-download}latest/premon-pb215-examples-noinf.tql.gz">tql.gz</a></td>
+<td>1418057</td>
+<td><a href="${site-download}latest/premon-pb215-inf.tql.gz">tql.gz</a></td>
+<td>700762</td>
+<td><a href="${site-download}latest/premon-pb215-examples-inf.tql.gz">tql.gz</a></td>
+<td>728</td>
+<td><a href="${site-download}latest/premon-pb215-stats.tql.gz">tql.gz</a></td>
+<td>310</td>
+<td><a href="${site-download}latest/premon-pb215-examples-stats.tql.gz">tql.gz</a></td>
+</tr>
+
+<tr>
+<td>NomBank 1.0 (from <a href="http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz">here</a>)</td>
+<td>517495</td>
+<td><a href="${site-download}latest/premon-nb10-noinf.tql.gz">tql.gz</a></td>
+<td>339496</td>
+<td><a href="${site-download}latest/premon-nb10-examples-noinf.tql.gz">tql.gz</a></td>
+<td>741484</td>
+<td><a href="${site-download}latest/premon-nb10-inf.tql.gz">tql.gz</a></td>
+<td>368245</td>
+<td><a href="${site-download}latest/premon-nb10-examples-inf.tql.gz">tql.gz</a></td>
+<td>623</td>
+<td><a href="${site-download}latest/premon-nb10-stats.tql.gz">tql.gz</a></td>
+<td>281</td>
+<td><a href="${site-download}latest/premon-nb10-examples-stats.tql.gz">tql.gz</a></td>
+</tr>
+
+<tr>
+<td>VerbNet 3.2 (from <a href="http://verbs.colorado.edu/verb-index/vn/verbnet-3.2.tar.gz">here</a>)</td>
+<td>236526</td>
+<td><a href="${site-download}latest/premon-vn32-noinf.tql.gz">tql.gz</a></td>
+<td>22404</td>
+<td><a href="${site-download}latest/premon-vn32-examples-noinf.tql.gz">tql.gz</a></td>
+<td>301540</td>
+<td><a href="${site-download}latest/premon-vn32-inf.tql.gz">tql.gz</a></td>
+<td>26592</td>
+<td><a href="${site-download}latest/premon-vn32-examples-inf.tql.gz">tql.gz</a></td>
+<td>1186</td>
+<td><a href="${site-download}latest/premon-vn32-stats.tql.gz">tql.gz</a></td>
+<td>196</td>
+<td><a href="${site-download}latest/premon-vn32-examples-stats.tql.gz">tql.gz</a></td>
+</tr>
+
+<tr>
+<td>FrameNet 1.5 (from <a href="https://framenet.icsi.berkeley.edu/">here</a>)</td>
+<td>332386</td>
+<td><a href="${site-download}latest/premon-fn15-noinf.tql.gz">tql.gz</a></td>
+<td>5752132</td>
+<td><a href="${site-download}latest/premon-fn15-examples-noinf.tql.gz">tql.gz</a></td>
+<td>419910</td>
+<td><a href="${site-download}latest/premon-fn15-inf.tql.gz">tql.gz</a></td>
+<td>6212899</td>
+<td><a href="${site-download}latest/premon-fn15-examples-inf.tql.gz">tql.gz</a></td>
+<td>1102</td>
+<td><a href="${site-download}latest/premon-fn15-stats.tql.gz">tql.gz</a></td>
+<td>251</td>
+<td><a href="${site-download}latest/premon-fn15-examples-stats.tql.gz">tql.gz</a></td>
+</tr>
+
+<tr>
+<td>FrameNet 1.6 (from <a href="https://framenet.icsi.berkeley.edu/">here</a>)</td>
+<td>411554</td>
+<td><a href="${site-download}latest/premon-fn16-noinf.tql.gz">tql.gz</a></td>
+<td>7122995</td>
+<td><a href="${site-download}latest/premon-fn16-examples-noinf.tql.gz">tql.gz</a></td>
+<td>521169</td>
+<td><a href="${site-download}latest/premon-fn16-inf.tql.gz">tql.gz</a></td>
+<td>7646270</td>
+<td><a href="${site-download}latest/premon-fn16-examples-inf.tql.gz">tql.gz</a></td>
+<td>1153</td>
+<td><a href="${site-download}latest/premon-fn16-stats.tql.gz">tql.gz</a></td>
+<td>251</td>
+<td><a href="${site-download}latest/premon-fn16-examples-stats.tql.gz">tql.gz</a></td>
+</tr>
+
+
+<tr>
+<td>SemLink 1.2.2c (from <a href="https://verbs.colorado.edu/semlink/versions/1.2.2c.zip">here</a>)</td>
+<td>203051</td>
+<td><a href="${site-download}latest/premon-sl122c-noinf.tql.gz">tql.gz</a></td>
+<td></td>
+<td></td>
+<td>252873</td>
+<td><a href="${site-download}latest/premon-sl122c-inf.tql.gz">tql.gz</a></td>
+<td></td>
+<td></td>
+<td>252</td>
+<td><a href="${site-download}latest/premon-sl122c-stats.tql.gz">tql.gz</a></td>
+<td></td>
+<td></td>
 </tr>
 
 </tbody>
 </table>
+
+For convenience, the closed version of the PreMOn TBox is available <a href="${site-download}latest/premon-tbox-inf.tql.gz">here</a>.
+
 <a style="display: block; width: 100%; text-align: right;" href="${site-download}">[browse old versions]</a>
