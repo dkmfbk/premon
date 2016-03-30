@@ -142,7 +142,7 @@ Finally, **pmofn:Frame**s, **pmofn:FrameElement**s and **pmofn:LexicalUnit**s ca
 
 :inheritsFromFER rdf:type owl:ObjectProperty ;
                  
-                 rdfs:label "frame element mapping (on inherits from frame relation)"@en ;
+                 rdfs:label "frame element mapping (on inheritsFrom frame relation)"@en ;
                  
                  rdfs:subPropertyOf pmo:roleRel ;
                  
@@ -166,7 +166,7 @@ Finally, **pmofn:Frame**s, **pmofn:FrameElement**s and **pmofn:LexicalUnit**s ca
 
 :isCausativeOfFER rdf:type owl:ObjectProperty ;
                   
-                  rdfs:label "frame element mapping (on is causative of frame relation)"@en ;
+                  rdfs:label "frame element mapping (on isCausativeOf frame relation)"@en ;
                   
                   rdfs:subPropertyOf pmo:roleRel ;
                   
@@ -190,7 +190,7 @@ Finally, **pmofn:Frame**s, **pmofn:FrameElement**s and **pmofn:LexicalUnit**s ca
 
 :isInchoativeOfFER rdf:type owl:ObjectProperty ;
                    
-                   rdfs:label "frame element mapping (on is inchoative of frame relation)"@en ;
+                   rdfs:label "frame element mapping (on isInchoativeOf frame relation)"@en ;
                    
                    rdfs:subPropertyOf pmo:roleRel ;
                    
@@ -214,7 +214,7 @@ Finally, **pmofn:Frame**s, **pmofn:FrameElement**s and **pmofn:LexicalUnit**s ca
 
 :perspectiveOnFER rdf:type owl:ObjectProperty ;
                   
-                  rdfs:label "frame element mapping (on perspective on frame relation)"@en ;
+                  rdfs:label "frame element mapping (on perspectiveOn frame relation)"@en ;
                   
                   rdfs:subPropertyOf pmo:roleRel ;
                   
@@ -262,7 +262,7 @@ Finally, **pmofn:Frame**s, **pmofn:FrameElement**s and **pmofn:LexicalUnit**s ca
 
 :reFrameMappingFER rdf:type owl:ObjectProperty ;
                    
-                   rdfs:label "frame element mapping (on re-frame mapping frame relation)"@en ;
+                   rdfs:label "frame element mapping (on reFrameMapping frame relation)"@en ;
                    
                    rdfs:subPropertyOf pmo:roleRel ;
                    
@@ -302,7 +302,7 @@ Finally, **pmofn:Frame**s, **pmofn:FrameElement**s and **pmofn:LexicalUnit**s ca
 :seeAlsoFER rdf:type owl:ObjectProperty ,
                      owl:SymmetricProperty ;
             
-            rdfs:label "frame element mapping (on see also frame relation)"@en ;
+            rdfs:label "frame element mapping (on seeAlso frame relation)"@en ;
             
             rdfs:subPropertyOf pmo:roleRel ;
             
@@ -371,7 +371,7 @@ Finally, **pmofn:Frame**s, **pmofn:FrameElement**s and **pmofn:LexicalUnit**s ca
 
 :subframeOfFER rdf:type owl:ObjectProperty ;
                
-               rdfs:label "frame element mapping (on sub-frame of frame relation)"@en ;
+               rdfs:label "frame element mapping (on subframeOf frame relation)"@en ;
                
                rdfs:subPropertyOf pmo:roleRel ;
                
@@ -455,13 +455,13 @@ Finally, **pmofn:Frame**s, **pmofn:FrameElement**s and **pmofn:LexicalUnit**s ca
        
        rdfs:subClassOf pmo:SemanticClass ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty pmo:semRole ;
-                         owl:allValuesFrom :FrameElement
-                       ] ,
-                       [ rdf:type owl:Restriction ;
                          owl:onProperty [ owl:inverseOf pmo:evokedConcept
                                         ] ;
                          owl:allValuesFrom :LexicalUnit
+                       ] ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty pmo:semRole ;
+                         owl:allValuesFrom :FrameElement
                        ] .
 
 

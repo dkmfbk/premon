@@ -24,12 +24,6 @@
                                      dc:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ,
                                                 "Francesco Corcoglioniti" ;
                                      
-                                     dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
-                                     
-                                     dcterms:title "Predicate Model for Ontologies (PreMOn) - Core ontology module"@en ;
-                                     
-                                     vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/core#" ;
-                                     
                                      dc:description """###  Semantic Classes and Roles
 
 The *PreMOn Ontology Core Module* extends *lemon* by introducing classes **pmo:SemanticClass** and **pmo:SemanticRole**. **pmo:SemanticClass** homogeneously represents the semantic classes from the various predicate models. That is, individuals of this class correspond to rolesets in PB and NB (e.g., *pm:nb10-seller.01* and *pm:pb17-sell.01*), verb classes in VN (e.g., *pm:vn32-give-13.1-1*), and frames in FN (e.g., *pm:fn15-commerce sell*). An instance of **pmo:SemanticClass** typically has (via property **pmo:semRole**) a number of **pmo:SemanticRole**s, representing, from a semantic point of view, the roles the arguments of that **pmo:SemanticClass** can play.
@@ -43,7 +37,7 @@ Properties **pmo:classRel** and **pmo:roleRel**, and their resource-specific sub
 Mappings between different predicate models are practically relevant but cannot be expressed using only the classes above, as they are often defined (e.g., in SemLink and PredicateMatrix) in terms of <**pmo:SemanticClass**, **ontolex:LexicalEntry**> pairs. To model these pairs, one could reuse the notion of ontolex:LexicalSense. However, its formalization in lemon as reified relation depends on the existence of (exactly) one ontological entity for each <**ontolex:LexicalConcept**, **ontolex:LexicalEntry**> pair, a strong constraint that we do not necessarily need for our purposes. Therefore, we introduce the **pmo:Conceptualization** class. Structurally, a **pmo:Conceptualization** can be seen as the reification of the **ontolex:evokes** relation between **ontolex:LexicalEntry** and **ontolex:LexicalConcept**. Semantically, it can be seen as a very specific intensional concept (among many, in case of polysemy) evoked by a single **ontolex:LexicalEntry**, which can be generalized to a **ontolex:LexicalConcept** when multiple entries are considered but with a possible loss of information that prevents precise alignments to be represented.
 
 Mappings are explicitly represented as individuals of class **pmo:Mapping**, and can be seen as sets of (or n-ary relations between) either (i) **pmo:Conceptualization**s, (ii) **pmo:SemanticClass**es, and (iii) **pmo:SemanticRole**s, with role mappings anchored to conceptualization or class mappings via property **pmo:semRoleMapping**. We rely on this set-like modeling, since mappings are not necessarily represented as binary relations in predicate mapping resources: e.g., in the PredicateMatrix, each row represents the mapping of a semantic role / lexical entry pair over the different resources (e.g., <*13.1-1-agent*, *deal*> in VN, <*sell.01-arg0*, *sell*> in PB, <*Commerce Sell-seller*, *sell*> in FN) as well as the corresponding WordNet verb sense. Reifying the n-ary mapping relation also allows us, if needed, to further characterize each single mapping, asserting additional information such as confidence and reliability. Moreover, it is possible to further specialize mappings
-(e.g., to model mappings holding only in one direction, from a resource to another one, or to represent different types of relationships among the members of the mapping) by subtyping the **pmo:Mapping class** or the property (pmo:item) relating a **pmo:Mapping** to its members.
+(e.g., to model mappings holding only in one direction, from a resource to another one, or to represent different types of relationships among the members of the mapping) by subtyping the **pmo:Mapping** class or the property (pmo:item) relating a **pmo:Mapping** to its members.
 
 ### Annotations
 
@@ -53,9 +47,15 @@ The PreMOn Ontology provides some common primitives, based on the [NLP Interchan
 
 To specifically model the aforementioned examples complementing predicate models, we introduce **pmo:Example**, subclass of **nif:Context**, to represent the string associated with the example. The occurrence of a **ontolex:LexicalEntry**, **pmo:SemanticClass**, or **pmo:SemanticRole** in a **nif:Context** is denoted by an instance of **nif:Annotation**, related to the given **ontolex:LexicalEntry**, **pmo:SemanticClass**, or **pmo:SemanticRole** via property **pmo:valueObj** (the value attached to the annotation), and to the **nif:Context** instance via property **nif:annotation**. If detailed information on the specific span of text (i.e., substring) denoting the **ontolex:LexicalEntry**, **pmo:SemanticClass**, or **pmo:SemanticRole** is available (e.g., FN provides the specific offsets of lexical units, frames, and frame elements, in the example text) an additional instance of **pmo:Markable**, subclass of **nif:String**, is created and linked to the specific **nif:Annotation** and **nif:Context** via properties **nif:annotation** and **nif:referenceContext**, respectively. As the same **nif:Context** may contain multiple **nif:Annotation**s referring to one or more semantic classes and their corresponding roles, an additional **pmo:AnnotationSet** instance is created to cluster annotations from the same predicate structure."""@en ;
                                      
+                                     dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+                                     
+                                     dcterms:title "Predicate Model for Ontologies (PreMOn) - Core ontology module"@en ;
+                                     
                                      rdfs:comment "The [PreMOn Ontology](http://premon.fbk.eu) is an extension of [lemon](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification) (W3C Ontology Lexicon Community Group, 2015) for representing *predicate models* and their *mappings*. The Core Module of the PreMOn Ontology defines the main abstractions for modelling *semantic classes* with their *semantic roles*, *mappings* between different predicate models, and *annotations*."@en ;
                                      
                                      dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
+                                     
+                                     vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/core#" ;
                                      
                                      vann:preferredNamespacePrefix "pmo" ;
                                      
@@ -361,12 +361,12 @@ pmo:AnnotationSet rdf:type owl:Class ;
                   
                   rdfs:subClassOf [ rdf:type owl:Restriction ;
                                     owl:onProperty pmo:item ;
-                                    owl:allValuesFrom nif:Annotation
+                                    owl:onClass nif:Annotation ;
+                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                   ] ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty pmo:item ;
-                                    owl:onClass nif:Annotation ;
-                                    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                    owl:allValuesFrom nif:Annotation
                                   ] ;
                   
                   rdfs:comment "Represent each annotation of a semantic class, togheter with its semantic roles, in an example"@en .
@@ -381,13 +381,13 @@ pmo:Conceptualization rdf:type owl:Class ;
                       
                       rdfs:subClassOf skos:Concept ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokingEntry ;
-                                        owl:onClass ontolex:LexicalEntry ;
+                                        owl:onProperty pmo:evokedConcept ;
+                                        owl:onClass ontolex:LexicalConcept ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ,
                                       [ rdf:type owl:Restriction ;
-                                        owl:onProperty pmo:evokedConcept ;
-                                        owl:onClass ontolex:LexicalConcept ;
+                                        owl:onProperty pmo:evokingEntry ;
+                                        owl:onClass ontolex:LexicalEntry ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                       ] ;
                       
@@ -468,12 +468,12 @@ pmo:Markable rdf:type owl:Class ;
              rdfs:subClassOf nif:RFC5147String ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:allValuesFrom pmo:Example
+                               owl:onClass pmo:Example ;
+                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty nif:referenceContext ;
-                               owl:onClass pmo:Example ;
-                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                               owl:allValuesFrom pmo:Example
                              ] ;
              
              rdfs:comment "Represent a piece of text to which some annotation is attached to"@en .
@@ -530,13 +530,13 @@ pmo:SemanticRoleMapping rdf:type owl:Class ;
                         
                         rdfs:subClassOf pmo:Mapping ,
                                         [ rdf:type owl:Restriction ;
-                                          owl:onProperty pmo:item ;
-                                          owl:allValuesFrom pmo:SemanticRole
-                                        ] ,
-                                        [ rdf:type owl:Restriction ;
                                           owl:onProperty [ owl:inverseOf pmo:semRoleMapping
                                                          ] ;
                                           owl:someValuesFrom owl:Thing
+                                        ] ,
+                                        [ rdf:type owl:Restriction ;
+                                          owl:onProperty pmo:item ;
+                                          owl:allValuesFrom pmo:SemanticRole
                                         ] ;
                         
                         rdfs:comment "An individual of this class represents a mapping between SemanticRoles"@en .
