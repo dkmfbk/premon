@@ -20,6 +20,8 @@
                                    
                                    dc:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
                                    
+                                   rdfs:comment "The PropBank module of the PreMOn ontology extends the core module for representing concepts specific to PropBank. The modelling is based on the [PropBank guidelines] (http://clear.colorado.edu/compsem/documents/propbank_guidelines.pdf)."@en ;
+                                   
                                    vann:preferredNamespacePrefix "pmopb" ;
                                    
                                    dc:creator "Francesco Corcoglioniti" ;
@@ -30,8 +32,6 @@
                                    
                                    dcterms:title "Predicate Model for Ontologies (PreMOn) - PropBank ontology module"@en ;
                                    
-                                   rdfs:comment "The PropBank module of the PreMOn ontology extends the core module for representing concepts specific to PropBank. The modelling is based on the [PropBank guidelines] (http://clear.colorado.edu/compsem/documents/propbank_guidelines.pdf)."@en ;
-                                   
                                    dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
                                    
                                    dc:description """We define classes **pmopb:Roleset** and **pmopb:SemanticRole** as subclasses of **pmo:SemanticClass** and **pmo:SemanticRole**, respectively.
@@ -40,8 +40,8 @@ Each **pmopb:SemanticRole** instance is related (via property **pmopb:argument**
 
 * **pmopb:NumberedArgument**, containing the individuals corresponding to numbered arguments (e.g., *Arg0*, *Arg1*); 
 * **pmopb:Modifier**, containing the
-individuals corresponding to modifiers (e.g., *ArgM-LOC*, *ArgM-TMP*); and, 
-* **pmopb:SecondaryAgent**, containing the single individual annotating secondary agents (*ArgA*). While PB annotation guidelines define a single modifier (*ArgM*) with multiple function tags (e.g., *LOC*, *TMP*), we opt to specialize the modifier for each function tag, similarly to the way these arguments are actually annotated by state-of-the-art SRL tools.
+individuals corresponding to modifiers (e.g., *ArgM-LOC*, *ArgM-TMP*). While PB annotation guidelines define a single modifier (*ArgM*) with multiple function tags (e.g., *LOC*, *TMP*), we opt to specialize the modifier for each function tag, similarly to the way these arguments are actually annotated by state-of-the-art SRL tools; and, 
+* **pmopb:SecondaryAgent**, containing the single individual annotating secondary agents (*ArgA*). 
 
 Property **pmopb:tag** enables associating possible tags, either a **pmopb:Modifier** or some additional tag defined in class **pmopb:Tag**, to **pmopb:SemanticRole**s, or **nif:Annotation**s of semantic roles in examples.
 
@@ -363,13 +363,13 @@ Additional classes (and related properties) are defined to represent inflectiona
               
               rdfs:subClassOf pmo:SemanticRole ,
                               [ rdf:type owl:Restriction ;
-                                owl:onProperty :argument ;
-                                owl:someValuesFrom :Argument
-                              ] ,
-                              [ rdf:type owl:Restriction ;
                                 owl:onProperty [ owl:inverseOf pmo:semRole
                                                ] ;
                                 owl:allValuesFrom :Roleset
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :argument ;
+                                owl:someValuesFrom :Argument
                               ] .
 
 

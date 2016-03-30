@@ -50,7 +50,7 @@ A verb class may have one or more **pmovn:VerbNetFrame**s (via property **pmovn:
 
 
 * one or more ordered semantic **pmo:Pred**s, modeling the meaning of the event, and its participants, expressed by the verb class for that syntactic construction (e.g.,
-*approve(during(E), Agent, Theme)*). Predicates in **pmovn:Pred** have a type (**pmovn:PredType**, e.g., *approve*) and can be further decomposed in **pmovn:PredArg** (e.g., *during(E)*) of various types (e.g., **pmovn:EventPredArg**). Negation of a predicate is expressed by typing the corresponding instance as **pmovn:NegPred**, while implicit **pmovn:PredArg**s are typed as **pmovn:ImplicitArg**.
+*approve(during(E), Agent, Theme)*). Predicates in **pmovn:Pred** have a type (**pmovn:PredType**, e.g., *approve*) and can be further decomposed in **pmovn:PredArg** (e.g., *during(E)*) of various types (e.g., **pmovn:EventPredArg**). Negation of a predicate is expressed by typing the corresponding instance as **pmovn:NegPred**, while implicit **pmovn:PredArg**s are typed as **pmovn:ImplicitPredArg**.
 
 A **pmovn:VerbNetFrame** is directly associated to its corresponding **pmo:Example** via the pmovn:frameExample property.
 
@@ -390,13 +390,13 @@ pmovn:AuxnpType rdf:type owl:Class ;
 
 pmovn:CompoundRestriction rdf:type owl:Class ;
                           
+                          rdfs:label "Compound Restriction"@en ;
+                          
                           rdfs:subClassOf pmovn:Restriction ,
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty pmo:item ;
                                             owl:someValuesFrom owl:Thing
                                           ] ;
-                          
-                          rdfs:comment "Compound Restriction"@en ;
                           
                           owl:disjointUnionOf ( pmovn:AndCompoundRestriction
                                                 pmovn:OrCompoundRestriction
@@ -704,7 +704,7 @@ pmovn:PrepositionSelectionalRestriction rdf:type owl:Class ;
 
 pmovn:Restriction rdf:type owl:Class ;
                   
-                  rdfs:label "pmo:Restriction"@en ;
+                  rdfs:label "Restriction"@en ;
                   
                   owl:disjointUnionOf ( pmovn:AtomicRestriction
                                         pmovn:CompoundRestriction
@@ -793,6 +793,8 @@ pmovn:RoleSelectionalRestriction rdf:type owl:Class ;
 
 pmovn:SelectionalRestriction rdf:type owl:Class ;
                              
+                             rdfs:label "Selectional Restriction"@en ;
+                             
                              rdfs:subClassOf pmovn:Restriction ,
                                              [ rdf:type owl:Restriction ;
                                                owl:onProperty pmo:valueObj ;
@@ -802,8 +804,6 @@ pmovn:SelectionalRestriction rdf:type owl:Class ;
                                                owl:onProperty pmo:item ;
                                                owl:allValuesFrom pmovn:SelectionalRestriction
                                              ] ;
-                             
-                             rdfs:comment "Selectional Restriction"@en ;
                              
                              owl:disjointUnionOf ( pmovn:PrepositionSelectionalRestriction
                                                    pmovn:RoleSelectionalRestriction
@@ -873,6 +873,8 @@ pmovn:SynItem rdf:type owl:Class ;
 
 pmovn:SyntacticRestriction rdf:type owl:Class ;
                            
+                           rdfs:label "Syntactic Restriction"@en ;
+                           
                            rdfs:subClassOf pmovn:Restriction ,
                                            [ rdf:type owl:Restriction ;
                                              owl:onProperty pmo:item ;
@@ -881,9 +883,7 @@ pmovn:SyntacticRestriction rdf:type owl:Class ;
                                            [ rdf:type owl:Restriction ;
                                              owl:onProperty pmo:valueObj ;
                                              owl:allValuesFrom pmovn:SyntacticRestrictionProperty
-                                           ] ;
-                           
-                           rdfs:comment "Syntactic Restriction"@en .
+                                           ] .
 
 
 
