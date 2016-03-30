@@ -2,7 +2,7 @@ Premon Dataset
 ===
 
 Each single component of the PreMOn Dataset can be downloaded by clicking the PreMOn icons in the table below.
-For each dataset, we provide, splitted among CORE resource data and EXAMPLE data, three separate RDF dumps (tql.gz - gzipped turtle format) containing:
+For each dataset, we provide, splitted among CORE resource data and EXAMPLE data, three separate RDF dumps (tql.gz - gzipped turtle format - convertible to any other RDF format using [RDFpro](http://rdfpro.fbk.eu)) containing:
 
   * the **base version** of the dataset, complete but without inferred RDF triples;
   * the **closed version** of the dataset, which includes also triples derived by applying owl2rl inference using PreMOn, lemon ontolex and NIF TBox definitions (recommended download);
