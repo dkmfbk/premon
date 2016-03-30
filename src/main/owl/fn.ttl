@@ -1,8 +1,7 @@
-@prefix : <http://premon.fbk.eu/ontology/fn#> .
+@prefix : <http://premon.fbk.eu/ontology/all#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix pmo: <http://premon.fbk.eu/ontology/core#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,546 +10,283 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix void: <http://rdfs.org/ns/void#> .
+@prefix pmo: <http://premon.fbk.eu/ontology/core#> .
+@prefix pmopb: <http://premon.fbk.eu/ontology/pb#> .
+@prefix pmonb: <http://premon.fbk.eu/ontology/nb#> .
+@prefix pmovn: <http://premon.fbk.eu/ontology/vn#> .
 @prefix pmofn: <http://premon.fbk.eu/ontology/fn#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
-@base <http://premon.fbk.eu/ontology/fn> .
-
-<http://premon.fbk.eu/ontology/fn> rdf:type owl:Ontology ;
-                                   
-                                   vann:preferredNamespacePrefix "pmofn" ;
-                                   
-                                   dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
-                                   
-                                   dc:creator "Francesco Corcoglioniti" ;
-                                   
-                                   vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/fn#" ;
-                                   
-                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
-                                   
-                                   dcterms:title "Predicate Model for Ontologies (premon) - FrameNet ontology module"@en ;
-                                   
-                                   rdfs:comment "The FrameNet module of the PreMOn ontology extends the core module for representing concepts specific to FrameNet. The modelling is based on the [FrameNet II: Extended Theory and Practice](https://framenet2.icsi.berkeley.edu/docs/r1.5/book.pdf) book."@en ;
-                                   
-                                   dc:description """The PreMOn FrameNet ontology module defines classes **pmofn:Frame** and **pmofn:FrameElement** as subclasses of **pmo:SemanticClass** and **pmo:SemanticRole**, respectively. **pmofn:FrameElement** is further specialized in four subclasses, denoting the four typologies of FN frame elements (e.g., **pmofn:CoreFrameElement**). Being **pmo:SemanticRole**s, in PreMOn Ontology frame elements are always specific to the frame where they are defined, even for extra thematic frame elements that are typically shared across frames in FN (e.g., the *Circumstances* extra thematic frame element corresponds to multiple individuals of type **pmofn:ExtraThematicFrameElement**, one for each frame where it is defined). Frame element core sets of a **pmofn:Frame** are represented as reified objects of type **pmofn:FECoreSet**, having as members some **pmofn:FrameElement**s.
-
-Relations between **pmofn:Frame**s are modeled using the subproperties of **pmofn:frameRelation** (e.g., **pmofn:inheritsFrom**). Similarly, mappings between **pmofn:FrameElement**s of **pmofn:Frame**s related via some **pmofn:frameRelation** are represented using frame relation-specific subproperties of **pmofn:frameElementRelation** (e.g., **pmofn:inheritsFromFER**). Within a frame, a frame element may exclude/require the presence of another frame element (**pmofn:excludesFrameElement**/**pmofn:requiresFrameElement**).
-
- **pmofn:LexicalUnit**, associating a lexical entry with a frame, is defined as subclass of **pmo:Conceptualization**. A **pmofn:LexicalUnit** may have a development status (**pmofn:LUStatus**) and can incorporate a **pmofn:FrameElement** (e.g., *microvawe.v*, besides evoking frame *Apply heat*, also incorporates the frame element *Heating instrument*).
 
-Finally, **pmofn:Frame**s, **pmofn:FrameElement**s and **pmofn:LexicalUnit**s can be constrained according to some semantic types, defined in **pmofn:SemType**, and organized in a hierarchy according to **pmofn:subTypeOf** relations between them."""@en ;
-                                   
-                                   dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
-                                   
-                                   dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
-                                   
-                                   dc:description <http://premon.fbk.eu/images/fn.svg> ;
-                                   
-                                   owl:imports <http://premon.fbk.eu/ontology/core> ;
-                                   
-                                   rdfs:isDefinedBy <http://premon.fbk.eu/ontology/fn.ttl> ;
-                                   
-                                   owl:imports <http://www.w3.org/ns/lemon/ontolex> .
+<http://premon.fbk.eu/ontology/fn> a owl:Ontology ;
+	vann:preferredNamespacePrefix "pmofn" ;
+	dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+	dc:creator "Francesco Corcoglioniti" , "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
+	vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/fn#" ;
+	dcterms:title "Predicate Model for Ontologies (premon) - FrameNet ontology module"@en ;
+	rdfs:comment "The FrameNet module of the PreMOn ontology extends the core module for representing concepts specific to FrameNet. The modelling is based on the [FrameNet II: Extended Theory and Practice](https://framenet2.icsi.berkeley.edu/docs/r1.5/book.pdf) book."@en ;
+	dc:description <http://premon.fbk.eu/images/fn.svg> , """The PreMOn FrameNet ontology module defines classes [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame) and [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively. [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement) is further specialized in four subclasses, denoting the four typologies of FN frame elements (e.g., [pmofn:CoreFrameElement](http://premon.fbk.eu/ontology/fn#CoreFrameElement)). Being [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole)s, in PreMOn Ontology frame elements are always specific to the frame where they are defined, even for extra thematic frame elements that are typically shared across frames in FN (e.g., the *Circumstances* extra thematic frame element corresponds to multiple individuals of type [pmofn:ExtraThematicFrameElement](http://premon.fbk.eu/ontology/fn#ExtraThematicFrameElement), one for each frame where it is defined). Frame element core sets of a [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame) are represented as reified objects of type [pmofn:FECoreSet](http://premon.fbk.eu/ontology/fn#FECoreSet), having as members some [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement)s.
+
+Relations between [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s are modeled using the subproperties of [pmofn:frameRelation](http://premon.fbk.eu/ontology/fn#frameRelation) (e.g., [pmofn:inheritsFrom](http://premon.fbk.eu/ontology/fn#inheritsFrom)). Similarly, mappings between [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement)s of [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s related via some [pmofn:frameRelation](http://premon.fbk.eu/ontology/fn#frameRelation) are represented using frame relation-specific subproperties of [pmofn:frameElementRelation](http://premon.fbk.eu/ontology/fn#frameElementRelation) (e.g., [pmofn:inheritsFromFER](http://premon.fbk.eu/ontology/fn#inheritsFromFER)). Within a frame, a frame element may exclude/require the presence of another frame element ([pmofn:excludesFrameElement](http://premon.fbk.eu/ontology/fn#excludesFrameElement)/[pmofn:requiresFrameElement](http://premon.fbk.eu/ontology/fn#requiresFrameElement)).
+
+ [pmofn:LexicalUnit](http://premon.fbk.eu/ontology/fn#LexicalUnit), associating a lexical entry with a frame, is defined as subclass of [pmo:Conceptualization](http://premon.fbk.eu/ontology/core#Conceptualization). A [pmofn:LexicalUnit](http://premon.fbk.eu/ontology/fn#LexicalUnit) may have a development status ([pmofn:LUStatus](http://premon.fbk.eu/ontology/fn#LUStatus)) and can incorporate a [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement) (e.g., *microvawe.v*, besides evoking frame *Apply heat*, also incorporates the frame element *Heating instrument*).
+
+Finally, [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s, [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement)s and [pmofn:LexicalUnit](http://premon.fbk.eu/ontology/fn#LexicalUnit)s can be constrained according to some semantic types, defined in [pmofn:SemType](http://premon.fbk.eu/ontology/fn#SemType), and organized in a hierarchy according to [pmofn:subTypeOf](http://premon.fbk.eu/ontology/fn#subTypeOf) relations between them."""@en ;
+	dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
+	dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
+	owl:imports <http://premon.fbk.eu/ontology/core> , <http://www.w3.org/ns/lemon/ontolex> ;
+	rdfs:isDefinedBy <http://premon.fbk.eu/ontology/fn.ttl> .
+
+pmofn:excludesFrameElement a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "excludes frame element"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement ;
+	owl:propertyDisjointWith pmofn:requiresFrameElement .
+
+pmofn:FrameElement a owl:Class ;
+	rdfs:label "Frame Element (FN)"@en ;
+	rdfs:subClassOf pmo:SemanticRole , _:node1af412rdfx10 ;
+	owl:disjointUnionOf _:node1af412rdfx12 .
+
+pmofn:requiresFrameElement a owl:ObjectProperty ;
+	rdfs:label "requires frame element"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement .
+
+pmofn:feCoreSet a owl:ObjectProperty , owl:InverseFunctionalProperty ;
+	rdfs:label "frame element core set"@en ;
+	rdfs:range pmofn:FECoreSet ;
+	rdfs:domain pmofn:Frame .
+
+pmofn:FECoreSet a owl:Class ;
+	rdfs:label "Frame Element Core Set"@en ;
+	rdfs:subClassOf _:node1af412rdfx5 , _:node1af412rdfx6 .
+
+pmofn:Frame a owl:Class ;
+	rdfs:label "Frame (FN)"@en ;
+	rdfs:subClassOf pmo:SemanticClass , _:node1af412rdfx7 , _:node1af412rdfx9 .
+
+pmofn:frameRelation a owl:ObjectProperty ;
+	rdfs:label "frame relation"@en ;
+	rdfs:subPropertyOf pmo:classRel ;
+	rdfs:range pmofn:Frame ;
+	rdfs:domain pmofn:Frame .
+
+pmofn:implicitIn a owl:ObjectProperty ;
+	rdfs:label "implicit in"@en ;
+	rdfs:domain pmofn:FrameElement .
+
+pmofn:incorporatedFrameElement a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "incorporated frame element"@en ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:LexicalUnit .
+
+pmofn:LexicalUnit a owl:Class ;
+	rdfs:label "Lexical Unit"@en ;
+	rdfs:subClassOf pmo:Conceptualization , _:node1af412rdfx16 .
+
+pmofn:inheritsFrom a owl:ObjectProperty ;
+	rdfs:label "inherits from"@en ;
+	rdfs:subPropertyOf skos:broader , pmofn:frameRelation .
+
+pmofn:inheritsFromFER a owl:ObjectProperty ;
+	rdfs:label "frame element mapping (on inheritsFrom frame relation)"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement .
+
+pmofn:isCausativeOf a owl:ObjectProperty ;
+	rdfs:label "is causative of"@en ;
+	rdfs:subPropertyOf pmofn:frameRelation .
+
+pmofn:isCausativeOfFER a owl:ObjectProperty ;
+	rdfs:label "frame element mapping (on isCausativeOf frame relation)"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement .
+
+pmofn:isInchoativeOf a owl:ObjectProperty ;
+	rdfs:label "is inchoative of"@en ;
+	rdfs:subPropertyOf pmofn:frameRelation .
+
+pmofn:isInchoativeOfFER a owl:ObjectProperty ;
+	rdfs:label "frame element mapping (on isInchoativeOf frame relation)"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement .
+
+pmofn:perspectiveOn a owl:ObjectProperty ;
+	rdfs:label "perspective on"@en ;
+	rdfs:subPropertyOf pmofn:frameRelation .
+
+pmofn:perspectiveOnFER a owl:ObjectProperty ;
+	rdfs:label "frame element mapping (on perspectiveOn frame relation)"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement .
+
+pmofn:precedes a owl:ObjectProperty ;
+	rdfs:label "precedes"@en ;
+	rdfs:subPropertyOf pmofn:frameRelation .
+
+pmofn:precedesFER a owl:ObjectProperty ;
+	rdfs:label "frame element mapping (on precedes frame relation)"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement .
+
+pmofn:reFrameMapping a owl:ObjectProperty ;
+	rdfs:label "re-frame mapping"@en ;
+	rdfs:subPropertyOf pmofn:frameRelation .
+
+pmofn:reFrameMappingFER a owl:ObjectProperty ;
+	rdfs:label "frame element mapping (on reFrameMapping frame relation)"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement .
+
+pmofn:seeAlso a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "see also"@en ;
+	rdfs:subPropertyOf pmofn:frameRelation .
+
+pmofn:seeAlsoFER a owl:ObjectProperty , owl:SymmetricProperty ;
+	rdfs:label "frame element mapping (on seeAlso frame relation)"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement .
 
+pmofn:semType a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "semantic type"@en ;
+	rdfs:range pmofn:SemType ;
+	rdfs:domain _:node1af412rdfx1 .
 
-#################################################################
-#
-#    Object Properties
-#
-#################################################################
+pmofn:SemType a owl:Class ;
+	rdfs:label "Semantic Type"@en .
 
+pmofn:status a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "status"@en ;
+	rdfs:range pmofn:LUStatus ;
+	rdfs:domain pmofn:LexicalUnit .
 
-###  http://premon.fbk.eu/ontology/fn#excludesFrameElement
+pmofn:LUStatus a owl:Class ;
+	rdfs:label "Lexical Unit Status"@en .
 
-:excludesFrameElement rdf:type owl:ObjectProperty ,
-                               owl:SymmetricProperty ;
-                      
-                      rdfs:label "excludes frame element"@en ;
-                      
-                      rdfs:subPropertyOf pmo:roleRel ;
-                      
-                      rdfs:range :FrameElement ;
-                      
-                      rdfs:domain :FrameElement ;
-                      
-                      owl:propertyDisjointWith :requiresFrameElement .
+pmofn:subTypeOf a owl:ObjectProperty ;
+	rdfs:label "sub-type of"@en ;
+	rdfs:subPropertyOf skos:broader ;
+	rdfs:range pmofn:SemType ;
+	rdfs:domain pmofn:SemType .
 
+pmofn:subframeOf a owl:ObjectProperty ;
+	rdfs:label "sub-frame of"@en ;
+	rdfs:subPropertyOf pmofn:frameRelation .
 
+pmofn:subframeOfFER a owl:ObjectProperty ;
+	rdfs:label "frame element mapping (on subframeOf frame relation)"@en ;
+	rdfs:subPropertyOf pmo:roleRel ;
+	rdfs:range pmofn:FrameElement ;
+	rdfs:domain pmofn:FrameElement .
 
-###  http://premon.fbk.eu/ontology/fn#feCoreSet
+pmofn:uses a owl:ObjectProperty ;
+	rdfs:label "uses"@en ;
+	rdfs:subPropertyOf pmofn:frameRelation .
 
-:feCoreSet rdf:type owl:InverseFunctionalProperty ,
-                    owl:ObjectProperty ;
-           
-           rdfs:label "frame element core set"@en ;
-           
-           rdfs:range :FECoreSet ;
-           
-           rdfs:domain :Frame .
+pmofn:CoreFrameElement a owl:Class ;
+	rdfs:label "Core Frame Element (FN)"@en ;
+	rdfs:subClassOf pmofn:FrameElement .
 
+pmofn:CoreUnexpressedFrameElement a owl:Class ;
+	rdfs:label "Core-unexpressed Frame Element (FN)"@en ;
+	rdfs:subClassOf pmofn:FrameElement .
 
+pmofn:ExtraThematicFrameElement a owl:Class ;
+	rdfs:label "Extra-thematic Frame Element (FN)"@en ;
+	rdfs:subClassOf pmofn:FrameElement .
 
-###  http://premon.fbk.eu/ontology/fn#frameRelation
+pmofn:PeripheralFrameElement a owl:Class ;
+	rdfs:label "Peripheral Frame Element (FN)"@en ;
+	rdfs:subClassOf pmofn:FrameElement .
 
-:frameRelation rdf:type owl:ObjectProperty ;
-               
-               rdfs:label "frame relation"@en ;
-               
-               rdfs:subPropertyOf pmo:classRel ;
-               
-               rdfs:domain :Frame ;
-               
-               rdfs:range :Frame .
+_:node1af412rdfx1 a owl:Class ;
+	owl:unionOf _:node1af412rdfx2 .
 
+_:node1af412rdfx10 a owl:Restriction ;
+	owl:onProperty _:node1af412rdfx11 ;
+	owl:allValuesFrom pmofn:Frame .
 
+_:node1af412rdfx11 owl:inverseOf pmo:semRole .
 
-###  http://premon.fbk.eu/ontology/fn#implicitIn
+_:node1af412rdfx12 rdf:first pmofn:CoreFrameElement ;
+	rdf:rest _:node1af412rdfx13 .
 
-:implicitIn rdf:type owl:ObjectProperty ;
-            
-            rdfs:label "implicit in"@en ;
-            
-            rdfs:domain :FrameElement .
+_:node1af412rdfx13 rdf:first pmofn:CoreUnexpressedFrameElement ;
+	rdf:rest _:node1af412rdfx14 .
 
+_:node1af412rdfx14 rdf:first pmofn:ExtraThematicFrameElement ;
+	rdf:rest _:node1af412rdfx15 .
 
+_:node1af412rdfx15 rdf:first pmofn:PeripheralFrameElement ;
+	rdf:rest rdf:nil .
 
-###  http://premon.fbk.eu/ontology/fn#incorporatedFrameElement
+_:node1af412rdfx16 a owl:Restriction ;
+	owl:onProperty pmo:evokedConcept ;
+	owl:allValuesFrom pmofn:Frame .
 
-:incorporatedFrameElement rdf:type owl:FunctionalProperty ,
-                                   owl:ObjectProperty ;
-                          
-                          rdfs:label "incorporated frame element"@en ;
-                          
-                          rdfs:range :FrameElement ;
-                          
-                          rdfs:domain :LexicalUnit .
+_:node1af412rdfx17 a owl:AllDisjointProperties ;
+	owl:members _:node1af412rdfx18 .
 
+_:node1af412rdfx18 rdf:first pmofn:inheritsFrom ;
+	rdf:rest _:node1af412rdfx19 .
 
+_:node1af412rdfx19 rdf:first pmofn:isCausativeOf ;
+	rdf:rest _:node1af412rdfx20 .
 
-###  http://premon.fbk.eu/ontology/fn#inheritsFrom
+_:node1af412rdfx2 rdf:first pmofn:Frame ;
+	rdf:rest _:node1af412rdfx3 .
 
-:inheritsFrom rdf:type owl:ObjectProperty ;
-              
-              rdfs:label "inherits from"@en ;
-              
-              rdfs:subPropertyOf :frameRelation ,
-                                 skos:broader .
+_:node1af412rdfx20 rdf:first pmofn:isInchoativeOf ;
+	rdf:rest _:node1af412rdfx21 .
 
+_:node1af412rdfx21 rdf:first pmofn:perspectiveOn ;
+	rdf:rest _:node1af412rdfx22 .
 
+_:node1af412rdfx22 rdf:first pmofn:precedes ;
+	rdf:rest _:node1af412rdfx23 .
 
-###  http://premon.fbk.eu/ontology/fn#inheritsFromFER
+_:node1af412rdfx23 rdf:first pmofn:reFrameMapping ;
+	rdf:rest _:node1af412rdfx24 .
 
-:inheritsFromFER rdf:type owl:ObjectProperty ;
-                 
-                 rdfs:label "frame element mapping (on inheritsFrom frame relation)"@en ;
-                 
-                 rdfs:subPropertyOf pmo:roleRel ;
-                 
-                 rdfs:domain :FrameElement ;
-                 
-                 rdfs:range :FrameElement .
+_:node1af412rdfx24 rdf:first pmofn:seeAlso ;
+	rdf:rest _:node1af412rdfx25 .
 
+_:node1af412rdfx25 rdf:first pmofn:subframeOf ;
+	rdf:rest _:node1af412rdfx26 .
 
+_:node1af412rdfx26 rdf:first pmofn:uses ;
+	rdf:rest rdf:nil .
 
-###  http://premon.fbk.eu/ontology/fn#isCausativeOf
+_:node1af412rdfx3 rdf:first pmofn:FrameElement ;
+	rdf:rest _:node1af412rdfx4 .
 
-:isCausativeOf rdf:type owl:ObjectProperty ;
-               
-               rdfs:label "is causative of"@en ;
-               
-               rdfs:subPropertyOf :frameRelation .
+_:node1af412rdfx4 rdf:first pmofn:LexicalUnit ;
+	rdf:rest rdf:nil .
 
+_:node1af412rdfx5 a owl:Restriction ;
+	owl:onProperty pmo:item ;
+	owl:minCardinality "2"^^xsd:nonNegativeInteger .
 
+_:node1af412rdfx6 a owl:Restriction ;
+	owl:onProperty pmo:item ;
+	owl:allValuesFrom pmofn:FrameElement .
 
-###  http://premon.fbk.eu/ontology/fn#isCausativeOfFER
+_:node1af412rdfx7 a owl:Restriction ;
+	owl:onProperty _:node1af412rdfx8 ;
+	owl:allValuesFrom pmofn:LexicalUnit .
 
-:isCausativeOfFER rdf:type owl:ObjectProperty ;
-                  
-                  rdfs:label "frame element mapping (on isCausativeOf frame relation)"@en ;
-                  
-                  rdfs:subPropertyOf pmo:roleRel ;
-                  
-                  rdfs:range :FrameElement ;
-                  
-                  rdfs:domain :FrameElement .
+_:node1af412rdfx8 owl:inverseOf pmo:evokedConcept .
 
-
-
-###  http://premon.fbk.eu/ontology/fn#isInchoativeOf
-
-:isInchoativeOf rdf:type owl:ObjectProperty ;
-                
-                rdfs:label "is inchoative of"@en ;
-                
-                rdfs:subPropertyOf :frameRelation .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#isInchoativeOfFER
-
-:isInchoativeOfFER rdf:type owl:ObjectProperty ;
-                   
-                   rdfs:label "frame element mapping (on isInchoativeOf frame relation)"@en ;
-                   
-                   rdfs:subPropertyOf pmo:roleRel ;
-                   
-                   rdfs:range :FrameElement ;
-                   
-                   rdfs:domain :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#perspectiveOn
-
-:perspectiveOn rdf:type owl:ObjectProperty ;
-               
-               rdfs:label "perspective on"@en ;
-               
-               rdfs:subPropertyOf :frameRelation .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#perspectiveOnFER
-
-:perspectiveOnFER rdf:type owl:ObjectProperty ;
-                  
-                  rdfs:label "frame element mapping (on perspectiveOn frame relation)"@en ;
-                  
-                  rdfs:subPropertyOf pmo:roleRel ;
-                  
-                  rdfs:range :FrameElement ;
-                  
-                  rdfs:domain :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#precedes
-
-:precedes rdf:type owl:ObjectProperty ;
-          
-          rdfs:label "precedes"@en ;
-          
-          rdfs:subPropertyOf :frameRelation .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#precedesFER
-
-:precedesFER rdf:type owl:ObjectProperty ;
-             
-             rdfs:label "frame element mapping (on precedes frame relation)"@en ;
-             
-             rdfs:subPropertyOf pmo:roleRel ;
-             
-             rdfs:domain :FrameElement ;
-             
-             rdfs:range :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#reFrameMapping
-
-:reFrameMapping rdf:type owl:ObjectProperty ;
-                
-                rdfs:label "re-frame mapping"@en ;
-                
-                rdfs:subPropertyOf :frameRelation .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#reFrameMappingFER
-
-:reFrameMappingFER rdf:type owl:ObjectProperty ;
-                   
-                   rdfs:label "frame element mapping (on reFrameMapping frame relation)"@en ;
-                   
-                   rdfs:subPropertyOf pmo:roleRel ;
-                   
-                   rdfs:range :FrameElement ;
-                   
-                   rdfs:domain :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#requiresFrameElement
-
-:requiresFrameElement rdf:type owl:ObjectProperty ;
-                      
-                      rdfs:label "requires frame element"@en ;
-                      
-                      rdfs:subPropertyOf pmo:roleRel ;
-                      
-                      rdfs:range :FrameElement ;
-                      
-                      rdfs:domain :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#seeAlso
-
-:seeAlso rdf:type owl:ObjectProperty ,
-                  owl:SymmetricProperty ;
-         
-         rdfs:label "see also"@en ;
-         
-         rdfs:subPropertyOf :frameRelation .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#seeAlsoFER
-
-:seeAlsoFER rdf:type owl:ObjectProperty ,
-                     owl:SymmetricProperty ;
-            
-            rdfs:label "frame element mapping (on seeAlso frame relation)"@en ;
-            
-            rdfs:subPropertyOf pmo:roleRel ;
-            
-            rdfs:range :FrameElement ;
-            
-            rdfs:domain :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#semType
-
-:semType rdf:type owl:FunctionalProperty ,
-                  owl:ObjectProperty ;
-         
-         rdfs:label "semantic type"@en ;
-         
-         rdfs:range :SemType ;
-         
-         rdfs:domain [ rdf:type owl:Class ;
-                       owl:unionOf ( :Frame
-                                     :FrameElement
-                                     :LexicalUnit
-                                   )
-                     ] .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#status
-
-:status rdf:type owl:FunctionalProperty ,
-                 owl:ObjectProperty ;
-        
-        rdfs:label "status"@en ;
-        
-        rdfs:range :LUStatus ;
-        
-        rdfs:domain :LexicalUnit .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#subTypeOf
-
-:subTypeOf rdf:type owl:ObjectProperty ;
-           
-           rdfs:label "sub-type of"@en ;
-           
-           rdfs:domain :SemType ;
-           
-           rdfs:range :SemType ;
-           
-           rdfs:subPropertyOf skos:broader .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#subframeOf
-
-:subframeOf rdf:type owl:ObjectProperty ;
-            
-            rdfs:label "sub-frame of"@en ;
-            
-            rdfs:subPropertyOf :frameRelation .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#subframeOfFER
-
-:subframeOfFER rdf:type owl:ObjectProperty ;
-               
-               rdfs:label "frame element mapping (on subframeOf frame relation)"@en ;
-               
-               rdfs:subPropertyOf pmo:roleRel ;
-               
-               rdfs:domain :FrameElement ;
-               
-               rdfs:range :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#uses
-
-:uses rdf:type owl:ObjectProperty ;
-      
-      rdfs:label "uses"@en ;
-      
-      rdfs:subPropertyOf :frameRelation .
-
-
-
-
-
-#################################################################
-#
-#    Classes
-#
-#################################################################
-
-
-###  http://premon.fbk.eu/ontology/fn#CoreFrameElement
-
-:CoreFrameElement rdf:type owl:Class ;
-                  
-                  rdfs:label "Core Frame Element (FN)"@en ;
-                  
-                  rdfs:subClassOf :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#CoreUnexpressedFrameElement
-
-:CoreUnexpressedFrameElement rdf:type owl:Class ;
-                             
-                             rdfs:label "Core-unexpressed Frame Element (FN)"@en ;
-                             
-                             rdfs:subClassOf :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#ExtraThematicFrameElement
-
-:ExtraThematicFrameElement rdf:type owl:Class ;
-                           
-                           rdfs:label "Extra-thematic Frame Element (FN)"@en ;
-                           
-                           rdfs:subClassOf :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#FECoreSet
-
-:FECoreSet rdf:type owl:Class ;
-           
-           rdfs:label "Frame Element Core Set"@en ;
-           
-           rdfs:subClassOf [ rdf:type owl:Restriction ;
-                             owl:onProperty pmo:item ;
-                             owl:minCardinality "2"^^xsd:nonNegativeInteger
-                           ] ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty pmo:item ;
-                             owl:allValuesFrom :FrameElement
-                           ] .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#Frame
-
-:Frame rdf:type owl:Class ;
-       
-       rdfs:label "Frame (FN)"@en ;
-       
-       rdfs:subClassOf pmo:SemanticClass ,
-                       [ rdf:type owl:Restriction ;
-                         owl:onProperty [ owl:inverseOf pmo:evokedConcept
-                                        ] ;
-                         owl:allValuesFrom :LexicalUnit
-                       ] ,
-                       [ rdf:type owl:Restriction ;
-                         owl:onProperty pmo:semRole ;
-                         owl:allValuesFrom :FrameElement
-                       ] .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#FrameElement
-
-:FrameElement rdf:type owl:Class ;
-              
-              rdfs:label "Frame Element (FN)"@en ;
-              
-              rdfs:subClassOf pmo:SemanticRole ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty [ owl:inverseOf pmo:semRole
-                                               ] ;
-                                owl:allValuesFrom :Frame
-                              ] ;
-              
-              owl:disjointUnionOf ( :CoreFrameElement
-                                    :CoreUnexpressedFrameElement
-                                    :ExtraThematicFrameElement
-                                    :PeripheralFrameElement
-                                  ) .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#LUStatus
-
-:LUStatus rdf:type owl:Class ;
-          
-          rdfs:label "Lexical Unit Status"@en .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#LexicalUnit
-
-:LexicalUnit rdf:type owl:Class ;
-             
-             rdfs:label "Lexical Unit"@en ;
-             
-             rdfs:subClassOf pmo:Conceptualization ,
-                             [ rdf:type owl:Restriction ;
-                               owl:onProperty pmo:evokedConcept ;
-                               owl:allValuesFrom :Frame
-                             ] .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#PeripheralFrameElement
-
-:PeripheralFrameElement rdf:type owl:Class ;
-                        
-                        rdfs:label "Peripheral Frame Element (FN)"@en ;
-                        
-                        rdfs:subClassOf :FrameElement .
-
-
-
-###  http://premon.fbk.eu/ontology/fn#SemType
-
-:SemType rdf:type owl:Class ;
-         
-         rdfs:label "Semantic Type"@en .
-
-
-
-
-
-#################################################################
-#
-#    General axioms
-#
-#################################################################
-
-
-[ rdf:type owl:AllDisjointProperties ;
-  owl:members ( :inheritsFrom
-                :isCausativeOf
-                :isInchoativeOf
-                :perspectiveOn
-                :precedes
-                :reFrameMapping
-                :seeAlso
-                :subframeOf
-                :uses
-              )
-] .
-
-
-
-
-###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
-
+_:node1af412rdfx9 a owl:Restriction ;
+	owl:onProperty pmo:semRole ;
+	owl:allValuesFrom pmofn:FrameElement .

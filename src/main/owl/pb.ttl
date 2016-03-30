@@ -1,8 +1,7 @@
-@prefix : <http://premon.fbk.eu/ontology/pb#> .
+@prefix : <http://premon.fbk.eu/ontology/all#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix pmo: <http://premon.fbk.eu/ontology/core#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -11,723 +10,399 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix void: <http://rdfs.org/ns/void#> .
+@prefix pmo: <http://premon.fbk.eu/ontology/core#> .
 @prefix pmopb: <http://premon.fbk.eu/ontology/pb#> .
+@prefix pmonb: <http://premon.fbk.eu/ontology/nb#> .
+@prefix pmovn: <http://premon.fbk.eu/ontology/vn#> .
+@prefix pmofn: <http://premon.fbk.eu/ontology/fn#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
-@base <http://premon.fbk.eu/ontology/pb> .
 
-<http://premon.fbk.eu/ontology/pb> rdf:type owl:Ontology ;
-                                   
-                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
-                                   
-                                   rdfs:comment "The PropBank module of the PreMOn ontology extends the core module for representing concepts specific to PropBank. The modelling is based on the [PropBank guidelines] (http://clear.colorado.edu/compsem/documents/propbank_guidelines.pdf)."@en ;
-                                   
-                                   vann:preferredNamespacePrefix "pmopb" ;
-                                   
-                                   dc:creator "Francesco Corcoglioniti" ;
-                                   
-                                   vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/pb#" ;
-                                   
-                                   dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
-                                   
-                                   dcterms:title "Predicate Model for Ontologies (PreMOn) - PropBank ontology module"@en ;
-                                   
-                                   dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
-                                   
-                                   dc:description """We define classes **pmopb:Roleset** and **pmopb:SemanticRole** as subclasses of **pmo:SemanticClass** and **pmo:SemanticRole**, respectively.
+<http://premon.fbk.eu/ontology/pb> a owl:Ontology ;
+	dc:creator "Francesco Corcoglioniti" , "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
+	rdfs:comment "The PropBank module of the PreMOn ontology extends the core module for representing concepts specific to PropBank. The modelling is based on the [PropBank guidelines] (http://clear.colorado.edu/compsem/documents/propbank_guidelines.pdf)."@en ;
+	vann:preferredNamespacePrefix "pmopb" ;
+	vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/pb#" ;
+	dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+	dcterms:title "Predicate Model for Ontologies (PreMOn) - PropBank ontology module"@en ;
+	dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
+	dc:description <http://premon.fbk.eu/images/pb.svg> , """We define classes [pmopb:Roleset](http://premon.fbk.eu/ontology/pb#Roleset) and [pmopb:SemanticRole](http://premon.fbk.eu/ontology/pb#SemanticRole) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively.
 
-Each **pmopb:SemanticRole** instance is related (via property **pmopb:argument**) to exactly one **pmopb:Argument**, which is defined as the disjoint union of three subclasses: 
+Each [pmopb:SemanticRole](http://premon.fbk.eu/ontology/pb#SemanticRole) instance is related (via property [pmopb:argument](http://premon.fbk.eu/ontology/pb#argument)) to exactly one [pmopb:Argument](http://premon.fbk.eu/ontology/pb#Argument), which is defined as the disjoint union of three subclasses: 
 
-* **pmopb:NumberedArgument**, containing the individuals corresponding to numbered arguments (e.g., *Arg0*, *Arg1*); 
-* **pmopb:Modifier**, containing the
+* [pmopb:NumberedArgument](http://premon.fbk.eu/ontology/pb#NumberedArgument), containing the individuals corresponding to numbered arguments (e.g., *Arg0*, *Arg1*); 
+* [pmopb:Modifier](http://premon.fbk.eu/ontology/pb#Modifier), containing the
 individuals corresponding to modifiers (e.g., *ArgM-LOC*, *ArgM-TMP*). While PB annotation guidelines define a single modifier (*ArgM*) with multiple function tags (e.g., *LOC*, *TMP*), we opt to specialize the modifier for each function tag, similarly to the way these arguments are actually annotated by state-of-the-art SRL tools; and, 
-* **pmopb:SecondaryAgent**, containing the single individual annotating secondary agents (*ArgA*). 
+* [pmopb:SecondaryAgent](http://premon.fbk.eu/ontology/pb#SecondaryAgent), containing the single individual annotating secondary agents (*ArgA*). 
+
+Property [pmopb:tag](http://premon.fbk.eu/ontology/pb#tag) enables associating possible tags, either a [pmopb:Modifier](http://premon.fbk.eu/ontology/pb#Modifier) or some additional tag defined in class [pmopb:Tag](http://premon.fbk.eu/ontology/pb#Tag), to [pmopb:SemanticRole](http://premon.fbk.eu/ontology/pb#SemanticRole)s, or [nif:Annotation](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Annotation)s of semantic roles in examples.
+
+Additional classes (and related properties) are defined to represent inflectional information about examples: [pmopb:Inflection](http://premon.fbk.eu/ontology/pb#Inflection), [pmopb:Person](http://premon.fbk.eu/ontology/pb#Person), [pmopb:Tense](http://premon.fbk.eu/ontology/pb#Tense), [pmopb:Aspect](http://premon.fbk.eu/ontology/pb#Aspect), [pmopb:Voice](http://premon.fbk.eu/ontology/pb#Voice), and [pmopb:Form](http://premon.fbk.eu/ontology/pb#Form)."""@en ;
+	dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
+	owl:imports <http://premon.fbk.eu/ontology/core> , <http://www.w3.org/ns/lemon/ontolex> ;
+	rdfs:isDefinedBy <http://premon.fbk.eu/ontology/pb.ttl> .
+
+pmopb:core a owl:FunctionalProperty , owl:DatatypeProperty ;
+	rdfs:comment "Set to true if the semantic role explicitly occurs in a frame file"@en ;
+	rdfs:label "core"@en ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pmo:SemanticRole .
 
-Property **pmopb:tag** enables associating possible tags, either a **pmopb:Modifier** or some additional tag defined in class **pmopb:Tag**, to **pmopb:SemanticRole**s, or **nif:Annotation**s of semantic roles in examples.
+pmopb:argument a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:label "argument"@en ;
+	rdfs:range pmopb:Argument ;
+	rdfs:domain pmopb:SemanticRole .
 
-Additional classes (and related properties) are defined to represent inflectional information about examples: **pmopb:Inflection**, **pmopb:Person**, **pmopb:Tense**, **pmopb:Aspect**, **pmopb:Voice**, and **pmopb:Form**."""@en ;
-                                   
-                                   dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
-                                   
-                                   dc:description <http://premon.fbk.eu/images/pb.svg> ;
-                                   
-                                   owl:imports <http://premon.fbk.eu/ontology/core> ;
-                                   
-                                   rdfs:isDefinedBy <http://premon.fbk.eu/ontology/pb.ttl> ;
-                                   
-                                   owl:imports <http://www.w3.org/ns/lemon/ontolex> .
+pmopb:Argument a owl:Class ;
+	rdfs:label "Argument (PB)"@en ;
+	owl:equivalentClass _:node1af412o0qx5 ;
+	rdfs:subClassOf skos:Concept .
 
+pmopb:SemanticRole a owl:Class ;
+	rdfs:label "Semantic Role (PB)"@en ;
+	rdfs:subClassOf pmo:SemanticRole , _:node1af412o0qx50 , _:node1af412o0qx52 .
 
-#################################################################
-#
-#    Object Properties
-#
-#################################################################
+pmopb:aspect a owl:ObjectProperty ;
+	rdfs:label "aspect"@en ;
+	rdfs:range pmopb:Aspect ;
+	rdfs:domain pmopb:Inflection .
 
+pmopb:Aspect a owl:Class ;
+	rdfs:label "Aspect"@en ;
+	rdfs:subClassOf _:node1af412o0qx9 .
 
-###  http://premon.fbk.eu/ontology/pb#argument
+pmopb:Inflection a owl:Class ;
+	rdfs:label "Inflection"@en .
 
-:argument rdf:type owl:FunctionalProperty ,
-                   owl:ObjectProperty ;
-          
-          rdfs:label "argument"@en ;
-          
-          rdfs:range :Argument ;
-          
-          rdfs:domain :SemanticRole .
+pmopb:form a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:label "form"@en ;
+	rdfs:range pmopb:Form ;
+	rdfs:domain pmopb:Inflection .
 
+pmopb:Form a owl:Class ;
+	rdfs:label "Form"@en ;
+	rdfs:subClassOf _:node1af412o0qx12 .
 
+pmopb:inflection a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:label "inflection"@en ;
+	rdfs:range pmopb:Inflection ;
+	rdfs:domain pmo:Example .
 
-###  http://premon.fbk.eu/ontology/pb#aspect
+pmopb:person a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:label "person"@en ;
+	rdfs:range pmopb:Person ;
+	rdfs:domain pmopb:Inflection .
 
-:aspect rdf:type owl:ObjectProperty ;
-        
-        rdfs:label "aspect"@en ;
-        
-        rdfs:range :Aspect ;
-        
-        rdfs:domain :Inflection .
+pmopb:Person a owl:Class ;
+	rdfs:label "Person"@en ;
+	rdfs:subClassOf _:node1af412o0qx46 .
 
+pmopb:tag a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:label "tag"@en ;
+	rdfs:range _:node1af412o0qx1 .
 
+pmopb:Modifier a owl:Class ;
+	rdfs:label "Modifier (PB)"@en ;
+	rdfs:subClassOf pmopb:Argument , _:node1af412o0qx17 ;
+	owl:disjointWith pmopb:NumberedArgument , pmopb:SecondaryAgent .
 
-###  http://premon.fbk.eu/ontology/pb#form
+pmopb:Tag a owl:Class ;
+	rdfs:label "Tag"@en .
 
-:form rdf:type owl:FunctionalProperty ,
-               owl:ObjectProperty ;
-      
-      rdfs:label "form"@en ;
-      
-      rdfs:range :Form ;
-      
-      rdfs:domain :Inflection .
+pmopb:tense a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:label "tense"@en ;
+	rdfs:range pmopb:Tense ;
+	rdfs:domain pmopb:Inflection .
 
+pmopb:Tense a owl:Class ;
+	rdfs:label "Tense"@en ;
+	rdfs:subClassOf _:node1af412o0qx53 .
 
+pmopb:voice a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:label "voice"@en ;
+	rdfs:range pmopb:Voice ;
+	rdfs:domain pmopb:Inflection .
 
-###  http://premon.fbk.eu/ontology/pb#inflection
+pmopb:Voice a owl:Class ;
+	rdfs:label "Voice"@en ;
+	rdfs:subClassOf _:node1af412o0qx57 .
 
-:inflection rdf:type owl:FunctionalProperty ,
-                     owl:ObjectProperty ;
-            
-            rdfs:label "inflection"@en ;
-            
-            rdfs:domain pmo:Example ;
-            
-            rdfs:range :Inflection .
+pmopb:NumberedArgument a owl:Class ;
+	rdfs:label "Numbered Argument (PB)"@en ;
+	rdfs:subClassOf pmopb:Argument , _:node1af412o0qx39 ;
+	owl:disjointWith pmopb:SecondaryAgent .
 
+pmopb:SecondaryAgent a owl:Class ;
+	rdfs:label "Secondary Agent"@en ;
+	rdfs:subClassOf pmopb:Argument .
 
+pmopb:perfect a owl:NamedIndividual , pmopb:Aspect .
 
-###  http://premon.fbk.eu/ontology/pb#person
+pmopb:progressive a owl:NamedIndividual , pmopb:Aspect .
 
-:person rdf:type owl:FunctionalProperty ,
-                 owl:ObjectProperty ;
-        
-        rdfs:label "person"@en ;
-        
-        rdfs:domain :Inflection ;
-        
-        rdfs:range :Person .
+pmopb:gerund a owl:NamedIndividual , pmopb:Form .
 
+pmopb:full a owl:NamedIndividual , pmopb:Form .
 
+pmopb:participle a owl:NamedIndividual , pmopb:Form .
 
-###  http://premon.fbk.eu/ontology/pb#tag
+pmopb:infinitive a owl:NamedIndividual , pmopb:Form .
 
-:tag rdf:type owl:FunctionalProperty ,
-              owl:ObjectProperty ;
-     
-     rdfs:label "tag"@en ;
-     
-     rdfs:range [ rdf:type owl:Class ;
-                  owl:unionOf ( :Modifier
-                                :Tag
-                                ontolex:LexicalEntry
-                              )
-                ] .
+pmopb:argm-lvb a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-cau a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-tmp a owl:NamedIndividual , pmopb:Modifier .
 
-###  http://premon.fbk.eu/ontology/pb#tense
+pmopb:argm-rcl a owl:NamedIndividual , pmopb:Modifier .
 
-:tense rdf:type owl:FunctionalProperty ,
-                owl:ObjectProperty ;
-       
-       rdfs:label "tense"@en ;
-       
-       rdfs:domain :Inflection ;
-       
-       rdfs:range :Tense .
+pmopb:argm-loc a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-gol a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-mod a owl:NamedIndividual , pmopb:Modifier .
 
-###  http://premon.fbk.eu/ontology/pb#voice
+pmopb:argm-prd a owl:NamedIndividual , pmopb:Modifier .
 
-:voice rdf:type owl:FunctionalProperty ,
-                owl:ObjectProperty ;
-       
-       rdfs:label "voice"@en ;
-       
-       rdfs:domain :Inflection ;
-       
-       rdfs:range :Voice .
+pmopb:argm-com a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-dsp a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-ext a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-adj a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-pnc a owl:NamedIndividual , pmopb:Modifier .
 
-#################################################################
-#
-#    Data properties
-#
-#################################################################
+pmopb:argm-slc a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-neg a owl:NamedIndividual , pmopb:Modifier .
 
-###  http://premon.fbk.eu/ontology/pb#core
+pmopb:argm-rec a owl:NamedIndividual , pmopb:Modifier .
 
-:core rdf:type owl:DatatypeProperty ,
-               owl:FunctionalProperty ;
-      
-      rdfs:label "core"@en ;
-      
-      rdfs:comment "Set to true if the semantic role explicitly occurs in a frame file"@en ;
-      
-      rdfs:domain pmo:SemanticRole ;
-      
-      rdfs:range xsd:boolean .
+pmopb:argm-dis a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-prp a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-dir a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-adv a owl:NamedIndividual , pmopb:Modifier .
 
+pmopb:argm-mnr a owl:NamedIndividual , pmopb:Modifier .
 
-#################################################################
-#
-#    Classes
-#
-#################################################################
+pmopb:arg4 a owl:NamedIndividual , pmopb:NumberedArgument .
 
+pmopb:arg3 a owl:NamedIndividual , pmopb:NumberedArgument .
 
-###  http://premon.fbk.eu/ontology/pb#Argument
+pmopb:arg2 a owl:NamedIndividual , pmopb:NumberedArgument .
 
-:Argument rdf:type owl:Class ;
-          
-          rdfs:label "Argument (PB)"@en ;
-          
-          owl:equivalentClass [ rdf:type owl:Class ;
-                                owl:unionOf ( :Modifier
-                                              :NumberedArgument
-                                              :SecondaryAgent
-                                            )
-                              ] ;
-          
-          rdfs:subClassOf skos:Concept .
+pmopb:arg1 a owl:NamedIndividual , pmopb:NumberedArgument .
 
+pmopb:arg0 a owl:NamedIndividual , pmopb:NumberedArgument .
 
+pmopb:arg5 a owl:NamedIndividual , pmopb:NumberedArgument .
 
-###  http://premon.fbk.eu/ontology/pb#Aspect
+pmopb:other a owl:NamedIndividual , pmopb:Person .
 
-:Aspect rdf:type owl:Class ;
-        
-        rdfs:label "Aspect"@en ;
-        
-        rdfs:subClassOf [ rdf:type owl:Class ;
-                          owl:oneOf ( :perfect
-                                      :progressive
-                                    )
-                        ] .
+pmopb:third a owl:NamedIndividual , pmopb:Person .
 
+pmopb:Roleset a owl:Class ;
+	rdfs:label "Roleset (PB)"@en ;
+	rdfs:subClassOf pmo:SemanticClass , _:node1af412o0qx49 .
 
+pmopb:future a owl:NamedIndividual , pmopb:Tense .
 
-###  http://premon.fbk.eu/ontology/pb#Form
+pmopb:past a owl:NamedIndividual , pmopb:Tense .
 
-:Form rdf:type owl:Class ;
-      
-      rdfs:label "Form"@en ;
-      
-      rdfs:subClassOf [ rdf:type owl:Class ;
-                        owl:oneOf ( :gerund
-                                    :full
-                                    :participle
-                                    :infinitive
-                                  )
-                      ] .
+pmopb:present a owl:NamedIndividual , pmopb:Tense .
 
+pmopb:passive a owl:NamedIndividual , pmopb:Voice .
 
+pmopb:active a owl:NamedIndividual , pmopb:Voice .
 
-###  http://premon.fbk.eu/ontology/pb#Inflection
+pmopb:arga a owl:NamedIndividual , pmopb:SecondaryAgent .
 
-:Inflection rdf:type owl:Class ;
-            
-            rdfs:label "Inflection"@en .
+pmopb:tag-pag a owl:NamedIndividual , pmopb:Tag .
 
+pmopb:tag-ppt a owl:NamedIndividual , pmopb:Tag .
 
+pmopb:tag-vsp a owl:NamedIndividual , pmopb:Tag .
 
-###  http://premon.fbk.eu/ontology/pb#Modifier
+_:node1af412o0qx1 a owl:Class ;
+	owl:unionOf _:node1af412o0qx2 .
 
-:Modifier rdf:type owl:Class ;
-          
-          rdfs:label "Modifier (PB)"@en ;
-          
-          rdfs:subClassOf :Argument ,
-                          [ rdf:type owl:Class ;
-                            owl:oneOf ( :argm-lvb
-                                        :argm-cau
-                                        :argm-tmp
-                                        :argm-rcl
-                                        :argm-loc
-                                        :argm-gol
-                                        :argm-mod
-                                        :argm-prd
-                                        :argm-com
-                                        :argm-dsp
-                                        :argm-ext
-                                        :argm-adj
-                                        :argm-pnc
-                                        :argm-slc
-                                        :argm-neg
-                                        :argm-rec
-                                        :argm-dis
-                                        :argm-prp
-                                        :argm-dir
-                                        :argm-adv
-                                        :argm-mnr
-                                      )
-                          ] ;
-          
-          owl:disjointWith :NumberedArgument ,
-                           :SecondaryAgent .
+_:node1af412o0qx10 rdf:first pmopb:perfect ;
+	rdf:rest _:node1af412o0qx11 .
 
+_:node1af412o0qx11 rdf:first pmopb:progressive ;
+	rdf:rest rdf:nil .
 
+_:node1af412o0qx12 a owl:Class ;
+	owl:oneOf _:node1af412o0qx13 .
 
-###  http://premon.fbk.eu/ontology/pb#NumberedArgument
+_:node1af412o0qx13 rdf:first pmopb:gerund ;
+	rdf:rest _:node1af412o0qx14 .
 
-:NumberedArgument rdf:type owl:Class ;
-                  
-                  rdfs:label "Numbered Argument (PB)"@en ;
-                  
-                  rdfs:subClassOf :Argument ,
-                                  [ rdf:type owl:Class ;
-                                    owl:oneOf ( :arg4
-                                                :arg3
-                                                :arg2
-                                                :arg1
-                                                :arg0
-                                                :arg5
-                                              )
-                                  ] ;
-                  
-                  owl:disjointWith :SecondaryAgent .
+_:node1af412o0qx14 rdf:first pmopb:full ;
+	rdf:rest _:node1af412o0qx15 .
 
+_:node1af412o0qx15 rdf:first pmopb:participle ;
+	rdf:rest _:node1af412o0qx16 .
 
+_:node1af412o0qx16 rdf:first pmopb:infinitive ;
+	rdf:rest rdf:nil .
 
-###  http://premon.fbk.eu/ontology/pb#Person
+_:node1af412o0qx17 a owl:Class ;
+	owl:oneOf _:node1af412o0qx18 .
 
-:Person rdf:type owl:Class ;
-        
-        rdfs:label "Person"@en ;
-        
-        rdfs:subClassOf [ rdf:type owl:Class ;
-                          owl:oneOf ( :other
-                                      :third
-                                    )
-                        ] .
+_:node1af412o0qx18 rdf:first pmopb:argm-lvb ;
+	rdf:rest _:node1af412o0qx19 .
 
+_:node1af412o0qx19 rdf:first pmopb:argm-cau ;
+	rdf:rest _:node1af412o0qx20 .
 
+_:node1af412o0qx2 rdf:first pmopb:Modifier ;
+	rdf:rest _:node1af412o0qx3 .
 
-###  http://premon.fbk.eu/ontology/pb#Roleset
+_:node1af412o0qx20 rdf:first pmopb:argm-tmp ;
+	rdf:rest _:node1af412o0qx21 .
 
-:Roleset rdf:type owl:Class ;
-         
-         rdfs:label "Roleset (PB)"@en ;
-         
-         rdfs:subClassOf pmo:SemanticClass ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty pmo:semRole ;
-                           owl:allValuesFrom :SemanticRole
-                         ] .
+_:node1af412o0qx21 rdf:first pmopb:argm-rcl ;
+	rdf:rest _:node1af412o0qx22 .
 
+_:node1af412o0qx22 rdf:first pmopb:argm-loc ;
+	rdf:rest _:node1af412o0qx23 .
 
+_:node1af412o0qx23 rdf:first pmopb:argm-gol ;
+	rdf:rest _:node1af412o0qx24 .
 
-###  http://premon.fbk.eu/ontology/pb#SecondaryAgent
+_:node1af412o0qx24 rdf:first pmopb:argm-mod ;
+	rdf:rest _:node1af412o0qx25 .
 
-:SecondaryAgent rdf:type owl:Class ;
-                
-                rdfs:label "Secondary Agent"@en ;
-                
-                rdfs:subClassOf :Argument .
+_:node1af412o0qx25 rdf:first pmopb:argm-prd ;
+	rdf:rest _:node1af412o0qx26 .
 
+_:node1af412o0qx26 rdf:first pmopb:argm-com ;
+	rdf:rest _:node1af412o0qx27 .
 
+_:node1af412o0qx27 rdf:first pmopb:argm-dsp ;
+	rdf:rest _:node1af412o0qx28 .
 
-###  http://premon.fbk.eu/ontology/pb#SemanticRole
+_:node1af412o0qx28 rdf:first pmopb:argm-ext ;
+	rdf:rest _:node1af412o0qx29 .
 
-:SemanticRole rdf:type owl:Class ;
-              
-              rdfs:label "Semantic Role (PB)"@en ;
-              
-              rdfs:subClassOf pmo:SemanticRole ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty [ owl:inverseOf pmo:semRole
-                                               ] ;
-                                owl:allValuesFrom :Roleset
-                              ] ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty :argument ;
-                                owl:someValuesFrom :Argument
-                              ] .
+_:node1af412o0qx29 rdf:first pmopb:argm-adj ;
+	rdf:rest _:node1af412o0qx30 .
 
+_:node1af412o0qx3 rdf:first pmopb:Tag ;
+	rdf:rest _:node1af412o0qx4 .
 
+_:node1af412o0qx30 rdf:first pmopb:argm-pnc ;
+	rdf:rest _:node1af412o0qx31 .
 
-###  http://premon.fbk.eu/ontology/pb#Tag
+_:node1af412o0qx31 rdf:first pmopb:argm-slc ;
+	rdf:rest _:node1af412o0qx32 .
 
-:Tag rdf:type owl:Class ;
-     
-     rdfs:label "Tag"@en .
+_:node1af412o0qx32 rdf:first pmopb:argm-neg ;
+	rdf:rest _:node1af412o0qx33 .
 
+_:node1af412o0qx33 rdf:first pmopb:argm-rec ;
+	rdf:rest _:node1af412o0qx34 .
 
+_:node1af412o0qx34 rdf:first pmopb:argm-dis ;
+	rdf:rest _:node1af412o0qx35 .
 
-###  http://premon.fbk.eu/ontology/pb#Tense
+_:node1af412o0qx35 rdf:first pmopb:argm-prp ;
+	rdf:rest _:node1af412o0qx36 .
 
-:Tense rdf:type owl:Class ;
-       
-       rdfs:label "Tense"@en ;
-       
-       rdfs:subClassOf [ rdf:type owl:Class ;
-                         owl:oneOf ( :future
-                                     :past
-                                     :present
-                                   )
-                       ] .
+_:node1af412o0qx36 rdf:first pmopb:argm-dir ;
+	rdf:rest _:node1af412o0qx37 .
 
+_:node1af412o0qx37 rdf:first pmopb:argm-adv ;
+	rdf:rest _:node1af412o0qx38 .
 
+_:node1af412o0qx38 rdf:first pmopb:argm-mnr ;
+	rdf:rest rdf:nil .
 
-###  http://premon.fbk.eu/ontology/pb#Voice
+_:node1af412o0qx39 a owl:Class ;
+	owl:oneOf _:node1af412o0qx40 .
 
-:Voice rdf:type owl:Class ;
-       
-       rdfs:label "Voice"@en ;
-       
-       rdfs:subClassOf [ rdf:type owl:Class ;
-                         owl:oneOf ( :passive
-                                     :active
-                                   )
-                       ] .
+_:node1af412o0qx4 rdf:first ontolex:LexicalEntry ;
+	rdf:rest rdf:nil .
 
+_:node1af412o0qx40 rdf:first pmopb:arg4 ;
+	rdf:rest _:node1af412o0qx41 .
 
+_:node1af412o0qx41 rdf:first pmopb:arg3 ;
+	rdf:rest _:node1af412o0qx42 .
 
+_:node1af412o0qx42 rdf:first pmopb:arg2 ;
+	rdf:rest _:node1af412o0qx43 .
 
+_:node1af412o0qx43 rdf:first pmopb:arg1 ;
+	rdf:rest _:node1af412o0qx44 .
 
-#################################################################
-#
-#    Individuals
-#
-#################################################################
+_:node1af412o0qx44 rdf:first pmopb:arg0 ;
+	rdf:rest _:node1af412o0qx45 .
 
+_:node1af412o0qx45 rdf:first pmopb:arg5 ;
+	rdf:rest rdf:nil .
 
-###  http://premon.fbk.eu/ontology/pb#active
+_:node1af412o0qx46 a owl:Class ;
+	owl:oneOf _:node1af412o0qx47 .
 
-:active rdf:type :Voice ,
-                 owl:NamedIndividual .
+_:node1af412o0qx47 rdf:first pmopb:other ;
+	rdf:rest _:node1af412o0qx48 .
 
+_:node1af412o0qx48 rdf:first pmopb:third ;
+	rdf:rest rdf:nil .
 
+_:node1af412o0qx49 a owl:Restriction ;
+	owl:onProperty pmo:semRole ;
+	owl:allValuesFrom pmopb:SemanticRole .
 
-###  http://premon.fbk.eu/ontology/pb#arg0
+_:node1af412o0qx5 a owl:Class ;
+	owl:unionOf _:node1af412o0qx6 .
 
-:arg0 rdf:type :NumberedArgument ,
-               owl:NamedIndividual .
+_:node1af412o0qx50 a owl:Restriction ;
+	owl:onProperty _:node1af412o0qx51 ;
+	owl:allValuesFrom pmopb:Roleset .
 
+_:node1af412o0qx51 owl:inverseOf pmo:semRole .
 
+_:node1af412o0qx52 a owl:Restriction ;
+	owl:onProperty pmopb:argument ;
+	owl:someValuesFrom pmopb:Argument .
 
-###  http://premon.fbk.eu/ontology/pb#arg1
+_:node1af412o0qx53 a owl:Class ;
+	owl:oneOf _:node1af412o0qx54 .
 
-:arg1 rdf:type :NumberedArgument ,
-               owl:NamedIndividual .
+_:node1af412o0qx54 rdf:first pmopb:future ;
+	rdf:rest _:node1af412o0qx55 .
 
+_:node1af412o0qx55 rdf:first pmopb:past ;
+	rdf:rest _:node1af412o0qx56 .
 
+_:node1af412o0qx56 rdf:first pmopb:present ;
+	rdf:rest rdf:nil .
 
-###  http://premon.fbk.eu/ontology/pb#arg2
+_:node1af412o0qx57 a owl:Class ;
+	owl:oneOf _:node1af412o0qx58 .
 
-:arg2 rdf:type :NumberedArgument ,
-               owl:NamedIndividual .
+_:node1af412o0qx58 rdf:first pmopb:passive ;
+	rdf:rest _:node1af412o0qx59 .
 
+_:node1af412o0qx59 rdf:first pmopb:active ;
+	rdf:rest rdf:nil .
 
+_:node1af412o0qx6 rdf:first pmopb:Modifier ;
+	rdf:rest _:node1af412o0qx7 .
 
-###  http://premon.fbk.eu/ontology/pb#arg3
+_:node1af412o0qx7 rdf:first pmopb:NumberedArgument ;
+	rdf:rest _:node1af412o0qx8 .
 
-:arg3 rdf:type :NumberedArgument ,
-               owl:NamedIndividual .
+_:node1af412o0qx8 rdf:first pmopb:SecondaryAgent ;
+	rdf:rest rdf:nil .
 
-
-
-###  http://premon.fbk.eu/ontology/pb#arg4
-
-:arg4 rdf:type :NumberedArgument ,
-               owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#arg5
-
-:arg5 rdf:type :NumberedArgument ,
-               owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#arga
-
-:arga rdf:type :SecondaryAgent ,
-               owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-adj
-
-:argm-adj rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-adv
-
-:argm-adv rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-cau
-
-:argm-cau rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-com
-
-:argm-com rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-dir
-
-:argm-dir rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-dis
-
-:argm-dis rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-dsp
-
-:argm-dsp rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-ext
-
-:argm-ext rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-gol
-
-:argm-gol rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-loc
-
-:argm-loc rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-lvb
-
-:argm-lvb rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-mnr
-
-:argm-mnr rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-mod
-
-:argm-mod rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-neg
-
-:argm-neg rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-pnc
-
-:argm-pnc rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-prd
-
-:argm-prd rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-prp
-
-:argm-prp rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-rcl
-
-:argm-rcl rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-rec
-
-:argm-rec rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-slc
-
-:argm-slc rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#argm-tmp
-
-:argm-tmp rdf:type :Modifier ,
-                   owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#full
-
-:full rdf:type :Form ,
-               owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#future
-
-:future rdf:type :Tense ,
-                 owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#gerund
-
-:gerund rdf:type :Form ,
-                 owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#infinitive
-
-:infinitive rdf:type :Form ,
-                     owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#other
-
-:other rdf:type :Person ,
-                owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#participle
-
-:participle rdf:type :Form ,
-                     owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#passive
-
-:passive rdf:type :Voice ,
-                  owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#past
-
-:past rdf:type :Tense ,
-               owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#perfect
-
-:perfect rdf:type :Aspect ,
-                  owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#present
-
-:present rdf:type :Tense ,
-                  owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#progressive
-
-:progressive rdf:type :Aspect ,
-                      owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#tag-pag
-
-:tag-pag rdf:type :Tag ,
-                  owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#tag-ppt
-
-:tag-ppt rdf:type :Tag ,
-                  owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#tag-vsp
-
-:tag-vsp rdf:type :Tag ,
-                  owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/pb#third
-
-:third rdf:type :Person ,
-                owl:NamedIndividual .
-
-
-
-
-###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
-
+_:node1af412o0qx9 a owl:Class ;
+	owl:oneOf _:node1af412o0qx10 .
