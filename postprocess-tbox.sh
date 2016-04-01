@@ -48,3 +48,6 @@ rdfpro @read src/main/owl/core.ttl \
        @unique \
        @transform '=c <http://premon.fbk.eu/resource/tbox>' \
        @write tbox.tql.gz
+
+# generate the PreMOn-all.zip containing also the catalog-001.xml for easy opening in Protege
+zip -FSr src/site/resources/ontology/PreMOn-all.zip src/main/owl/*.xml src/main/owl/*.owl src/main/owl/*.ttl
