@@ -2,15 +2,7 @@ package eu.fbk.dkm.premon.premonitor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.annotation.Nullable;
 
@@ -27,6 +19,7 @@ import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.query.algebra.evaluation.function.hash.MD5;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
@@ -43,6 +36,9 @@ import eu.fbk.rdfpro.util.Hash;
 
 public abstract class Converter {
 
+    protected int added = 0, notadded = 0, total = 0; //todo: remove!!
+    protected int ncon = 0, nclass = 0, nrole = 0;
+
     public static final Logger LOGGER = LoggerFactory.getLogger(Converter.class);
 
     static final Map<String, URI> LANGUAGE_CODES_TO_URIS;
@@ -50,7 +46,7 @@ public abstract class Converter {
     public static final String NAMESPACE = "http://premon.fbk.eu/resource/";
 
     static final URI LE_GRAPH = PM.ENTRIES;
-    //    static final URI EXAMPLE_GRAPH = PM.EXAMPLES;
+    //static final URI EXAMPLE_GRAPH = PM.EXAMPLES;
     protected URI website = null;
     protected String baseResource = null;
 
@@ -452,12 +448,23 @@ public abstract class Converter {
         Preconditions.checkNotNull(class1);
         Preconditions.checkNotNull(class2);
 
-        addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, class1, class2);
+        List<URI> classes = new ArrayList<URI>();
+        classes.add(class1);
+        classes.add(class2);
+        List<URI> conceptualizations = new ArrayList<URI>();
+        if(conceptualization1 != null && conceptualization2 != null){
+            conceptualizations.add(conceptualization1);
+            conceptualizations.add(conceptualization2);
+        }
+
+        addMappings(classes, conceptualizations, null);
+
+        /*addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, class1, class2);
 
         if (conceptualization1 != null && conceptualization2 != null) {
             addSingleMapping(null, prefix, DEFAULT_CON_SUFFIX, conceptualization1,
                     conceptualization2);
-        }
+        }*/
     }
 
     protected void addMappings(URI class1, URI class2, @Nullable URI conceptualization1,
@@ -468,7 +475,21 @@ public abstract class Converter {
         Preconditions.checkNotNull(argument1);
         Preconditions.checkNotNull(argument2);
 
-        URI classMapping = addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, class1, class2);
+        List<URI> classes = new ArrayList<URI>();
+        classes.add(class1);
+        classes.add(class2);
+        List<URI> conceptualizations = new ArrayList<URI>();
+        if(conceptualization1 != null && conceptualization2 != null){
+            conceptualizations.add(conceptualization1);
+            conceptualizations.add(conceptualization2);
+        }
+        List<URI> arguments = new ArrayList<URI>();
+        arguments.add(argument1);
+        arguments.add(argument2);
+
+        addMappings(classes, conceptualizations, arguments);
+
+        /*URI classMapping = addSingleMapping(null, prefix, DEFAULT_PRED_SUFFIX, class1, class2); //old method
         addSingleMapping(classMapping, prefix, DEFAULT_ARG_SUFFIX, argument1, argument2);
 
         if (conceptualization1 != null && conceptualization2 != null) {
@@ -476,9 +497,53 @@ public abstract class Converter {
                     conceptualization1, conceptualization2);
             addSingleMapping(conceptualizationMapping, prefix, DEFAULT_ARG_SUFFIX, argument1,
                     argument2);
-        }
+        }*/
     }
-    
+
+    protected void addMappings(@Nullable List<URI> classes, @Nullable List<URI> conceptualizations, @Nullable List<URI> arguments){
+        int nClasses = classes == null? 0:classes.size();
+        int nConceptualization = conceptualizations == null? 0:conceptualizations.size();
+        int nArguments = arguments == null? 0:arguments.size();
+        URI classMapping, conceptualizationMapping;
+
+        if(nClasses >= 2){
+            classMapping = addMappingFromList(null, prefix, DEFAULT_PRED_SUFFIX, classes);
+			nclass ++;
+            if(nClasses == nArguments){
+            	addMappingFromList(classMapping, prefix, DEFAULT_ARG_SUFFIX, arguments); // roleMapping
+				nrole ++;
+			}
+			if(nClasses == nConceptualization) {
+				conceptualizationMapping = addMappingFromList(null, prefix, DEFAULT_CON_SUFFIX, conceptualizations);
+				ncon++;
+				if (nConceptualization == nArguments) {
+					addMappingFromList(conceptualizationMapping, prefix, DEFAULT_ARG_SUFFIX, arguments); // roleMapping
+				}
+			}
+		}else if(nConceptualization >= 2){
+			addMappingFromList(null, prefix, DEFAULT_CON_SUFFIX, conceptualizations); // conceptualizationMapping
+			ncon++;
+		}
+    }
+
+    protected List<URI> removeNullElements(List<URI> uris){
+        for(int i = 0; i < uris.size(); i++){
+            if(uris.get(i) == null){
+                uris.remove(i);
+            }
+        }
+        return uris;
+    }
+
+    protected URI addMappingFromList(@Nullable URI parentMapping, String prefix, String suffix, List<URI> uris){
+        TreeSet<URI> cluster = new URITreeSet();
+        for (URI uri : uris) {
+            cluster.add(uri);
+        }
+
+        return addMappingToSink(parentMapping, cluster, suffix, prefix);
+    }
+
     protected URI addSingleMapping(@Nullable URI parentMapping, String prefix, String suffix, URI... uris) {
         TreeSet<URI> cluster = new URITreeSet();
         for (URI uri : uris) {
