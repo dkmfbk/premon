@@ -737,9 +737,11 @@ public class Premonitor {
             for (final Map.Entry<URI, QuadModel> entry : map.entrySet()) {
                 final QuadModel model = entry.getValue();
                 for (final URI type : new URI[] { PMO.CONCEPTUALIZATION_MAPPING,
-                        PMO.SEMANTIC_CLASS_MAPPING, PMO.SEMANTIC_ROLE_MAPPING }) {
+                        PMO.SEMANTIC_CLASS_MAPPING, PMO.SEMANTIC_ROLE_MAPPING}) {
                     int numMappingsToDelete = 0;
                     int numMappings = 0;
+                    int mappingsDeletedCompletely = 0;
+                    int referencesRemoved = 0;
                     final Map<String, Integer> numMappingsPerSource = Maps.newHashMap();
                     final List<Statement> stmtsToDelete = Lists.newArrayList();
                     for (final Resource m : model.filter(null, RDF.TYPE, type).subjects()) {
@@ -747,33 +749,52 @@ public class Premonitor {
                         final List<Statement> stmts = ImmutableList.copyOf(model.filter(m, null,
                                 null));
                         boolean valid = true;
+                        final List<Statement> stmtsInvalid = Lists.newArrayList();
                         for (final Statement stmt : stmts) {
                             if (stmt.getPredicate().equals(PMO.ITEM)
                                     && !validItems.contains(stmt.getObject())) {
-                                ++numMappingsToDelete;
-                                final String str = stmt.getObject().stringValue();
-                                for (final String source : models.keySet()) {
-                                    if (str.contains("-" + source + "-")
-                                            || str.contains("/" + source + "-")) {
-                                        numMappingsPerSource.put(source,
-                                                1 + numMappingsPerSource.getOrDefault(source, 0));
+
+                                if (!stmt.getObject().stringValue().contains("-wn31-")) {
+                                    ++numMappingsToDelete;
+                                    final String str = stmt.getObject().stringValue();
+                                    for (final String source : models.keySet()) {
+                                        if (str.contains("-" + source + "-")
+                                                || str.contains("/" + source + "-")) {
+                                            numMappingsPerSource.put(source,
+                                                    1 + numMappingsPerSource.getOrDefault(source, 0));
+                                        }
                                     }
+
+                                    if (numMappingsToDelete <= 10) {
+                                        LOGGER.warn("Removing illegal mapping {} - missing {}", m,
+                                                stmt.getObject());
+                                    } else if (LOGGER.isDebugEnabled()) {
+                                        LOGGER.debug("Removing illegal mapping {} - missing {}", m,
+                                                stmt.getObject());
+                                    } else if (numMappingsToDelete == 11) {
+                                        LOGGER.warn("Omitting further illegal mappings ....");
+                                    }
+                                    stmtsInvalid.add(stmt);
+                                    valid = false;
+                                    break;
                                 }
-                                if (numMappingsToDelete <= 10) {
-                                    LOGGER.warn("Removing illegal mapping {} - missing {}", m,
-                                            stmt.getObject());
-                                } else if (LOGGER.isDebugEnabled()) {
-                                    LOGGER.debug("Removing illegal mapping {} - missing {}", m,
-                                            stmt.getObject());
-                                } else if (numMappingsToDelete == 11) {
-                                    LOGGER.warn("Omitting further illegal mappings ....");
-                                }
-                                valid = false;
-                                break;
                             }
                         }
                         if (!valid) {
-                            stmtsToDelete.addAll(stmts);
+                            int items = 0, itemsInv = 0;
+                            for(final Statement stmt : stmts)
+                                if(stmt.getPredicate().equals(PMO.ITEM))items++;
+                            for(final Statement stmt : stmtsInvalid)
+                                if(stmt.getPredicate().equals(PMO.ITEM))itemsInv++;//useless (all Statement in stmtsInvalid are items)
+                            if(items-itemsInv < 2){
+                                stmtsToDelete.addAll(stmts);
+                                mappingsDeletedCompletely++;
+                                if(numMappingsToDelete <= 10 || LOGGER.isDebugEnabled())LOGGER.info("Removing the complete mapping");
+                            }else {
+                                stmtsToDelete.addAll(stmtsInvalid);
+                                referencesRemoved++;
+                                if(numMappingsToDelete <= 10 || LOGGER.isDebugEnabled())LOGGER.info("Removing only missing reference");
+                            }
                         }
                     }
                     if (numMappingsToDelete > 0) {
@@ -781,12 +802,12 @@ public class Premonitor {
                             model.remove(stmt);
                         }
                         LOGGER.warn(
-                                "{}/{} illegal {} mappings {} removed from {}",
-                                numMappingsToDelete,
+                                "{}/{} illegal {} mappings and {} references {} removed from {}\n############################################################################################################",
+                                mappingsDeletedCompletely,
                                 numMappings,
                                 type.equals(PMO.SEMANTIC_CLASS_MAPPING) ? "semantic class"
                                         : type.equals(PMO.CONCEPTUALIZATION_MAPPING) ? "conceptualization"
-                                                : "semantic role", numMappingsPerSource, entry
+                                                : "semantic role", referencesRemoved, numMappingsPerSource, entry
                                         .getKey());
                     }
                 }
