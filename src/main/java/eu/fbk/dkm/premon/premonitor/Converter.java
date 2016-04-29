@@ -363,7 +363,7 @@ public abstract class Converter {
         return createURI(builder.toString());
     }
 
-    private URI uriForLexicalEntry(String lemma, URI type) {
+    protected URI uriForLexicalEntry(String lemma, URI type) {
         StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
         builder.append(lemmaPart(lemma, type));
@@ -371,6 +371,7 @@ public abstract class Converter {
     }
 
     protected String lemmaPart(String lemma, URI type) {
+        Preconditions.checkNotNull(type);
         StringBuilder builder = new StringBuilder();
         builder.append(LEXINFO.map.get(type));
         builder.append(separator);
@@ -509,14 +510,14 @@ public abstract class Converter {
         if(nClasses >= 2){
             classMapping = addMappingFromList(null, prefix, DEFAULT_PRED_SUFFIX, classes);
 			nclass ++;
-            if(nClasses == nArguments){
+            if(nArguments >= 2){
             	addMappingFromList(classMapping, prefix, DEFAULT_ARG_SUFFIX, arguments); // roleMapping
 				nrole ++;
 			}
-			if(nClasses == nConceptualization) {
+			if(nConceptualization >= 2) {
 				conceptualizationMapping = addMappingFromList(null, prefix, DEFAULT_CON_SUFFIX, conceptualizations);
 				ncon++;
-				if (nConceptualization == nArguments) {
+				if (nArguments >= 2) {
 					addMappingFromList(conceptualizationMapping, prefix, DEFAULT_ARG_SUFFIX, arguments); // roleMapping
 				}
 			}

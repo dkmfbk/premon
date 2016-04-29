@@ -754,30 +754,28 @@ public class Premonitor {
                             if (stmt.getPredicate().equals(PMO.ITEM)
                                     && !validItems.contains(stmt.getObject())) {
 
-                                if (!stmt.getObject().stringValue().contains("-wn31-")) {
-                                    ++numMappingsToDelete;
-                                    final String str = stmt.getObject().stringValue();
-                                    for (final String source : models.keySet()) {
-                                        if (str.contains("-" + source + "-")
-                                                || str.contains("/" + source + "-")) {
-                                            numMappingsPerSource.put(source,
-                                                    1 + numMappingsPerSource.getOrDefault(source, 0));
-                                        }
+                                ++numMappingsToDelete;
+                                final String str = stmt.getObject().stringValue();
+                                for (final String source : models.keySet()) {
+                                    if (str.contains("-" + source + "-")
+                                           || str.contains("/" + source + "-")) {
+                                        numMappingsPerSource.put(source,
+                                                1 + numMappingsPerSource.getOrDefault(source, 0));
                                     }
-
-                                    if (numMappingsToDelete <= 10) {
-                                        LOGGER.warn("Removing illegal mapping {} - missing {}", m,
-                                                stmt.getObject());
-                                    } else if (LOGGER.isDebugEnabled()) {
-                                        LOGGER.debug("Removing illegal mapping {} - missing {}", m,
-                                                stmt.getObject());
-                                    } else if (numMappingsToDelete == 11) {
-                                        LOGGER.warn("Omitting further illegal mappings ....");
-                                    }
-                                    stmtsInvalid.add(stmt);
-                                    valid = false;
-                                    break;
                                 }
+
+                                if (numMappingsToDelete <= 10) {
+                                    LOGGER.warn("Removing illegal mapping {} - missing {}", m,
+                                            stmt.getObject());
+                                } else if (LOGGER.isDebugEnabled()) {
+                                    LOGGER.debug("Removing illegal mapping {} - missing {}", m,
+                                            stmt.getObject());
+                                } else if (numMappingsToDelete == 11) {
+                                    LOGGER.warn("Omitting further illegal mappings ....");
+                                }
+                                stmtsInvalid.add(stmt);
+                                valid = false;
+                                break;
                             }
                         }
                         if (!valid) {

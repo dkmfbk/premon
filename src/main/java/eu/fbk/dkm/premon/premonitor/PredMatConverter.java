@@ -2,12 +2,15 @@ package eu.fbk.dkm.premon.premonitor;
 
 import com.google.common.io.Files;
 import eu.fbk.dkm.premon.vocab.LEXINFO;
+import eu.fbk.dkm.premon.vocab.PMO;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.joox.JOOX;
 import org.joox.Match;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.rio.RDFHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -180,22 +183,7 @@ public class PredMatConverter extends Converter {
 							URI wnSenseURI = wnSense == null || (vnLe == null && fnLe == null)?
 									null : uriForWnSense(wnSense, vnLe==null?fnLe:vnLe);
 
-							if(wnSenseURI != null) {																	// --> Mapping on WordNet
-								conceptualizations.add(wnSenseURI);
-								if (pbConceptualizationURI != null) {
-									conceptualizations.add(pbConceptualizationURI);
-								}
-								if (vnConceptualizationURI != null) {
-									conceptualizations.add(vnConceptualizationURI);
-								}
-								if (fnConceptualizationURI != null) {
-									conceptualizations.add(fnConceptualizationURI);
-								}
-							}																							// Mapping on WordNet -->
 
-							addMappings(null, conceptualizations, null);
-
-							conceptualizations.clear();
 							if(vnClassURI != null){
 								classes.add(vnClassURI);
 							}if(fnFrameURI != null){
@@ -204,35 +192,21 @@ public class PredMatConverter extends Converter {
 								classes.add(pbRolesetURI);
 							}
 
-							addMappings(classes, null, null);
-
-							classes.clear();
-							if(vnClassURI != null && vnConceptualizationURI != null){
-								classes.add(vnClassURI);
+							if(vnConceptualizationURI != null){
 								conceptualizations.add(vnConceptualizationURI);
-							}if(fnFrameURI != null && fnConceptualizationURI != null){
-								classes.add(fnFrameURI);
+							}if(fnConceptualizationURI != null){
 								conceptualizations.add(fnConceptualizationURI);
-							}if(pbRolesetURI != null && fnConceptualizationURI != null){
-								classes.add(pbRolesetURI);
+							}if(fnConceptualizationURI != null){
 								conceptualizations.add(pbConceptualizationURI);
+							}if(wnSenseURI != null) {
+								conceptualizations.add(wnSenseURI);
 							}
 
-							addMappings(classes, conceptualizations, null);
-
-							classes.clear();
-							conceptualizations.clear();
-							if(vnClassURI != null && vnConceptualizationURI != null && vnArgURI != null){
-								classes.add(vnClassURI);
-								conceptualizations.add(vnConceptualizationURI);
+							if(vnArgURI != null){
 								arguments.add(vnArgURI);
-							}if(fnFrameURI != null && fnConceptualizationURI != null && fnArgURI != null){
-								classes.add(fnFrameURI);
-								conceptualizations.add(fnConceptualizationURI);
+							}if(fnArgURI != null){
 								arguments.add(fnArgURI);
-							}if(pbRolesetURI != null && fnConceptualizationURI != null && pbArgURI != null){
-								classes.add(pbRolesetURI);
-								conceptualizations.add(pbConceptualizationURI);
+							}if(pbArgURI != null){
 								arguments.add(pbArgURI);
 							}
 
@@ -326,8 +300,27 @@ public class PredMatConverter extends Converter {
 					continue;
 				}
 
+				String wnuri = wnURI.toString();
+				URI type = null;
+				if(wnuri.endsWith("-v")){
+					type = LEXINFO.VERB;
+				}else if(wnuri.endsWith("-n")){
+					type = LEXINFO.NOUN;
+				}else if(wnuri.endsWith("-r")){
+					type = LEXINFO.ADVERB;
+				}else if(wnuri.endsWith("-a")){
+					type = LEXINFO.ADJECTIVE;
+				}
+
+				URI lexicalEntryURI = uriForLexicalEntry(lemma, type);
+
 				wnConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma,
 						"v", m.group(1), "wn31");
+
+				addStatementToSink(wnConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
+				addStatementToSink(wnConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
+				addStatementToSink(wnConceptualizationURI, RDFS.SEEALSO, reference);
+				addStatementToSink(wnConceptualizationURI, PMO.EVOKED_CONCEPT, wnURI);
 			}
 		}
 		return wnConceptualizationURI;
