@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
@@ -34,6 +35,7 @@ import com.google.common.collect.Multimaps;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
 import com.google.common.io.Resources;
 
 import org.openrdf.model.BNode;
@@ -73,6 +75,7 @@ import eu.fbk.rdfpro.RDFSources;
 import eu.fbk.rdfpro.RuleEngine;
 import eu.fbk.rdfpro.Ruleset;
 import eu.fbk.rdfpro.SetOperator;
+import eu.fbk.rdfpro.util.Hash;
 import eu.fbk.rdfpro.util.IO;
 import eu.fbk.rdfpro.util.QuadModel;
 import eu.fbk.rdfpro.util.Statements;
@@ -561,21 +564,21 @@ public class Premonitor {
                     "  %-10s %-10s %-10s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s", "from", "to",
                     "resource", "con", "class", "role", "other", "con", "class", "role", "other"));
             for (final String from : sourceKeys) {
-                final AtomicInteger z = new AtomicInteger(0);
+                final Integer z = new Integer(0);
                 for (final String to : sourceKeys) {
                     for (final String resource : Iterables.concat(models.keySet(),
                             ImmutableList.of("all"))) {
                         final MappingStatistics ms = msAfter.get(resource);
                         final MappingStatistics msb = msBefore.get(resource);
                         final int nx, nc, nr, no, nxb, ncb, nrb, nob;
-                        nx = MoreObjects.firstNonNull(ms.conMappings.get(from, to), z).get();
-                        nc = MoreObjects.firstNonNull(ms.classMappings.get(from, to), z).get();
-                        nr = MoreObjects.firstNonNull(ms.roleMappings.get(from, to), z).get();
-                        no = MoreObjects.firstNonNull(ms.otherMappings.get(from, to), z).get();
-                        nxb = MoreObjects.firstNonNull(msb.conMappings.get(from, to), z).get();
-                        ncb = MoreObjects.firstNonNull(msb.classMappings.get(from, to), z).get();
-                        nrb = MoreObjects.firstNonNull(msb.roleMappings.get(from, to), z).get();
-                        nob = MoreObjects.firstNonNull(msb.otherMappings.get(from, to), z).get();
+                        nx = MoreObjects.firstNonNull(ms.conMappings.get(from, to), z);
+                        nc = MoreObjects.firstNonNull(ms.classMappings.get(from, to), z);
+                        nr = MoreObjects.firstNonNull(ms.roleMappings.get(from, to), z);
+                        no = MoreObjects.firstNonNull(ms.otherMappings.get(from, to), z);
+                        nxb = MoreObjects.firstNonNull(msb.conMappings.get(from, to), z);
+                        ncb = MoreObjects.firstNonNull(msb.classMappings.get(from, to), z);
+                        nrb = MoreObjects.firstNonNull(msb.roleMappings.get(from, to), z);
+                        nob = MoreObjects.firstNonNull(msb.otherMappings.get(from, to), z);
                         if (nxb + ncb + nrb + nob > 0) {
                             LOGGER.info(String.format(
                                     "  %-10s %-10s %-10s %-9d %-9d %-9d %-9d %-9d %-9d %-9d %-9d",
@@ -737,7 +740,7 @@ public class Premonitor {
             for (final Map.Entry<URI, QuadModel> entry : map.entrySet()) {
                 final QuadModel model = entry.getValue();
                 for (final URI type : new URI[] { PMO.CONCEPTUALIZATION_MAPPING,
-                        PMO.SEMANTIC_CLASS_MAPPING, PMO.SEMANTIC_ROLE_MAPPING}) {
+                        PMO.SEMANTIC_CLASS_MAPPING, PMO.SEMANTIC_ROLE_MAPPING }) {
                     int numMappingsToDelete = 0;
                     int numMappings = 0;
                     int mappingsDeletedCompletely = 0;
@@ -758,7 +761,7 @@ public class Premonitor {
                                 final String str = stmt.getObject().stringValue();
                                 for (final String source : models.keySet()) {
                                     if (str.contains("-" + source + "-")
-                                           || str.contains("/" + source + "-")) {
+                                            || str.contains("/" + source + "-")) {
                                         numMappingsPerSource.put(source,
                                                 1 + numMappingsPerSource.getOrDefault(source, 0));
                                     }
@@ -780,18 +783,28 @@ public class Premonitor {
                         }
                         if (!valid) {
                             int items = 0, itemsInv = 0;
-                            for(final Statement stmt : stmts)
-                                if(stmt.getPredicate().equals(PMO.ITEM))items++;
-                            for(final Statement stmt : stmtsInvalid)
-                                if(stmt.getPredicate().equals(PMO.ITEM))itemsInv++;//useless (all Statement in stmtsInvalid are items)
-                            if(items-itemsInv < 2){
+                            for (final Statement stmt : stmts) {
+                                if (stmt.getPredicate().equals(PMO.ITEM)) {
+                                    items++;
+                                }
+                            }
+                            for (final Statement stmt : stmtsInvalid) {
+                                if (stmt.getPredicate().equals(PMO.ITEM)) {
+                                    itemsInv++;//useless (all Statement in stmtsInvalid are items)
+                                }
+                            }
+                            if (items - itemsInv < 2) {
                                 stmtsToDelete.addAll(stmts);
                                 mappingsDeletedCompletely++;
-                                if(numMappingsToDelete <= 10 || LOGGER.isDebugEnabled())LOGGER.info("Removing the complete mapping");
-                            }else {
+                                if (numMappingsToDelete <= 10 || LOGGER.isDebugEnabled()) {
+                                    LOGGER.info("Removing the complete mapping");
+                                }
+                            } else {
                                 stmtsToDelete.addAll(stmtsInvalid);
                                 referencesRemoved++;
-                                if(numMappingsToDelete <= 10 || LOGGER.isDebugEnabled())LOGGER.info("Removing only missing reference");
+                                if (numMappingsToDelete <= 10 || LOGGER.isDebugEnabled()) {
+                                    LOGGER.info("Removing only missing reference");
+                                }
                             }
                         }
                     }
@@ -805,8 +818,8 @@ public class Premonitor {
                                 numMappings,
                                 type.equals(PMO.SEMANTIC_CLASS_MAPPING) ? "semantic class"
                                         : type.equals(PMO.CONCEPTUALIZATION_MAPPING) ? "conceptualization"
-                                                : "semantic role", referencesRemoved, numMappingsPerSource, entry
-                                        .getKey());
+                                                : "semantic role", referencesRemoved,
+                                numMappingsPerSource, entry.getKey());
                     }
                 }
             }
@@ -929,21 +942,21 @@ public class Premonitor {
 
     private static final class MappingStatistics {
 
-        final Table<String, String, AtomicInteger> conMappings;
+        final Table<String, String, Integer> conMappings;
 
-        final Table<String, String, AtomicInteger> classMappings;
+        final Table<String, String, Integer> classMappings;
 
-        final Table<String, String, AtomicInteger> roleMappings;
+        final Table<String, String, Integer> roleMappings;
 
-        final Table<String, String, AtomicInteger> otherMappings;
+        final Table<String, String, Integer> otherMappings;
 
         public MappingStatistics(final Iterable<? extends QuadModel> models,
                 final Iterable<String> sources) {
 
-            this.conMappings = HashBasedTable.create();
-            this.classMappings = HashBasedTable.create();
-            this.roleMappings = HashBasedTable.create();
-            this.otherMappings = HashBasedTable.create();
+            final Table<String, String, Set<Hash>> conHashes = HashBasedTable.create();
+            final Table<String, String, Set<Hash>> classHashes = HashBasedTable.create();
+            final Table<String, String, Set<Hash>> roleHashes = HashBasedTable.create();
+            final Table<String, String, Set<Hash>> otherHashes = HashBasedTable.create();
 
             final List<String> sourceKeys = ImmutableList.copyOf(sources);
             final List<Pattern> sourcePatterns = ImmutableList.copyOf(sourceKeys.stream()
@@ -952,48 +965,64 @@ public class Premonitor {
             for (final QuadModel model : models) {
                 for (final Resource mapping : model.filter(null, RDF.TYPE, PMO.MAPPING).subjects()) {
 
-                    final Table<String, String, AtomicInteger> table;
+                    final Table<String, String, Set<Hash>> hashes;
                     if (model.contains(mapping, RDF.TYPE, PMO.CONCEPTUALIZATION_MAPPING)) {
-                        table = this.conMappings;
+                        hashes = conHashes;
                     } else if (model.contains(mapping, RDF.TYPE, PMO.SEMANTIC_CLASS_MAPPING)) {
-                        table = this.classMappings;
+                        hashes = classHashes;
                     } else if (model.contains(mapping, RDF.TYPE, PMO.SEMANTIC_ROLE_MAPPING)) {
-                        table = this.roleMappings;
+                        hashes = roleHashes;
                     } else {
-                        table = this.otherMappings;
+                        hashes = otherHashes;
                     }
 
-                    final Set<String> mappedSources = Sets.newHashSet();
+                    final Map<String, String> items = Maps.newHashMap();
                     for (final Value item : model.filter(mapping, PMO.ITEM, null).objects()) {
                         final String str = item.stringValue();
                         for (int i = 0; i < sourceKeys.size(); ++i) {
                             if (sourcePatterns.get(i).matcher(str).find()) {
-                                mappedSources.add(sourceKeys.get(i));
+                                items.put(sourceKeys.get(i), item.stringValue());
                             }
                         }
                     }
 
-                    for (final String fromSource : mappedSources) {
-                        for (final String toSource : mappedSources) {
+                    for (final String fromSource : items.keySet()) {
+                        for (final String toSource : items.keySet()) {
                             if (fromSource.compareTo(toSource) < 0) {
-                                AtomicInteger counter = table.get(fromSource, toSource);
-                                if (counter == null) {
-                                    counter = new AtomicInteger(0);
-                                    table.put(fromSource, toSource, counter);
-                                }
-                                counter.incrementAndGet();
+                                addHash(hashes, fromSource, toSource, items.get(fromSource), "|",
+                                        items.get(toSource));
                             }
                         }
                     }
 
-                    AtomicInteger counter = table.get("all", "all");
-                    if (counter == null) {
-                        counter = new AtomicInteger(0);
-                        table.put("all", "all", counter);
-                    }
-                    counter.incrementAndGet();
+                    addHash(hashes, "all", "all",
+                            Joiner.on('|').join(Ordering.natural().sortedCopy(items.values())));
                 }
             }
+
+            this.conMappings = countHashes(conHashes);
+            this.classMappings = countHashes(classHashes);
+            this.roleMappings = countHashes(roleHashes);
+            this.otherMappings = countHashes(otherHashes);
+        }
+
+        private static void addHash(final Table<String, String, Set<Hash>> hashes,
+                final String row, final String col, final String... hashedStrings) {
+            Set<Hash> set = hashes.get(row, col);
+            if (set == null) {
+                set = Sets.newHashSet();
+                hashes.put(row, col, set);
+            }
+            set.add(Hash.murmur3(hashedStrings));
+        }
+
+        private static Table<String, String, Integer> countHashes(
+                final Table<String, String, Set<Hash>> hashes) {
+            final Table<String, String, Integer> counts = HashBasedTable.create();
+            for (final Cell<String, String, Set<Hash>> cell : hashes.cellSet()) {
+                counts.put(cell.getRowKey(), cell.getColumnKey(), cell.getValue().size());
+            }
+            return counts;
         }
 
     }
