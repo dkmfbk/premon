@@ -171,17 +171,17 @@ public class PredMatConverter extends Converter {
 									null : uriForConceptualizationWithPrefix(fnLe, DEFAULT_TYPE, fnSc, fnLink);
 							String oldArgumentSeparator = argumentSeparator;
 							argumentSeparator = "@";
-							URI fnArgURI = fnSr == null? null : uriForArgument(fnSc, fnSr, fnLink);
+							URI fnArgURI = fnSr == null || fnSc == null? null : uriForArgument(fnSc, fnSr, fnLink);
 							argumentSeparator = oldArgumentSeparator;
 
 							URI pbRolesetURI = pbSc == null? null : uriForRoleset(pbSc, pbLink);
 							URI pbConceptualizationURI = pbSc == null?
-									null : uriForConceptualizationWithPrefix(pbSc.substring(0, pbSc.length()-3),
+									null : uriForConceptualizationWithPrefix(pbSc.substring(0, pbSc.indexOf(".")),
 													DEFAULT_TYPE, pbSc, pbLink);
 							URI pbArgURI = pbSr == null || pbSc == null? null : uriForArgument(pbSc, pbSr, pbLink);
 
-							URI wnSenseURI = wnSense == null || (vnLe == null && fnLe == null)?
-									null : uriForWnSense(wnSense, vnLe==null?fnLe:vnLe);
+							URI wnSenseURI = wnSense == null?
+									null : uriForWnSense(wnSense, wnSense.substring(0,wnSense.indexOf("%")));
 
 
 							if(vnClassURI != null){
@@ -196,7 +196,7 @@ public class PredMatConverter extends Converter {
 								conceptualizations.add(vnConceptualizationURI);
 							}if(fnConceptualizationURI != null){
 								conceptualizations.add(fnConceptualizationURI);
-							}if(fnConceptualizationURI != null){
+							}if(pbConceptualizationURI != null){
 								conceptualizations.add(pbConceptualizationURI);
 							}if(wnSenseURI != null) {
 								conceptualizations.add(wnSenseURI);
