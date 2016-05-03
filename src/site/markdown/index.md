@@ -27,14 +27,14 @@ PreMOn consists of an **OWL ontology** for modelling **semantic classes** with t
 
 - modular [OWL ontology](ontology.html) (core module with extension for each predicate model)
 - based on [lemon](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification) by the [Ontology-Lexica Community Group](https://www.w3.org/community/ontolex/) at W3C
-- [dataset](download.html) with [VOID](http://www.w3.org/TR/void/) statistics available for [PropBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) (1.7 and 2.1.5), [NomBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) (1.0), [VerbNet](https://verbs.colorado.edu/~mpalmer/projects/verbnet.html) (3.2), [FrameNet](https://framenet.icsi.berkeley.edu/fndrupal/) (1.5 and 1.6), and [SemLink](https://verbs.colorado.edu/semlink/) (1.2.2c)
+- [dataset](download.html) with [VOID](http://www.w3.org/TR/void/) statistics available for [PropBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) (1.7 and 2.1.5), [NomBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) (1.0), [VerbNet](https://verbs.colorado.edu/~mpalmer/projects/verbnet.html) (3.2), [FrameNet](https://framenet.icsi.berkeley.edu/fndrupal/) (1.5 and 1.6), [SemLink](https://verbs.colorado.edu/semlink/) (1.2.2c), and [PredicateMatrix](http://adimen.si.ehu.es/web/PredicateMatrix) (1.3)
 - SPARQL [endpoint](query.html) with web interface
 - URI dereferencing and navigation using [lodview](https://github.com/dvcama/LodView)
 - [premonitor](premonitor.html) software for converting original resources
 
-
 ### News
 
+- 2016-05-02 Added PredicateMatrix 1.3
 - 2016-03-10 [Manuscript](https://dkm-static.fbk.eu/people/rospocher/files/pubs/2016lrec1.pdf) of the LREC2016 paper available
 - 2016-03-10 Added FrameNet, VerbNet, SemLink
 - 2016-01-26 Paper accepted at [LREC2016](http://lrec2016.lrec-conf.org/en/).

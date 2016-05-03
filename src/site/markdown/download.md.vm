@@ -98,6 +98,16 @@ For each dataset, we provide, splitted among CORE resource data and EXAMPLE data
 <td></td>
 </tr>
 
+<tr>
+    <td>PredicateMatrix 1.3 (from <a href="http://adimen.si.ehu.es/web/files/PredicateMatrix/PredicateMatrix.v1.3.tar.gz">here</a>)</td>
+    <td><a href="${site-download}latest/premon-${premon-version}-pm13-noinf.tql.gz"><img src="images/favicon.png" alt="Download" style="width: 20%"/></a> (332031)</td>
+    <td></td>
+    <td><a href="${site-download}latest/premon-${premon-version}-pm13-inf.tql.gz"><img src="images/favicon.png" alt="Download" style="width: 20%"/></a> (396776)</td>
+    <td></td>
+    <td><a href="${site-download}latest/premon-${premon-version}-pm13-stats.tql.gz"><img src="images/favicon.png" alt="Download" style="width: 20%"/></a> (374)</td>
+    <td></td>
+</tr>
+
 </tbody>
 </table>
 <a style="display: block; width: 100%; text-align: right;" href="${site-download}">[browse old versions]</a>
@@ -115,6 +125,7 @@ Triples are placed in different named graphs that can be used when querying to s
   * **`pm:fn15`** contains semantic classes, semantic roles and examples specific to [FrameNet 1.5](https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex)
   * **`pm:fn16`** contains semantic classes, semantic roles and examples specific to [FrameNet 1.6](https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex)
   * **`pm:sl122`** contains mappings between conceptualizations and semantic roles provided by [SemLink 1.2.2c](https://verbs.colorado.edu/semlink/versions/1.2.2c.zip)
+  * **`pm:pm13`** contains mappings between conceptualizations, semantic classes, and semantic roles provided by [PredicateMatrix 1.3](http://adimen.si.ehu.es/web/files/PredicateMatrix/PredicateMatrix.v1.3.tar.gz)
 
 Examples are placed in further separated graphs obtained suffixing **`-ex`**  to the resource URI (e.g., **`pm:nb10-ex`**).
 

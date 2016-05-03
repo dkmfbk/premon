@@ -32,6 +32,7 @@ Here are some URIs you can retrieve with your browser or client (e.g., `wget`) t
   * Mapping:
       * (SemLink) VerbNet - FrameNet: [conceptualization](http://premon.fbk.eu/resource/con-A-0q7lhtJIGF4tIh8fcSF9) and [semantic role](http://premon.fbk.eu/resource/arg-EguUonKJcWUBcGcppTJPNU)
       * (SemLink) VerbNet - PropBank: [conceptualization](http://premon.fbk.eu/resource/con-A147cm2rrYvJ7FrPP1_abL) and [semantic role](http://premon.fbk.eu/resource/arg-Cm29KepxlJ-PJ7gxposV-e)
+      * (PredicateMatrix) VerbNet - FrameNet - PropBank (and WordNet): [conceptualization](http://premon.fbk.eu/resource/con-ChMADAVoodfK1Vr3b_yTA0), [semantic class](http://premon.fbk.eu/resource/pred-PuSNb4psBxuDFWKHW82rlo) and [semantic role](http://premon.fbk.eu/resource/arg-OfQZSz4AEb9OqMIRZNx23E)
       * (PropBank) PropBank - VerbNet: [conceptualization](http://premon.fbk.eu/resource/con-EnGvYz0-JxAEgioTU_Dx7B) and [semantic role](http://premon.fbk.eu/resource/arg-HCBxgS1GmR_IKKXdogxkWN)
       * (PropBank) PropBank - FrameNet: [conceptualization](http://premon.fbk.eu/resource/con-BZIGuFUnTUFNv94IiSTzh2)
       * (NomBank) NomBank - PropBank: [conceptualization](http://premon.fbk.eu/resource/con-A-GMtLZb2HgJdwIkW2QJXe) and [semantic role](http://premon.fbk.eu/resource/arg-IwjnkbGi2ESF-uzgHVXDnZ)

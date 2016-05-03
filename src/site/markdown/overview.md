@@ -5,11 +5,11 @@ PreMOn overview
 ### What is PreMOn?
 
 
-**PreMOn** (*PRedicate Model for ONtologies*) is a linguistic resource for representing predicate models (i.e., [PropBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html), [NomBank](http://nlp.cs.nyu.edu/meyers/NomBank.html), [VerbNet](https://verbs.colorado.edu/~mpalmer/projects/verbnet.html), [FrameNet](https://framenet.icsi.berkeley.edu/fndrupal/)), their annotations, the mappings between them (e.g, [SemLink](https://verbs.colorado.edu/semlink/), [PredicateMatrix](adimen.si.ehu.es/web/PredicateMatrix)), and the mappings to frame-based ontologies in RDF/OWL. PreMOn consists of two components:
+**PreMOn** (*PRedicate Model for ONtologies*) is a linguistic resource for representing predicate models (i.e., [PropBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html), [NomBank](http://nlp.cs.nyu.edu/meyers/NomBank.html), [VerbNet](https://verbs.colorado.edu/~mpalmer/projects/verbnet.html), [FrameNet](https://framenet.icsi.berkeley.edu/fndrupal/)), their annotations, the mappings between them (e.g, [SemLink](https://verbs.colorado.edu/semlink/), [PredicateMatrix](http://adimen.si.ehu.es/web/PredicateMatrix)), and the mappings to frame-based ontologies in RDF/OWL. PreMOn consists of two components:
 
 1. the [PreMOn Ontology](ontology.html), an OWL 2 ontology that extends [lemon](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification) (by the W3C Ontology Lexicon Community Group) for modeling the core concepts of semantic class (i.e., roleset in PropBank and NomBank, verb class in VerbNet, and frame in FrameNet), semantic role, mapping, and annotation common to all predicate models; and,
 
-2. the [PreMOn Dataset](download.html), a freely-available, interlinked RDF dataset containing the PropBank, NomBank, VerbNet, and FrameNet predicate model data (in various versions), the examples provided with the original resources, and the SemLink mappings, published online as Linked Open Data according to the PreMOn Ontology.
+2. the [PreMOn Dataset](download.html), a freely-available, interlinked RDF dataset containing the PropBank, NomBank, VerbNet, and FrameNet predicate model data (in various versions), the examples provided with the original resources, and the SemLink and PredicateMatrix mappings, published online as Linked Open Data according to the PreMOn Ontology.
 
 Compared to the current situation where each predicate model has its own proprietary XML format, PreMOn brings several benefits to users of predicate models:
 
@@ -86,8 +86,9 @@ We applied the conversion suite on a large collection of resources, producing a 
 * FrameNet v1.5 (fn15)
 * FrameNet v1.6 (fn16)
 * SemLink 1.2.2c (sl122c)
+* PredicateMatrix 1.3 (pm13)
 
-The PreMOn Dataset contains the mappings between semantic classes and roles provided by each predicate model and SemLink, as well as the mappings between VerbNet classes and lexical senses in WordNet 3.1 (wn31) and OntoNotes 5 groupings.
+The PreMOn Dataset contains the mappings between semantic classes and roles provided by each predicate model, SemLink and the PredicateMatrix, as well as the mappings between VerbNet classes and lexical senses in WordNet 3.1 (wn31) and OntoNotes 5 groupings.
 
 By adopting an homogeneous schema for heterogeneous predicate models, PreMOn facilitates the joint querying of content from different resources. For instance, a query like
 

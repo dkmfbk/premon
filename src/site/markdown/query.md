@@ -12,7 +12,8 @@ The following named graphs are available, with their content included by default
  `pm:vn32` for VerbNet 3.2 data;
  `pm:fn15` for FrameNet 1.5 data;
  `pm:fn16` for FrameNet 1.6 data;
- `pm:sl122c` for SemLink 1.2.2c data.
+ `pm:sl122c` for SemLink 1.2.2c data;
+ `pm:pm13` for PredicateMatrix 1.3 data.
 
 To run the query, hit the triangle button on the top right corner of the query form.
 
