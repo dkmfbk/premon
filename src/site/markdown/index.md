@@ -36,6 +36,7 @@ PreMOn consists of an **OWL ontology** for modelling **semantic classes** with t
 
 - 2016-05-04 PreMOn 2016.b released
 - 2016-05-02 Added PredicateMatrix 1.3
+- 2016-04-08 PreMOn is on [DataHub](https://datahub.io/dataset/premon)
 - 2016-03-10 [Manuscript](https://dkm-static.fbk.eu/people/rospocher/files/pubs/2016lrec1.pdf) of the LREC2016 paper available
 - 2016-03-10 Added FrameNet, VerbNet, SemLink
 - 2016-01-26 Paper accepted at [LREC2016](http://lrec2016.lrec-conf.org/en/).
