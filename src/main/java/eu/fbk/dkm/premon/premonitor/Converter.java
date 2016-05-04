@@ -25,6 +25,7 @@ import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.fbk.dkm.premon.util.Replacer;
 import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.DECOMP;
 import eu.fbk.dkm.premon.vocab.LEXINFO;
@@ -35,6 +36,16 @@ import eu.fbk.dkm.premon.vocab.PMO;
 import eu.fbk.rdfpro.util.Hash;
 
 public abstract class Converter {
+
+    protected static final Replacer REPLACER;
+
+    static {
+        try {
+            REPLACER = new Replacer("classpath:/eu/fbk/dkm/premon/premonitor/replacements");
+        } catch (IOException ex) {
+            throw new Error(ex);
+        }
+    }
 
     protected int added = 0, notadded = 0, total = 0; //todo: remove!!
     protected int ncon = 0, nclass = 0, nrole = 0;

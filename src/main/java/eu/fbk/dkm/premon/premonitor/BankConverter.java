@@ -229,7 +229,8 @@ public abstract class BankConverter extends Converter {
                 for (Object predicate : noteOrPredicate) {
                     if (predicate instanceof Predicate) {
 
-                        String uriLemma = getLemmaFromPredicateName(((Predicate) predicate).getLemma());
+                        String replacedLemma = REPLACER.apply(((Predicate)predicate).getLemma(), this.baseResource, "lemma", file.getName());
+                        String uriLemma = getLemmaFromPredicateName(replacedLemma);
                         String goodLemma = uriLemma.replaceAll("\\+", " ");
 
                         List<String> tokens = new ArrayList<>();
@@ -243,7 +244,7 @@ public abstract class BankConverter extends Converter {
                         List<Object> noteOrRoleset = ((Predicate) predicate).getNoteOrRoleset();
                         for (Object roleset : noteOrRoleset) {
                             if (roleset instanceof Roleset) {
-                                String rolesetID = ((Roleset) roleset).getId();
+                                String rolesetID = REPLACER.apply(((Roleset) roleset).getId(), this.baseResource, "predicate", file.getName());
 
                                 if (rolesetBugMap.containsKey(rolesetID)) {
                                     rolesetID = rolesetBugMap.get(rolesetID);
