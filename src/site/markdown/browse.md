@@ -21,9 +21,9 @@ Here are some URIs you can retrieve with your browser or client (e.g., `wget`) t
   * Lexical Entry: [http://premon.fbk.eu/resource/v-look](http://premon.fbk.eu/resource/v-look)
   * Semantic Class
       * PropBank Roleset: [http://premon.fbk.eu/resource/pb17-look.01](http://premon.fbk.eu/resource/pb17-look.01)
-      * NomBank Roleset: [http://premon.fbk.eu/resource/nb10-look.01.html](http://premon.fbk.eu/resource/nb10-look.01.html)
+      * NomBank Roleset: [http://premon.fbk.eu/resource/nb10-look.01](http://premon.fbk.eu/resource/nb10-look.01)
       * VerbNet Class: [http://premon.fbk.eu/resource/vn32-stimulus_subject-30.4](http://premon.fbk.eu/resource/vn32-stimulus_subject-30.4)
-      * FrameNet Frame: [http://premon.fbk.eu/resource/fn15-seeking.html](http://premon.fbk.eu/resource/fn15-seeking.html)
+      * FrameNet Frame: [http://premon.fbk.eu/resource/fn15-seeking](http://premon.fbk.eu/resource/fn15-seeking)
   * Semantic Role
       * PropBank Semantic Role: [http://premon.fbk.eu/resource/pb17-look.01-arg0](http://premon.fbk.eu/resource/pb17-look.01-arg0)
       * NomBank Semantic Role: [http://premon.fbk.eu/resource/nb10-look.01-arg0](http://premon.fbk.eu/resource/nb10-look.01-arg0)
@@ -42,6 +42,6 @@ Here are some URIs you can retrieve with your browser or client (e.g., `wget`) t
       * PropBank: [http://premon.fbk.eu/resource/pb17-look.01-example_LJfSq7Uz](http://premon.fbk.eu/resource/pb17-look.01-example_LJfSq7Uz)
       * NomBank: [http://premon.fbk.eu/resource/nb10-look.01-example_DNhmvHaf](http://premon.fbk.eu/resource/nb10-look.01-example_DNhmvHaf)
       * VerbNet: [http://premon.fbk.eu/resource/vn32-stimulus_subject-30.4_frame_1_ex](http://premon.fbk.eu/resource/vn32-stimulus_subject-30.4_frame_1_ex)
-      * FrameNet: [http://premon.fbk.eu/resource/fn15-example_779332.html](http://premon.fbk.eu/resource/fn15-example_779332.html)
+      * FrameNet: [http://premon.fbk.eu/resource/fn15-example_779332](http://premon.fbk.eu/resource/fn15-example_779332)
 
 This feature is powered by [OpenLink Virtuoso](https://github.com/openlink/virtuoso-opensource) and [LodView](https://github.com/dvcama/LodView).
