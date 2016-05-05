@@ -1,4 +1,0 @@
-- create ontologies from source with: postprocess-tbox.sh
-- generate site: mvn site:site site:deploy -DskipTests -Prelease
-- deploy web-site
-- generate (and load) HTML of ontology: createLODE+uploadOnServer.sh
