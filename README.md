@@ -10,11 +10,7 @@ PREMON is released using the Maven paradigm. To install it, just type into the s
 * `git checkout -b develop origin/develop` (to use the latest code from the `develop` branch)
 * `mvn clean package -DskipTests -Prelease`
 * `cd target`
-<<<<<<< HEAD
-* `tar xf premon-1.0-SNAPSHOT-bin.tar.gz`
-=======
 * `tar xf premon-*-bin.tar.gz #where * refers to the version`
->>>>>>> release-1.0
 * `cd premon`
 
 Now you can start the tool by simply use the `./premonitor` command.
@@ -54,10 +50,7 @@ Here is the list of available sub-directories of `resources` with the indication
   * `framenet-1.5` - put here the contents of the `fndata-1.5` folder in the archive obtainable from this  [page](https://framenet.icsi.berkeley.edu/fndrupal/framenet_request_data)
   * `framenet-1.6` - put here the contents of the `fndata-1.6` folder in the archive obtainable from this [page](https://framenet.icsi.berkeley.edu/fndrupal/framenet_request_data)
   * `nombank-1.0` - put here the contents of the `nombank.1.0.tgz` archive downloadable from this [link](http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz) in this [page](http://nlp.cs.nyu.edu/meyers/NomBank.html)
-<<<<<<< HEAD
-=======
   * `pm-1.3` - put here the content of the `PredicateMatrix.v1.3.tar.gz` archive downloadable from this [link](http://adimen.si.ehu.es/web/files/PredicateMatrix/PredicateMatrix.v1.3.tar.gz) in this [page](http://adimen.si.ehu.es/web/PredicateMatrix/)
->>>>>>> release-1.0
   * `propbank-1.7` - put here the contents of the `propbank-1.7.tar.gz' archive downloadable from this [link](http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz) in this [page](http://verbs.colorado.edu/verb-index/index.php)
   * `propbank-2.1.5` - put here the contents of the `v2.1.5.tar.gz' archive downloadable from this [link](https://github.com/propbank/propbank-frames/archive/v2.1.5.tar.gz) in this [page](https://github.com/propbank/propbank-frames/releases/tag/v2.1.5)
   * `semlink-1.2.2c` - put here the content of the `1.2.2c.zip` archive downloadable from this [link](https://verbs.colorado.edu/semlink/versions/1.2.2c.zip) in this [page](https://verbs.colorado.edu/semlink/)
