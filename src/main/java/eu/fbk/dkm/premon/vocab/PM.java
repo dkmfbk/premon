@@ -21,11 +21,23 @@ public final class PM {
 
     // Classes
 
+    /** Class pm:Resource. */
+    public static final URI RESOURCE = createURI("Resource");
+
+    /** Class pm:Example. */
+    public static final URI EXAMPLE = createURI("Example");
+
     /** Class pm:meta. */
     public static final URI META = createURI("meta");
 
     /** Class pm:entries. */
     public static final URI ENTRIES = createURI("entries");
+
+    /** Class pm:examples. */
+    public static final URI EXAMPLES = createURI("examples");
+    
+    /** Class pm:tbox. */
+    public static final URI TBOX = createURI("tbox");
 
     // Utility methods
 

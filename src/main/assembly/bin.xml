@@ -14,6 +14,10 @@
             <directoryMode>0755</directoryMode>
         </fileSet>
         <fileSet>
+            <directory>src/main/config</directory>
+            <outputDirectory>.</outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>.</directory>
             <outputDirectory>.</outputDirectory>
             <includes>
@@ -24,29 +28,98 @@
             </includes>
         </fileSet>
 
+        <!-- Output -->
+        <fileSet>
+            <outputDirectory>./output</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
+        
         <!-- Resources -->
         <fileSet>
-            <outputDirectory>./PropBank17</outputDirectory>
-            <directory>src/main/resources</directory>
-            <includes>
-                <include>frameset.dtd</include>
-            </includes>
+            <outputDirectory>./resources</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
-            <outputDirectory>./PropBankON5</outputDirectory>
-            <directory>src/main/resources</directory>
-            <includes>
-                <include>frameset.dtd</include>
-            </includes>
+            <outputDirectory>./resources/propbank-1.7</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+            <!-- <directory>src/main/resources</directory> -->
+            <!-- <includes> -->
+            <!-- <include>frameset.dtd</include> -->
+            <!-- </includes> -->
         </fileSet>
         <fileSet>
-            <outputDirectory>./NomBank10</outputDirectory>
-            <directory>src/main/resources</directory>
-            <includes>
-                <include>frameset.dtd</include>
-            </includes>
+            <outputDirectory>./resources/propbank-ontonotes5</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+            <!-- <directory>src/main/resources</directory> -->
+            <!-- <includes> -->
+            <!-- <include>frameset.dtd</include> -->
+            <!-- </includes> -->
         </fileSet>
-
+        <fileSet>
+            <outputDirectory>./resources/nombank-1.0</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+            <!-- <directory>src/main/resources</directory> -->
+            <!-- <includes> -->
+            <!-- <include>frameset.dtd</include> -->
+            <!-- </includes> -->
+        </fileSet>
+        <fileSet>
+            <outputDirectory>./resources/verbnet-3.2</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>./resources/framenet-1.5</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>./resources/framenet-1.6</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>./resources/semlink-1.2.2c</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>./resources/wordnet-3.0</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>./resources/wordnet-3.1</outputDirectory>
+            <directory>src/main/assembly</directory>
+            <excludes>
+                <exclude>*/**</exclude>
+            </excludes>
+        </fileSet>
     </fileSets>
     <dependencySets>
         <dependencySet>

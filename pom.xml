@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,11 +12,12 @@
     </parent>
 
     <artifactId>premon</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <name>premon</name>
     <description>Predicate model for ontologies</description>
     <inceptionYear>2015</inceptionYear>
+    <url>http://premon.fbk.eu/</url>
 
     <scm>
         <connection>scm:git:https://github.com/dkmfbk/premon.git</connection>
@@ -33,10 +34,22 @@
 
     <developers>
         <developer>
+            <id>corcoglio</id>
+            <name>Francesco Corcoglioniti</name>
+            <email>corcoglio@fbk.eu</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+            <properties>
+                <picUrl>https://premon.fbk.eu/images/team/corcoglio.jpg</picUrl>
+            </properties>
+        </developer>
+        <developer>
             <id>rospocher</id>
             <name>Marco Rospocher</name>
             <email>rospocher@fbk.eu</email>
-            <url>https://dkm.fbk.eu/people/profile/rospocher</url>
+            <url>https://dkm.fbk.eu/rospocher</url>
             <roles>
                 <role>Developer</role>
             </roles>
@@ -58,19 +71,32 @@
                 <picUrl>https://premon.fbk.eu/images/team/aprosio.jpg</picUrl>
             </properties>
         </developer>
-        <developer>
-            <id>corcoglio</id>
-            <name>Francesco Corcoglioniti</name>
-            <email>corcoglio@fbk.eu</email>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Alessio Scussel</name>
+            <email>alessio.scussel@studenti.unitn.it</email>
             <roles>
-                <role>Developer</role>
+                <role>Contributor</role>
             </roles>
             <timezone>+1</timezone>
             <properties>
-                <picUrl>https://premon.fbk.eu/images/team/corcoglio.jpg</picUrl>
             </properties>
-        </developer>
-    </developers>
+        </contributor>
+    <contributor>
+        <name>Sara Tonelli</name>
+        <email>satonelli@fbk.eu</email>
+        <url>https://dh.fbk.eu/people/profile/satonelli</url>
+        <roles>
+            <role>Contributor</role>
+        </roles>
+        <timezone>+1</timezone>
+        <properties>
+            <picUrl>https://premon.fbk.eu/images/team/satonelli.jpg</picUrl>
+        </properties>
+    </contributor>
+    </contributors>
 
     <licenses>
         <license>
@@ -96,6 +122,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.8.3</version>
+        </dependency>
+        <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>joox</artifactId>
             <version>1.3.0</version>
@@ -119,11 +155,31 @@
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-util</artifactId>
+            <artifactId>sesame-query</artifactId>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-queryalgebra-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jwordnet</groupId>
+            <artifactId>jwnl</artifactId>
+            <version>${jwnl.version}</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>log4j-over-slf4j</artifactId>-->
+            <!--<version>1.7.16</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.2</version>
         </dependency>
 
         <dependency>
@@ -186,6 +242,10 @@
             <artifactId>rdfpro-jsonld</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>eu.fbk.rdfpro</groupId>
+            <artifactId>rdfpro-core</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -244,6 +304,8 @@
     <properties>
         <site.root>https://premon.fbk.eu/</site.root>
         <site-download>https://knowledgestore.fbk.eu/files/premon/</site-download>
+        <jwnl.version>1.4_rc3</jwnl.version>
+        <premon-version>2016b</premon-version>
     </properties>
 
 </project>

@@ -26,6 +26,8 @@ var yasr = YASR(document.getElementById("yasr"), {
         map.pmo = "http://premon.fbk.eu/ontology/core#";
         map.pmopb = "http://premon.fbk.eu/ontology/pb#";
         map.pmonb = "http://premon.fbk.eu/ontology/nb#";
+        map.pmofn = "http://premon.fbk.eu/ontology/pb#";
+        map.pmovn = "http://premon.fbk.eu/ontology/nb#";
         map.nif = "http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#";
         map.semiotics = "http://www.ontologydesignpatterns.org/cp/owl/semiotics.owl#";
         map.skos = "http://www.w3.org/2004/02/skos/core#";
@@ -34,13 +36,20 @@ var yasr = YASR(document.getElementById("yasr"), {
 });
 
 yasqe.addPrefixes({
-    "": "http://premon.fbk.eu/resource/",
+
+    ontolex: "http://www.w3.org/ns/lemon/ontolex#",
+    decomp: "http://www.w3.org/ns/lemon/decomp.owl#",
+    nif: "http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#",
+    wn31: "http://wordnet-rdf.princeton.edu/wn31/",
+    lexinfo: "http://www.lexinfo.net/ontology/2.0/lexinfo#",
+    lime: "http://www.w3.org/ns/lemon/lime#",
     pmo: "http://premon.fbk.eu/ontology/core#",
     pmopb: "http://premon.fbk.eu/ontology/pb#",
     pmonb: "http://premon.fbk.eu/ontology/nb#",
-    ontolex: "http://www.w3.org/ns/lemon/ontolex#",
-    decomp: "http://www.w3.org/ns/lemon/decomp.owl#",
-    nif: "http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#"
+    pmofn: "http://premon.fbk.eu/ontology/fn#",
+    pmovn: "http://premon.fbk.eu/ontology/vn#",
+    pm: "http://premon.fbk.eu/resource/"
+
 });
 yasqe.collapsePrefixes = true;
 yasqe.options.sparql.callbacks.complete = yasr.setResponse;

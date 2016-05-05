@@ -1,6 +1,5 @@
 @prefix : <http://premon.fbk.eu/ontology/all#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
-@prefix pm: <http://premon.fbk.eu/resource/> .
 @prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix pmo: <http://premon.fbk.eu/ontology/core#> .
@@ -12,6 +11,9 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix void: <http://rdfs.org/ns/void#> .
+@prefix pmofn: <http://premon.fbk.eu/ontology/fn#> .
+@prefix pmonb: <http://premon.fbk.eu/ontology/nb#> .
+@prefix pmopb: <http://premon.fbk.eu/ontology/pb#> .
 @prefix pmovn: <http://premon.fbk.eu/ontology/vn#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
@@ -19,27 +21,49 @@
 
 <http://premon.fbk.eu/ontology/vn> rdf:type owl:Ontology ;
                                    
-                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/people/profile/rospocher>" ;
-                                   
                                    vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/vn#" ;
-                                   
-                                   rdfs:comment "The VerbNet module of the PreMOn ontology extends the core module for representing concepts specific to VerbNet" ;
                                    
                                    dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                    
                                    vann:preferredNamespacePrefix "pmovn" ;
                                    
-                                   dc:creator "Francesco Corcoglioniti" ;
+                                   dc:creator "Francesco Corcoglioniti" ,
+                                              "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
                                    
-                                   dcterms:title "Predicate Model for Ontologies (premon) - VerbNet ontology module"@en ;
+                                   dcterms:title "Predicate Model for Ontologies (PreMOn) - VerbNet ontology module"@en ;
                                    
-                                   dc:description """The VerbNet module of the PreMOn ontology extends the core module with classes and properties specific to the VerbNet predicate model. The modelling is based on the specification at <http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf>.
+                                   dc:description """The VerbNet module of the PreMOn ontology defines classes [pmovn:VerbClass](http://premon.fbk.eu/ontology/vn#VerbClass) and [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively. 
 
-Subclasses of Predicate, SemanticArgument and SemanticRole of the core module are defined for representing elements specific to VerbNet."""@en ;
+*Class members* are modeled as instances of [ontolex:LexicalEntry](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Entry), connected to their class via property [ontolex:evokes](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Evokes). 
+
+The VN class hierarchy is modeled via the [pmovn:subclassOf](http://premon.fbk.eu/ontology/vn#subclassOf) property (subproperty of [skos:broader](http://www.w3.org/2004/02/skos/core#broader)), that relates a verb class (e.g., *13.1-1*) with its parent class (e.g., *13.1*). 
+
+Given the propagation of semantic roles along the class hierarchy, we introduce property [pmovn:definesSemRole](http://premon.fbk.eu/ontology/vn#definesSemRole) to differentiate the [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) instances defined on a class from the ones inherited from its ancestor classes. 
+
+Each [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) instance is related (via property [pmovn:thematicRole](http://premon.fbk.eu/ontology/vn#thematicRole)) to exactly one pmovn:ThematicRole, which contains all the thematic roles defined in VB. These thematic roles are organized in a hierarchy, which is formalized via the skos:broader property. 
+
+VN selectional restrictions on [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole)s (e.g., restricting *theme* to something not animate) are formalized using property [pmovn:restriction](http://premon.fbk.eu/ontology/vn#restriction) and class [pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction) (see later).
+
+A verb class may have one or more [pmovn:VerbNetFrame](http://premon.fbk.eu/ontology/vn#VerbNetFrame)s (via property [pmovn:frame](http://premon.fbk.eu/ontology/vn#frame), or its subproperty [pmovn:definesFrame](http://premon.fbk.eu/ontology/vn#definesFrame), to distinguish frames defined on the class or inherited from ancestors), which have:
+
+* one or more ordered [pmo:SynItem](http://premon.fbk.eu/ontology/core#SynItem)s, modeling a syntactic construction (e.g., *Agent V Theme [-sentential]*) shared by all members of the class. [pmo:SynItem](http://premon.fbk.eu/ontology/core#SynItem)s are specialized according to their syntactical function (e.g., [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem) for noun phrases). A [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem) can point (via [pmo:valueObj](http://premon.fbk.eu/ontology/core#valueObj)) to a [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole), and define, via [pmovn:restriction](http://premon.fbk.eu/ontology/vn#restriction), (i) a selectional restriction holding for the [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) in that frame (e.g., *animate*), or (ii) some other syntactic restriction (e.g., *np to inf*). Similarly, selectional restrictions can be modelled on [pmovn:PrepSynItem](http://premon.fbk.eu/ontology/vn#PrepSynItem) (e.g., *spatial*);
+
+
+
+* one or more ordered semantic [pmo:Pred](http://premon.fbk.eu/ontology/core#Pred)s, modeling the meaning of the event, and its participants, expressed by the verb class for that syntactic construction (e.g.,
+*approve(during(E), Agent, Theme)*). Predicates in [pmovn:Pred](http://premon.fbk.eu/ontology/vn#Pred) have a type ([pmovn:PredType](http://premon.fbk.eu/ontology/vn#PredType), e.g., *approve*) and can be further decomposed in [pmovn:PredArg](http://premon.fbk.eu/ontology/vn#PredArg) (e.g., *during(E)*) of various types (e.g., [pmovn:EventPredArg](http://premon.fbk.eu/ontology/vn#EventPredArg)). Negation of a predicate is expressed by typing the corresponding instance as [pmovn:NegPred](http://premon.fbk.eu/ontology/vn#NegPred), while implicit [pmovn:PredArg](http://premon.fbk.eu/ontology/vn#PredArg)s are typed as [pmovn:ImplicitPredArg](http://premon.fbk.eu/ontology/vn#ImplicitPredArg).
+
+A [pmovn:VerbNetFrame](http://premon.fbk.eu/ontology/vn#VerbNetFrame) is directly associated to its corresponding [pmo:Example](http://premon.fbk.eu/ontology/core#Example) via the pmovn:frameExample property.
+
+### Restrictions
+
+[pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)s are modeled structurally as AND / OR compositions ([pmovn:CompoundRestriction](http://premon.fbk.eu/ontology/vn#CompoundRestriction) and subclasses) of atomic restrictions ([pmovn:AtomicRestriction](http://premon.fbk.eu/ontology/vn#AtomicRestriction) and subclasses) that require the presence or absence of a certain [pmovn:RestrictionProperty](http://premon.fbk.eu/ontology/vn#RestrictionProperty). Semantically, restrictions are divided in [pmovn:SyntacticRestriction](http://premon.fbk.eu/ontology/vn#SyntacticRestriction)s, which refer to a [pmovn:SyntacticRestrictionProperty](http://premon.fbk.eu/ontology/vn#SyntacticRestrictionProperty) and are attached to [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s, and [pmovn:SelectionalRestriction](http://premon.fbk.eu/ontology/vn#SelectionalRestriction)s. The latter are divided in [pmovn:PrepositionalSelectionalRestriction](http://premon.fbk.eu/ontology/vn#PrepositionalSelectionalRestriction)s, which refer to a [pmovn:PrepositionalRestrictionProperty](http://premon.fbk.eu/ontology/vn#PrepositionalRestrictionProperty) and are attached to [pmovn:PrepSynItem](http://premon.fbk.eu/ontology/vn#PrepSynItem)s, and [pmovn:RoleSelectionalRestriction](http://premon.fbk.eu/ontology/vn#RoleSelectionalRestriction)s, which refer to a [pmovn:RoleRestrictionProperty](http://premon.fbk.eu/ontology/vn#RoleRestrictionProperty) and are attached both to [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole)s and [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s. Every restriction instance instantiates both a structural and a semantic subclass of [pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)."""@en ;
                                    
-                                   dc:rights "This ontology is licensed under CC-BY <http://creativecommons.org/licenses/by/4.0/>"@en ;
+                                   rdfs:comment "The VerbNet module of the PreMOn ontology extends the core module with classes and properties specific to the VerbNet predicate model. The modelling is based on the [VerbNet Annotation Guidelines](http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf)."@en ;
                                    
-                                   dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
+                                   dc:rights "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en ;
+                                   
+                                   dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
                                    
                                    dc:description <http://premon.fbk.eu/images/vn.svg> ;
                                    
@@ -84,11 +108,27 @@ skos:related rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://premon.fbk.eu/ontology/vn#first
+###  http://premon.fbk.eu/ontology/vn#definesFrame
 
-pmovn:first rdf:type owl:ObjectProperty ;
-            
-            rdfs:subPropertyOf pmovn:item .
+pmovn:definesFrame rdf:type owl:ObjectProperty ;
+                   
+                   rdfs:label "defines frame"@en ;
+                   
+                   rdfs:subPropertyOf pmovn:frame .
+
+
+
+###  http://premon.fbk.eu/ontology/vn#definesSemRole
+
+pmovn:definesSemRole rdf:type owl:ObjectProperty ;
+                     
+                     rdfs:label "defines semantic role"@en ;
+                     
+                     rdfs:subPropertyOf pmo:semRole ;
+                     
+                     rdfs:range pmovn:SemanticRole ;
+                     
+                     rdfs:domain pmovn:VerbClass .
 
 
 
@@ -96,106 +136,76 @@ pmovn:first rdf:type owl:ObjectProperty ;
 
 pmovn:frame rdf:type owl:ObjectProperty ;
             
+            rdfs:label "frame"@en ;
+            
             rdfs:domain pmovn:VerbClass ;
             
-            rdfs:range pmovn:VerbFrame .
+            rdfs:range pmovn:VerbNetFrame .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#item
+###  http://premon.fbk.eu/ontology/vn#frameExample
 
-pmovn:item rdf:type owl:ObjectProperty ;
-           
-           owl:propertyChainAxiom ( pmovn:first
-                                    pmovn:next
-                                  ) .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#itemValue
-
-pmovn:itemValue rdf:type owl:ObjectProperty ;
-                
-                rdfs:domain [ rdf:type owl:Class ;
-                              owl:unionOf ( pmovn:Arg
-                                            pmovn:Pred
-                                            pmovn:SynItem
-                                          )
-                            ] .
+pmovn:frameExample rdf:type owl:FunctionalProperty ,
+                            owl:ObjectProperty ;
+                   
+                   rdfs:label "frame example"@en ;
+                   
+                   rdfs:comment "directly associates a VerbNet frame to its corresponding example"@en .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#next
+###  http://premon.fbk.eu/ontology/vn#restriction
 
-pmovn:next rdf:type owl:ObjectProperty .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#property
-
-pmovn:property rdf:type owl:ObjectProperty ;
-               
-               rdfs:subPropertyOf owl:topObjectProperty ;
-               
-               rdfs:domain [ rdf:type owl:Class ;
-                             owl:unionOf ( pmovn:AtomicSelectionalRestriction
-                                           pmovn:AtomicSyntacticRestriction
-                                         )
-                           ] ;
-               
-               rdfs:range [ rdf:type owl:Class ;
-                            owl:unionOf ( pmovn:PrepositionalRestrictionProperty
-                                          pmovn:RoleRestrictionProperty
-                                          pmovn:SyntacticRestrictionProperty
-                                        )
-                          ] .
+pmovn:restriction rdf:type owl:ObjectProperty ;
+                  
+                  rdfs:label "restriction"@en ;
+                  
+                  rdfs:range pmovn:Restriction ;
+                  
+                  rdfs:subPropertyOf owl:topObjectProperty ;
+                  
+                  rdfs:domain [ rdf:type owl:Class ;
+                                owl:unionOf ( pmovn:NpSynItem
+                                              pmovn:PrepSynItem
+                                              pmovn:SemanticRole
+                                            )
+                              ] .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#restrictionItem
+###  http://premon.fbk.eu/ontology/vn#subclassOf
 
-pmovn:restrictionItem rdf:type owl:ObjectProperty ;
-                      
-                      rdfs:range [ rdf:type owl:Class ;
-                                   owl:unionOf ( pmovn:SelectionalRestriction
-                                                 pmovn:SyntacticRestriction
-                                               )
-                                 ] ;
-                      
-                      rdfs:domain [ rdf:type owl:Class ;
-                                    owl:unionOf ( pmovn:SelectionalRestrictionSet
-                                                  pmovn:SyntacticRestrictionSet
-                                                )
-                                  ] .
+pmovn:subclassOf rdf:type owl:ObjectProperty ;
+                 
+                 rdfs:label "subclass of"@en ;
+                 
+                 rdfs:subPropertyOf pmo:classRel ;
+                 
+                 rdfs:domain pmovn:VerbClass ;
+                 
+                 rdfs:range pmovn:VerbClass ;
+                 
+                 rdfs:subPropertyOf skos:broader .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#selRestriction
+###  http://premon.fbk.eu/ontology/vn#thematicRole
 
-pmovn:selRestriction rdf:type owl:ObjectProperty ;
-                     
-                     rdfs:range pmovn:SelectionalRestrictionSet ;
-                     
-                     rdfs:subPropertyOf owl:topObjectProperty ;
-                     
-                     rdfs:domain [ rdf:type owl:Class ;
-                                   owl:unionOf ( pmovn:NpSynItem
-                                                 pmovn:PrepSynItem
-                                                 pmovn:SemanticArgument
-                                               )
-                                 ] .
+pmovn:thematicRole rdf:type owl:FunctionalProperty ,
+                            owl:ObjectProperty ;
+                   
+                   rdfs:label "thematic role"@en ;
+                   
+                   rdfs:domain pmovn:SemanticRole ;
+                   
+                   rdfs:range pmovn:ThematicRole .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#synRestriction
+###  http://www.lexinfo.net/ontology/2.0/lexinfo#partOfSpeech
 
-pmovn:synRestriction rdf:type owl:ObjectProperty ;
-                     
-                     rdfs:domain pmovn:NpSynItem ;
-                     
-                     rdfs:range pmovn:SyntacticRestrictionSet ;
-                     
-                     rdfs:subPropertyOf owl:topObjectProperty .
+<http://www.lexinfo.net/ontology/2.0/lexinfo#partOfSpeech> rdf:type owl:ObjectProperty .
 
 
 
@@ -213,7 +223,9 @@ pmovn:synRestriction rdf:type owl:ObjectProperty ;
 pmovn:frameDescNumber rdf:type owl:DatatypeProperty ,
                                owl:FunctionalProperty ;
                       
-                      rdfs:domain pmovn:VerbFrame ;
+                      rdfs:label "frame description number"@en ;
+                      
+                      rdfs:domain pmovn:VerbNetFrame ;
                       
                       rdfs:range xsd:string .
 
@@ -224,7 +236,9 @@ pmovn:frameDescNumber rdf:type owl:DatatypeProperty ,
 pmovn:framePrimary rdf:type owl:DatatypeProperty ,
                             owl:FunctionalProperty ;
                    
-                   rdfs:domain pmovn:VerbFrame ;
+                   rdfs:label "frame primary"@en ;
+                   
+                   rdfs:domain pmovn:VerbNetFrame ;
                    
                    rdfs:range xsd:string .
 
@@ -235,7 +249,9 @@ pmovn:framePrimary rdf:type owl:DatatypeProperty ,
 pmovn:frameSecondary rdf:type owl:DatatypeProperty ,
                               owl:FunctionalProperty ;
                      
-                     rdfs:domain pmovn:VerbFrame ;
+                     rdfs:label "frame secondary"@en ;
+                     
+                     rdfs:domain pmovn:VerbNetFrame ;
                      
                      rdfs:range xsd:string .
 
@@ -245,9 +261,11 @@ pmovn:frameSecondary rdf:type owl:DatatypeProperty ,
 
 pmovn:frameSemanticsDescription rdf:type owl:DatatypeProperty ;
                                 
-                                rdfs:label "String representing the semantics of the Frame" ;
+                                rdfs:label "frame semantics description"@en ;
                                 
-                                rdfs:domain pmovn:VerbFrame ;
+                                rdfs:comment "String representing the semantics of the Frame"@en ;
+                                
+                                rdfs:domain pmovn:VerbNetFrame ;
                                 
                                 rdfs:range xsd:string .
 
@@ -257,9 +275,11 @@ pmovn:frameSemanticsDescription rdf:type owl:DatatypeProperty ;
 
 pmovn:frameSyntaxDescription rdf:type owl:DatatypeProperty ;
                              
-                             rdfs:label "String representing the syntax of the Frame" ;
+                             rdfs:label "frame syntax description"@en ;
                              
-                             rdfs:domain pmovn:VerbFrame ;
+                             rdfs:comment "String representing the syntax of the Frame"@en ;
+                             
+                             rdfs:domain pmovn:VerbNetFrame ;
                              
                              rdfs:range xsd:string .
 
@@ -270,7 +290,9 @@ pmovn:frameSyntaxDescription rdf:type owl:DatatypeProperty ;
 pmovn:frameXtag rdf:type owl:DatatypeProperty ,
                          owl:FunctionalProperty ;
                 
-                rdfs:domain pmovn:VerbFrame ;
+                rdfs:label "frame xtag"@en ;
+                
+                rdfs:domain pmovn:VerbNetFrame ;
                 
                 rdfs:range xsd:string .
 
@@ -285,27 +307,21 @@ pmovn:frameXtag rdf:type owl:DatatypeProperty ,
 #################################################################
 
 
-###  http://premon.fbk.eu/ontology/core#SemanticArgument
+###  http://premon.fbk.eu/ontology/vn#AbsentAtomicRestriction
 
-pmo:SemanticArgument rdfs:subClassOf [ rdf:type owl:Restriction ;
-                                       owl:onProperty pmovn:selRestriction ;
-                                       owl:allValuesFrom pmovn:SelectionalRestriction
-                                     ] .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#AbsentAtomicSyntacticRestriction
-
-pmovn:AbsentAtomicSyntacticRestriction rdf:type owl:Class ;
-                                       
-                                       rdfs:subClassOf pmovn:AtomicSelectionalRestriction ,
-                                                       pmovn:AtomicSyntacticRestriction .
+pmovn:AbsentAtomicRestriction rdf:type owl:Class ;
+                              
+                              rdfs:label "Absent Atomic Restriction"@en ;
+                              
+                              rdfs:subClassOf pmovn:AtomicRestriction .
 
 
 
 ###  http://premon.fbk.eu/ontology/vn#AdjSynItem
 
 pmovn:AdjSynItem rdf:type owl:Class ;
+                 
+                 rdfs:label "Adjective Syntactic Item"@en ;
                  
                  rdfs:subClassOf pmovn:SynItem ;
                  
@@ -317,139 +333,139 @@ pmovn:AdjSynItem rdf:type owl:Class ;
 
 pmovn:AdvSynItem rdf:type owl:Class ;
                  
+                 rdfs:label "Adverb Syntactic Item"@en ;
+                 
                  rdfs:subClassOf pmovn:SynItem ;
                  
                  skos:closeMatch <http://www.lexinfo.net/lexinfo#Adverb> .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#AndSelectionalRestrictionSet
+###  http://premon.fbk.eu/ontology/vn#AndCompoundRestriction
 
-pmovn:AndSelectionalRestrictionSet rdf:type owl:Class ;
-                                   
-                                   rdfs:subClassOf pmovn:SelectionalRestrictionSet ;
-                                   
-                                   rdfs:comment "default" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#AndSyntacticRestrictionSet
-
-pmovn:AndSyntacticRestrictionSet rdf:type owl:Class ;
-                                 
-                                 rdfs:subClassOf pmovn:SyntacticRestrictionSet ;
-                                 
-                                 rdfs:comment "default" .
+pmovn:AndCompoundRestriction rdf:type owl:Class ;
+                             
+                             rdfs:label "And Compound Restriction"@en ;
+                             
+                             rdfs:subClassOf pmovn:CompoundRestriction ;
+                             
+                             rdfs:comment "default" .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#Arg
+###  http://premon.fbk.eu/ontology/vn#AtomicRestriction
 
-pmovn:Arg rdf:type owl:Class ;
-          
-          owl:equivalentClass [ rdf:type owl:Class ;
-                                owl:unionOf ( pmovn:ConstantArg
-                                              pmovn:EventArg
-                                              pmovn:ThemRoleArg
-                                              pmovn:VerbSpecificArg
-                                            )
-                              ] .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#AtomicSelectionalRestriction
-
-pmovn:AtomicSelectionalRestriction rdf:type owl:Class ;
-                                   
-                                   owl:equivalentClass [ rdf:type owl:Class ;
-                                                         owl:unionOf ( pmovn:AbsentAtomicSyntacticRestriction
-                                                                       pmovn:ExistAtomicSelectionalRestriction
-                                                                     )
-                                                       ] ;
-                                   
-                                   rdfs:subClassOf pmovn:SelectionalRestriction .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#AtomicSyntacticRestriction
-
-pmovn:AtomicSyntacticRestriction rdf:type owl:Class ;
-                                 
-                                 owl:equivalentClass [ rdf:type owl:Class ;
-                                                       owl:unionOf ( pmovn:AbsentAtomicSyntacticRestriction
-                                                                     pmovn:ExistAtomicSyntacticRestriction
-                                                                   )
-                                                     ] ;
-                                 
-                                 rdfs:subClassOf pmovn:SyntacticRestriction .
+pmovn:AtomicRestriction rdf:type owl:Class ;
+                        
+                        rdfs:label "Atomic Restriction"@en ;
+                        
+                        rdfs:subClassOf pmovn:Restriction ,
+                                        [ rdf:type owl:Restriction ;
+                                          owl:onProperty pmo:valueObj ;
+                                          owl:cardinality "1"^^xsd:nonNegativeInteger
+                                        ] ;
+                        
+                        owl:disjointUnionOf ( pmovn:AbsentAtomicRestriction
+                                              pmovn:ExistAtomicRestriction
+                                            ) .
 
 
 
 ###  http://premon.fbk.eu/ontology/vn#AuxnpType
 
-pmovn:AuxnpType rdf:type owl:Class .
+pmovn:AuxnpType rdf:type owl:Class ;
+                
+                rdfs:label "Auxiliary NP Type"@en ;
+                
+                owl:equivalentClass [ rdf:type owl:Class ;
+                                      owl:oneOf ( pmovn:oblique_auxnpType
+                                                  pmovn:oblique2_auxnpType
+                                                  pmovn:oblique1_auxnpType
+                                                  pmovn:np_auxnpType
+                                                )
+                                    ] .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#ConstantArg
+###  http://premon.fbk.eu/ontology/vn#CompoundRestriction
 
-pmovn:ConstantArg rdf:type owl:Class ;
-                  
-                  rdfs:subClassOf pmovn:Arg .
+pmovn:CompoundRestriction rdf:type owl:Class ;
+                          
+                          rdfs:label "Compound Restriction"@en ;
+                          
+                          rdfs:subClassOf pmovn:Restriction ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty pmo:item ;
+                                            owl:someValuesFrom owl:Thing
+                                          ] ;
+                          
+                          owl:disjointUnionOf ( pmovn:AndCompoundRestriction
+                                                pmovn:OrCompoundRestriction
+                                              ) .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#EventArg
+###  http://premon.fbk.eu/ontology/vn#ConstantPredArg
 
-pmovn:EventArg rdf:type owl:Class ;
-               
-               rdfs:subClassOf pmovn:Arg .
+pmovn:ConstantPredArg rdf:type owl:Class ;
+                      
+                      rdfs:label "Constant Predicate Argument"@en ;
+                      
+                      rdfs:subClassOf pmovn:PredArg .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#EventArgType
+###  http://premon.fbk.eu/ontology/vn#EventPredArg
 
-pmovn:EventArgType rdf:type owl:Class ;
+pmovn:EventPredArg rdf:type owl:Class ;
                    
-                   owl:equivalentClass [ rdf:type owl:Class ;
-                                         owl:oneOf ( pmovn:startEventArg
-                                                     pmovn:resultEventArg
-                                                     pmovn:endEventArg
-                                                     pmovn:duringEventArg
-                                                   )
-                                       ] .
+                   rdfs:label "Event Predicate Argument"@en ;
+                   
+                   rdfs:subClassOf pmovn:PredArg ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty pmo:valueObj ;
+                                     owl:cardinality "1"^^xsd:nonNegativeInteger
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty pmo:valueObj ;
+                                     owl:allValuesFrom pmovn:EventPredArgType
+                                   ] .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#Example
+###  http://premon.fbk.eu/ontology/vn#EventPredArgType
 
-pmovn:Example rdf:type owl:Class ;
-              
-              rdfs:subClassOf pmo:Example .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#ExistAtomicSelectionalRestriction
-
-pmovn:ExistAtomicSelectionalRestriction rdf:type owl:Class ;
-                                        
-                                        rdfs:subClassOf pmovn:AtomicSelectionalRestriction .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#ExistAtomicSyntacticRestriction
-
-pmovn:ExistAtomicSyntacticRestriction rdf:type owl:Class ;
-                                      
-                                      rdfs:subClassOf pmovn:AtomicSyntacticRestriction .
+pmovn:EventPredArgType rdf:type owl:Class ;
+                       
+                       rdfs:label "Event Predicate Argument Type"@en ;
+                       
+                       owl:equivalentClass [ rdf:type owl:Class ;
+                                             owl:oneOf ( pmovn:startEventArg
+                                                         pmovn:resultEventArg
+                                                         pmovn:endEventArg
+                                                         pmovn:duringEventArg
+                                                       )
+                                           ] .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#ImplicitArg
+###  http://premon.fbk.eu/ontology/vn#ExistAtomicRestriction
 
-pmovn:ImplicitArg rdf:type owl:Class ;
-                  
-                  rdfs:subClassOf pmovn:Arg .
+pmovn:ExistAtomicRestriction rdf:type owl:Class ;
+                             
+                             rdfs:label "Exist Atomic Restriction"@en ;
+                             
+                             rdfs:subClassOf pmovn:AtomicRestriction .
+
+
+
+###  http://premon.fbk.eu/ontology/vn#ImplicitPredArg
+
+pmovn:ImplicitPredArg rdf:type owl:Class ;
+                      
+                      rdfs:label "Implicit Predicate Argument"@en ;
+                      
+                      rdfs:subClassOf pmovn:PredArg .
 
 
 
@@ -457,7 +473,18 @@ pmovn:ImplicitArg rdf:type owl:Class ;
 
 pmovn:LexSynItem rdf:type owl:Class ;
                  
-                 rdfs:subClassOf pmovn:SynItem ;
+                 rdfs:label "Lexical Syntactic Item"@en ;
+                 
+                 rdfs:subClassOf pmovn:SynItem ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty pmo:valueDt ;
+                                   owl:allValuesFrom xsd:string
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty pmo:valueDt ;
+                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                   owl:onDataRange xsd:string
+                                 ] ;
                  
                  rdfs:comment "Not clear if there is an equivalent in lexInfo" .
 
@@ -467,6 +494,8 @@ pmovn:LexSynItem rdf:type owl:Class ;
 
 pmovn:NegPred rdf:type owl:Class ;
               
+              rdfs:label "Negated Predicate"@en ;
+              
               rdfs:subClassOf pmovn:Pred .
 
 
@@ -475,41 +504,41 @@ pmovn:NegPred rdf:type owl:Class ;
 
 pmovn:NpSynItem rdf:type owl:Class ;
                 
+                rdfs:label "NP Syntactic Item"@en ;
+                
                 rdfs:subClassOf pmovn:SynItem ,
                                 [ rdf:type owl:Restriction ;
-                                  owl:onProperty pmovn:itemValue ;
+                                  owl:onProperty pmo:valueObj ;
                                   owl:allValuesFrom [ rdf:type owl:Class ;
                                                       owl:unionOf ( pmovn:AuxnpType
-                                                                    pmovn:ThematicRole
+                                                                    pmovn:SemanticRole
                                                                   )
                                                     ]
                                 ] ,
                                 [ rdf:type owl:Restriction ;
-                                  owl:onProperty pmovn:selRestriction ;
-                                  owl:allValuesFrom pmovn:SelectionalRestriction
+                                  owl:onProperty pmo:valueObj ;
+                                  owl:cardinality "1"^^xsd:nonNegativeInteger
                                 ] ,
                                 [ rdf:type owl:Restriction ;
-                                  owl:onProperty pmovn:synRestriction ;
-                                  owl:allValuesFrom pmovn:SyntacticRestriction
+                                  owl:onProperty pmovn:restriction ;
+                                  owl:allValuesFrom [ rdf:type owl:Class ;
+                                                      owl:unionOf ( pmovn:RoleSelectionalRestriction
+                                                                    pmovn:SyntacticRestriction
+                                                                  )
+                                                    ]
                                 ] ;
                 
                 skos:closeMatch <http://www.lexinfo.net/lexinfo#NounPhrase> .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#OrSelectionalRestrictionSet
+###  http://premon.fbk.eu/ontology/vn#OrCompoundRestriction
 
-pmovn:OrSelectionalRestrictionSet rdf:type owl:Class ;
-                                  
-                                  rdfs:subClassOf pmovn:SelectionalRestrictionSet .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#OrSyntacticRestrictionSet
-
-pmovn:OrSyntacticRestrictionSet rdf:type owl:Class ;
-                                
-                                rdfs:subClassOf pmovn:SyntacticRestrictionSet .
+pmovn:OrCompoundRestriction rdf:type owl:Class ;
+                            
+                            rdfs:label "Or Compound Restriction"@en ;
+                            
+                            rdfs:subClassOf pmovn:CompoundRestriction .
 
 
 
@@ -517,10 +546,53 @@ pmovn:OrSyntacticRestrictionSet rdf:type owl:Class ;
 
 pmovn:Pred rdf:type owl:Class ;
            
+           rdfs:label "Predicate"@en ;
+           
            rdfs:subClassOf [ rdf:type owl:Restriction ;
-                             owl:onProperty pmovn:itemValue ;
+                             owl:onProperty pmo:valueObj ;
+                             owl:someValuesFrom owl:Thing
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty pmo:item ;
+                             owl:someValuesFrom pmovn:PredArg
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty pmo:valueObj ;
                              owl:allValuesFrom pmovn:PredType
+                           ] ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty pmo:first ;
+                             owl:onClass pmovn:PredArg ;
+                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                            ] .
+
+
+
+###  http://premon.fbk.eu/ontology/vn#PredArg
+
+pmovn:PredArg rdf:type owl:Class ;
+              
+              rdfs:label "Predicate Argument"@en ;
+              
+              rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                owl:onProperty pmo:next ;
+                                owl:allValuesFrom pmovn:PredArg
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty pmo:valueDt ;
+                                owl:allValuesFrom xsd:string
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty pmo:valueDt ;
+                                owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                owl:onDataRange xsd:string
+                              ] ;
+              
+              owl:disjointUnionOf ( pmovn:ConstantPredArg
+                                    pmovn:EventPredArg
+                                    pmovn:ThemRolePredArg
+                                    pmovn:VerbSpecificPredArg
+                                  ) .
 
 
 
@@ -528,122 +600,7 @@ pmovn:Pred rdf:type owl:Class ;
 
 pmovn:PredType rdf:type owl:Class ;
                
-               owl:equivalentClass [ rdf:type owl:Class ;
-                                     owl:oneOf ( pmovn:abstain_pred
-                                                 pmovn:visible_pred
-                                                 pmovn:depend_pred
-                                                 pmovn:force_pred
-                                                 pmovn:occur_pred
-                                                 pmovn:describe_pred
-                                                 pmovn:hold_pred
-                                                 pmovn:position_pred
-                                                 pmovn:prop_pred
-                                                 pmovn:nonagentive_cause_pred
-                                                 pmovn:take_care_of_pred
-                                                 pmovn:flinch_pred
-                                                 pmovn:conspire_pred
-                                                 pmovn:rotational_motion_pred
-                                                 pmovn:occurred_pred
-                                                 pmovn:in_reaction_to_pred
-                                                 pmovn:wear_pred
-                                                 pmovn:avoid_pred
-                                                 pmovn:degradation_material_integrity_pred
-                                                 pmovn:free_pred
-                                                 pmovn:adv_pred
-                                                 pmovn:discomfort_pred
-                                                 pmovn:cause_pred
-                                                 pmovn:body_process_pred
-                                                 pmovn:command_pred
-                                                 pmovn:have_opinion_pred
-                                                 pmovn:help_pred
-                                                 pmovn:financial_relationship_pred
-                                                 pmovn:mingled_pred
-                                                 pmovn:begin_pred
-                                                 pmovn:urge_pred
-                                                 pmovn:express_pred
-                                                 pmovn:exist_pred
-                                                 pmovn:appear_pred
-                                                 pmovn:body_reflex_pred
-                                                 pmovn:designated_pred
-                                                 pmovn:harmed_pred
-                                                 pmovn:filled_with_pred
-                                                 pmovn:meets_pred
-                                                 pmovn:prep_pred
-                                                 pmovn:allow_pred
-                                                 pmovn:declare_pred
-                                                 pmovn:associate_pred
-                                                 pmovn:attempt_pred
-                                                 pmovn:property_pred
-                                                 pmovn:assess_pred
-                                                 pmovn:created_image_pred
-                                                 pmovn:transfer_info_pred
-                                                 pmovn:social_interaction_pred
-                                                 pmovn:state_pred
-                                                 pmovn:weather_pred
-                                                 pmovn:cooked_pred
-                                                 pmovn:capacity_pred
-                                                 pmovn:rushed_pred
-                                                 pmovn:benefit_pred
-                                                 pmovn:motion_pred
-                                                 pmovn:manner_pred
-                                                 pmovn:suffocate_pred
-                                                 pmovn:apply_heat_pred
-                                                 pmovn:sleep_pred
-                                                 pmovn:via_pred
-                                                 pmovn:different_pred
-                                                 pmovn:attached_pred
-                                                 pmovn:in_pred
-                                                 pmovn:future_possession_pred
-                                                 pmovn:admit_pred
-                                                 pmovn:conflict_pred
-                                                 pmovn:direction_pred
-                                                 pmovn:masquerade_pred
-                                                 pmovn:indicate_pred
-                                                 pmovn:location_pred
-                                                 pmovn:experience_pred
-                                                 pmovn:amount_changed_pred
-                                                 pmovn:perceive_pred
-                                                 pmovn:equals_pred
-                                                 pmovn:involuntary_pred
-                                                 pmovn:linger_pred
-                                                 pmovn:spend_pred
-                                                 pmovn:alive_pred
-                                                 pmovn:emit_pred
-                                                 pmovn:pred_pred
-                                                 pmovn:take_in_pred
-                                                 pmovn:made_of_pred
-                                                 pmovn:dedicate_pred
-                                                 pmovn:apart_pred
-                                                 pmovn:cost_pred
-                                                 pmovn:physical_form_pred
-                                                 pmovn:disappear_pred
-                                                 pmovn:believe_pred
-                                                 pmovn:together_pred
-                                                 pmovn:delay_pred
-                                                 pmovn:search_pred
-                                                 pmovn:contact_pred
-                                                 pmovn:use_pred
-                                                 pmovn:end_pred
-                                                 pmovn:perform_pred
-                                                 pmovn:give_birth_pred
-                                                 pmovn:continue_pred
-                                                 pmovn:covered_pred
-                                                 pmovn:about_pred
-                                                 pmovn:forbid_pred
-                                                 pmovn:has_possession_pred
-                                                 pmovn:hide_pred
-                                                 pmovn:exert_force_pred
-                                                 pmovn:destroyed_pred
-                                                 pmovn:value_pred
-                                                 pmovn:apply_material_pred
-                                                 pmovn:change_value_pred
-                                                 pmovn:emotional_state_pred
-                                                 pmovn:transfer_pred
-                                                 pmovn:desire_pred
-                                                 pmovn:body_motion_pred
-                                                 pmovn:cooperate_pred
-                                               )
-                                   ] .
+               rdfs:label "Predicate Type"@en .
 
 
 
@@ -651,85 +608,127 @@ pmovn:PredType rdf:type owl:Class ;
 
 pmovn:PrepSynItem rdf:type owl:Class ;
                   
+                  rdfs:label "Preposition Syntactic Item"@en ;
+                  
                   rdfs:subClassOf pmovn:SynItem ,
-                                  [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmovn:itemValue ;
-                                    owl:allValuesFrom pmovn:PrepType
+                                  [ rdf:type owl:Class ;
+                                    owl:unionOf ( [ rdf:type owl:Class ;
+                                                    owl:intersectionOf ( [ rdf:type owl:Class ;
+                                                                           owl:complementOf [ rdf:type owl:Restriction ;
+                                                                                              owl:onProperty pmo:valueObj ;
+                                                                                              owl:someValuesFrom owl:Thing
+                                                                                            ]
+                                                                         ]
+                                                                         [ rdf:type owl:Restriction ;
+                                                                           owl:onProperty pmovn:restriction ;
+                                                                           owl:someValuesFrom owl:Thing
+                                                                         ]
+                                                                       )
+                                                  ]
+                                                  [ rdf:type owl:Class ;
+                                                    owl:intersectionOf ( [ rdf:type owl:Class ;
+                                                                           owl:complementOf [ rdf:type owl:Restriction ;
+                                                                                              owl:onProperty pmovn:restriction ;
+                                                                                              owl:someValuesFrom owl:Thing
+                                                                                            ]
+                                                                         ]
+                                                                         [ rdf:type owl:Restriction ;
+                                                                           owl:onProperty pmo:valueObj ;
+                                                                           owl:someValuesFrom owl:Thing
+                                                                         ]
+                                                                       )
+                                                  ]
+                                                )
                                   ] ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty pmovn:selRestriction ;
-                                    owl:allValuesFrom pmovn:SelectionalRestriction
+                                    owl:onProperty pmo:valueObj ;
+                                    owl:allValuesFrom [ rdf:type owl:Class ;
+                                                        owl:intersectionOf ( ontolex:LexicalEntry
+                                                                             [ rdf:type owl:Restriction ;
+                                                                               owl:onProperty <http://www.lexinfo.net/ontology/2.0/lexinfo#partOfSpeech> ;
+                                                                               owl:hasValue <http://www.lexinfo.net/ontology/2.0/lexinfo#preposition>
+                                                                             ]
+                                                                           )
+                                                      ]
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty pmovn:restriction ;
+                                    owl:allValuesFrom pmovn:PrepositionSelectionalRestriction
                                   ] ;
                   
                   skos:closeMatch <http://www.lexinfo.net/lexinfo#Preposition> .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#PrepType
+###  http://premon.fbk.eu/ontology/vn#PrepositionRestrictionProperty
 
-pmovn:PrepType rdf:type owl:Class ;
-               
-               owl:equivalentClass [ rdf:type owl:Class ;
-                                     owl:oneOf ( pmovn:to_prepType
-                                                 pmovn:regarding_prepType
-                                                 pmovn:under_prepType
-                                                 pmovn:for_prepType
-                                                 pmovn:at_prepType
-                                                 pmovn:towards_prepType
-                                                 pmovn:in_prepType
-                                                 pmovn:concerning_prepType
-                                                 pmovn:respecting_prepType
-                                                 pmovn:upon_prepType
-                                                 pmovn:against_prepType
-                                                 pmovn:from_prepType
-                                                 pmovn:out_of_prepType
-                                                 pmovn:after_prepType
-                                                 pmovn:until_prepType
-                                                 pmovn:with_prepTypep
-                                                 pmovn:between_prepType
-                                                 pmovn:over_prepType
-                                                 pmovn:off_prepType
-                                                 pmovn:by_prepType
-                                                 pmovn:in_between_prepType
-                                                 pmovn:about_prepType
-                                                 pmovn:on_prepType
-                                                 pmovn:like_prepType
-                                                 pmovn:onto_prepType
-                                                 pmovn:of_prepType
-                                                 pmovn:into_prepType
-                                                 pmovn:before_prepType
-                                                 pmovn:through_prepType
-                                                 pmovn:among_prepType
-                                                 pmovn:as_prepType
-                                               )
-                                   ] .
+pmovn:PrepositionRestrictionProperty rdf:type owl:Class ;
+                                     
+                                     rdfs:label "Preposition Selectional Restriction Property"@en ;
+                                     
+                                     owl:equivalentClass [ rdf:type owl:Class ;
+                                                           owl:oneOf ( pmovn:dest_prp
+                                                                       pmovn:path_prp
+                                                                       pmovn:dir_prp
+                                                                       pmovn:loc_prp
+                                                                       pmovn:spatial_prp
+                                                                       pmovn:plural_prp
+                                                                       pmovn:src_prp
+                                                                       pmovn:dest_dir_prp
+                                                                       pmovn:dest_conf_prp
+                                                                     )
+                                                         ] ;
+                                     
+                                     rdfs:subClassOf pmovn:SelectionalRestrictionProperty .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#PrepositionalRestrictionProperty
+###  http://premon.fbk.eu/ontology/vn#PrepositionSelectionalRestriction
 
-pmovn:PrepositionalRestrictionProperty rdf:type owl:Class ;
-                                       
-                                       owl:equivalentClass [ rdf:type owl:Class ;
-                                                             owl:oneOf ( pmovn:dest_prp
-                                                                         pmovn:path_prp
-                                                                         pmovn:dir_prp
-                                                                         pmovn:loc_prp
-                                                                         pmovn:spatial_prp
-                                                                         pmovn:plural_prp
-                                                                         pmovn:src_prp
-                                                                         pmovn:dest_dir_prp
-                                                                         pmovn:dest_conf_prp
-                                                                       )
-                                                           ] ;
-                                       
-                                       rdfs:subClassOf pmovn:SelectionalRestrictionProperty .
+pmovn:PrepositionSelectionalRestriction rdf:type owl:Class ;
+                                        
+                                        rdfs:label "Preposition Selectional Restriction"@en ;
+                                        
+                                        rdfs:subClassOf pmovn:SelectionalRestriction ,
+                                                        [ rdf:type owl:Restriction ;
+                                                          owl:onProperty pmo:valueObj ;
+                                                          owl:allValuesFrom pmovn:PrepositionRestrictionProperty
+                                                        ] ,
+                                                        [ rdf:type owl:Restriction ;
+                                                          owl:onProperty pmo:item ;
+                                                          owl:allValuesFrom pmovn:PrepositionSelectionalRestriction
+                                                        ] .
+
+
+
+###  http://premon.fbk.eu/ontology/vn#Restriction
+
+pmovn:Restriction rdf:type owl:Class ;
+                  
+                  rdfs:label "Restriction"@en ;
+                  
+                  owl:disjointUnionOf ( pmovn:AtomicRestriction
+                                        pmovn:CompoundRestriction
+                                      ) ,
+                                      ( pmovn:SelectionalRestriction
+                                        pmovn:SyntacticRestriction
+                                      ) .
+
+
+
+###  http://premon.fbk.eu/ontology/vn#RestrictionProperty
+
+pmovn:RestrictionProperty rdf:type owl:Class ;
+                          
+                          rdfs:label "Restriction Property"@en .
 
 
 
 ###  http://premon.fbk.eu/ontology/vn#RoleRestrictionProperty
 
 pmovn:RoleRestrictionProperty rdf:type owl:Class ;
+                              
+                              rdfs:label "Role Selectional Restriction Property"@en ;
                               
                               owl:equivalentClass [ rdf:type owl:Class ;
                                                     owl:oneOf ( pmovn:machine_rrp
@@ -773,16 +772,43 @@ pmovn:RoleRestrictionProperty rdf:type owl:Class ;
 
 
 
+###  http://premon.fbk.eu/ontology/vn#RoleSelectionalRestriction
+
+pmovn:RoleSelectionalRestriction rdf:type owl:Class ;
+                                 
+                                 rdfs:label "Role Selectional Restriction"@en ;
+                                 
+                                 rdfs:subClassOf pmovn:SelectionalRestriction ,
+                                                 [ rdf:type owl:Restriction ;
+                                                   owl:onProperty pmo:item ;
+                                                   owl:allValuesFrom pmovn:RoleSelectionalRestriction
+                                                 ] ,
+                                                 [ rdf:type owl:Restriction ;
+                                                   owl:onProperty pmo:valueObj ;
+                                                   owl:allValuesFrom pmovn:RoleRestrictionProperty
+                                                 ] .
+
+
+
 ###  http://premon.fbk.eu/ontology/vn#SelectionalRestriction
 
 pmovn:SelectionalRestriction rdf:type owl:Class ;
                              
-                             owl:equivalentClass [ rdf:type owl:Class ;
-                                                   owl:unionOf ( pmovn:PrepositionalRestrictionProperty
-                                                                 pmovn:RoleRestrictionProperty
-                                                                 pmovn:SelectionalRestrictionSet
-                                                               )
-                                                 ] .
+                             rdfs:label "Selectional Restriction"@en ;
+                             
+                             rdfs:subClassOf pmovn:Restriction ,
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty pmo:valueObj ;
+                                               owl:allValuesFrom pmovn:SelectionalRestrictionProperty
+                                             ] ,
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty pmo:item ;
+                                               owl:allValuesFrom pmovn:SelectionalRestriction
+                                             ] ;
+                             
+                             owl:disjointUnionOf ( pmovn:PrepositionSelectionalRestriction
+                                                   pmovn:RoleSelectionalRestriction
+                                                 ) .
 
 
 
@@ -790,37 +816,36 @@ pmovn:SelectionalRestriction rdf:type owl:Class ;
 
 pmovn:SelectionalRestrictionProperty rdf:type owl:Class ;
                                      
-                                     owl:equivalentClass [ rdf:type owl:Class ;
-                                                           owl:unionOf ( pmovn:PrepositionalRestrictionProperty
-                                                                         pmovn:RoleRestrictionProperty
-                                                                       )
-                                                         ] .
+                                     rdfs:label "Selectional Restriction Property"@en ;
+                                     
+                                     rdfs:subClassOf pmovn:RestrictionProperty ;
+                                     
+                                     owl:disjointUnionOf ( pmovn:PrepositionRestrictionProperty
+                                                           pmovn:RoleRestrictionProperty
+                                                         ) .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#SelectionalRestrictionSet
+###  http://premon.fbk.eu/ontology/vn#SemanticRole
 
-pmovn:SelectionalRestrictionSet rdf:type owl:Class ;
-                                
-                                owl:equivalentClass [ rdf:type owl:Class ;
-                                                      owl:unionOf ( pmovn:AndSelectionalRestrictionSet
-                                                                    pmovn:OrSelectionalRestrictionSet
-                                                                  )
+pmovn:SemanticRole rdf:type owl:Class ;
+                   
+                   rdfs:label "Semantic Role (VN)"@en ;
+                   
+                   rdfs:subClassOf pmo:SemanticRole ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty pmovn:restriction ;
+                                     owl:allValuesFrom pmovn:RoleRestrictionProperty
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty [ owl:inverseOf pmo:semRole
                                                     ] ;
-                                
-                                rdfs:subClassOf pmovn:SelectionalRestriction ,
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty pmovn:restrictionItem ;
-                                                  owl:someValuesFrom pmovn:SelectionalRestriction
-                                                ] .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#SemanticArgument
-
-pmovn:SemanticArgument rdf:type owl:Class ;
-                       
-                       rdfs:subClassOf pmo:SemanticArgument .
+                                     owl:allValuesFrom pmovn:VerbClass
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty pmovn:thematicRole ;
+                                     owl:someValuesFrom pmovn:ThematicRole
+                                   ] .
 
 
 
@@ -828,15 +853,20 @@ pmovn:SemanticArgument rdf:type owl:Class ;
 
 pmovn:SynItem rdf:type owl:Class ;
               
-              owl:equivalentClass [ rdf:type owl:Class ;
-                                    owl:unionOf ( pmovn:AdjSynItem
-                                                  pmovn:AdvSynItem
-                                                  pmovn:LexSynItem
-                                                  pmovn:NpSynItem
-                                                  pmovn:PrepSynItem
-                                                  pmovn:VerbSynItem
-                                                )
-                                  ] .
+              rdfs:label "Syntactic Item"@en ;
+              
+              rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                owl:onProperty pmo:next ;
+                                owl:allValuesFrom pmovn:SynItem
+                              ] ;
+              
+              owl:disjointUnionOf ( pmovn:AdjSynItem
+                                    pmovn:AdvSynItem
+                                    pmovn:LexSynItem
+                                    pmovn:NpSynItem
+                                    pmovn:PrepSynItem
+                                    pmovn:VerbSynItem
+                                  ) .
 
 
 
@@ -844,11 +874,17 @@ pmovn:SynItem rdf:type owl:Class ;
 
 pmovn:SyntacticRestriction rdf:type owl:Class ;
                            
-                           owl:equivalentClass [ rdf:type owl:Class ;
-                                                 owl:unionOf ( pmovn:SyntacticRestrictionProperty
-                                                               pmovn:SyntacticRestrictionSet
-                                                             )
-                                               ] .
+                           rdfs:label "Syntactic Restriction"@en ;
+                           
+                           rdfs:subClassOf pmovn:Restriction ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty pmo:valueObj ;
+                                             owl:allValuesFrom pmovn:SyntacticRestrictionProperty
+                                           ] ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty pmo:item ;
+                                             owl:allValuesFrom pmovn:SyntacticRestriction
+                                           ] .
 
 
 
@@ -899,33 +935,27 @@ pmovn:SyntacticRestrictionProperty rdf:type owl:Class ;
                                                                      pmovn:body_part_syrp
                                                                      pmovn:refl_syrp
                                                                    )
-                                                       ] .
+                                                       ] ;
+                                   
+                                   rdfs:subClassOf pmovn:RestrictionProperty .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#SyntacticRestrictionSet
+###  http://premon.fbk.eu/ontology/vn#ThemRolePredArg
 
-pmovn:SyntacticRestrictionSet rdf:type owl:Class ;
-                              
-                              owl:equivalentClass [ rdf:type owl:Class ;
-                                                    owl:unionOf ( pmovn:AndSyntacticRestrictionSet
-                                                                  pmovn:OrSyntacticRestrictionSet
-                                                                )
-                                                  ] ;
-                              
-                              rdfs:subClassOf pmovn:SyntacticRestriction ,
-                                              [ rdf:type owl:Restriction ;
-                                                owl:onProperty pmovn:restrictionItem ;
-                                                owl:someValuesFrom pmovn:SyntacticRestriction
-                                              ] .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#ThemRoleArg
-
-pmovn:ThemRoleArg rdf:type owl:Class ;
-                  
-                  rdfs:subClassOf pmovn:Arg .
+pmovn:ThemRolePredArg rdf:type owl:Class ;
+                      
+                      rdfs:label "Thematic Role Predicate Argument"@en ;
+                      
+                      rdfs:subClassOf pmovn:PredArg ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty pmo:valueObj ;
+                                        owl:cardinality "1"^^xsd:nonNegativeInteger
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty pmo:valueObj ;
+                                        owl:allValuesFrom pmovn:SemanticRole
+                                      ] .
 
 
 
@@ -933,47 +963,9 @@ pmovn:ThemRoleArg rdf:type owl:Class ;
 
 pmovn:ThematicRole rdf:type owl:Class ;
                    
-                   rdfs:label "ThematicRole" ;
+                   rdfs:label "Thematic Role (VN)"@en ;
                    
-                   owl:equivalentClass [ rdf:type owl:Class ;
-                                         owl:oneOf ( pmovn:theme
-                                                     pmovn:patient
-                                                     pmovn:actor
-                                                     pmovn:recipient
-                                                     pmovn:place
-                                                     pmovn:pivot
-                                                     pmovn:destination
-                                                     pmovn:co-patient
-                                                     pmovn:co-agent
-                                                     pmovn:cause
-                                                     pmovn:reflexive
-                                                     pmovn:agent
-                                                     pmovn:extent
-                                                     pmovn:stimulus
-                                                     pmovn:instrument
-                                                     pmovn:topic
-                                                     pmovn:beneficiary
-                                                     pmovn:material
-                                                     pmovn:result
-                                                     pmovn:predicate
-                                                     pmovn:goal
-                                                     pmovn:attribute
-                                                     pmovn:undergoer
-                                                     pmovn:value_pred
-                                                     pmovn:initial_location
-                                                     pmovn:asset
-                                                     pmovn:co-theme
-                                                     pmovn:source
-                                                     pmovn:experiencer
-                                                     pmovn:product
-                                                     pmovn:location_rrp
-                                                     pmovn:time_rrp
-                                                     pmovn:participant
-                                                     pmovn:trajectory
-                                                   )
-                                       ] ;
-                   
-                   rdfs:subClassOf pmo:SemanticRole .
+                   rdfs:subClassOf skos:Concept .
 
 
 
@@ -981,46 +973,58 @@ pmovn:ThematicRole rdf:type owl:Class ;
 
 pmovn:VerbClass rdf:type owl:Class ;
                 
-                rdfs:label "VerbClass" ;
+                rdfs:label "Verb Class (VN)"@en ;
                 
-                rdfs:subClassOf pmo:Predicate .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#VerbFrame
-
-pmovn:VerbFrame rdf:type owl:Class ;
-                
-                rdfs:label "Frame" ;
-                
-                rdfs:subClassOf owl:Thing ,
-                                [ rdf:type owl:Class ;
-                                  owl:unionOf ( [ rdf:type owl:Class ;
-                                                  owl:complementOf [ rdf:type owl:Restriction ;
-                                                                     owl:onProperty pmovn:item ;
-                                                                     owl:someValuesFrom pmovn:SynItem
-                                                                   ]
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty pmovn:item ;
-                                                  owl:someValuesFrom pmovn:VerbSynItem
-                                                ]
-                                              )
+                rdfs:subClassOf pmo:SemanticClass ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty pmo:semRole ;
+                                  owl:allValuesFrom pmovn:SemanticRole
                                 ] .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#VerbSpecificArg
+###  http://premon.fbk.eu/ontology/vn#VerbNetFrame
 
-pmovn:VerbSpecificArg rdf:type owl:Class ;
-                      
-                      rdfs:subClassOf pmovn:Arg .
+pmovn:VerbNetFrame rdf:type owl:Class ;
+                   
+                   rdfs:label "Syntactic Frame (VN)"@en ;
+                   
+                   rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                     owl:onProperty pmo:first ;
+                                     owl:onClass pmovn:SynItem ;
+                                     owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty pmo:item ;
+                                     owl:onClass pmovn:VerbSynItem ;
+                                     owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty pmo:item ;
+                                     owl:allValuesFrom [ rdf:type owl:Class ;
+                                                         owl:unionOf ( pmovn:Pred
+                                                                       pmovn:SynItem
+                                                                     )
+                                                       ]
+                                   ] .
+
+
+
+###  http://premon.fbk.eu/ontology/vn#VerbSpecificPredArg
+
+pmovn:VerbSpecificPredArg rdf:type owl:Class ;
+                          
+                          rdfs:label "Verb Specific Predicate Argument"@en ;
+                          
+                          rdfs:subClassOf pmovn:PredArg .
 
 
 
 ###  http://premon.fbk.eu/ontology/vn#VerbSynItem
 
 pmovn:VerbSynItem rdf:type owl:Class ;
+                  
+                  rdfs:label "Verb Syntactic Item"@en ;
                   
                   rdfs:subClassOf pmovn:SynItem ;
                   
@@ -1035,40 +1039,6 @@ pmovn:VerbSynItem rdf:type owl:Class ;
 #    Individuals
 #
 #################################################################
-
-
-###  http://premon.fbk.eu/ontology/vn#PrepositionalRestrictionProperty
-
-pmovn:PrepositionalRestrictionProperty rdf:type pmovn:SelectionalRestriction ,
-                                                owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#about_pred
-
-pmovn:about_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "about" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#about_prepType
-
-pmovn:about_prepType rdf:type pmovn:PrepType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "about" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#abstain_pred
-
-pmovn:abstain_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "abstain" .
-
 
 
 ###  http://premon.fbk.eu/ontology/vn#abstract_rrp
@@ -1112,18 +1082,11 @@ pmovn:acc_ing_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:actor rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:comment "abstract, non instantiated in the dataset" ;
+            rdfs:label "actor"@en ;
+            
+            rdfs:comment "abstract, non instantiated in the dataset"@en ;
             
             skos:broader pmovn:participant .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#admit_pred
-
-pmovn:admit_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "admit" .
 
 
 
@@ -1136,77 +1099,14 @@ pmovn:adv_loc_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#adv_pred
-
-pmovn:adv_pred rdf:type pmovn:PredType ,
-                        owl:NamedIndividual ;
-               
-               rdfs:label "Adv" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#after_prepType
-
-pmovn:after_prepType rdf:type pmovn:PrepType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "after" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#against_prepType
-
-pmovn:against_prepType rdf:type pmovn:PrepType ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "against" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#agent
 
 pmovn:agent rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "agent" ;
+            rdfs:label "agent"@en ;
             
             skos:broader pmovn:actor .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#alive_pred
-
-pmovn:alive_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "alive" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#allow_pred
-
-pmovn:allow_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "allow" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#among_prepType
-
-pmovn:among_prepType rdf:type pmovn:PrepType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "among" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#amount_changed_pred
-
-pmovn:amount_changed_pred rdf:type pmovn:PredType ,
-                                   owl:NamedIndividual ;
-                          
-                          rdfs:label "amount_changed" .
 
 
 
@@ -1234,42 +1134,6 @@ pmovn:animate_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#apart_pred
-
-pmovn:apart_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "apart" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#appear_pred
-
-pmovn:appear_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "appear" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#apply_heat_pred
-
-pmovn:apply_heat_pred rdf:type pmovn:PredType ,
-                               owl:NamedIndividual ;
-                      
-                      rdfs:label "apply_heat" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#apply_material_pred
-
-pmovn:apply_material_pred rdf:type pmovn:PredType ,
-                                   owl:NamedIndividual ;
-                          
-                          rdfs:label "apply_material" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#artifact_rrp
 
 pmovn:artifact_rrp rdf:type pmovn:RoleRestrictionProperty ,
@@ -1283,68 +1147,14 @@ pmovn:artifact_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#as_prepType
-
-pmovn:as_prepType rdf:type pmovn:PrepType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "as" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#assess_pred
-
-pmovn:assess_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "assess" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#asset
 
 pmovn:asset rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "asset" ;
+            rdfs:label "asset"@en ;
             
             skos:broader pmovn:value .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#associate_pred
-
-pmovn:associate_pred rdf:type pmovn:PredType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "associate" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#at_prepType
-
-pmovn:at_prepType rdf:type pmovn:PrepType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "at" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#attached_pred
-
-pmovn:attached_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "attached" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#attempt_pred
-
-pmovn:attempt_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "attempt" .
 
 
 
@@ -1353,18 +1163,9 @@ pmovn:attempt_pred rdf:type pmovn:PredType ,
 pmovn:attribute rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:label "attribute" ;
+                rdfs:label "attribute"@en ;
                 
                 skos:broader pmovn:undergoer .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#avoid_pred
-
-pmovn:avoid_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "avoid" .
 
 
 
@@ -1377,59 +1178,14 @@ pmovn:be_sc_ing_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#before_prepType
-
-pmovn:before_prepType rdf:type pmovn:PrepType ,
-                               owl:NamedIndividual ;
-                      
-                      rdfs:label "before" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#begin_pred
-
-pmovn:begin_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "begin" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#believe_pred
-
-pmovn:believe_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "believe" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#beneficiary
 
 pmovn:beneficiary rdf:type pmovn:ThematicRole ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "beneficiary" ;
+                  rdfs:label "beneficiary"@en ;
                   
                   skos:broader pmovn:undergoer .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#benefit_pred
-
-pmovn:benefit_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "benefit" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#between_prepType
-
-pmovn:between_prepType rdf:type pmovn:PrepType ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "between" .
 
 
 
@@ -1439,15 +1195,6 @@ pmovn:biotic_rrp rdf:type pmovn:RoleRestrictionProperty ,
                           owl:NamedIndividual ;
                  
                  rdfs:label "biotic" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#body_motion_pred
-
-pmovn:body_motion_pred rdf:type pmovn:PredType ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "body_motion" .
 
 
 
@@ -1471,113 +1218,47 @@ pmovn:body_part_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#body_process_pred
-
-pmovn:body_process_pred rdf:type pmovn:PredType ,
-                                 owl:NamedIndividual ;
-                        
-                        rdfs:label "body_process" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#body_reflex_pred
-
-pmovn:body_reflex_pred rdf:type pmovn:PredType ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "body_reflex" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#by_prepType
-
-pmovn:by_prepType rdf:type pmovn:PrepType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "by" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#capacity_pred
-
-pmovn:capacity_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "capacity" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#cause
 
 pmovn:cause rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "cause" ;
+            rdfs:label "cause"@en ;
             
             skos:broader pmovn:actor .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#cause_pred
+###  http://premon.fbk.eu/ontology/vn#coAgent
 
-pmovn:cause_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "cause" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#change_value_pred
-
-pmovn:change_value_pred rdf:type pmovn:PredType ,
-                                 owl:NamedIndividual ;
-                        
-                        rdfs:label "change_value" .
+pmovn:coAgent rdf:type pmovn:ThematicRole ,
+                       owl:NamedIndividual ;
+              
+              rdfs:label "co-agent"@en ;
+              
+              skos:broader pmovn:actor .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#co-Agent
+###  http://premon.fbk.eu/ontology/vn#coPatient
 
-pmovn:co-Agent rdf:type pmovn:ThematicRole ,
-                        owl:NamedIndividual ;
-               
-               rdfs:label "co-Agent" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#co-Patient
-
-pmovn:co-Patient rdf:type pmovn:ThematicRole ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "co-Patient" .
+pmovn:coPatient rdf:type pmovn:ThematicRole ,
+                         owl:NamedIndividual ;
+                
+                rdfs:label "co-patient"@en ;
+                
+                skos:broader pmovn:undergoer .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#co-Theme
+###  http://premon.fbk.eu/ontology/vn#coTheme
 
-pmovn:co-Theme rdf:type pmovn:ThematicRole ,
-                        owl:NamedIndividual ;
-               
-               rdfs:label "co-Theme" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#co-agent
-
-pmovn:co-agent rdf:type owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#co-patient
-
-pmovn:co-patient rdf:type owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#co-theme
-
-pmovn:co-theme rdf:type owl:NamedIndividual .
+pmovn:coTheme rdf:type pmovn:ThematicRole ,
+                       owl:NamedIndividual ;
+              
+              rdfs:label "co-theme"@en ;
+              
+              skos:broader pmovn:undergoer .
 
 
 
@@ -1586,16 +1267,9 @@ pmovn:co-theme rdf:type owl:NamedIndividual .
 pmovn:comestible_rrp rdf:type pmovn:RoleRestrictionProperty ,
                               owl:NamedIndividual ;
                      
-                     rdfs:label "comestible" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#command_pred
-
-pmovn:command_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "command" .
+                     rdfs:label "comestible" ;
+                     
+                     skos:broader pmovn:phys_obj_rrp .
 
 
 
@@ -1610,102 +1284,12 @@ pmovn:communication_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#concerning_prepType
-
-pmovn:concerning_prepType rdf:type pmovn:PrepType ,
-                                   owl:NamedIndividual ;
-                          
-                          rdfs:label "concerning" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#concrete_rrp
 
 pmovn:concrete_rrp rdf:type pmovn:RoleRestrictionProperty ,
                             owl:NamedIndividual ;
                    
                    rdfs:label "concrete" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#conflict_pred
-
-pmovn:conflict_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "conflict" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#conspire_pred
-
-pmovn:conspire_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "conspire" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#contact_pred
-
-pmovn:contact_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "contact" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#continue_pred
-
-pmovn:continue_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "continue" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#cooked_pred
-
-pmovn:cooked_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "cooked" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#cooperate_pred
-
-pmovn:cooperate_pred rdf:type pmovn:PredType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "cooperate" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#cost_pred
-
-pmovn:cost_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
-                
-                rdfs:label "cost" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#covered_pred
-
-pmovn:covered_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "covered" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#created_image_pred
-
-pmovn:created_image_pred rdf:type pmovn:PredType ,
-                                  owl:NamedIndividual ;
-                         
-                         rdfs:label "created_image" .
 
 
 
@@ -1718,24 +1302,6 @@ pmovn:currency_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#declare_pred
-
-pmovn:declare_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "declare" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#dedicate_pred
-
-pmovn:dedicate_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "dedicate" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#definite_syrp
 
 pmovn:definite_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
@@ -1745,63 +1311,9 @@ pmovn:definite_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#degradation_material_integrity_pred
-
-pmovn:degradation_material_integrity_pred rdf:type pmovn:PredType ,
-                                                   owl:NamedIndividual ;
-                                          
-                                          rdfs:label "degradation_material_integrity" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#delay_pred
-
-pmovn:delay_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "delay" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#depend_pred
-
-pmovn:depend_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "depend" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#describe_pred
-
-pmovn:describe_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "describe" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#designated_pred
-
-pmovn:designated_pred rdf:type pmovn:PredType ,
-                               owl:NamedIndividual ;
-                      
-                      rdfs:label "designated" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#desire_pred
-
-pmovn:desire_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "desire" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#dest_conf_prp
 
-pmovn:dest_conf_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
+pmovn:dest_conf_prp rdf:type pmovn:PrepositionRestrictionProperty ,
                              owl:NamedIndividual ;
                     
                     rdfs:label "dest_conf" .
@@ -1810,7 +1322,7 @@ pmovn:dest_conf_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
 
 ###  http://premon.fbk.eu/ontology/vn#dest_dir_prp
 
-pmovn:dest_dir_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
+pmovn:dest_dir_prp rdf:type pmovn:PrepositionRestrictionProperty ,
                             owl:NamedIndividual ;
                    
                    rdfs:label "dest_dir" .
@@ -1819,7 +1331,7 @@ pmovn:dest_dir_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
 
 ###  http://premon.fbk.eu/ontology/vn#dest_prp
 
-pmovn:dest_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
+pmovn:dest_prp rdf:type pmovn:PrepositionRestrictionProperty ,
                         owl:NamedIndividual ;
                
                rdfs:label "dest" .
@@ -1831,70 +1343,39 @@ pmovn:dest_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
 pmovn:destination rdf:type pmovn:ThematicRole ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "destination" ;
+                  rdfs:label "destination"@en ;
                   
-                  skos:broader pmovn:location .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#destroyed_pred
-
-pmovn:destroyed_pred rdf:type pmovn:PredType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "destroyed" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#different_pred
-
-pmovn:different_pred rdf:type pmovn:PredType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "different" .
+                  skos:broader pmovn:goal ,
+                               pmovn:location .
 
 
 
 ###  http://premon.fbk.eu/ontology/vn#dir_prp
 
-pmovn:dir_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
+pmovn:dir_prp rdf:type pmovn:PrepositionRestrictionProperty ,
                        owl:NamedIndividual ;
               
               rdfs:label "dir" .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#direction_pred
+###  http://premon.fbk.eu/ontology/vn#duration
 
-pmovn:direction_pred rdf:type pmovn:PredType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "direction" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#disappear_pred
-
-pmovn:disappear_pred rdf:type pmovn:PredType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "disappear" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#discomfort_pred
-
-pmovn:discomfort_pred rdf:type pmovn:PredType ,
-                               owl:NamedIndividual ;
-                      
-                      rdfs:label "discomfort" .
+pmovn:duration rdf:type pmovn:ThematicRole ,
+                        owl:NamedIndividual ;
+               
+               rdfs:label "duration"@en ;
+               
+               skos:broader pmovn:time .
 
 
 
 ###  http://premon.fbk.eu/ontology/vn#duringEventArg
 
-pmovn:duringEventArg rdf:type pmovn:EventArgType ,
-                              owl:NamedIndividual .
+pmovn:duringEventArg rdf:type pmovn:EventPredArgType ,
+                              owl:NamedIndividual ;
+                     
+                     rdfs:label "during event"@en .
 
 
 
@@ -1909,73 +1390,12 @@ pmovn:elongated_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#emit_pred
-
-pmovn:emit_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
-                
-                rdfs:label "emit" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#emotional_state_pred
-
-pmovn:emotional_state_pred rdf:type pmovn:PredType ,
-                                    owl:NamedIndividual ;
-                           
-                           rdfs:label "emotional_state" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#endEventArg
 
-pmovn:endEventArg rdf:type pmovn:EventArgType ,
-                           owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#end_pred
-
-pmovn:end_pred rdf:type pmovn:PredType ,
-                        owl:NamedIndividual ;
-               
-               rdfs:label "end" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#equals_pred
-
-pmovn:equals_pred rdf:type pmovn:PredType ,
+pmovn:endEventArg rdf:type pmovn:EventPredArgType ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "equals" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#exert_force_pred
-
-pmovn:exert_force_pred rdf:type pmovn:PredType ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "exert_force" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#exist_pred
-
-pmovn:exist_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "exist" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#experience_pred
-
-pmovn:experience_pred rdf:type pmovn:PredType ,
-                               owl:NamedIndividual ;
-                      
-                      rdfs:label "experience" .
+                  rdfs:label "end of event"@en .
 
 
 
@@ -1984,18 +1404,9 @@ pmovn:experience_pred rdf:type pmovn:PredType ,
 pmovn:experiencer rdf:type pmovn:ThematicRole ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "experiencer" ;
+                  rdfs:label "experiencer"@en ;
                   
                   skos:broader pmovn:patient .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#express_pred
-
-pmovn:express_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "express" .
 
 
 
@@ -2004,36 +1415,20 @@ pmovn:express_pred rdf:type pmovn:PredType ,
 pmovn:extent rdf:type pmovn:ThematicRole ,
                       owl:NamedIndividual ;
              
-             rdfs:label "extent" ;
+             rdfs:label "extent"@en ;
              
              skos:broader pmovn:value .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#filled_with_pred
+###  http://premon.fbk.eu/ontology/vn#finalTime
 
-pmovn:filled_with_pred rdf:type pmovn:PredType ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "filled_with" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#financial_relationship_pred
-
-pmovn:financial_relationship_pred rdf:type pmovn:PredType ,
-                                           owl:NamedIndividual ;
-                                  
-                                  rdfs:label "financial_relationship" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#flinch_pred
-
-pmovn:flinch_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "flinch" .
+pmovn:finalTime rdf:type pmovn:ThematicRole ,
+                         owl:NamedIndividual ;
+                
+                rdfs:label "final time"@en ;
+                
+                skos:broader pmovn:time .
 
 
 
@@ -2043,33 +1438,6 @@ pmovn:for_comp_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
                              owl:NamedIndividual ;
                     
                     rdfs:label "for_comp" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#for_prepType
-
-pmovn:for_prepType rdf:type pmovn:PrepType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "for" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#forbid_pred
-
-pmovn:forbid_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "forbid" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#force_pred
-
-pmovn:force_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "force" .
 
 
 
@@ -2084,30 +1452,14 @@ pmovn:force_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#free_pred
+###  http://premon.fbk.eu/ontology/vn#frequency
 
-pmovn:free_pred rdf:type pmovn:PredType ,
+pmovn:frequency rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:label "free" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#from_prepType
-
-pmovn:from_prepType rdf:type pmovn:PrepType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "from" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#future_possession_pred
-
-pmovn:future_possession_pred rdf:type pmovn:PredType ,
-                                      owl:NamedIndividual ;
-                             
-                             rdfs:label "future_possession" .
+                rdfs:label "frequency"@en ;
+                
+                skos:broader pmovn:time .
 
 
 
@@ -2131,77 +1483,14 @@ pmovn:genitive_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#give_birth_pred
-
-pmovn:give_birth_pred rdf:type pmovn:PredType ,
-                               owl:NamedIndividual ;
-                      
-                      rdfs:label "give_birth" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#goal
 
 pmovn:goal rdf:type pmovn:ThematicRole ,
                     owl:NamedIndividual ;
            
-           rdfs:label "goal" ;
+           rdfs:label "goal"@en ;
            
            skos:broader pmovn:place .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#harmed_pred
-
-pmovn:harmed_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "harmed" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#has_possession_pred
-
-pmovn:has_possession_pred rdf:type pmovn:PredType ,
-                                   owl:NamedIndividual ;
-                          
-                          rdfs:label "has_possession" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#have_opinion_pred
-
-pmovn:have_opinion_pred rdf:type pmovn:PredType ,
-                                 owl:NamedIndividual ;
-                        
-                        rdfs:label "have_opinion" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#help_pred
-
-pmovn:help_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
-                
-                rdfs:label "help" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#hide_pred
-
-pmovn:hide_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
-                
-                rdfs:label "hide" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#hold_pred
-
-pmovn:hold_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
-                
-                rdfs:label "hold" .
 
 
 
@@ -2225,66 +1514,37 @@ pmovn:human_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#in_between_prepType
+###  http://premon.fbk.eu/ontology/vn#idea_rrp
 
-pmovn:in_between_prepType rdf:type pmovn:PrepType ,
-                                   owl:NamedIndividual ;
-                          
-                          rdfs:label "in_between" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#in_pred
-
-pmovn:in_pred rdf:type pmovn:PredType ,
-                       owl:NamedIndividual ;
-              
-              rdfs:label "in" .
+pmovn:idea_rrp rdf:type pmovn:RoleRestrictionProperty ,
+                        owl:NamedIndividual ;
+               
+               rdfs:label "idea" ;
+               
+               skos:broader pmovn:abstract_rrp .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#in_prepType
+###  http://premon.fbk.eu/ontology/vn#initialLocation
 
-pmovn:in_prepType rdf:type pmovn:PrepType ,
+pmovn:initialLocation rdf:type pmovn:ThematicRole ,
+                               owl:NamedIndividual ;
+                      
+                      rdfs:label "initial location"@en ;
+                      
+                      skos:broader pmovn:location ,
+                                   pmovn:source .
+
+
+
+###  http://premon.fbk.eu/ontology/vn#initialTime
+
+pmovn:initialTime rdf:type pmovn:ThematicRole ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "in" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#in_reaction_to_pred
-
-pmovn:in_reaction_to_pred rdf:type pmovn:PredType ,
-                                   owl:NamedIndividual ;
-                          
-                          rdfs:label "in_reaction_to" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#indicate_pred
-
-pmovn:indicate_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "indicate" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#initial_Location
-
-pmovn:initial_Location rdf:type pmovn:ThematicRole ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "initial_Location" ;
-                       
-                       skos:broader pmovn:location ,
-                                    pmovn:source .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#initial_location
-
-pmovn:initial_location rdf:type owl:NamedIndividual .
+                  rdfs:label "initial time"@en ;
+                  
+                  skos:broader pmovn:time .
 
 
 
@@ -2293,7 +1553,7 @@ pmovn:initial_location rdf:type owl:NamedIndividual .
 pmovn:instrument rdf:type pmovn:ThematicRole ,
                           owl:NamedIndividual ;
                  
-                 rdfs:label "instrument" ;
+                 rdfs:label "instrument"@en ;
                  
                  skos:broader pmovn:undergoer .
 
@@ -2314,45 +1574,9 @@ pmovn:int_control_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#into_prepType
-
-pmovn:into_prepType rdf:type pmovn:PrepType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "into" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#involuntary_pred
-
-pmovn:involuntary_pred rdf:type pmovn:PredType ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "involuntary" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#like_prepType
-
-pmovn:like_prepType rdf:type pmovn:PrepType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "like" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#linger_pred
-
-pmovn:linger_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "linger" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#loc_prp
 
-pmovn:loc_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
+pmovn:loc_prp rdf:type pmovn:PrepositionRestrictionProperty ,
                        owl:NamedIndividual ;
               
               rdfs:label "loc" .
@@ -2364,18 +1588,9 @@ pmovn:loc_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
 pmovn:location rdf:type pmovn:ThematicRole ,
                         owl:NamedIndividual ;
                
-               rdfs:label "location" ;
+               rdfs:label "location"@en ;
                
                skos:broader pmovn:place .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#location_pred
-
-pmovn:location_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "location" .
 
 
 
@@ -2403,78 +1618,26 @@ pmovn:machine_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#made_of_pred
-
-pmovn:made_of_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "made_of" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#manner_pred
-
-pmovn:manner_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "manner" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#masquerade_pred
-
-pmovn:masquerade_pred rdf:type pmovn:PredType ,
-                               owl:NamedIndividual ;
-                      
-                      rdfs:label "masquerade" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#material
 
 pmovn:material rdf:type pmovn:ThematicRole ,
                         owl:NamedIndividual ;
                
-               rdfs:label "material" ;
+               rdfs:label "material"@en ;
                
                skos:broader pmovn:patient ,
                             pmovn:source .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#meets_pred
+###  http://premon.fbk.eu/ontology/vn#natural_rrp
 
-pmovn:meets_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "meets" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#mingled_pred
-
-pmovn:mingled_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "mingled" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#motion_pred
-
-pmovn:motion_pred rdf:type pmovn:PredType ,
+pmovn:natural_rrp rdf:type pmovn:RoleRestrictionProperty ,
                            owl:NamedIndividual ;
                   
-                  rdfs:label "motion" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#nonagentive_cause_pred
-
-pmovn:nonagentive_cause_pred rdf:type pmovn:PredType ,
-                                      owl:NamedIndividual ;
-                             
-                             rdfs:label "nonagentive_cause" .
+                  rdfs:label "natural" ;
+                  
+                  skos:broader pmovn:concrete_rrp .
 
 
 
@@ -2606,60 +1769,6 @@ pmovn:oc_to_inf_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#occur_pred
-
-pmovn:occur_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "occur" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#occurred_pred
-
-pmovn:occurred_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "occurred" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#of_prepType
-
-pmovn:of_prepType rdf:type pmovn:PrepType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "of" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#off_prepType
-
-pmovn:off_prepType rdf:type pmovn:PrepType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "off" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#on_prepType
-
-pmovn:on_prepType rdf:type pmovn:PrepType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "on" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#onto_prepType
-
-pmovn:onto_prepType rdf:type pmovn:PrepType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "onto" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#organization_rrp
 
 pmovn:organization_rrp rdf:type pmovn:RoleRestrictionProperty ,
@@ -2669,36 +1778,20 @@ pmovn:organization_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#out_of_prepType
-
-pmovn:out_of_prepType rdf:type pmovn:PrepType ,
-                               owl:NamedIndividual ;
-                      
-                      rdfs:label "out_of" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#over_prepType
-
-pmovn:over_prepType rdf:type pmovn:PrepType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "over" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#participant
 
 pmovn:participant rdf:type pmovn:ThematicRole ,
                            owl:NamedIndividual ;
                   
-                  rdfs:comment "abstract, non instantiated in the dataset." .
+                  rdfs:label "participant"@en ;
+                  
+                  rdfs:comment "abstract, non instantiated in the dataset."@en .
 
 
 
 ###  http://premon.fbk.eu/ontology/vn#path_prp
 
-pmovn:path_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
+pmovn:path_prp rdf:type pmovn:PrepositionRestrictionProperty ,
                         owl:NamedIndividual ;
                
                rdfs:label "path" .
@@ -2710,27 +1803,9 @@ pmovn:path_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
 pmovn:patient rdf:type pmovn:ThematicRole ,
                        owl:NamedIndividual ;
               
-              rdfs:label "patient" ;
+              rdfs:label "patient"@en ;
               
               skos:broader pmovn:undergoer .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#perceive_pred
-
-pmovn:perceive_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "perceive" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#perform_pred
-
-pmovn:perform_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "perform" .
 
 
 
@@ -2747,21 +1822,12 @@ pmovn:phys_obj_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#physical_form_pred
-
-pmovn:physical_form_pred rdf:type pmovn:PredType ,
-                                  owl:NamedIndividual ;
-                         
-                         rdfs:label "physical_form" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#pivot
 
 pmovn:pivot rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "pivot" ;
+            rdfs:label "pivot"@en ;
             
             skos:broader pmovn:undergoer .
 
@@ -2772,7 +1838,9 @@ pmovn:pivot rdf:type pmovn:ThematicRole ,
 pmovn:place rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:comment "abstract, non instantiated in the dataset" ;
+            rdfs:label "place"@en ;
+            
+            rdfs:comment "abstract, non instantiated in the dataset"@en ;
             
             skos:broader pmovn:participant .
 
@@ -2793,7 +1861,16 @@ pmovn:plant_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 ###  http://premon.fbk.eu/ontology/vn#plural_prp
 
-pmovn:plural_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
+pmovn:plural_prp rdf:type pmovn:PrepositionRestrictionProperty ,
+                          owl:NamedIndividual ;
+                 
+                 rdfs:label "plural" .
+
+
+
+###  http://premon.fbk.eu/ontology/vn#plural_rrp
+
+pmovn:plural_rrp rdf:type pmovn:RoleRestrictionProperty ,
                           owl:NamedIndividual ;
                  
                  rdfs:label "plural" .
@@ -2820,12 +1897,12 @@ pmovn:pointy_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#position_pred
+###  http://premon.fbk.eu/ontology/vn#pos_ing
 
-pmovn:position_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "position" .
+pmovn:pos_ing rdf:type pmovn:SyntacticRestrictionProperty ,
+                       owl:NamedIndividual ;
+              
+              rdfs:label "pos_ing" .
 
 
 
@@ -2838,30 +1915,14 @@ pmovn:poss_ing_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#pred_pred
-
-pmovn:pred_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
-                
-                rdfs:label "Pred" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#predicate
 
 pmovn:predicate rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:label "predicate" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#prep_pred
-
-pmovn:prep_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
+                rdfs:label "predicate"@en ;
                 
-                rdfs:label "Prep" .
+                skos:broader pmovn:participant .
 
 
 
@@ -2870,27 +1931,9 @@ pmovn:prep_pred rdf:type pmovn:PredType ,
 pmovn:product rdf:type pmovn:ThematicRole ,
                        owl:NamedIndividual ;
               
-              rdfs:label "product" ;
+              rdfs:label "product"@en ;
               
               skos:broader pmovn:result .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#prop_pred
-
-pmovn:prop_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
-                
-                rdfs:label "Prop" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#property_pred
-
-pmovn:property_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "property" .
 
 
 
@@ -2908,7 +1951,7 @@ pmovn:quotation_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:recipient rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:label "recipient" ;
+                rdfs:label "recipient"@en ;
                 
                 skos:broader pmovn:destination .
 
@@ -2937,16 +1980,9 @@ pmovn:refl_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:reflexive rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:label "reflexive" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#regarding_prepType
-
-pmovn:regarding_prepType rdf:type pmovn:PrepType ,
-                                  owl:NamedIndividual ;
-                         
-                         rdfs:label "regarding" .
+                rdfs:label "reflexive"@en ;
+                
+                skos:broader pmovn:participant .
 
 
 
@@ -2961,21 +1997,12 @@ pmovn:region_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#respecting_prepType
-
-pmovn:respecting_prepType rdf:type pmovn:PrepType ,
-                                   owl:NamedIndividual ;
-                          
-                          rdfs:label "respecting" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#result
 
 pmovn:result rdf:type pmovn:ThematicRole ,
                       owl:NamedIndividual ;
              
-             rdfs:label "result" ;
+             rdfs:label "result"@en ;
              
              skos:broader pmovn:goal ,
                           pmovn:patient .
@@ -2984,8 +2011,10 @@ pmovn:result rdf:type pmovn:ThematicRole ,
 
 ###  http://premon.fbk.eu/ontology/vn#resultEventArg
 
-pmovn:resultEventArg rdf:type pmovn:EventArgType ,
-                              owl:NamedIndividual .
+pmovn:resultEventArg rdf:type pmovn:EventPredArgType ,
+                              owl:NamedIndividual ;
+                     
+                     rdfs:label "result of event"@en .
 
 
 
@@ -3002,30 +2031,12 @@ pmovn:rigid_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#rotational_motion_pred
-
-pmovn:rotational_motion_pred rdf:type pmovn:PredType ,
-                                      owl:NamedIndividual ;
-                             
-                             rdfs:label "rotational_motion" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#rs_to_inf_syrp
 
 pmovn:rs_to_inf_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
                               owl:NamedIndividual ;
                      
                      rdfs:label "rs_to_inf" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#rushed_pred
-
-pmovn:rushed_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "rushed" .
 
 
 
@@ -3056,15 +2067,6 @@ pmovn:scalar_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#search_pred
-
-pmovn:search_pred rdf:type pmovn:PredType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "search" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#sentential_syrp
 
 pmovn:sentential_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
@@ -3087,30 +2089,12 @@ pmovn:shape_rrp rdf:type pmovn:RoleRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#sleep_pred
-
-pmovn:sleep_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "sleep" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#small_clause_syrp
 
 pmovn:small_clause_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
                                  owl:NamedIndividual ;
                         
                         rdfs:label "small_clause" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#social_interaction_pred
-
-pmovn:social_interaction_pred rdf:type pmovn:PredType ,
-                                       owl:NamedIndividual ;
-                              
-                              rdfs:label "social_interaction" .
 
 
 
@@ -3143,7 +2127,7 @@ pmovn:sound_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:source rdf:type pmovn:ThematicRole ,
                       owl:NamedIndividual ;
              
-             rdfs:label "source" ;
+             rdfs:label "source"@en ;
              
              skos:broader pmovn:place .
 
@@ -3151,25 +2135,16 @@ pmovn:source rdf:type pmovn:ThematicRole ,
 
 ###  http://premon.fbk.eu/ontology/vn#spatial_prp
 
-pmovn:spatial_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
+pmovn:spatial_prp rdf:type pmovn:PrepositionRestrictionProperty ,
                            owl:NamedIndividual ;
                   
                   rdfs:label "spatial" .
 
 
 
-###  http://premon.fbk.eu/ontology/vn#spend_pred
-
-pmovn:spend_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "spend" .
-
-
-
 ###  http://premon.fbk.eu/ontology/vn#src_prp
 
-pmovn:src_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
+pmovn:src_prp rdf:type pmovn:PrepositionRestrictionProperty ,
                        owl:NamedIndividual ;
               
               rdfs:label "src" .
@@ -3178,17 +2153,10 @@ pmovn:src_prp rdf:type pmovn:PrepositionalRestrictionProperty ,
 
 ###  http://premon.fbk.eu/ontology/vn#startEventArg
 
-pmovn:startEventArg rdf:type pmovn:EventArgType ,
-                             owl:NamedIndividual .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#state_pred
-
-pmovn:state_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "state" .
+pmovn:startEventArg rdf:type pmovn:EventPredArgType ,
+                             owl:NamedIndividual ;
+                    
+                    rdfs:label "start of event"@en .
 
 
 
@@ -3206,7 +2174,7 @@ pmovn:state_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:stimulus rdf:type pmovn:ThematicRole ,
                         owl:NamedIndividual ;
                
-               rdfs:label "stimulus" ;
+               rdfs:label "stimulus"@en ;
                
                skos:broader pmovn:cause .
 
@@ -3220,33 +2188,6 @@ pmovn:substance_rrp rdf:type pmovn:RoleRestrictionProperty ,
                     rdfs:label "substance" ;
                     
                     skos:broader pmovn:concrete_rrp .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#suffocate_pred
-
-pmovn:suffocate_pred rdf:type pmovn:PredType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "suffocate" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#take_care_of_pred
-
-pmovn:take_care_of_pred rdf:type pmovn:PredType ,
-                                 owl:NamedIndividual ;
-                        
-                        rdfs:label "take_care_of" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#take_in_pred
-
-pmovn:take_in_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "take_in" .
 
 
 
@@ -3273,18 +2214,9 @@ pmovn:that_comp_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 pmovn:theme rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "theme" ;
+            rdfs:label "theme"@en ;
             
             skos:broader pmovn:undergoer .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#through_prepType
-
-pmovn:through_prepType rdf:type pmovn:PrepType ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "through" .
 
 
 
@@ -3293,7 +2225,7 @@ pmovn:through_prepType rdf:type pmovn:PrepType ,
 pmovn:time rdf:type pmovn:ThematicRole ,
                     owl:NamedIndividual ;
            
-           rdfs:label "time" ;
+           rdfs:label "time"@en ;
            
            skos:broader pmovn:participant .
 
@@ -3317,21 +2249,12 @@ pmovn:to_be_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#to_prepType
+###  http://premon.fbk.eu/ontology/vn#to_inf_rs_syrp
 
-pmovn:to_prepType rdf:type pmovn:PrepType ,
-                           owl:NamedIndividual ;
-                  
-                  rdfs:label "to" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#together_pred
-
-pmovn:together_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "together" .
+pmovn:to_inf_rs_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
+                              owl:NamedIndividual ;
+                     
+                     rdfs:label "to_inf_rs" .
 
 
 
@@ -3353,18 +2276,9 @@ pmovn:tool_rrp rdf:type pmovn:RoleRestrictionProperty ,
 pmovn:topic rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "topic" ;
+            rdfs:label "topic"@en ;
             
             skos:broader pmovn:theme .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#towards_prepType
-
-pmovn:towards_prepType rdf:type pmovn:PrepType ,
-                                owl:NamedIndividual ;
-                       
-                       rdfs:label "towards" .
 
 
 
@@ -3373,34 +2287,9 @@ pmovn:towards_prepType rdf:type pmovn:PrepType ,
 pmovn:trajectory rdf:type pmovn:ThematicRole ,
                           owl:NamedIndividual ;
                  
-                 rdfs:label "trajectory" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#transfer_info_pred
-
-pmovn:transfer_info_pred rdf:type pmovn:PredType ,
-                                  owl:NamedIndividual ;
-                         
-                         rdfs:label "transfer_info" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#transfer_pred
-
-pmovn:transfer_pred rdf:type pmovn:PredType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "transfer" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#under_prepType
-
-pmovn:under_prepType rdf:type pmovn:PrepType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "under" .
+                 rdfs:label "trajectory"@en ;
+                 
+                 skos:broader pmovn:participant .
 
 
 
@@ -3409,45 +2298,11 @@ pmovn:under_prepType rdf:type pmovn:PrepType ,
 pmovn:undergoer rdf:type pmovn:ThematicRole ,
                          owl:NamedIndividual ;
                 
-                rdfs:comment "abstract, non instantiated in the dataset" ;
+                rdfs:label "undergoer"@en ;
+                
+                rdfs:comment "abstract, non instantiated in the dataset"@en ;
                 
                 skos:broader pmovn:participant .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#until_prepType
-
-pmovn:until_prepType rdf:type pmovn:PrepType ,
-                              owl:NamedIndividual ;
-                     
-                     rdfs:label "until" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#upon_prepType
-
-pmovn:upon_prepType rdf:type pmovn:PrepType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "upon" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#urge_pred
-
-pmovn:urge_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
-                
-                rdfs:label "urge" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#use_pred
-
-pmovn:use_pred rdf:type pmovn:PredType ,
-                        owl:NamedIndividual ;
-               
-               rdfs:label "use" .
 
 
 
@@ -3456,18 +2311,9 @@ pmovn:use_pred rdf:type pmovn:PredType ,
 pmovn:value rdf:type pmovn:ThematicRole ,
                      owl:NamedIndividual ;
             
-            rdfs:label "value" ;
+            rdfs:label "value"@en ;
             
             skos:broader pmovn:place .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#value_pred
-
-pmovn:value_pred rdf:type pmovn:PredType ,
-                          owl:NamedIndividual ;
-                 
-                 rdfs:label "value" .
 
 
 
@@ -3488,42 +2334,6 @@ pmovn:vehicle_rrp rdf:type pmovn:RoleRestrictionProperty ,
                   rdfs:label "vehicle" ;
                   
                   skos:broader pmovn:machine_rrp .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#via_pred
-
-pmovn:via_pred rdf:type pmovn:PredType ,
-                        owl:NamedIndividual ;
-               
-               rdfs:label "via" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#visible_pred
-
-pmovn:visible_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "visible" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#wear_pred
-
-pmovn:wear_pred rdf:type pmovn:PredType ,
-                         owl:NamedIndividual ;
-                
-                rdfs:label "wear" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#weather_pred
-
-pmovn:weather_pred rdf:type pmovn:PredType ,
-                            owl:NamedIndividual ;
-                   
-                   rdfs:label "weather" .
 
 
 
@@ -3590,39 +2400,9 @@ pmovn:wheth_inf_syrp rdf:type pmovn:SyntacticRestrictionProperty ,
 
 
 
-###  http://premon.fbk.eu/ontology/vn#with_prepType
+###  http://www.lexinfo.net/ontology/2.0/lexinfo#preposition
 
-pmovn:with_prepType rdf:type pmovn:PrepType ,
-                             owl:NamedIndividual ;
-                    
-                    rdfs:label "with" .
-
-
-
-###  http://premon.fbk.eu/ontology/vn#with_prepTypep
-
-pmovn:with_prepTypep rdf:type owl:NamedIndividual .
-
-
-
-
-
-#################################################################
-#
-#    Annotations
-#
-#################################################################
-
-
-pmovn:natural_rrp skos:broader pmovn:concrete_rrp .
-
-
-
-pmovn:commestible_rrp skos:broader pmovn:phys_obj_rrp .
-
-
-
-pmovn:idea_rrp skos:broader pmovn:abstract_rrp .
+<http://www.lexinfo.net/ontology/2.0/lexinfo#preposition> rdf:type owl:NamedIndividual .
 
 
 

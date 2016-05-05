@@ -21,6 +21,9 @@ public final class VARTRANS {
 
     // Classes
 
+    /** Class vartrans:ConceptualRelation. */
+    public static final URI CONCEPTUAL_RELATION = createURI("ConceptualRelation");
+
     /** Class vartrans:LexicalRelation. */
     public static final URI LEXICAL_RELATION = createURI("LexicalRelation");
 
@@ -44,11 +47,11 @@ public final class VARTRANS {
     /** Object property vartrans:category. */
     public static final URI CATEGORY = createURI("category");
 
+    /** Object property vartrans:conceptRel. */
+    public static final URI CONCEPT_REL = createURI("conceptRel");
+
     /** Object property vartrans:lexicalRel. */
     public static final URI LEXICAL_REL = createURI("lexicalRel");
-
-    /** Object property vartrans:member. */
-    public static final URI MEMBER = createURI("member");
 
     /** Object property vartrans:relates. */
     public static final URI RELATES = createURI("relates");
@@ -61,6 +64,9 @@ public final class VARTRANS {
 
     /** Object property vartrans:target. */
     public static final URI TARGET = createURI("target");
+
+    /** Object property vartrans:trans. */
+    public static final URI TRANS = createURI("trans");
 
     /** Object property vartrans:translatableAs. */
     public static final URI TRANSLATABLE_AS = createURI("translatableAs");

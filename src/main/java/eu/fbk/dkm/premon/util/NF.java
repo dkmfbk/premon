@@ -74,7 +74,8 @@ public class NF {
                     return f;
                 } else {
                     //todo: if n='m' the attribute f should be populated, but it's not always true (see abandon-v.xml)
-                    return MOD;
+                    // return MOD;
+                    return null; // FC: this will discard the role
                 }
             } else {
                 return n;

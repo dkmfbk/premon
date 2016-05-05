@@ -1,11 +1,11 @@
 package eu.fbk.dkm.premon.vocab;
 
+import java.util.HashMap;
+
 import org.openrdf.model.Namespace;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.ValueFactoryImpl;
-
-import java.util.HashMap;
 
 /**
  * Vocabulary constants for the PreMOn Ontology - NomBank module (PMONB).
@@ -23,23 +23,17 @@ public final class PMONB {
 
     // Classes
 
-    /** Class pmonb:Example. */
-    public static final URI EXAMPLE = createURI("Example");
+    /** Class pmonb:Argument. */
+    public static final URI ARGUMENT_C = createURI("Argument");
 
-    /** Class pmonb:Markable. */
-    public static final URI MARKABLE = createURI("Markable");
+    /** Class pmonb:Modifier. */
+    public static final URI MODIFIER = createURI("Modifier");
 
-    /** Class pmonb:ModifierRole. */
-    public static final URI MODIFIER_ROLE = createURI("ModifierRole");
-
-    /** Class pmonb:NumberedRole. */
-    public static final URI NUMBERED_ROLE = createURI("NumberedRole");
+    /** Class pmonb:NumberedArgument. */
+    public static final URI NUMBERED_ARGUMENT = createURI("NumberedArgument");
 
     /** Class pmonb:Predicate. */
-    public static final URI PREDICATE = createURI("Predicate");
-
-    /** Class pmonb:SemanticArgument. */
-    public static final URI SEMANTIC_ARGUMENT = createURI("SemanticArgument");
+    public static final URI ROLESET = createURI("Roleset");
 
     /** Class pmonb:SemanticRole. */
     public static final URI SEMANTIC_ROLE = createURI("SemanticRole");
@@ -49,8 +43,16 @@ public final class PMONB {
 
     // Object properties
 
+    /** Object property pmonb:argument. */
+    public static final URI ARGUMENT_P = createURI("argument");
+
     /** Object property pmonb:tag. */
     public static final URI TAG_P = createURI("tag");
+
+    // Datatype properties
+
+    /** Datatype property pmonb:core. */
+    public static final URI CORE = createURI("core");
 
     // Individuals
 
@@ -109,13 +111,13 @@ public final class PMONB {
     public static final URI ARGM_TMP = createURI("argm-tmp");
 
     /** Individual pmonb:prd (a pmonb:Tag). */
-    public static final URI PRD = createURI("prd");
+    public static final URI TAG_PRD = createURI("tag-prd");
 
     /** Individual pmonb:ref (a pmonb:Tag). */
-    public static final URI REF = createURI("ref");
+    public static final URI TAG_REF = createURI("tag-ref");
 
     /** Individual pmonb:support (a pmonb:Tag). */
-    public static final URI SUPPORT = createURI("support");
+    public static final URI TAG_SUPPORT = createURI("tag-support");
 
     // Map
 
@@ -136,9 +138,9 @@ public final class PMONB {
         mapM.put("prd", ARGM_PRD);
         mapM.put("tmp", ARGM_TMP);
 
-        mapO.put("prd", PRD);
-        mapO.put("ref", REF);
-        mapO.put("support", SUPPORT);
+        mapO.put("prd", TAG_PRD);
+        mapO.put("ref", TAG_REF);
+        mapO.put("support", TAG_SUPPORT);
 
         mapF.put("0", ARG0);
         mapF.put("1", ARG1);

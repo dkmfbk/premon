@@ -1,47 +1,23 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import com.google.common.io.Files;
-
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.vocabulary.DCTERMS;
-import org.openrdf.model.vocabulary.OWL;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
-import org.openrdf.model.vocabulary.SESAME;
+import eu.fbk.dkm.premon.vocab.FB;
+import eu.fbk.dkm.premon.vocab.ONTOLEX;
+import eu.fbk.dkm.premon.vocab.PM;
+import eu.fbk.rdfpro.*;
+import eu.fbk.rdfpro.util.Statements;
+import org.openrdf.model.*;
+import org.openrdf.model.vocabulary.*;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.Rio;
 
-import eu.fbk.dkm.premon.vocab.FB;
-import eu.fbk.dkm.premon.vocab.ONTOLEX;
-import eu.fbk.dkm.premon.vocab.PM;
-import eu.fbk.rdfpro.AbstractRDFHandlerWrapper;
-import eu.fbk.rdfpro.RDFProcessor;
-import eu.fbk.rdfpro.RDFProcessors;
-import eu.fbk.rdfpro.RDFSource;
-import eu.fbk.rdfpro.RDFSources;
-import eu.fbk.rdfpro.util.Statements;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class FramebaseConverter extends Converter {
 
@@ -87,9 +63,8 @@ public class FramebaseConverter extends Converter {
     };
 
     public FramebaseConverter(final File path, final RDFHandler sink, final Properties properties,
-            final Set<URI> wnURIs) {
-        super(path, properties.getProperty("source"), sink, properties, properties
-                .getProperty("language"), wnURIs);
+            Map<String, URI> wnInfo) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
     }
 
     @Override
@@ -119,7 +94,7 @@ public class FramebaseConverter extends Converter {
 
         };
         final RDFProcessor p = RDFProcessors.sequence(p1, p2);
-        p.apply(RDFSources.NIL, this.sink, 1);
+        p.apply(RDFSources.NIL, this.defaultSink, 1);
     }
 
     private static class Handler extends AbstractRDFHandlerWrapper {
@@ -462,4 +437,7 @@ public class FramebaseConverter extends Converter {
 
     }
 
+    @Override protected URI getPosURI(String textualPOS) {
+        return null;
+    }
 }

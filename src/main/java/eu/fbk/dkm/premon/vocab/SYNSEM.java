@@ -56,11 +56,11 @@ public final class SYNSEM {
     /** Object property synsem:propertyRange. */
     public static final URI PROPERTY_RANGE = createURI("propertyRange");
 
-    /** Object property synsem:subframe. */
-    public static final URI SUBFRAME = createURI("subframe");
-
     /** Object property synsem:subjOfProp. */
     public static final URI SUBJ_OF_PROP = createURI("subjOfProp");
+
+    /** Object property synsem:submap. */
+    public static final URI SUBMAP = createURI("submap");
 
     /** Object property synsem:synArg. */
     public static final URI SYN_ARG = createURI("synArg");

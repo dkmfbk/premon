@@ -1,77 +1,106 @@
 PreMOnitor tool
 ===
 
-**PreMOnitor** is a Java command line tool for converting the frame files distributed with various predicate resources in the premon RDF representation.
+**PreMOnitor** is a Java 1.8 command line tool for converting the frame files distributed with various predicate resources in the PreMOn RDF representation.
 
 
-Download the last stable version (easy way)
+Download
 ---
 
-The tool is distributed using the git/Maven paradigms. This means that you can easily download and install the last version (stable or unstable).
-To install the last stable version of the tool, just download it from [here](${site-download}premon-bin.tar.gz).
+A `tar.gz` archive with the compiled binaries of the last stable version of the tool is available [here](${site-download}premon-${project-version}-bin.tar.gz).
+
+Once downloaded, you should extract with 
+
+```
+tar xf premon-*-bin.tar.gz # the * refers to the version
+cd premon
+```
+
+in the directory you prefer.
 
 
-Install from sources (not-so-easy way)
+Compile
 ---
 
-To compile the tool from sources, just open a terminal (for Linux/Mac OS) and type these commands:
+The Java sources of PreMOnitor are available on [GitHub](https://github.com/dkmfbk/premon). Under the `master` branch you can find the sources of the latest stable version, while the `develop` branch contains the latest (unstable) code we are working on.
 
+To checkout the code from GitHub, open a terminal (on Linux/Mac OS) in the parent directory where you want to download the code, and type:
 
 ```
 git checkout https://github.com/dkmfbk/premon.git
 cd premon
-
 # Uncomment the following command to use the last/unstable version of PreMOn
 # git checkout -b develop origin/develop
+```
 
+PreMOnitor is built using Maven. To compile the tool from sources, enter the `premon` directory and type:
+
+```
 mvn clean package -DskipTests -Prelease
+```
+
+This will produce the same `tar.gz` file with the binaries we distribute on this website. To use it, extract the `tar.gz` archive with:
+
+```
 cd target
-tar xzf premon-*-bin.tar.gz # the * refers to the version
+tar xf premon-*-bin.tar.gz # the * refers to the version
 cd premon
 ```
 
-You can now start the program by using the `./premonitor` executable.
 
-
-Run the tool
+Run
 ---
 
 Starting from a downloaded or compiled version, you should use the `./premonitor` executable to run the tool.
-The only mandatory parameter is the name of a property files supplying a detailed configuration of the conversion process.
-A 'default.properties' file is included with the default configuration.
 
-Based on the configuration supplied, the programm will look for a number of folders containing PropBank/NomBank XMLs frame files (default: `pb17` for PropBank 1.7, `pbon5` for PropBank Ontonote5, `nb10` for NomBank 1.0).
-You can overwrite this behavior by editing the properties file.
-PropBank/NomBank folders must contain the `frameset.dtd` file.
+The default configuration of the tool, contained in `premonitor.properties`, expect to find the resources to convert under the directory `resources` and its sub-directories. It is enough to populate the sub-directories for the resources you want to convert (or replacing these sub-directories with symlinks to the paths where containing the required files), and then execute
+
+```
+./premonitor
+```
+
+Here is the list of available sub-directories with the indication of what to place under each of them:
+
+  * `framenet-1.5` - put here the contents of the `fndata-1.5` folder in the archive obtainable from this  [page](https://framenet.icsi.berkeley.edu/fndrupal/framenet_request_data)
+  * `framenet-1.6` - put here the contents of the `fndata-1.6` folder in the archive obtainable from this [page](https://framenet.icsi.berkeley.edu/fndrupal/framenet_request_data)
+  * `nombank-1.0` - put here the contents of the `nombank.1.0.tgz` archive downloadable from this [link](http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz) in this [page](http://nlp.cs.nyu.edu/meyers/NomBank.html)
+  * `pm-1.3` - put here the content of the `PredicateMatrix.v1.3.tar.gz` archive downloadable from this [link](http://adimen.si.ehu.es/web/files/PredicateMatrix/PredicateMatrix.v1.3.tar.gz) in this [page](http://adimen.si.ehu.es/web/PredicateMatrix/)
+  * `propbank-1.7` - put here the contents of the `propbank-1.7.tar.gz' archive downloadable from this [link](http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz) in this [page](http://verbs.colorado.edu/verb-index/index.php)
+  * `propbank-2.1.5` - put here the contents of the `v2.1.5.tar.gz' archive downloadable from this [link](https://github.com/propbank/propbank-frames/archive/v2.1.5.tar.gz) in this [page](https://github.com/propbank/propbank-frames/releases/tag/v2.1.5)
+  * `semlink-1.2.2c` - put here the content of the `1.2.2c.zip` archive downloadable from this [link](https://verbs.colorado.edu/semlink/versions/1.2.2c.zip) in this [page](https://verbs.colorado.edu/semlink/)
+  * `verbnet-3.2` - put here the contents of the `verbnet-3.2.tar.gz` archive downloadable from this  [link](http://verbs.colorado.edu/verb-index/vn/verbnet-3.2.tar.gz) in this [page](http://verbs.colorado.edu/verbnet_downloads/downloads.html)
+  * `wordnet-3.0` - put here the contents of the `WordNet-3.0.tar.gz` archive downloadable from this [link](http://wordnetcode.princeton.edu/3.0/WordNet-3.0.tar.gz) in this [page](https://wordnet.princeton.edu/wordnet/download/current-version/)
+  * `wordnet-3.1` - put here the file `wn31.nt.gz` downloadable from this [link](http://wordnet-rdf.princeton.edu/wn31.nt.gz) in this [page](http://wordnet-rdf.princeton.edu/) (do not extract)
+
+It is possible to customize the `premonitor.properties` configuration file enabling or disabling certain resources, or certain mappings between these resources. 
+Note that the PropBank/NomBank folders must contain the `frameset.dtd` file.
 If missing, you can use the one provided with this tool (in `src/main/resources/`):
 just copy it in the XMLs folder.
 
 This is the complete list of options (that the tool print when the `-h` option is set):
 
 ```
-usage: ./premonitor [-b <PATH>] [-c] [-d] [-D] [-f <FMTS>] [-h] [-i <FOLDER>]
-       [-p <FILE>] [-s <LEMMA>] [-V] [-v] [--wordnet <FILE>] [-x]
+usage: ./premonitor [-b <PATH>] [-D] [-f <FMTS>] [-h] [-i <FOLDER>] [-m] [-p
+       <FILE>] [-r] [-s <LEMMA>] [-V] [-v] [--wordnet <FILE>]
+       [--wordnet-sensekeys <FILE>] [-x]
 
 Transform linguistic resources into RDF
 
-  -b,--output-base <PATH>     Output base path/name (default 'premon')
-  -c,--closure                Emits also the RDFS closure of produced datasets
-  -d,--divide                 Emits one dataset for each resource converted
-  -D,--verbose                enable verbose output
-  -f,--output-formats <FMTS>  Comma-separated list of output formats (default
-                              'tql.gz')
-  -h,--help                   display this help message and terminate
-  -i,--input <FOLDER>         input folder (default .)
-  -p,--properties <FILE>      Property file (default default.properties)
-  -s,--single <LEMMA>         Extract single lemma (apply to all resources)
-  -V,--very verbose           enable very verbose output
-  -v,--version                display version information and terminate
-     --wordnet <FILE>         WordNet RDF triple file
-  -x,--stats                  Generates also VOID statistics for each dataset
-```
-
-Example of invocation that generates all the files available on PreMOn web site (requires filling the `pb17`, `pbon5`, `nb10` folders with appropriate frame data, plus downloading [WordNet 3.1 RDF data](http://wordnet-rdf.princeton.edu/wn31.nt.gz)):
-
-```
-./premonitor -p default.properties -f tql.gz,trig.gz,ttl.gz --wordnet PATH_TO_WN31.NT.GZ -d -c -x
+  -b,--output-base <PATH>        Output base path/name (default 'premon')
+  -D,--verbose                   enable verbose output
+  -f,--output-formats <FMTS>     Comma-separated list of output formats (default
+                                 'tql.gz')
+  -h,--help                      display this help message and terminate
+  -i,--input <FOLDER>            input folder (default .)
+  -m,--omit-filter-mappings      Omit filtering illegal mappings referring to
+                                 non-existing conceptualizations (faster)
+  -p,--properties <FILE>         Property file (default premonitor.properties)
+  -r,--omit-owl2rl               Omit OWL2RL reasoning (faster)
+  -s,--single <LEMMA>            Extract single lemma (apply to all resources)
+  -V,--very verbose              enable very verbose output
+  -v,--version                   display version information and terminate
+     --wordnet <FILE>            WordNet RDF triple file (default:
+                                 wordnet-3.1/wn31.nt.gz)
+     --wordnet-sensekeys <FILE>  WordNet senseKey mapping
+  -x,--omit-stats                Omit generation of statistics (faster)
 ```

@@ -1,21 +1,29 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
-import eu.fbk.dkm.premon.premonitor.propbank.Role;
-import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
-import eu.fbk.dkm.premon.vocab.NIF;
-import eu.fbk.dkm.premon.vocab.PMONB;
-import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.SKOS;
-import org.openrdf.rio.RDFHandler;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+
+import org.openrdf.model.URI;
+import org.openrdf.rio.RDFHandler;
+
+import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
+import eu.fbk.dkm.premon.premonitor.propbank.Role;
+import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
+import eu.fbk.dkm.premon.util.URITreeSet;
+import eu.fbk.dkm.premon.vocab.NIF;
+import eu.fbk.dkm.premon.vocab.PMONB;
 
 /**
  * Created by alessio on 03/11/15.
@@ -23,37 +31,24 @@ import java.util.regex.Pattern;
 
 public class NombankConverter extends BankConverter {
 
-    ArrayList<String> pbLinks = new ArrayList<>();
-    Pattern PB_PATTERN = Pattern.compile("^verb-((.*)\\.[0-9]+)$");
     private static String LINK_PATTERN = "http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0/frames/%s.xml";
 
-    public NombankConverter(File path, RDFHandler sink, Properties properties, Set<URI> wnURIs) {
-        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnURIs);
+    public NombankConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
+        super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
 
         this.nonVerbsToo = true;
         this.isOntoNotes = false;
         this.noDef = !properties.getProperty("extractdefinitions", "0").equals("1");
-        this.source = properties.getProperty("source");
-        this.extractExamples = properties.getProperty("extractexamples", "0").equals("1");
         this.defaultType = "n";
-
-        String pbLinksString = properties.getProperty("linkpb");
-        if (pbLinksString != null) {
-            for (String link : pbLinksString.split(",")) {
-                pbLinks.add(link.trim().toLowerCase());
-            }
-        }
-
-        LOGGER.info("Links to: {}", pbLinks.toString());
     }
 
-    @Override protected void addExampleArgToSink(Type argType, String argName, URI markableURI,
-            String f, String rolesetID) {
+    @Override protected URI addExampleArgToSink(Type argType, String argName, URI markableURI,
+            String f, String rolesetID, URI asURI) {
         URI argumentURI = uriForArgument(rolesetID, argName);
 
         switch (argType) {
         case NUMERIC:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI);
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
             Type fType = getType(f);
             switch (fType) {
             case M_FUNCTION:
@@ -62,25 +57,29 @@ public class NombankConverter extends BankConverter {
                 }
 
                 if (f.equals("prd")) {
-                    addStatementToSink(markableURI, PMONB.TAG_P, PMONB.mapO.get(f));
+                    addStatementToSink(asURI, PMONB.TAG_P, PMONB.mapO.get(f), EXAMPLE_GRAPH);
                 } else {
                     throw new IllegalArgumentException(String.format("String %s not found", f));
                 }
                 break;
             case ADDITIONAL:
-                addStatementToSink(markableURI, PMONB.TAG_P, PMONB.mapO.get(f));
+                addStatementToSink(asURI, PMONB.TAG_P, PMONB.mapO.get(f), EXAMPLE_GRAPH);
                 break;
+            default:
+                // FC: it happens, don't know if it is OK
             }
             break;
         case M_FUNCTION:
-            addStatementToSink(markableURI, NIF.ANNOTATION_P, argumentURI);
+            addStatementToSink(markableURI, NIF.ANNOTATION_P, asURI, EXAMPLE_GRAPH);
             break;
         case ADDITIONAL:
-            addStatementToSink(markableURI, PMONB.TAG_P, PMONB.mapO.get(argName));
+            addStatementToSink(asURI, PMONB.TAG_P, PMONB.mapO.get(argName), EXAMPLE_GRAPH);
             break;
         default:
             //todo: should never happen, but it happens
         }
+
+        return argumentURI;
     }
 
     @Override protected void addRelToSink(Type argType, String argName, URI markableURI) {
@@ -88,21 +87,21 @@ public class NombankConverter extends BankConverter {
     }
 
     @Override URI getPredicate() {
-        return PMONB.PREDICATE;
+        return PMONB.ROLESET;
     }
 
     @Override URI getSemanticArgument() {
-        return PMONB.SEMANTIC_ARGUMENT;
+        return PMONB.SEMANTIC_ROLE;
     }
 
-    @Override URI getMarkable() {
-        return PMONB.MARKABLE;
+    @Override URI getRoleToArgumentProperty() {
+        return PMONB.ARGUMENT_P;
     }
-
-    @Override URI getExample() {
-        return PMONB.EXAMPLE;
+    
+    @Override URI getCoreProperty() {
+        return PMONB.CORE;
     }
-
+    
     @Override HashMap<String, URI> getFunctionMap() {
         return PMONB.mapM;
     }
@@ -112,7 +111,7 @@ public class NombankConverter extends BankConverter {
     }
 
     @Override protected URI getExternalLink(String lemma, String type) {
-        return factory.createURI(String.format(LINK_PATTERN, lemma));
+        return createURI(String.format(LINK_PATTERN, lemma));
     }
 
     @Override void addArgumentToSink(URI argumentURI, String argName, String f, Type argType,
@@ -135,10 +134,21 @@ public class NombankConverter extends BankConverter {
             return;
         }
 
-        addArgumentToSink(key, keyURI, argumentURI, lemma, type, rolesetID, lexicalEntryURI);
+        List<String> vnLemmas = Lists.newArrayList();
+        for (Matcher matcher : getPropBankPredicates(roleset)) {
+            vnLemmas.add(getLemmaFromPredicateName(matcher.group(2)));
+        }
 
-        URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
+        
+        addArgumentToSink(key, keyURI, argumentURI, lemma, type, rolesetID, lexicalEntryURI, role, vnLemmas);
+
+        // todo: bad! this should be merged with the addExternalLinks method
+        // URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
         ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
+
+        URI rolesetURI = uriForRoleset(rolesetID);
+        URI conceptualizationURI = uriForConceptualization(lemma, type, rolesetID);
+        
         for (Matcher matcher : matchers) {
             String pbLemma = matcher.group(2);
             String pbPredicate = matcher.group(1);
@@ -151,13 +161,18 @@ public class NombankConverter extends BankConverter {
 
             for (String pbLink : pbLinks) {
                 pbLemma = getLemmaFromPredicateName(pbLemma);
-                URI argPropBankConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, key,
-                        pbLink);
-                addStatementToSink(argConceptualizationURI, SKOS.CLOSE_MATCH, argPropBankConceptualizationURI);
+                // URI argPropBankConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, key, pbLink);
+                // addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, argConceptualizationURI, argPropBankConceptualizationURI);
+                
+                URI pbRolesetURI = uriForRoleset(pbPredicate, pbLink);
+                URI pbConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, pbLink);
+                URI pbArgumentURI = uriForArgument(pbPredicate, key, pbLink);
+                
+                addMappings(rolesetURI, pbRolesetURI, conceptualizationURI, pbConceptualizationURI, argumentURI, pbArgumentURI);
             }
         }
     }
-
+    
     @Override Type getType(String code) {
         if (code != null) {
             if (PMONB.mapM.containsKey(code)) {
@@ -186,43 +201,39 @@ public class NombankConverter extends BankConverter {
         return Type.NULL;
     }
 
-    private ArrayList<Matcher> getPropBankPredicates(Roleset roleset) {
+    protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
 
-        ArrayList<Matcher> ret = new ArrayList<>();
+        Set<String> lemmas = new HashSet<>();
 
-        String source = roleset.getSource();
-        if (source != null && source.length() > 0) {
-
-            String[] parts = source.split("\\s+");
-            for (String part : parts) {
-                if (part.trim().length() == 0) {
-                    continue;
-                }
-
-                Matcher matcher = PB_PATTERN.matcher(source);
-                if (!matcher.find()) {
-                    continue;
-                }
-
-                ret.add(matcher);
-            }
-        }
-
-        return ret;
-    }
-
-    @Override protected void addConceptualizationLink(Roleset roleset, URI conceptualizationURI) {
-
+        String rolesetID = ((Roleset) roleset).getId();
+        URI rolesetURI = uriForRoleset(rolesetID);
+        
+        // PropBank
         ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
         for (Matcher matcher : matchers) {
             String pbLemma = matcher.group(2);
+            String lemma = getLemmaFromPredicateName(pbLemma);
+            lemmas.add(lemma);
             String pbPredicate = matcher.group(1);
 
             for (String pbLink : pbLinks) {
-                String lemma = getLemmaFromPredicateName(pbLemma);
-                URI pbConceptURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
-                addStatementToSink(conceptualizationURI, SKOS.CLOSE_MATCH, pbConceptURI);
+                URI pbRolesetURI = uriForRoleset(pbPredicate, pbLink);
+                URI pbConceptualizationURI = uriForConceptualizationWithPrefix(lemma, "v", pbPredicate, pbLink);
+                addMappings(rolesetURI, pbRolesetURI, conceptualizationURI, pbConceptualizationURI);
             }
         }
+
+        // VerbNet
+        List<String> vnClasses = getVnClasses(roleset.getVncls());
+        for (String vnClass : vnClasses) {
+            for (String vnLink : vnLinks) {
+                for (String lemma : lemmas) {
+                    URI vnClassURI = uriForRoleset(vnClass, vnLink);
+                    URI vnConceptualizationURI = uriForConceptualizationWithPrefix(lemma, "v", vnClass, vnLink);
+                    addMappings(rolesetURI, vnClassURI, conceptualizationURI, vnConceptualizationURI);
+                }
+            }
+        }
+
     }
 }
