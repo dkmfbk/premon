@@ -1,0 +1,122 @@
+body{
+    font-family: 'Ubuntu',Tahoma,sans-serif;
+}
+
+#hidden{
+    display: none;
+}
+
+.dataTables_filter{
+    display: none;
+}
+
+.dataTables_info{
+    display: block;
+}
+
+button.accordion {
+    background-color: #d44413;
+    color: #FFF;
+    cursor: pointer;
+    padding: 7px;
+    padding-top: 6px;
+    width: 100%;
+    border: none;
+    border-top: 1px solid #bf4415;
+    text-align: center;
+    outline: none;
+    transition: 0.4s;
+    animation: 0.4s;
+}
+
+button.accordion.active, button.accordion:hover {
+    background-color: #bf4415;
+}
+
+div.acc {
+    padding: 0px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.6s linear;
+    animation: 0.6s linear;
+}
+
+div.acc.show {
+    overflow: auto;
+    overflow-x: hidden;
+    max-height: 100%;
+}
+
+#master{
+    -webkit-transition: width 0.4s linear;
+    transition: width 0.4s;
+    animation: width 0.4s;
+    background-color: #a74415;
+    width: 100%;
+    float: left;
+    border-right: 1px solid #8d8d8d;
+    height: 100%;
+
+}
+
+#master.masterActive{
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s;
+    animation: width 0.4s;
+    width: 24%;
+    float: left;
+}
+
+.dataTables_scrollBody{
+    overflow-x: hidden;
+}
+
+.tHead{
+    display: none;
+}
+
+#frame{
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s;
+    animation: width 0.4s;
+    width: 0px;
+    border: 0px;
+    float: right;
+}
+
+#frame.frameActive{
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s;
+    animation: width 0.4s;
+    width: 76%;
+    height: 100%;
+}
+
+#filter{
+    margin-top: 6px;
+}
+
+#header{
+    padding: 5px;
+    background: #d44413;
+    color: #FFF;
+    font-weight: 500;
+    font-family: 'Ubuntu',Tahoma,sans-serif;
+}
+
+#header img{
+    margin-right: 5px;
+}
+
+#header a{
+    color: #FFF;
+}
+#header a:visited{
+    color: #FFF;
+}
+
+#header a:hover{
+    color: #FFF;
+    text-decoration: none;
+}
