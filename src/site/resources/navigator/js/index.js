@@ -46,10 +46,7 @@ $(document).ready(function() {
         initTable(i, height>1000?height:1000, uri, prefix, file);
     }
 
-    accordions = document.getElementsByClassName("accordion");
-    accordions[0].classList.add("active");
-    accordions[0].nextElementSibling.classList.add("show");
-
+    openFirstAccordion();
     resize();
 });
 
@@ -110,6 +107,9 @@ function initTable(n, height, uri, prefix, file){
     $("#table"+n).DataTable().on( 'draw.dt', function (e, settings, data) {
         updateAll();
     });
+    $("#table"+n).DataTable().on('init.dt', function (e, settings, data) {
+        openFirstAccordion();
+    })
 }
 
 function keyUp() {
@@ -134,6 +134,12 @@ function getParameterByName(name, url) {
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function openFirstAccordion(){
+    accordions = document.getElementsByClassName("accordion");
+    accordions[0].classList.add("active");
+    accordions[0].nextElementSibling.classList.add("show");
 }
 
 function updateAll(){
