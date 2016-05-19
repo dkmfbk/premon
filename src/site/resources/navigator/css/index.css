@@ -27,6 +27,9 @@ button.accordion {
     outline: none;
     transition: 0.4s;
     animation: 0.4s;
+    -webkit-box-shadow: 0px 5px 10px #888888;
+    -moz-box-shadow: 0px 5px 10px #888888;
+    box-shadow: 0px 5px 10px #888888;
 }
 
 button.accordion.active, button.accordion:hover {
@@ -38,8 +41,11 @@ div.acc {
     background-color: white;
     max-height: 0;
     overflow: hidden;
-    transition: 0.6s linear;
-    animation: 0.6s linear;
+    transition: 0.4s linear;
+    animation: 0.4s linear;
+    -webkit-box-shadow: 0px 5px 10px #888888;
+    -moz-box-shadow: 0px 5px 10px #888888;
+    box-shadow: 0px 5px 10px #888888;
 }
 
 div.acc.show {
@@ -49,21 +55,23 @@ div.acc.show {
 }
 
 #master{
-    -webkit-transition: width 0.4s linear;
-    transition: width 0.4s;
-    animation: width 0.4s;
-    background-color: #a74415;
+    -webkit-transition: width 0.3s linear;
+    transition: width 0.3s;
+    animation: width 0.3s;
+    background-color: rgb(212, 212, 212);
     width: 100%;
     float: left;
     border-right: 1px solid #8d8d8d;
     height: 100%;
-
+    -webkit-box-shadow: -3px 0px 10px #888888;
+    -moz-box-shadow: -3px 0px 10px #888888;
+    box-shadow:inset -3px 0px 10px #888888;
 }
 
 #master.masterActive{
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s;
-    animation: width 0.4s;
+    -webkit-transition: width 0.3s ease-in-out;
+    transition: width 0.3s;
+    animation: width 0.3s;
     width: 24%;
     float: left;
 }
@@ -77,18 +85,18 @@ div.acc.show {
 }
 
 #frame{
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s;
-    animation: width 0.4s;
+    -webkit-transition: width 0.3s ease-in-out;
+    transition: width 0.3s;
+    animation: width 0.3s;
     width: 0px;
     border: 0px;
     float: right;
 }
 
 #frame.frameActive{
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s;
-    animation: width 0.4s;
+    -webkit-transition: width 0.3s ease-in-out;
+    transition: width 0.3s;
+    animation: width 0.3s;
     width: 76%;
     height: 100%;
 }
@@ -119,4 +127,8 @@ div.acc.show {
 #header a:hover{
     color: #FFF;
     text-decoration: none;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody{
+    border-bottom: 0px;
 }
