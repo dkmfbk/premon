@@ -95,12 +95,12 @@ function initTable(n, height, uri, prefix, file){
         "columnDefs": [
             {
                 "targets": [0],
-                "visible": false,
+                "visible": false
             }
         ],
         "createdRow" : function ( row, data, index ) {
             var val = $('td', row).eq(0).html();
-            $('td', row).eq(0).html('<a style="margin-left: 0px" href="'+uri+val+'" target="iframe1">'+prefix+val+'</a>');
+            $('td', row).eq(0).html('<a href="'+uri+val+'" target="iframe1">'+prefix+val+'</a>');
         },
         deferRender: true,
         scrollCollapse: true,
