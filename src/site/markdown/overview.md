@@ -115,6 +115,7 @@ looks for lexical entries (`?lexEnt`) evoking semantic classes in different reso
   * read the [LREC2016 paper](https://dkm-static.fbk.eu/people/rospocher/files/pubs/2016lrec1.pdf);
   * explore the [PreMOn ontology](ontology.html);
   * download [PreMOn datasets](download.html) for various predicate models;
+  * [navigate](navigator) all the `ontolex:LexicalEntry` and `pmo:SemanticClass` instances;
   * query datasets using the [PreMOn SPARQL endpoint](query.html);
   * check out the [URI dereferencing](browse.html) facilities offered by PreMOn;
   * download and use yourself the [premonitor](premonitor.html) conversion tool.
