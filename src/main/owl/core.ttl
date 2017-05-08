@@ -289,6 +289,46 @@ ontolex:evokes owl:propertyChainAxiom ( [ owl:inverseOf pmo:evokingEntry
 
 
 
+###  http://premon.fbk.eu/ontology/core#ontologyMatch
+
+pmo:ontologyMatch rdf:type owl:ObjectProperty ;
+
+                  rdfs:label "ontology (exact) match"@en ;
+
+                  rdfs:comment "PreMOn generic property to associate a SKOS concept to an ontological entity"@en ;
+
+                  rdfs:range rdfs:Resource ;
+
+                  rdfs:domain skos:Concept .
+
+
+
+###  http://premon.fbk.eu/ontology/core#ontologyBroaderMatch
+
+pmo:ontologyBroaderMatch rdf:type owl:ObjectProperty ;
+
+                  rdfs:label "ontology broader match"@en ;
+
+                  rdfs:comment "PreMOn generic property to associate a SKOS concept to a some way more general ontological entity"@en ;
+
+                  rdfs:range rdfs:Resource ;
+
+                  rdfs:domain skos:Concept .
+
+
+###  http://premon.fbk.eu/ontology/core#ontologyNarrowerMatch
+
+pmo:ontologyNarrowerMatch rdf:type owl:ObjectProperty ;
+
+                  rdfs:label "ontology narrower match"@en ;
+
+                  rdfs:comment "PreMOn generic property to associate a SKOS concept to a some way more specific ontological entity"@en ;
+
+                  rdfs:range rdfs:Resource ;
+
+                  rdfs:domain skos:Concept .
+
+
 
 
 #################################################################
