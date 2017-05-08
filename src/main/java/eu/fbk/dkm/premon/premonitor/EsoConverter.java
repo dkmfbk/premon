@@ -94,7 +94,7 @@ public class EsoConverter extends Converter {
 
                 URI fnFrameURI = uriForRoleset(frame, fnLink);
 //                LOGGER.info("frame " + fnFrameURI.toString());
-                addStatementToSink(eso,premon_prop,fnFrameURI);
+                addStatementToSink(fnFrameURI,premon_prop,eso);
             }
 
 
