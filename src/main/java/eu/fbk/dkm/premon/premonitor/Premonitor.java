@@ -482,7 +482,7 @@ public class Premonitor {
                                     }
                                 }
                             } else if (!isEntries) {
-                                if (entriesModel.contains(stmt)) {
+                                if (entriesModel!=null && entriesModel.contains(stmt)) {
                                     continue;
                                 }
                             }
