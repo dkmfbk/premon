@@ -825,13 +825,7 @@ public class Premonitor {
             }
         }
 
-
-
-
-
-
-
-        //Ontological Mappings
+        //Cleaning Ontological Mappings
         for (final Map<URI, QuadModel> map : models.values()) {
             for (final Map.Entry<URI, QuadModel> entry : map.entrySet()) {
                 final QuadModel model = entry.getValue();
@@ -841,13 +835,13 @@ public class Premonitor {
                         null));
                 int numMappingsToDelete = 0;
                 int numTriplesToDelete = 0;
-//                final Map<String, Integer> numMappingsPerSource = Maps.newHashMap();
 
                 for (Statement stmt:stmts
                      ) {
                     if (!validItems.contains(stmt.getSubject())) {
                         ++numMappingsToDelete;
 
+                        //delete ontology matching triple
                         ++numTriplesToDelete;
                         model.remove(stmt);
                         if (numMappingsToDelete <= 10) {
@@ -861,12 +855,27 @@ public class Premonitor {
                         }
 
 
+                        //check if there are other things mapping to the same ontological concept, otherwise remove all its triple
+                        if (ImmutableList.copyOf(model.filter(null, PMO.ONTO_MATCH,
+                                stmt.getObject())).isEmpty()) {
 
-                        //Check if only remaining triple is "rdf:type skos:Concept". if so remove
+                            final List<Statement> onto_stmts_all = ImmutableList.copyOf(model.filter((URI) stmt.getObject(),null, null));
+                            for (final Statement s: onto_stmts_all
+                                 ) {
+
+                                ++numTriplesToDelete;
+                                model.remove(s);
+                                LOGGER.debug("Removing onto triple {} - {} - {}", s.getSubject(),s.getPredicate(),
+                                        s.getObject());
+                            }
+                        }
+
+                        //Check if only remaining triple on subject is "rdf:type skos:Concept". if so remove
                         final List<Statement> rel_stmts = ImmutableList.copyOf(model.filter(stmt.getSubject(),null,
                                 null));
 
-                        if ((rel_stmts.size()==1)&&rel_stmts.get(0).getPredicate().equals(RDF.TYPE)&&rel_stmts.get(0).getObject().equals(SKOS.CONCEPT)) {
+                        if ((ImmutableList.copyOf(model.filter(stmt.getSubject(),null,
+                                null)).size()==1)&&rel_stmts.get(0).getPredicate().equals(RDF.TYPE)&&rel_stmts.get(0).getObject().equals(SKOS.CONCEPT)) {
                             ++numTriplesToDelete;
                             LOGGER.debug("Removing type triple {} - {} - {}", rel_stmts.get(0).getSubject(),rel_stmts.get(0).getPredicate(),
                                     rel_stmts.get(0).getObject());

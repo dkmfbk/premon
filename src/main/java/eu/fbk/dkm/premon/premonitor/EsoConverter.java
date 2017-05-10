@@ -96,8 +96,6 @@ public class EsoConverter extends Converter {
             while (iterator.hasNext()) {
                 i++;
                 BindingSet resultRow = iterator.next();
-                //System.out.println("combo" + resultRow.getValue("combo"));
-                //System.out.println("role" + resultRow.getValue("role"));
                 URI fnFE = createURI(resultRow.getValue("combo").toString());
                 URI esoRole = createURI(resultRow.getValue("role").toString());
 
@@ -109,40 +107,25 @@ public class EsoConverter extends Converter {
 
     private void processClassMappings(QuadModel model, URI frameBroad_prop, URI premon_prop) {
 
-
-
         for (String fnLink:this.fnLinks
                 ) {
             Iterator<Statement> iter_fb = model.iterator(null, frameBroad_prop, null);
             int i = 0;
             while (iter_fb.hasNext()) {
-
+                i++;
                 Statement stmt = iter_fb.next();
-
                 final Resource eso = stmt.getSubject();
                 final Value framenet = stmt.getObject();
 
-                //LOGGER.info("sub "+(URI eso_role_propertyRES);
-//                LOGGER.info("pred "+t.getPredicate().toString());
-//                LOGGER.info("obj "+t.getObject().toString());
+                LOGGER.debug("subj "+eso.toString());
+                LOGGER.debug("obj "+framenet.stringValue());
 
-//            LOGGER.info("subj "+eso.toString());
-//            LOGGER.info("obj "+framenet.stringValue());
                 String frame = framenet.stringValue().substring(framenet.stringValue().lastIndexOf("#") + 1).toLowerCase();
-
-                Set<URI> fnURIs = new HashSet<URI>();
-
-
                 URI fnFrameURI = uriForRoleset(frame, fnLink);
-//                LOGGER.info("frame " + fnFrameURI.toString());
-                i++;
-                fnURIs.add(fnFrameURI);
+                LOGGER.debug("frame " + fnFrameURI.toString());
+
+
                 addStatementToSink(fnFrameURI, premon_prop, eso);
-
-
-                //this.esoCL_fnFrameMAP.put(eso,fnURIs);
-                //addStatementToSink(eso,premon_prop,framenet_pm,eso)
-
 
             }
             LOGGER.info("Number of Extracted " + fnLink+"-"+this.resource+" Semantic Class ontoMatch: " + i);
