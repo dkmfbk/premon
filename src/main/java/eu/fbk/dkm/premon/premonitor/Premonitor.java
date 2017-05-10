@@ -46,10 +46,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.vocabulary.DCTERMS;
-import org.openrdf.model.vocabulary.OWL;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.model.vocabulary.*;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
@@ -741,6 +738,9 @@ public class Premonitor {
                 final QuadModel model = entry.getValue();
                 for (final URI type : new URI[] { PMO.CONCEPTUALIZATION_MAPPING,
                         PMO.SEMANTIC_CLASS_MAPPING, PMO.SEMANTIC_ROLE_MAPPING }) {
+
+
+
                     int numMappingsToDelete = 0;
                     int numMappings = 0;
                     int mappingsDeletedCompletely = 0;
@@ -824,6 +824,69 @@ public class Premonitor {
                 }
             }
         }
+
+
+
+
+
+
+
+        //Ontological Mappings
+        for (final Map<URI, QuadModel> map : models.values()) {
+            for (final Map.Entry<URI, QuadModel> entry : map.entrySet()) {
+                final QuadModel model = entry.getValue();
+
+
+                final List<Statement> stmts = ImmutableList.copyOf(model.filter(null,PMO.ONTO_MATCH,
+                        null));
+                int numMappingsToDelete = 0;
+                int numTriplesToDelete = 0;
+//                final Map<String, Integer> numMappingsPerSource = Maps.newHashMap();
+
+                for (Statement stmt:stmts
+                     ) {
+                    if (!validItems.contains(stmt.getSubject())) {
+                        ++numMappingsToDelete;
+
+                        ++numTriplesToDelete;
+                        model.remove(stmt);
+                        if (numMappingsToDelete <= 10) {
+                            LOGGER.warn("Removing illegal ontoMatch {} - missing {}", stmt.getSubject(),
+                                    stmt.getObject());
+                        } else if (LOGGER.isDebugEnabled()) {
+                            LOGGER.debug("Removing illegal ontoMatch {} - missing {}", stmt.getSubject(),
+                                    stmt.getObject());
+                        } else if (numMappingsToDelete == 11) {
+                            LOGGER.warn("Omitting further illegal ontoMatch assertions ....");
+                        }
+
+
+
+                        //Check if only remaining triple is "rdf:type skos:Concept". if so remove
+                        final List<Statement> rel_stmts = ImmutableList.copyOf(model.filter(stmt.getSubject(),null,
+                                null));
+
+                        if ((rel_stmts.size()==1)&&rel_stmts.get(0).getPredicate().equals(RDF.TYPE)&&rel_stmts.get(0).getObject().equals(SKOS.CONCEPT)) {
+                            ++numTriplesToDelete;
+                            LOGGER.debug("Removing type triple {} - {} - {}", rel_stmts.get(0).getSubject(),rel_stmts.get(0).getPredicate(),
+                                    rel_stmts.get(0).getObject());
+                            model.remove(stmt);
+
+                        }
+
+                    }
+
+                }
+
+                LOGGER.warn(
+                        "{} illegal ontoMatch assertions and {} related triples removed from {}\n############################################################################################################",
+                        numMappingsToDelete,
+                        numTriplesToDelete,
+                        entry.getKey());
+
+            }
+        }
+
     }
 
     private static boolean isExampleGraph(final URI uri) {

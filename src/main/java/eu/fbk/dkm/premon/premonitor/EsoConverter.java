@@ -1,6 +1,7 @@
 package eu.fbk.dkm.premon.premonitor;
 
 import eu.fbk.dkm.premon.vocab.ESO;
+import eu.fbk.dkm.premon.vocab.PM;
 import eu.fbk.dkm.premon.vocab.PMO;
 import eu.fbk.rdfpro.*;
 import eu.fbk.rdfpro.util.Algebra;
@@ -34,7 +35,7 @@ public class EsoConverter extends Converter {
             "	?rule <http://www.newsreader-project.eu/domain-ontology#hasSituationRuleAssertion> ?ass . \n" +
             "	?ass (<http://www.newsreader-project.eu/domain-ontology#hasSituationAssertionObject>|<http://www.newsreader-project.eu/domain-ontology#hasSituationAssertionSubject>) ?role1 .\n" +
             "	FILTER (str(?role) = str(?role1)) . ?role <http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetElement> ?FE .\n" +
-            "	BIND(CONCAT(\"pm:[PLACEHOLDER]-\",LCASE(STRAFTER(?frame,\"#\")),\"@\",LCASE(STRAFTER(?FE,\"#\"))) as ?combo)\n" +
+            "	BIND(IRI(CONCAT(\"[PREFIX][FNV]-\",LCASE(STRAFTER(?frame,\"#\")),\"@\",LCASE(STRAFTER(?FE,\"#\")))) as ?combo)\n" +
             "}\n" +
             "ORDER BY ?role ?combo";
 
@@ -89,7 +90,7 @@ public class EsoConverter extends Converter {
 
         for (String fnLink:this.fnLinks
                 ) {
-            TupleExpr query = Algebra.parseTupleExpr(this.role_FE_query.replace("[PLACEHOLDER]",fnLink), null, Namespaces.DEFAULT.uriMap());
+            TupleExpr query = Algebra.parseTupleExpr(this.role_FE_query.replace("[FNV]",fnLink).replace("[PREFIX]", PM.NAMESPACE), null, Namespaces.DEFAULT.uriMap());
             Iterator<BindingSet> iterator = model.evaluate(query, null, null);
             int i = 0;
             while (iterator.hasNext()) {
