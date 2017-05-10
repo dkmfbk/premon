@@ -87,10 +87,10 @@ public final class PMO {
     public static final URI ONTO_MATCH = createURI("ontologyMatch");
 
     /** Object property pmo:ontologyBroaderMatch. */
-    public static final URI ONTO_BROADER_MATCH = createURI("ontologyBroaderMatch");
+    //public static final URI ONTO_BROADER_MATCH = createURI("ontologyBroaderMatch");
 
     /** Object property pmo:ontologyNarrowerMatch. */
-    public static final URI ONTO_NARROWER_MATCH = createURI("ontologyNarrowerMatch");
+    //public static final URI ONTO_NARROWER_MATCH = createURI("ontologyNarrowerMatch");
 
     // Datatype properties
 

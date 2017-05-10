@@ -55,14 +55,11 @@ public class EsoConverter extends Converter {
 
             URI FE_prop = createURI("http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetElement");
             URI frameClose_prop = createURI("http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetFrame_closeMatch");
-            URI frameBroad_prop = createURI("http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetFrame_broadMatch");
+            //URI frameBroad_prop = createURI("http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetFrame_broadMatch");
             //URI frameRelated_prop = createURI("http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetFrame_relatedMatch");
 
-
             processProperty(model, frameClose_prop, PMO.ONTO_MATCH);
-
-            processProperty(model, frameBroad_prop, PMO.ONTO_NARROWER_MATCH);
-
+            //processProperty(model, frameBroad_prop, PMO.ONTO_NARROWER_MATCH);
             //processProperty(model, frameRelated_prop,null);
 
         }catch (IOException e){
