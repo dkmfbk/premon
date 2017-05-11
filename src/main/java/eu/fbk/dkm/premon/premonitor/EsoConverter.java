@@ -1,6 +1,7 @@
 package eu.fbk.dkm.premon.premonitor;
 
 import eu.fbk.dkm.premon.vocab.ESO;
+import eu.fbk.dkm.premon.vocab.FBMETA;
 import eu.fbk.dkm.premon.vocab.PM;
 import eu.fbk.dkm.premon.vocab.PMO;
 import eu.fbk.rdfpro.*;
@@ -20,6 +21,7 @@ import org.openrdf.rio.RDFHandlerException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by marcorospocher on 08/05/2017.
@@ -53,22 +55,17 @@ public class EsoConverter extends Converter {
     public void convert() throws IOException, RDFHandlerException {
 
 
-        String filename = "ESO_Version2.owl";
-
-        File eso = new File(
-                this.path + File.separator + filename);
-
-        //read input file
+        //read input file(s)
         try {
-            final QuadModel model = readTriples(eso);
+            final QuadModel model = readTriples();
 
-            LOGGER.info("Read "+filename);
+            LOGGER.info("Read ESO Ontology");
 
             final Ruleset tboxRuleset = Ruleset
                     .fromRDF("classpath:/eu/fbk/dkm/premon/premonitor/ruleset.ttl");
             RuleEngine.create(tboxRuleset).eval(model);
 
-            LOGGER.info("TBox Closure "+filename);
+            LOGGER.info("ESO TBox Ontology Closure");
 
             // processClassesMappings
             processClassMappings(model, ESO.CORRESPOND_FRAME_CLOSE, PMO.ONTO_MATCH);
@@ -78,7 +75,7 @@ public class EsoConverter extends Converter {
 
 
 
-        }catch (IOException e){
+        }catch (RDFHandlerException e){
             throw e;
         } catch (MalformedQueryException e) {
             e.printStackTrace();
@@ -135,24 +132,35 @@ public class EsoConverter extends Converter {
 
 
 
-    private static QuadModel readTriples(final File file) throws IOException {
-        try {
-            final QuadModel model = QuadModel.create();
-            RDFSources.read(false, true, null, null, file.getAbsolutePath())
-                    .emit(new AbstractRDFHandlerWrapper(RDFHandlers.wrap(model)) {
+    private QuadModel readTriples() throws RDFHandlerException {
+        final QuadModel model = QuadModel.create();
 
-                        @Override
-                        public void handleStatement(final Statement stmt)
-                                throws RDFHandlerException {
-                            super.handleStatement(Statements.VALUE_FACTORY.createStatement(
-                                    stmt.getSubject(), stmt.getPredicate(), stmt.getObject()));
-                        }
+        for (final File file : this.path.listFiles()) {
+            try {
 
-                    }, 1);
-            return model;
-        } catch (final RDFHandlerException ex) {
-            throw new IOException(ex);
+                final AtomicInteger counter = new AtomicInteger();
+                final RDFSource source = RDFSources.read(false, true, null, null,
+                        file.getAbsolutePath());
+
+                source.emit(new AbstractRDFHandler() {
+
+                            @Override
+                            public void handleStatement(final Statement stmt) throws RDFHandlerException {
+                                final URI p = stmt.getPredicate();
+                                final Value o = stmt.getObject();
+                                model.add(stmt);
+                                counter.incrementAndGet();
+                            }
+
+
+                }, 1);
+                LOGGER.info("{} triples read from {}", counter, file);
+            } catch (RDFHandlerException e) {
+                e.printStackTrace();
+            }
         }
+        return model;
+
     }
 
 
