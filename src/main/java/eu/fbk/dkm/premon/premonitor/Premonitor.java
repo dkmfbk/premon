@@ -515,9 +515,9 @@ public class Premonitor {
             msBefore = Maps.newHashMap();
             for (final Map.Entry<String, Map<URI, QuadModel>> entry : models.entrySet()) {
                 msBefore.put(entry.getKey(), new MappingStatistics(entry.getValue().values(),
-                        sourceKeys));
+                        sourceKeys,quadModels));
             }
-            msBefore.put("all", new MappingStatistics(quadModels, ImmutableList.of()));
+            msBefore.put("all", new MappingStatistics(quadModels, ImmutableList.of(),quadModels));
             msAfter = msBefore;
         }
 
@@ -532,9 +532,9 @@ public class Premonitor {
                 msAfter = Maps.newHashMap();
                 for (final Map.Entry<String, Map<URI, QuadModel>> entry : models.entrySet()) {
                     msAfter.put(entry.getKey(), new MappingStatistics(entry.getValue().values(),
-                            sourceKeys));
+                            sourceKeys,quadModels));
                 }
-                msAfter.put("all", new MappingStatistics(quadModels, ImmutableList.of()));
+                msAfter.put("all", new MappingStatistics(quadModels, ImmutableList.of(),quadModels));
             }
             LOGGER.info("Resource statistics");
             LOGGER.info(String.format("  %-10s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s",
@@ -1023,13 +1023,16 @@ public class Premonitor {
 
         final Table<String, String, Integer> otherMappings;
 
+        //final Table<String, String, Integer> ontoMappings;
+
         public MappingStatistics(final Iterable<? extends QuadModel> models,
-                final Iterable<String> sources) {
+                final Iterable<String> sources, final List<QuadModel> quadModels) {
 
             final Table<String, String, Set<Hash>> conHashes = HashBasedTable.create();
             final Table<String, String, Set<Hash>> classHashes = HashBasedTable.create();
             final Table<String, String, Set<Hash>> roleHashes = HashBasedTable.create();
             final Table<String, String, Set<Hash>> otherHashes = HashBasedTable.create();
+            //final Table<String, String, Set<Hash>> ontoHashes = HashBasedTable.create();
 
             final List<String> sourceKeys = ImmutableList.copyOf(sources);
             final List<Pattern> sourcePatterns = ImmutableList.copyOf(sourceKeys.stream()
@@ -1071,12 +1074,61 @@ public class Premonitor {
                     addHash(hashes, "all", "all",
                             Joiner.on('|').join(Ordering.natural().sortedCopy(items.values())));
                 }
+
+                for (final Statement mapping : model.filter(null, PMO.ONTO_MATCH, null)) {
+
+                    final Resource subject = mapping.getSubject();
+
+                    Table<String, String, Set<Hash>> hashes = otherHashes;
+
+                    boolean found = false;
+                    for (QuadModel quadModel:quadModels) {
+
+                        if (quadModel.contains(subject, RDF.TYPE, PMO.CONCEPTUALIZATION)) {
+                            hashes = conHashes; found = true; break;
+                        } else if (quadModel.contains(subject, RDF.TYPE, PMO.SEMANTIC_CLASS)) {
+                            hashes = classHashes;  found = true; break;
+                        } else if (quadModel.contains(subject, RDF.TYPE, PMO.SEMANTIC_ROLE)) {
+                            hashes = roleHashes;  found = true; break;
+                        }
+                    }
+
+
+                    final Map<String, String> items = Maps.newHashMap();
+
+                        final String str = subject.stringValue();
+                        for (int i = 0; i < sourceKeys.size(); ++i) {
+                            if (sourcePatterns.get(i).matcher(str).find()) {
+                                items.put(sourceKeys.get(i), subject.stringValue());
+                            }
+                        }
+
+
+                    for (final String fromSource : items.keySet()) {
+                        for (final String toSource : items.keySet()) {
+                            if (fromSource.compareTo(toSource) < 0) {
+                                addHash(hashes, fromSource, toSource, items.get(fromSource), "|",
+                                        items.get(toSource));
+                            }
+                        }
+                    }
+
+                    addHash(hashes, "all", "all",
+                            Joiner.on('|').join(Ordering.natural().sortedCopy(items.values())));
+                }
+
+
             }
+
+
+
+
 
             this.conMappings = countHashes(conHashes);
             this.classMappings = countHashes(classHashes);
             this.roleMappings = countHashes(roleHashes);
             this.otherMappings = countHashes(otherHashes);
+            //this.ontoMappings = countHashes(ontoHashes);
         }
 
         private static void addHash(final Table<String, String, Set<Hash>> hashes,
