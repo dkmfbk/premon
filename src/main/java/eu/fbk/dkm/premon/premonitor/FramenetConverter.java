@@ -987,7 +987,12 @@ public class FramenetConverter extends Converter {
         builder.append(NAMESPACE);
         builder.append(CONCEPTUALIZATION_PREFIX);
         builder.append(separator);
-        builder.append(pos);
+        
+        
+        
+        // builder.append(pos); // FIXME should normalize pos as below!!
+        builder.append(LEXINFO.map.get(getPosURI(pos)));
+        
         builder.append(separator);
         builder.append(luName.replaceAll("[^a-zA-Z0-9-_+]", ""));
         builder.append(separator);

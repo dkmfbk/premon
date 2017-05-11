@@ -84,6 +84,16 @@ public class FramebaseConverter extends Converter {
         }
     }
 
+    private URI getPosURIfromFramebase(final String pos, final String lemma, final String clazz) {
+        if (clazz.equalsIgnoreCase("cardinal_numbers") && !lemma.equalsIgnoreCase("score")
+                && !lemma.equalsIgnoreCase("brace") && !lemma.equalsIgnoreCase("couple")
+                && !lemma.equalsIgnoreCase("fourteen") && !lemma.equalsIgnoreCase("dual")
+                && !lemma.equalsIgnoreCase("pair")) {
+            return LEXINFO.CARDINAL_NUMERAL;
+        }
+        return getPosURI(pos);
+    }
+
     @Override
     public void convert() throws IOException, RDFHandlerException {
 
@@ -133,13 +143,14 @@ public class FramebaseConverter extends Converter {
         LOGGER.info("Emitting FN frame -> FB class alignments");
         for (final Resource s : model.filter(null, RDF.TYPE, FBMETA.LU_MICROFRAME).subjects()) {
             final URI luMicroframe = (URI) s;
-            final String[] tokens = luMicroframe.getLocalName().toLowerCase().split("\\.");
+            final String[] tokens = luMicroframe.getLocalName().split("\\.");
             assert tokens.length == 3;
-            final String frame = tokens[0];
-            final String lemma = tokens[1];
-            final String pos = tokens[2];
+            final String frame = tokens[0].toLowerCase();
+            final String lemma = fixLemma(tokens[1]);
+            final String pos = tokens[2].toLowerCase();
             for (final String fnPrefix : this.fnPrefixes) {
-                final URI fnCon = uriForConceptualizationWithPrefix(lemma, pos, frame, fnPrefix);
+                final URI fnCon = uriForConceptualization(fnPrefix, lemma,
+                        getPosURIfromFramebase(pos, lemma, frame), frame);
                 addStatementToSink(fnCon, PMO.ONTO_MATCH, luMicroframe);
             }
         }
@@ -158,9 +169,9 @@ public class FramebaseConverter extends Converter {
                         .toLowerCase().split("\\.");
                 assert tokens.length == 2;
                 final String frame = tokens[0];
-                final String role = tokens[1];
+                final String role = tokens[1].replace("has_", "").replace('+', '_');
                 for (final String fnPrefix : this.fnPrefixes) {
-                    final URI fnArg = uriForArgument(frame, role, fnPrefix);
+                    final URI fnArg = uriForSemanticRole(fnPrefix, frame, role);
                     addStatementToSink(fnArg, PMO.ONTO_MATCH, property);
                 }
             }
@@ -173,7 +184,7 @@ public class FramebaseConverter extends Converter {
         for (final Resource s : model.filter(null, RDF.TYPE, FBMETA.LU_MICROFRAME).subjects()) {
             final String[] tokens = ((URI) s).getLocalName().toLowerCase().split("\\.");
             final String frame = tokens[0];
-            final String lemma = tokens[1];
+            final String lemma = fixLemma(tokens[1]);
             luMicroframes.put(frame + "-" + lemma, (URI) s);
         }
 
@@ -209,8 +220,9 @@ public class FramebaseConverter extends Converter {
             }
 
             for (final String prefix : prefixes) {
-                final URI pred = uriForRoleset(roleset, prefix);
-                final URI con = uriForConceptualizationWithPrefix(lemma, pos, roleset, prefix);
+                final URI pred = uriForSemanticClass(prefix, roleset);
+                final URI con = uriForConceptualization(prefix, lemma,
+                        getPosURIfromFramebase(pos, lemma, frame), roleset);
                 addStatementToSink(pred, PMO.ONTO_MATCH, luMicroframe);
                 addStatementToSink(con, PMO.ONTO_MATCH, luMicroframe);
             }
@@ -219,8 +231,7 @@ public class FramebaseConverter extends Converter {
         final Map<String, URI> properties = Maps.newHashMap();
         for (final Resource s : model.filter(null, FBMETA.HAS_FRAMENET_FE, null).subjects()) {
             final String name = s.stringValue().substring(FE_NS.length()).toLowerCase()
-                    .replace(".has_", ".");
-            // System.out.println(name);
+                    .replace(".has_", ".").replace('+', '_');
             properties.put(name, (URI) s);
         }
 
@@ -233,7 +244,7 @@ public class FramebaseConverter extends Converter {
             final String bank = fields[0].substring(0, index);
             final String roleset = fields[0].substring(index + 1);
             final List<String> prefixes = "pb".equals(bank) ? this.pbPrefixes : this.nbPrefixes;
-            final String role = "arg" + fields[1];
+            final String role = fields[1];
             final String frame = rolesetFrames.get(fields[0]);
             final String fe = fields[2];
 
@@ -249,9 +260,62 @@ public class FramebaseConverter extends Converter {
             }
 
             for (final String prefix : prefixes) {
-                final URI arg = uriForArgument(roleset, role, prefix);
+                final URI arg = uriForSemanticRole(prefix, roleset, role);
                 addStatementToSink(arg, PMO.ONTO_MATCH, property);
             }
+        }
+    }
+
+    private static URI uriForSemanticClass(final String prefix, final String clazz) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(NAMESPACE);
+        builder.append(prefix);
+        builder.append("-");
+        builder.append(clazz.toLowerCase());
+        return createURI(builder.toString());
+    }
+
+    private static URI uriForConceptualization(final String prefix, final String lemma, URI pos,
+            final String clazz) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(NAMESPACE);
+        builder.append(CONCEPTUALIZATION_PREFIX);
+        builder.append("-");
+        builder.append(LEXINFO.map.get(pos));
+        builder.append("-");
+        builder.append(lemma.equals("%") ? "perc-sign" : lemma.replaceAll("[^a-zA-Z0-9-_+]", ""));
+        builder.append("-");
+        builder.append(prefix);
+        builder.append("-");
+        builder.append(clazz.toLowerCase());
+        return createURI(builder.toString());
+    }
+
+    private static URI uriForSemanticRole(final String prefix, final String clazz,
+            final String role) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(NAMESPACE);
+        builder.append(prefix.toLowerCase());
+        builder.append("-");
+        builder.append(clazz.toLowerCase());
+        if (prefix.startsWith("fn")) {
+            builder.append("@").append(role.toLowerCase());
+        } else if (prefix.startsWith("pb") || prefix.startsWith("nb")) {
+            builder.append("-arg").append(role.toLowerCase());
+        } else {
+            throw new UnsupportedOperationException();
+        }
+        return createURI(builder.toString());
+    }
+
+    private static String fixLemma(String lemma) {
+        // TODO this is a hack
+        if (lemma.equals("nom+de+plume")) {
+            return "nomdeplume";
+        } else if (lemma.equals("nom+de+guerre")) {
+            return "nomdeguerre";
+        } else {
+            return lemma;
         }
     }
 

@@ -672,7 +672,7 @@ public class Premonitor {
                 .toArray(new RDFProcessor[processors.size()]));
 
         // Apply the processor
-        final RDFHandler handler = processor.wrap(RDFHandlers.NIL);
+        final RDFHandler handler = RDFHandlers.decouple(processor.wrap(RDFHandlers.NIL));
         try {
             // Start
             handler.startRDF();
