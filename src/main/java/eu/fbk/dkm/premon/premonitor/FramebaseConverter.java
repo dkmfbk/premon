@@ -218,7 +218,10 @@ public class FramebaseConverter extends Converter {
 
         final Map<String, URI> properties = Maps.newHashMap();
         for (final Resource s : model.filter(null, FBMETA.HAS_FRAMENET_FE, null).subjects()) {
-            properties.put(s.stringValue().substring(FE_NS.length()).toLowerCase(), (URI) s);
+            final String name = s.stringValue().substring(FE_NS.length()).toLowerCase()
+                    .replace(".has_", ".");
+            // System.out.println(name);
+            properties.put(name, (URI) s);
         }
 
         LOGGER.info("Emitting PB/NB role -> FB property alignments");
@@ -241,7 +244,7 @@ public class FramebaseConverter extends Converter {
 
             final URI property = properties.get(frame + "." + fe);
             if (property == null) {
-                // LOGGER.warn("Could not find matching property for " + line);
+                LOGGER.warn("Could not find matching property for " + line);
                 continue;
             }
 
