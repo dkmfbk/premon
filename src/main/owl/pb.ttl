@@ -291,6 +291,8 @@ pmopb:Modifier rdf:type owl:Class ;
                                              pmopb:argm-dir
                                              pmopb:argm-adv
                                              pmopb:argm-mnr
+                                             pmopb:argm-prn
+                                             pmopb:argm-cxn
                                            )
                                ] ;
                
@@ -313,6 +315,7 @@ pmopb:NumberedArgument rdf:type owl:Class ;
                                                      pmopb:arg1
                                                      pmopb:arg0
                                                      pmopb:arg5
+                                                     pmopb:arg6
                                                    )
                                        ] ;
                        
@@ -471,6 +474,12 @@ pmopb:arg5 rdf:type pmopb:NumberedArgument ,
                     owl:NamedIndividual .
 
 
+###  http://premon.fbk.eu/ontology/pb#arg6
+
+pmopb:arg6 rdf:type pmopb:NumberedArgument ,
+                    owl:NamedIndividual .
+
+
 
 ###  http://premon.fbk.eu/ontology/pb#arga
 
@@ -561,6 +570,17 @@ pmopb:argm-lvb rdf:type pmopb:Modifier ,
 pmopb:argm-mnr rdf:type pmopb:Modifier ,
                         owl:NamedIndividual .
 
+
+###  http://premon.fbk.eu/ontology/pb#argm-prn
+
+pmopb:argm-prn rdf:type pmopb:Modifier ,
+                        owl:NamedIndividual .
+
+                        
+###  http://premon.fbk.eu/ontology/pb#argm-cxn
+
+pmopb:argm-cxn rdf:type pmopb:Modifier ,
+                        owl:NamedIndividual .                        
 
 
 ###  http://premon.fbk.eu/ontology/pb#argm-mod

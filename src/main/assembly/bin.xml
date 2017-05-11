@@ -134,6 +134,20 @@
 				<exclude>*/**</exclude>
 			</excludes>
 		</fileSet>
+		<fileSet>
+			<outputDirectory>./resources/eso-2.0</outputDirectory>
+			<directory>src/main/assembly</directory>
+			<excludes>
+				<exclude>*/**</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<outputDirectory>./resources/framebase-2.0</outputDirectory>
+			<directory>src/main/assembly</directory>
+			<excludes>
+				<exclude>*/**</exclude>
+			</excludes>
+		</fileSet>
 	</fileSets>
 	<dependencySets>
 		<dependencySet>

@@ -1,33 +1,43 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import com.google.common.base.Throwables;
-import com.google.common.collect.Lists;
-import com.google.common.io.Files;
-import eu.fbk.dkm.premon.vocab.LEXINFO;
+import eu.fbk.dkm.premon.vocab.ESO;
+import eu.fbk.dkm.premon.vocab.PM;
 import eu.fbk.dkm.premon.vocab.PMO;
 import eu.fbk.rdfpro.*;
+import eu.fbk.rdfpro.util.Algebra;
+import eu.fbk.rdfpro.util.Namespaces;
 import eu.fbk.rdfpro.util.QuadModel;
 import eu.fbk.rdfpro.util.Statements;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.vocabulary.SESAME;
+import org.openrdf.model.*;
+import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.Rio;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.*;
-import java.util.logging.Handler;
 
 /**
  * Created by marcorospocher on 08/05/2017.
  */
 public class EsoConverter extends Converter {
 
+
+
+    //private HashMap<Resource,Set<URI>> esoCL_fnFrameMAP = new HashMap<Resource,Set<URI>>();
+    private String role_FE_query = "SELECT DISTINCT ?combo ?role\n" +
+            "WHERE { ?eso  <http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetFrame_closeMatch> ?frame . \n" +
+            "	?eso (rdfs:subClassOf|owl:equivalentClass)/owl:hasValue ?rule . \n" +
+            "	?rule <http://www.newsreader-project.eu/domain-ontology#hasSituationRuleAssertion> ?ass . \n" +
+            "	?ass (<http://www.newsreader-project.eu/domain-ontology#hasSituationAssertionObject>|<http://www.newsreader-project.eu/domain-ontology#hasSituationAssertionSubject>) ?role1 .\n" +
+            "	FILTER (str(?role) = str(?role1)) . ?role <http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetElement> ?FE .\n" +
+            "	BIND(IRI(CONCAT(\"[PREFIX][FNV]-\",LCASE(STRAFTER(?frame,\"#\")),\"@\",LCASE(STRAFTER(?FE,\"#\")))) as ?combo)\n" +
+            "}\n" +
+            "ORDER BY ?role ?combo";
 
     private ArrayList<String> fnLinks = new ArrayList<>();
 
@@ -51,58 +61,78 @@ public class EsoConverter extends Converter {
         //read input file
         try {
             final QuadModel model = readTriples(eso);
+
             LOGGER.info("Read "+filename);
 
-            URI FE_prop = createURI("http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetElement");
-            URI frameClose_prop = createURI("http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetFrame_closeMatch");
-            URI frameBroad_prop = createURI("http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetFrame_broadMatch");
-            //URI frameRelated_prop = createURI("http://www.newsreader-project.eu/domain-ontology#correspondToFrameNetFrame_relatedMatch");
+            final Ruleset tboxRuleset = Ruleset
+                    .fromRDF("classpath:/eu/fbk/dkm/premon/premonitor/ruleset.ttl");
+            RuleEngine.create(tboxRuleset).eval(model);
+
+            LOGGER.info("TBox Closure "+filename);
+
+            // processClassesMappings
+            processClassMappings(model, ESO.CORRESPOND_FRAME_CLOSE, PMO.ONTO_MATCH);
+
+            preocessRoleMappings(model, PMO.ONTO_MATCH);
 
 
-            processProperty(model, frameClose_prop, PMO.ONTO_MATCH);
 
-            processProperty(model, frameBroad_prop, PMO.ONTO_NARROWER_MATCH);
-
-            //processProperty(model, frameRelated_prop,null);
 
         }catch (IOException e){
             throw e;
+        } catch (MalformedQueryException e) {
+            e.printStackTrace();
         }
 
     }
 
-    private void processProperty(QuadModel model, URI frameBroad_prop, URI premon_prop) {
-        Iterator<Statement> iter_fb = model.iterator(null,frameBroad_prop,null);
-        while(iter_fb.hasNext()){
+    private void preocessRoleMappings(QuadModel model, URI premon_prop) throws MalformedQueryException {
 
-            Statement stmt = iter_fb.next();
+        for (String fnLink:this.fnLinks
+                ) {
+            TupleExpr query = Algebra.parseTupleExpr(this.role_FE_query.replace("[FNV]",fnLink).replace("[PREFIX]", PM.NAMESPACE), null, Namespaces.DEFAULT.uriMap());
+            Iterator<BindingSet> iterator = model.evaluate(query, null, null);
+            int i = 0;
+            while (iterator.hasNext()) {
+                i++;
+                BindingSet resultRow = iterator.next();
+                URI fnFE = createURI(resultRow.getValue("combo").toString());
+                URI esoRole = createURI(resultRow.getValue("role").toString());
 
-            final Resource eso = stmt.getSubject();
-            final Value framenet = stmt.getObject();
-
-            //LOGGER.info("sub "+(URI eso_role_propertyRES);
-//                LOGGER.info("pred "+t.getPredicate().toString());
-//                LOGGER.info("obj "+t.getObject().toString());
-
-//            LOGGER.info("subj "+eso.toString());
-//            LOGGER.info("obj "+framenet.stringValue());
-            String frame = framenet.stringValue().substring(framenet.stringValue().lastIndexOf("#")+1).toLowerCase();
-
-
-            for (String fnLink:this.fnLinks
-                 ) {
-
-                URI fnFrameURI = uriForRoleset(frame, fnLink);
-//                LOGGER.info("frame " + fnFrameURI.toString());
-                addStatementToSink(fnFrameURI,premon_prop,eso);
+                addStatementToSink(fnFE, premon_prop, esoRole);
             }
-
-
-            //addStatementToSink(eso,premon_prop,framenet_pm,eso)
-            
-
+            LOGGER.info("Number of Extracted " + fnLink+"-"+this.resource+" Semantic Role ontoMatch: " + i);
         }
     }
+
+    private void processClassMappings(QuadModel model, URI frameBroad_prop, URI premon_prop) {
+
+        for (String fnLink:this.fnLinks
+                ) {
+            Iterator<Statement> iter_fb = model.iterator(null, frameBroad_prop, null);
+            int i = 0;
+            while (iter_fb.hasNext()) {
+                i++;
+                Statement stmt = iter_fb.next();
+                final Resource eso = stmt.getSubject();
+                final Value framenet = stmt.getObject();
+
+                LOGGER.debug("subj "+eso.toString());
+                LOGGER.debug("obj "+framenet.stringValue());
+
+                String frame = framenet.stringValue().substring(framenet.stringValue().lastIndexOf("#") + 1).toLowerCase();
+                URI fnFrameURI = uriForRoleset(frame, fnLink);
+                LOGGER.debug("frame " + fnFrameURI.toString());
+
+
+                addStatementToSink(fnFrameURI, premon_prop, eso);
+
+            }
+            LOGGER.info("Number of Extracted " + fnLink+"-"+this.resource+" Semantic Class ontoMatch: " + i);
+        }
+    }
+
+
 
 
     private static QuadModel readTriples(final File file) throws IOException {
