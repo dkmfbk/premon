@@ -77,15 +77,15 @@ public class PropbankConverter extends BankConverter {
         return Type.NULL;
     }
 
-    protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
+    protected void addExternalLinks(ComplexLemmaWithMappings complexLemmaWithMappings, URI conceptualizationURI, String uriLemma, String type) {
 
-        String rolesetID = ((Roleset) roleset).getId();
+        String rolesetID = complexLemmaWithMappings.getRolesetID();
         URI rolesetURI = uriForRoleset(rolesetID);
         
         // FrameNet
         List<String> fnPredicates = new ArrayList<>();
-        if (roleset.getFramnet() != null) {
-            String[] tmpFnPreds = roleset.getFramnet().trim().toLowerCase()
+        if (complexLemmaWithMappings.getFramenet() != null) {
+            String[] tmpFnPreds = complexLemmaWithMappings.getFramenet().trim().toLowerCase()
                     .split("\\s+");
             for (String tmpClass : tmpFnPreds) {
                 tmpClass = tmpClass.trim();
@@ -104,7 +104,7 @@ public class PropbankConverter extends BankConverter {
         }
 
         // VerbNet
-        List<String> vnClasses = getVnClasses(roleset.getVncls());
+        List<String> vnClasses = getVnClasses(complexLemmaWithMappings.getVn());
         for (String vnClass : vnClasses) {
             for (String vnLink : vnLinks) {
                 URI vnClassURI = uriForRoleset(vnClass, vnLink);

@@ -27,6 +27,7 @@ import java.util.List;
     @XmlAttribute(name = "source") @XmlJavaTypeAdapter(NormalizedStringAdapter.class) protected String source;
     @XmlElements({ @XmlElement(name = "note", type = Note.class),
             @XmlElement(name = "roles", type = Roles.class),
+            @XmlElement(name = "aliases", type = Aliases.class),
             @XmlElement(name = "example", type = Example.class) }) protected List<Object> noteOrRolesOrExample;
 
     /**
@@ -141,7 +142,7 @@ import java.util.List;
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getNoteOrRolesOrExample().add(newItem);
+     *    getNoteOrRolesOrExampleOrAliases().add(newItem);
      * </pre>
      * <p>
      * <p>
@@ -151,7 +152,7 @@ import java.util.List;
      * {@link Roles }
      * {@link Example }
      */
-    public List<Object> getNoteOrRolesOrExample() {
+    public List<Object> getNoteOrRolesOrExampleOrAliases() {
         if (noteOrRolesOrExample == null) {
             noteOrRolesOrExample = new ArrayList<Object>();
         }

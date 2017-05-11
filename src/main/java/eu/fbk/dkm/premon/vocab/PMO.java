@@ -100,6 +100,11 @@ public final class PMO {
     /** Datatype property pmo:abbreviation. */
     public static final URI ABBREVIATION = createURI("abbreviation");
 
+    // Individuals
+
+    /** Individual pmo:idiosyncratic. */
+    public static final URI IDIOSYNCRATIC = createURI("idiosyncratic");
+
     // Utility methods
 
     private static URI createURI(final String localName) {

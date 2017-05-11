@@ -303,6 +303,9 @@ public abstract class Converter {
 
     protected URI addSingleEntry(String goodLemma, String uriLemma, String pos, Resource lexiconURI) {
         URI posURI = getPosURI(pos);
+        if (posURI == null) {
+            System.out.println(pos);
+        }
         URI leURI = uriForLexicalEntry(uriLemma, posURI);
         URI formURI = uriForForm(uriLemma, posURI);
 

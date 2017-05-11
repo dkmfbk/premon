@@ -113,6 +113,9 @@ public final class PMOPB {
     /** Individual pmopb:arg5 (a pmopb:NumberedRole). */
     public static final URI ARG5 = createURI("arg5");
 
+    /** Individual pmopb:arg6 (a pmopb:NumberedRole). */
+    public static final URI ARG6 = createURI("arg6");
+
     /** Individual pmopb:arga (a pmopb:AgentiveRole). */
     public static final URI ARGA = createURI("arga");
 
@@ -178,6 +181,12 @@ public final class PMOPB {
 
     /** Individual pmopb:argm-tmp (a pmopb:ModifierRole). */
     public static final URI ARGM_TMP = createURI("argm-tmp");
+
+    /** Individual pmopb:argm-cxn (a pmopb:ModifierRole). */
+    public static final URI ARGM_CXN = createURI("argm-cxn");
+
+    /** Individual pmopb:argm-prr (a pmopb:ModifierRole). */
+    public static final URI ARGM_PRR = createURI("argm-prr");
 
     /** Individual pmopb:tag-pag (a pmopb:Tag). */
     public static final URI TAG_PAG = createURI("tag-pag");
@@ -261,6 +270,8 @@ public final class PMOPB {
         mapM.put("rcl", ARGM_RCL);
         mapM.put("slc", ARGM_SLC);
         mapM.put("lvb", ARGM_LVB);
+        mapM.put("cxn", ARGM_CXN);
+        mapM.put("prr", ARGM_PRR);
 
         mapO.put("pag", TAG_PAG);
         mapO.put("ppt", TAG_PPT);
@@ -272,6 +283,7 @@ public final class PMOPB {
         mapF.put("3", ARG3);
         mapF.put("4", ARG4);
         mapF.put("5", ARG5);
+        mapF.put("6", ARG6);
 
         mapAspect.put("perfect", PERFECT);
         mapAspect.put("progressive", PROGRESSIVE);

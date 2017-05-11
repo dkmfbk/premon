@@ -15,10 +15,10 @@ import java.util.List;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "", propOrder = {
-        "noteOrRole" }) @XmlRootElement(name = "roles") public class Roles {
+        "noteOrAlias" }) @XmlRootElement(name = "aliases") public class Aliases {
 
     @XmlElements({ @XmlElement(name = "note", type = Note.class),
-            @XmlElement(name = "role", type = Role.class) }) protected List<Object> noteOrRole;
+            @XmlElement(name = "alias", type = Alias.class) }) protected List<Object> noteOrAlias;
 
     /**
      * Gets the value of the noteOrAlias property.
@@ -41,11 +41,11 @@ import java.util.List;
      * {@link Note }
      * {@link Role }
      */
-    public List<Object> getNoteOrRole() {
-        if (noteOrRole == null) {
-            noteOrRole = new ArrayList<Object>();
+    public List<Object> getNoteOrAlias() {
+        if (noteOrAlias == null) {
+            noteOrAlias = new ArrayList<Object>();
         }
-        return this.noteOrRole;
+        return this.noteOrAlias;
     }
 
 }
