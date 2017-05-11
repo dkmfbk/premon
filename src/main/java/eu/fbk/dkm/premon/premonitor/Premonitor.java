@@ -725,9 +725,10 @@ public class Premonitor {
             for (final QuadModel model : map.values()) {
                 for (final Statement stmt : model.filter(null, PMO.EVOKED_CONCEPT, null)) {
                     validItems.add((URI) stmt.getSubject()); // conceptualizations
-                    validItems.add((URI) stmt.getObject()); // semantic class
+
                 }
                 for (final Statement stmt : model.filter(null, PMO.SEM_ROLE, null)) {
+                    validItems.add((URI) stmt.getSubject()); // semantic class
                     validItems.add((URI) stmt.getObject()); // semantic roles
                 }
             }
