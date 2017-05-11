@@ -188,6 +188,9 @@ public final class PMOPB {
     /** Individual pmopb:argm-prr (a pmopb:ModifierRole). */
     public static final URI ARGM_PRR = createURI("argm-prr");
 
+    /** Individual pmopb:argm-vsp (a pmopb:ModifierRole). */
+    public static final URI ARGM_VSP = createURI("argm-vsp");
+
     /** Individual pmopb:tag-pag (a pmopb:Tag). */
     public static final URI TAG_PAG = createURI("tag-pag");
 
@@ -272,6 +275,7 @@ public final class PMOPB {
         mapM.put("lvb", ARGM_LVB);
         mapM.put("cxn", ARGM_CXN);
         mapM.put("prr", ARGM_PRR);
+        mapM.put("vsp", ARGM_VSP);
 
         mapO.put("pag", TAG_PAG);
         mapO.put("ppt", TAG_PPT);
