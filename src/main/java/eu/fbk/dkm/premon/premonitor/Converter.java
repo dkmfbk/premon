@@ -7,6 +7,7 @@ import java.util.*;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
@@ -167,6 +168,19 @@ public abstract class Converter {
                 }
             }
         }
+    }
+    
+    protected static List<String> parseLinks(String linkString) {
+        ImmutableList.Builder<String> builder = ImmutableList.builder();
+        if (linkString != null) {
+            for (String link : linkString.split(",")) {
+                link = link.trim();
+                if (link.length() > 0) {
+                    builder.add(link.toLowerCase());
+                }
+            }
+        }
+        return builder.build();
     }
 
     // Methods to add statement
