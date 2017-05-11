@@ -146,7 +146,7 @@ public class FramebaseConverter extends Converter {
             final String[] tokens = luMicroframe.getLocalName().split("\\.");
             assert tokens.length == 3;
             final String frame = tokens[0].toLowerCase();
-            final String lemma = fixLemma(tokens[1]);
+            final String lemma = fixFramebaseLemma(tokens[1]);
             final String pos = tokens[2].toLowerCase();
             for (final String fnPrefix : this.fnPrefixes) {
                 final URI fnCon = uriForConceptualization(fnPrefix, lemma,
@@ -180,11 +180,18 @@ public class FramebaseConverter extends Converter {
 
     private void emitPBNBAlignments(final QuadModel model) throws IOException {
 
+        final Map<String, String> multiwordLemmas = Maps.newHashMap();
+        for (final String line : Resources.readLines(
+                FramebaseConverter.class.getResource("pb215-multiwords.tsv"), Charsets.UTF_8)) {
+            final String[] fields = line.split("\t");
+            multiwordLemmas.put(fields[0], fields[1]);
+        }
+
         final Multimap<String, URI> luMicroframes = HashMultimap.create();
         for (final Resource s : model.filter(null, RDF.TYPE, FBMETA.LU_MICROFRAME).subjects()) {
             final String[] tokens = ((URI) s).getLocalName().toLowerCase().split("\\.");
             final String frame = tokens[0];
-            final String lemma = fixLemma(tokens[1]);
+            final String lemma = fixFramebaseLemma(tokens[1]);
             luMicroframes.put(frame + "-" + lemma, (URI) s);
         }
 
@@ -197,8 +204,9 @@ public class FramebaseConverter extends Converter {
             final int index1 = fields[0].indexOf(':');
             final int index2 = fields[0].lastIndexOf('.');
             final String bank = fields[0].substring(0, index1);
-            final List<String> prefixes = "pb".equals(bank) ? this.pbPrefixes : this.nbPrefixes;
-            final String roleset = fields[0].substring(index1 + 1);
+            final List<String> prefixes = "pb".equals(bank) ? this.pbPrefixes
+                    : "nb".equals(bank) ? this.nbPrefixes : null;
+            final String roleset = fields[0].substring(index1 + 1).replace(".lv", ".LV");
             final String lemma = fields[0].substring(index1 + 1, index2);
             final String frame = fields[1];
             rolesetFrames.put(fields[0], fields[1]);
@@ -207,8 +215,8 @@ public class FramebaseConverter extends Converter {
             String pos = null;
             for (final URI candidate : luMicroframes.get(frame + "-" + lemma)) {
                 final String str = candidate.stringValue();
-                if (luMicroframe == null || "pb".equals(bank) && str.endsWith(".verb")
-                        || "nb".equals(bank) && str.endsWith(".noun")) {
+                if ("nb".equals(bank) && str.endsWith(".noun")
+                        || "pb".equals(bank) && (luMicroframe == null || str.endsWith(".verb"))) {
                     luMicroframe = candidate;
                     pos = str.substring(str.lastIndexOf('.') + 1);
                 }
@@ -220,8 +228,10 @@ public class FramebaseConverter extends Converter {
             }
 
             for (final String prefix : prefixes) {
+                final String expandedLemma = prefix.startsWith("pb")
+                        ? multiwordLemmas.getOrDefault(roleset, lemma) : lemma;
                 final URI pred = uriForSemanticClass(prefix, roleset);
-                final URI con = uriForConceptualization(prefix, lemma,
+                final URI con = uriForConceptualization(prefix, expandedLemma,
                         getPosURIfromFramebase(pos, lemma, frame), roleset);
                 addStatementToSink(pred, PMO.ONTO_MATCH, luMicroframe);
                 addStatementToSink(con, PMO.ONTO_MATCH, luMicroframe);
@@ -242,7 +252,7 @@ public class FramebaseConverter extends Converter {
             final String[] fields = line.toLowerCase().split("\t");
             final int index = fields[0].indexOf(':');
             final String bank = fields[0].substring(0, index);
-            final String roleset = fields[0].substring(index + 1);
+            final String roleset = fields[0].substring(index + 1).replace(".lv", ".LV");
             final List<String> prefixes = "pb".equals(bank) ? this.pbPrefixes : this.nbPrefixes;
             final String role = fields[1];
             final String frame = rolesetFrames.get(fields[0]);
@@ -271,12 +281,12 @@ public class FramebaseConverter extends Converter {
         builder.append(NAMESPACE);
         builder.append(prefix);
         builder.append("-");
-        builder.append(clazz.toLowerCase());
+        builder.append(clazz);
         return createURI(builder.toString());
     }
 
-    private static URI uriForConceptualization(final String prefix, final String lemma, URI pos,
-            final String clazz) {
+    private static URI uriForConceptualization(final String prefix, final String lemma,
+            final URI pos, final String clazz) {
         final StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
         builder.append(CONCEPTUALIZATION_PREFIX);
@@ -287,7 +297,7 @@ public class FramebaseConverter extends Converter {
         builder.append("-");
         builder.append(prefix);
         builder.append("-");
-        builder.append(clazz.toLowerCase());
+        builder.append(clazz);
         return createURI(builder.toString());
     }
 
@@ -297,7 +307,7 @@ public class FramebaseConverter extends Converter {
         builder.append(NAMESPACE);
         builder.append(prefix.toLowerCase());
         builder.append("-");
-        builder.append(clazz.toLowerCase());
+        builder.append(clazz);
         if (prefix.startsWith("fn")) {
             builder.append("@").append(role.toLowerCase());
         } else if (prefix.startsWith("pb") || prefix.startsWith("nb")) {
@@ -308,7 +318,7 @@ public class FramebaseConverter extends Converter {
         return createURI(builder.toString());
     }
 
-    private static String fixLemma(String lemma) {
+    private static String fixFramebaseLemma(final String lemma) {
         // TODO this is a hack
         if (lemma.equals("nom+de+plume")) {
             return "nomdeplume";
