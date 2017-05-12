@@ -105,6 +105,8 @@ public class FramebaseConverter extends Converter {
 
         // Emit PB/NB -> FrameBase alignments, deriving them from FB and embedded mapping data
         emitPBNBAlignments(model);
+
+        //LOGGER.info("Framebase Total alignments: "+model.filter(null,PMO.ONTO_MATCH,null).size());
     }
 
     private QuadModel readFramebaseTriples() throws IOException {
@@ -139,6 +141,9 @@ public class FramebaseConverter extends Converter {
 
     private void emitFNAlignments(final QuadModel model) {
 
+
+        int conCount=0;
+        int roleCount=0;
         // Emit mappings for LU microframes
         LOGGER.info("Emitting FN frame -> FB class alignments");
         for (final Resource s : model.filter(null, RDF.TYPE, FBMETA.LU_MICROFRAME).subjects()) {
@@ -152,8 +157,11 @@ public class FramebaseConverter extends Converter {
                 final URI fnCon = uriForConceptualization(fnPrefix, lemma,
                         getPosURIfromFramebase(pos, lemma, frame), frame);
                 addStatementToSink(fnCon, PMO.ONTO_MATCH, luMicroframe);
+                addStatementToSink(fnCon, RDF.TYPE, PMO.CONCEPTUALIZATION);
+                conCount++;
             }
         }
+        LOGGER.info("Alignments found: "+conCount);
 
         // Retrieve the most specific macroframes
         final Set<Resource> macroframes = Sets.newHashSet();
@@ -173,19 +181,25 @@ public class FramebaseConverter extends Converter {
                 for (final String fnPrefix : this.fnPrefixes) {
                     final URI fnArg = uriForSemanticRole(fnPrefix, frame, role);
                     addStatementToSink(fnArg, PMO.ONTO_MATCH, property);
+                    addStatementToSink(fnArg, RDF.TYPE, PMO.SEMANTIC_ROLE);
+                    roleCount++;
                 }
             }
         }
+        LOGGER.info("Alignments found: "+roleCount);
     }
 
     private void emitPBNBAlignments(final QuadModel model) throws IOException {
 
-        final Map<String, String> multiwordLemmas = Maps.newHashMap();
-        for (final String line : Resources.readLines(
-                FramebaseConverter.class.getResource("pb215-multiwords.tsv"), Charsets.UTF_8)) {
-            final String[] fields = line.split("\t");
-            multiwordLemmas.put(fields[0], fields[1]);
-        }
+        int conCount=0;
+        int roleCount=0;
+
+//        final Map<String, String> multiwordLemmas = Maps.newHashMap();
+//        for (final String line : Resources.readLines(
+//                FramebaseConverter.class.getResource("pb215-multiwords.tsv"), Charsets.UTF_8)) {
+//            final String[] fields = line.split("\t");
+//            multiwordLemmas.put(fields[0], fields[1]);
+//        }
 
         final Multimap<String, URI> luMicroframes = HashMultimap.create();
         for (final Resource s : model.filter(null, RDF.TYPE, FBMETA.LU_MICROFRAME).subjects()) {
@@ -228,15 +242,19 @@ public class FramebaseConverter extends Converter {
             }
 
             for (final String prefix : prefixes) {
-                final String expandedLemma = prefix.startsWith("pb")
-                        ? multiwordLemmas.getOrDefault(roleset, lemma) : lemma;
+                //final String expandedLemma = prefix.startsWith("pb")
+                //        ? multiwordLemmas.getOrDefault(roleset, lemma) : lemma;
                 final URI pred = uriForSemanticClass(prefix, roleset);
-                final URI con = uriForConceptualization(prefix, expandedLemma,
+                final URI con = uriForConceptualization(prefix, lemma,
                         getPosURIfromFramebase(pos, lemma, frame), roleset);
                 addStatementToSink(pred, PMO.ONTO_MATCH, luMicroframe);
+                addStatementToSink(pred, RDF.TYPE, PMO.SEMANTIC_CLASS);
                 addStatementToSink(con, PMO.ONTO_MATCH, luMicroframe);
+                addStatementToSink(con, RDF.TYPE, PMO.CONCEPTUALIZATION);
+                conCount+=2;
             }
         }
+        LOGGER.info("Alignments found: "+conCount);
 
         final Map<String, URI> properties = Maps.newHashMap();
         for (final Resource s : model.filter(null, FBMETA.HAS_FRAMENET_FE, null).subjects()) {
@@ -272,8 +290,11 @@ public class FramebaseConverter extends Converter {
             for (final String prefix : prefixes) {
                 final URI arg = uriForSemanticRole(prefix, roleset, role);
                 addStatementToSink(arg, PMO.ONTO_MATCH, property);
+                addStatementToSink(arg, RDF.TYPE, PMO.SEMANTIC_ROLE);
+                roleCount++;
             }
         }
+        LOGGER.info("Alignments found: "+roleCount);
     }
 
     private static URI uriForSemanticClass(final String prefix, final String clazz) {

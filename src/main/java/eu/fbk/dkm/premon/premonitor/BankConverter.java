@@ -215,7 +215,7 @@ public abstract class BankConverter extends Converter {
 //                        List<ComplexLemma> lemmas = new ArrayList<>();
 
                         ComplexLemma complexLemma;
-                        if (true) {
+//                        if (true) {
                             String replacedLemma = REPLACER.apply(((Predicate) predicate).getLemma(), this.baseResource, "lemma", file.getName());
                             String uLemma = getLemmaFromPredicateName(replacedLemma);
                             String goodLemma = uLemma.replaceAll("\\+", " ");
@@ -228,7 +228,7 @@ public abstract class BankConverter extends Converter {
                             URI leURI = addLexicalEntry(goodLemma, uLemma, tokens, pos, mainType, getLexicon());
 
                             complexLemma = new ComplexLemma(goodLemma, uLemma, tokens, pos, mainType, getLexicon(), leURI);
-                        }
+  //                      }
 //                        lemmas.add(complexLemma);
 
 //                        System.out.println("Lemma: " + ((Predicate) predicate).getLemma());
@@ -307,7 +307,7 @@ public abstract class BankConverter extends Converter {
 
                                     URI lexicalEntryURI = lemma.getLemma().getLexicalEntryURI();
                                     String clOLemma = lemma.getLemma().getGoodLemma();
-                                    String uriLemma = lemma.getLemma().getUriLemma();
+                                    String uriLemma = lemmas.size() == 1 ? uriOrigLemma : lemma.getLemma().getUriLemma();
                                     String mainPos = lemma.getLemma().getMainPos();
 
                                     addStatementToSink(rolesetURI, RDFS.SEEALSO, getExternalLink(clOLemma, mainPos));

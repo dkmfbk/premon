@@ -10,6 +10,7 @@ import eu.fbk.rdfpro.util.Namespaces;
 import eu.fbk.rdfpro.util.QuadModel;
 import eu.fbk.rdfpro.util.Statements;
 import org.openrdf.model.*;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -97,6 +98,7 @@ public class EsoConverter extends Converter {
                 URI esoRole = createURI(resultRow.getValue("role").toString());
 
                 addStatementToSink(fnFE, premon_prop, esoRole);
+                addStatementToSink(fnFE, RDF.TYPE, PMO.SEMANTIC_ROLE);
             }
             LOGGER.info("Number of Extracted " + fnLink+"-"+this.resource+" Semantic Role ontoMatch: " + i);
         }
@@ -123,6 +125,7 @@ public class EsoConverter extends Converter {
 
 
                 addStatementToSink(fnFrameURI, premon_prop, eso);
+                addStatementToSink(fnFrameURI, RDF.TYPE, PMO.SEMANTIC_CLASS);
 
             }
             LOGGER.info("Number of Extracted " + fnLink+"-"+this.resource+" Semantic Class ontoMatch: " + i);

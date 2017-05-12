@@ -515,9 +515,9 @@ public class Premonitor {
             msBefore = Maps.newHashMap();
             for (final Map.Entry<String, Map<URI, QuadModel>> entry : models.entrySet()) {
                 msBefore.put(entry.getKey(), new MappingStatistics(entry.getValue().values(),
-                        sourceKeys,quadModels));
+                        sourceKeys,entry.getKey()));
             }
-            msBefore.put("all", new MappingStatistics(quadModels, ImmutableList.of(),quadModels));
+            msBefore.put("all", new MappingStatistics(quadModels, ImmutableList.of(),"all"));
             msAfter = msBefore;
         }
 
@@ -532,9 +532,9 @@ public class Premonitor {
                 msAfter = Maps.newHashMap();
                 for (final Map.Entry<String, Map<URI, QuadModel>> entry : models.entrySet()) {
                     msAfter.put(entry.getKey(), new MappingStatistics(entry.getValue().values(),
-                            sourceKeys,quadModels));
+                            sourceKeys,entry.getKey()));
                 }
-                msAfter.put("all", new MappingStatistics(quadModels, ImmutableList.of(),quadModels));
+                msAfter.put("all", new MappingStatistics(quadModels, ImmutableList.of(),"all"));
             }
             LOGGER.info("Resource statistics");
             LOGGER.info(String.format("  %-10s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s",
@@ -871,17 +871,21 @@ public class Premonitor {
                             }
                         }
 
+                        //for all
                         //Check if only remaining triple on subject is "rdf:type skos:Concept". if so remove
-                        final List<Statement> rel_stmts = ImmutableList.copyOf(model.filter(stmt.getSubject(),null,
-                                null));
 
-                        if ((ImmutableList.copyOf(model.filter(stmt.getSubject(),null,
-                                null)).size()==1)&&rel_stmts.get(0).getPredicate().equals(RDF.TYPE)&&rel_stmts.get(0).getObject().equals(SKOS.CONCEPT)) {
-                            ++numTriplesToDelete;
-                            LOGGER.debug("Removing type triple {} - {} - {}", rel_stmts.get(0).getSubject(),rel_stmts.get(0).getPredicate(),
-                                    rel_stmts.get(0).getObject());
-                            model.remove(stmt);
+                        if (!model.contains(stmt.getSubject(),PMO.ONTO_MATCH,
+                                null)) {
 
+                            for (Statement rel_stmt : ImmutableList.copyOf(model.filter(stmt.getSubject(),null,
+                                    null))){
+
+                                ++numTriplesToDelete;
+                                LOGGER.debug("Removing type triple {} - {} - {}", rel_stmt.getSubject(),rel_stmt.getPredicate(),
+                                        rel_stmt.getObject());
+                                model.remove(stmt);
+
+                            }
                         }
 
                     }
@@ -1026,7 +1030,7 @@ public class Premonitor {
         //final Table<String, String, Integer> ontoMappings;
 
         public MappingStatistics(final Iterable<? extends QuadModel> models,
-                final Iterable<String> sources, final List<QuadModel> quadModels) {
+                final Iterable<String> sources, final String resource) {
 
             final Table<String, String, Set<Hash>> conHashes = HashBasedTable.create();
             final Table<String, String, Set<Hash>> classHashes = HashBasedTable.create();
@@ -1075,46 +1079,38 @@ public class Premonitor {
                             Joiner.on('|').join(Ordering.natural().sortedCopy(items.values())));
                 }
 
+                int mappingsCount = model.filter(null, PMO.ONTO_MATCH, null).size();
+                if (mappingsCount!=0) LOGGER.debug("Processing "+mappingsCount+" for mapping resource "+resource);
+
                 for (final Statement mapping : model.filter(null, PMO.ONTO_MATCH, null)) {
 
                     final Resource subject = mapping.getSubject();
+                    final Value object = mapping.getObject();
 
-                    Table<String, String, Set<Hash>> hashes = otherHashes;
+                    final Table<String, String, Set<Hash>> hashes;
 
-                    boolean found = false;
-                    for (QuadModel quadModel:quadModels) {
+                    if (model.contains(subject, RDF.TYPE, PMO.CONCEPTUALIZATION)) {
+                        hashes = conHashes;
+                    } else if (model.contains(subject, RDF.TYPE, PMO.SEMANTIC_CLASS)) {
+                        hashes = classHashes;
+                    } else if (model.contains(subject, RDF.TYPE, PMO.SEMANTIC_ROLE)) {
+                        hashes = roleHashes;
+                    } else hashes = otherHashes;
 
-                        if (quadModel.contains(subject, RDF.TYPE, PMO.CONCEPTUALIZATION)) {
-                            hashes = conHashes; found = true; break;
-                        } else if (quadModel.contains(subject, RDF.TYPE, PMO.SEMANTIC_CLASS)) {
-                            hashes = classHashes;  found = true; break;
-                        } else if (quadModel.contains(subject, RDF.TYPE, PMO.SEMANTIC_ROLE)) {
-                            hashes = roleHashes;  found = true; break;
+                    final String subjStr = subject.stringValue();
+                    String subjRes ="";
+                    for (int i = 0; i < sourceKeys.size(); ++i) {
+                        if (sourcePatterns.get(i).matcher(subjStr).find()) {
+                            subjRes=sourceKeys.get(i); break;
                         }
                     }
+                    final String objStr = object.stringValue();
 
-
-                    final Map<String, String> items = Maps.newHashMap();
-
-                        final String str = subject.stringValue();
-                        for (int i = 0; i < sourceKeys.size(); ++i) {
-                            if (sourcePatterns.get(i).matcher(str).find()) {
-                                items.put(sourceKeys.get(i), subject.stringValue());
-                            }
-                        }
-
-
-                    for (final String fromSource : items.keySet()) {
-                        for (final String toSource : items.keySet()) {
-                            if (fromSource.compareTo(toSource) < 0) {
-                                addHash(hashes, fromSource, toSource, items.get(fromSource), "|",
-                                        items.get(toSource));
-                            }
-                        }
-                    }
-
+                    addHash(hashes, subjRes, resource, subjStr, "|",
+                            objStr);
                     addHash(hashes, "all", "all",
-                            Joiner.on('|').join(Ordering.natural().sortedCopy(items.values())));
+                            subjStr, "|",
+                            objStr);
                 }
 
 

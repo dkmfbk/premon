@@ -42,7 +42,7 @@ nif:referenceContext a owl:ObjectProperty ;
 skos:broader a owl:ObjectProperty .
 
 nif:Annotation a owl:Class ;
-	rdfs:subClassOf _:node1bfoq7jdux9 .
+	rdfs:subClassOf _:node1bfugcveax9 .
 
 nif:Context a owl:Class .
 
@@ -54,7 +54,7 @@ nif:RFC5147String a owl:Class .
 
 The *PreMOn Ontology Core Module* extends *lemon* by introducing classes [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole). [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) homogeneously represents the semantic classes from the various predicate models. That is, individuals of this class correspond to rolesets in PB and NB (e.g., *pm:nb10-seller.01* and *pm:pb17-sell.01*), verb classes in VN (e.g., *pm:vn32-give-13.1-1*), and frames in FN (e.g., *pm:fn15-commerce sell*). An instance of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) typically has (via property [pmo:semRole](http://premon.fbk.eu/ontology/core#semRole)) a number of [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole)s, representing, from a semantic point of view, the roles the arguments of that [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) can play.
 
-Semantic roles are defined locally to semantic classes, so VN *agent* is represented as multiple semantic roles, one for each verb class it occurs in, and with each semantic role linked to its specific selectional restrictions (if any). Note that [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) is defined as subclass of [ontolex:LexicalConcept](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Concept), as we see [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass)es as essentially informal concepts rather than well defined concepts of a formal ontology (although an ontology can be derived from them, cf., FrameBase and ESO). Being [ontolex:LexicalConcept](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Concept)s, [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass)es inherit the link to lexical entries as well as the link (via [ontolex:isConceptOf](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Concept)) to the ontological entities formalizing them, typically event classes.
+Semantic roles are defined locally to semantic classes, so VN *agent* is represented as multiple semantic roles, one for each verb class it occurs in, and with each semantic role linked to its specific selectional restrictions (if any). Note that [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) is defined as subclass of [ontolex:LexicalConcept](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Concept), as we see [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass)es as essentially informal concepts rather than well defined concepts of a formal ontology (although an ontology can be derived from them, cf., FrameBase and ESO). In particular, being [ontolex:LexicalConcept](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Concept)s, [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass)es inherit the link to lexical entries.
 
 Properties [pmo:classRel](http://premon.fbk.eu/ontology/core#classRel) and [pmo:roleRel](http://premon.fbk.eu/ontology/core#roleRel), and their resource-specific subproperties, are introduced to express the relations between elements at each level, such as subtyping, and predicate and role inheritance (e.g., [pmofn:inheritsFrom](http://premon.fbk.eu/ontology/fn#inheritsFrom) and [pmofn:inheritsFromFER](http://premon.fbk.eu/ontology/fn#inheritsFromFER) for FN). Additional resource-specific classes (e.g., [pmovn:ThematicRole](http://premon.fbk.eu/ontology/vn#ThematicRole)) and properties (e.g., [pmovn:thematicRole](http://premon.fbk.eu/ontology/vn#thematicRole)) further characterize important aspects of each predicate model, like commonalities between semantic roles.
 
@@ -64,6 +64,17 @@ Mappings between different predicate models are practically relevant but cannot 
 
 Mappings are explicitly represented as individuals of class [pmo:Mapping](http://premon.fbk.eu/ontology/core#Mapping), and can be seen as sets of (or n-ary relations between) either (i) [pmo:Conceptualization](http://premon.fbk.eu/ontology/core#Conceptualization)s, (ii) [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass)es, and (iii) [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole)s, with role mappings anchored to conceptualization or class mappings via property [pmo:semRoleMapping](http://premon.fbk.eu/ontology/core#semRoleMapping). We rely on this set-like modeling, since mappings are not necessarily represented as binary relations in predicate mapping resources: e.g., in the PredicateMatrix, each row represents the mapping of a semantic role / lexical entry pair over the different resources (e.g., <*13.1-1-agent*, *deal*> in VN, <*sell.01-arg0*, *sell*> in PB, <*Commerce Sell-seller*, *sell*> in FN) as well as the corresponding WordNet verb sense. Reifying the n-ary mapping relation also allows us, if needed, to further characterize each single mapping, asserting additional information such as confidence and reliability. Moreover, it is possible to further specialize mappings
 (e.g., to model mappings holding only in one direction, from a resource to another one, or to represent different types of relationships among the members of the mapping) by subtyping the [pmo:Mapping](http://premon.fbk.eu/ontology/core#Mapping) class or the property (pmo:item) relating a [pmo:Mapping](http://premon.fbk.eu/ontology/core#Mapping) to its members.
+
+### Ontological Mappings
+
+Building on *lemon*, *PreMOn* inherits the capability of linking lexical content to ontological resources. In particular, being [ontolex:LexicalConcept](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Concept)s, [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass)es inherit the link (via [ontolex:isConceptOf](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Concept)) to the ontological entities formalizing them, typically event classes.
+
+However, in order to properly align predicate models to existing frame/event-based ontologies such as FrameBase and ESO, *PreMOn* introduces the property [pmo:ontologyMatch](http://premon.fbk.eu/ontology/core#ontologyMatch), having as domain 
+[skos:Concept](https://www.w3.org/2009/08/skos-reference/skos.html#Concept), to enable the possibility of linking to ontological entities also other resources than [ontolex:LexicalConcept](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Concept)s. In particular, [pmo:ontologyMatch](http://premon.fbk.eu/ontology/core#ontologyMatch) property enables the alignment to ontology elements of resources such as: 
+
+* [pmo:Conceptualization](http://premon.fbk.eu/ontology/core#Conceptualization)s
+* [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass)es (in this case, [ontolex:isConceptOf](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Concept) can be seen as a subproperty of [pmo:ontologyMatch](http://premon.fbk.eu/ontology/core#ontologyMatch), although we abstained from formally enforcing this)
+* [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole)s.
 
 ### Annotations
 
@@ -101,7 +112,7 @@ pmo:evokedConcept a owl:ObjectProperty , owl:FunctionalProperty ;
 pmo:Conceptualization a owl:Class ;
 	rdfs:comment "Structurally, it can be seen as the reification of the ontolex:evokes relation between ontolex:LexicalEntry and ontolex:LexicalConcept. Semantically, it can be seen as a very specific intensional concept (among many, in case of polysemy) evoked by a single ontolex:LexicalEntry, which can be generalized to a ontolex:LexicalConcept when multiple entries are considered but with a possible loss of information that prevents precise alignments to be represented."@en ;
 	rdfs:label "Conceptualization"@en ;
-	rdfs:subClassOf skos:Concept , _:node1bfoq7jdux13 , _:node1bfoq7jdux14 .
+	rdfs:subClassOf skos:Concept , _:node1bfugcveax13 , _:node1bfugcveax14 .
 
 pmo:evokingEntry a owl:ObjectProperty , owl:FunctionalProperty ;
 	rdfs:label "evoking entry"@en ;
@@ -116,7 +127,7 @@ pmo:first a owl:ObjectProperty ;
 pmo:item a owl:ObjectProperty ;
 	rdfs:comment "first, item, next are used to model set-like construct"@en ;
 	rdfs:label "item"@en ;
-	owl:propertyChainAxiom _:node1bfoq7jdux1 .
+	owl:propertyChainAxiom _:node1bfugcveax1 .
 
 pmo:next a owl:ObjectProperty ;
 	rdfs:comment "first, item, next are used to model set-like construct"@en ;
@@ -142,29 +153,29 @@ pmo:semRole a owl:ObjectProperty ;
 pmo:semRoleMapping a owl:ObjectProperty ;
 	rdfs:comment "relates a mapping between semantic roles to the corresponding mapping between semantic classes and/or conceptualizations"@en ;
 	rdfs:label "semantic role mapping"@en ;
-	rdfs:domain _:node1bfoq7jdux3 ;
+	rdfs:domain _:node1bfugcveax3 ;
 	rdfs:range pmo:SemanticRoleMapping .
 
 pmo:SemanticRoleMapping a owl:Class ;
 	rdfs:comment "An individual of this class represents a mapping between SemanticRoles"@en ;
 	rdfs:label "Semantic Role Mapping"@en ;
-	rdfs:subClassOf pmo:Mapping , _:node1bfoq7jdux29 , _:node1bfoq7jdux31 .
+	rdfs:subClassOf pmo:Mapping , _:node1bfugcveax29 , _:node1bfugcveax31 .
 
 pmo:ConceptualizationMapping a owl:Class ;
 	rdfs:comment "An individual of this class represents a mapping between Conceptualizations"@en ;
 	rdfs:label "Conceptualization Mapping"@en ;
-	rdfs:subClassOf pmo:Mapping , _:node1bfoq7jdux15 .
+	rdfs:subClassOf pmo:Mapping , _:node1bfugcveax15 .
 
 pmo:SemanticClassMapping a owl:Class ;
 	rdfs:comment "An individual of this class represents a mapping between SemanticClasses"@en ;
 	rdfs:label "Semantic Class Mapping"@en ;
-	rdfs:subClassOf pmo:Mapping , _:node1bfoq7jdux28 .
+	rdfs:subClassOf pmo:Mapping , _:node1bfugcveax28 .
 
 pmo:valueObj a owl:ObjectProperty ;
 	rdfs:comment "generic property to associate an object value to an instance"@en ;
 	rdfs:label "value"@en .
 
-ontolex:evokes owl:propertyChainAxiom _:node1bfoq7jdux6 .
+ontolex:evokes owl:propertyChainAxiom _:node1bfugcveax6 .
 
 pmo:ontologyMatch a owl:ObjectProperty ;
 	rdfs:comment "PreMOn generic property to associate a SKOS concept to an ontological entity"@en ;
@@ -183,130 +194,130 @@ pmo:valueDt a owl:DatatypeProperty ;
 pmo:AnnotationSet a owl:Class ;
 	rdfs:comment "Represent each annotation of a semantic class, togheter with its semantic roles, in an example"@en ;
 	rdfs:label "Annotation Set"@en ;
-	rdfs:subClassOf _:node1bfoq7jdux11 , _:node1bfoq7jdux12 .
+	rdfs:subClassOf _:node1bfugcveax11 , _:node1bfugcveax12 .
 
 pmo:Mapping a owl:Class ;
 	rdfs:comment "An individual of this class represents a mapping between skos:Concepts"@en ;
 	rdfs:label "Mapping"@en ;
-	rdfs:subClassOf _:node1bfoq7jdux18 , _:node1bfoq7jdux19 .
+	rdfs:subClassOf _:node1bfugcveax18 , _:node1bfugcveax19 .
 
 pmo:Example a owl:Class ;
 	rdfs:comment "Represent the text associated to an example"@en ;
 	rdfs:label "Example"@en ;
-	rdfs:subClassOf nif:Context , _:node1bfoq7jdux16 .
+	rdfs:subClassOf nif:Context , _:node1bfugcveax16 .
 
 pmo:Markable a owl:Class ;
 	rdfs:comment "Represent a piece of text to which some annotation is attached to"@en ;
 	rdfs:label "Markable"@en ;
-	rdfs:subClassOf nif:RFC5147String , _:node1bfoq7jdux26 , _:node1bfoq7jdux27 .
+	rdfs:subClassOf nif:RFC5147String , _:node1bfugcveax26 , _:node1bfugcveax27 .
 
-_:node1bfoq7jdux1 rdf:first pmo:item ;
-	rdf:rest _:node1bfoq7jdux2 .
+_:node1bfugcveax1 rdf:first pmo:item ;
+	rdf:rest _:node1bfugcveax2 .
 
-_:node1bfoq7jdux10 owl:inverseOf pmo:item .
+_:node1bfugcveax10 owl:inverseOf pmo:item .
 
-_:node1bfoq7jdux11 a owl:Restriction ;
+_:node1bfugcveax11 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom nif:Annotation .
 
-_:node1bfoq7jdux12 a owl:Restriction ;
+_:node1bfugcveax12 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:onClass nif:Annotation ;
 	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1bfoq7jdux13 a owl:Restriction ;
+_:node1bfugcveax13 a owl:Restriction ;
 	owl:onProperty pmo:evokedConcept ;
 	owl:onClass ontolex:LexicalConcept ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1bfoq7jdux14 a owl:Restriction ;
+_:node1bfugcveax14 a owl:Restriction ;
 	owl:onProperty pmo:evokingEntry ;
 	owl:onClass ontolex:LexicalEntry ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1bfoq7jdux15 a owl:Restriction ;
+_:node1bfugcveax15 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:Conceptualization .
 
-_:node1bfoq7jdux16 a owl:Restriction ;
-	owl:onProperty _:node1bfoq7jdux17 ;
+_:node1bfugcveax16 a owl:Restriction ;
+	owl:onProperty _:node1bfugcveax17 ;
 	owl:allValuesFrom pmo:Markable .
 
-_:node1bfoq7jdux17 owl:inverseOf nif:referenceContext .
+_:node1bfugcveax17 owl:inverseOf nif:referenceContext .
 
-_:node1bfoq7jdux18 a owl:Restriction ;
+_:node1bfugcveax18 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:onClass skos:Concept ;
 	owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger .
 
-_:node1bfoq7jdux19 a owl:Class ;
-	owl:unionOf _:node1bfoq7jdux20 .
+_:node1bfugcveax19 a owl:Class ;
+	owl:unionOf _:node1bfugcveax20 .
 
-_:node1bfoq7jdux2 rdf:first pmo:next ;
+_:node1bfugcveax2 rdf:first pmo:next ;
 	rdf:rest rdf:nil .
 
-_:node1bfoq7jdux20 rdf:first _:node1bfoq7jdux21 ;
-	rdf:rest _:node1bfoq7jdux22 .
+_:node1bfugcveax20 rdf:first _:node1bfugcveax21 ;
+	rdf:rest _:node1bfugcveax22 .
 
-_:node1bfoq7jdux21 a owl:Restriction ;
+_:node1bfugcveax21 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:Conceptualization .
 
-_:node1bfoq7jdux22 rdf:first _:node1bfoq7jdux23 ;
-	rdf:rest _:node1bfoq7jdux24 .
+_:node1bfugcveax22 rdf:first _:node1bfugcveax23 ;
+	rdf:rest _:node1bfugcveax24 .
 
-_:node1bfoq7jdux23 a owl:Restriction ;
+_:node1bfugcveax23 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:SemanticClass .
 
-_:node1bfoq7jdux24 rdf:first _:node1bfoq7jdux25 ;
+_:node1bfugcveax24 rdf:first _:node1bfugcveax25 ;
 	rdf:rest rdf:nil .
 
-_:node1bfoq7jdux25 a owl:Restriction ;
+_:node1bfugcveax25 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:SemanticRole .
 
-_:node1bfoq7jdux26 a owl:Restriction ;
+_:node1bfugcveax26 a owl:Restriction ;
 	owl:onProperty nif:referenceContext ;
 	owl:onClass pmo:Example ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1bfoq7jdux27 a owl:Restriction ;
+_:node1bfugcveax27 a owl:Restriction ;
 	owl:onProperty nif:referenceContext ;
 	owl:allValuesFrom pmo:Example .
 
-_:node1bfoq7jdux28 a owl:Restriction ;
+_:node1bfugcveax28 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:SemanticClass .
 
-_:node1bfoq7jdux29 a owl:Restriction ;
-	owl:onProperty _:node1bfoq7jdux30 ;
+_:node1bfugcveax29 a owl:Restriction ;
+	owl:onProperty _:node1bfugcveax30 ;
 	owl:someValuesFrom owl:Thing .
 
-_:node1bfoq7jdux3 a owl:Class ;
-	owl:unionOf _:node1bfoq7jdux4 .
+_:node1bfugcveax3 a owl:Class ;
+	owl:unionOf _:node1bfugcveax4 .
 
-_:node1bfoq7jdux30 owl:inverseOf pmo:semRoleMapping .
+_:node1bfugcveax30 owl:inverseOf pmo:semRoleMapping .
 
-_:node1bfoq7jdux31 a owl:Restriction ;
+_:node1bfugcveax31 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:SemanticRole .
 
-_:node1bfoq7jdux4 rdf:first pmo:ConceptualizationMapping ;
-	rdf:rest _:node1bfoq7jdux5 .
+_:node1bfugcveax4 rdf:first pmo:ConceptualizationMapping ;
+	rdf:rest _:node1bfugcveax5 .
 
-_:node1bfoq7jdux5 rdf:first pmo:SemanticClassMapping ;
+_:node1bfugcveax5 rdf:first pmo:SemanticClassMapping ;
 	rdf:rest rdf:nil .
 
-_:node1bfoq7jdux6 rdf:first _:node1bfoq7jdux7 ;
-	rdf:rest _:node1bfoq7jdux8 .
+_:node1bfugcveax6 rdf:first _:node1bfugcveax7 ;
+	rdf:rest _:node1bfugcveax8 .
 
-_:node1bfoq7jdux7 owl:inverseOf pmo:evokingEntry .
+_:node1bfugcveax7 owl:inverseOf pmo:evokingEntry .
 
-_:node1bfoq7jdux8 rdf:first pmo:evokedConcept ;
+_:node1bfugcveax8 rdf:first pmo:evokedConcept ;
 	rdf:rest rdf:nil .
 
-_:node1bfoq7jdux9 a owl:Restriction ;
-	owl:onProperty _:node1bfoq7jdux10 ;
+_:node1bfugcveax9 a owl:Restriction ;
+	owl:onProperty _:node1bfugcveax10 ;
 	owl:onClass pmo:AnnotationSet ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
