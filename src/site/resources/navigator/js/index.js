@@ -19,18 +19,22 @@ $(document).ready(function() {
     createTable("Lexical Entry");
     createTable("FrameNet 1.5");
     createTable("FrameNet 1.6");
+    createTable("FrameNet 1.7");    
     createTable("NomBank 1.0");
     createTable("PropBank 1.7");
     createTable("PropBank 2.1.5");
+    createTable("PropBank 3.1");    
     createTable("VerbNet 3.2");
 
     var file = [
         "data/lexEnt.json",
         "data/fn15semCla.json",
         "data/fn16semCla.json",
+        "data/fn17semCla.json",        
         "data/nb10semCla.json",
         "data/pb17semCla.json",
         "data/pb215semCla.json",
+        "data/pb31semCla.json",        
         "data/vn32semCla.json"
     ];
 
