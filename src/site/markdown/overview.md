@@ -11,7 +11,7 @@ PreMOn overview
 
 2. the [PreMOn Dataset](download.html), a freely-available, interlinked RDF dataset containing the PropBank, NomBank, VerbNet, and FrameNet predicate model data (in various versions), the examples provided with the original resources, and the SemLink and PredicateMatrix mappings, published online as Linked Open Data according to the PreMOn Ontology.
 
-Compared to the current situation where each predicate model has its own proprietary XML format, PreMOn brings several benefits to users of predicate models:
+Compared to the previous situation where each predicate model has its own proprietary XML format, PreMOn brings several benefits to users of predicate models:
 
 1. ease of access and reuse of predicate model data, due to the adoption of a common RDF format, stable URIs, and LOD best practices;
 2. possibility to abstract and capture the aspects common to different predicate models, while at the same time keeping track of the peculiarities of each model (using RDFS/OWL subclass/subproperty primitives);
@@ -55,12 +55,12 @@ Mappings are explicitly represented as individuals of class [`pmo:Mapping`](http
 
 #### Ontological Mappings
 
-Building on [lemon](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification), PreMOn inherits the capability of linking lexical content to ontological resources. In particular, being [`ontolex:LexicalConcept`](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Concept), [`pmo:SemanticClass`](http://premon.fbk.eu/ontology/core#SemanticClass) inherit the link (via [`ontolex:isConceptOf`](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Concept)) to the ontological entities formalizing them, typically event classes.
+Building on [lemon](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification), PreMOn inherits the capability of linking lexical content to ontological resources. In particular, being [`ontolex:LexicalConcept`](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Concept)s, [`pmo:SemanticClass`](http://premon.fbk.eu/ontology/core#SemanticClass)es inherit the link (via [`ontolex:isConceptOf`](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Concept)) to the ontological entities formalizing them, typically event classes.
 
 However, in order to properly align predicate models to existing frame/event-based ontologies such as [FrameBase](http://framebase.org/) and [ESO](http://www.newsreader-project.eu/results/event-and-situation-ontology/), PreMOn introduces the property [`pmo:ontologyMatch`](http://premon.fbk.eu/ontology/core#ontologyMatch), having as domain SKOS [`Concept`](http://www.w3.org/TR/skos-reference/#concepts), to enable the possibility of linking to ontological entities also other resources than [`ontolex:LexicalConcept`](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Concept)s. In particular, [`pmo:ontologyMatch`](http://premon.fbk.eu/ontology/core#ontologyMatch) property enables the alignment to ontology elements of resources such as:
 
 - [`pmo:Conceptualization`](http://premon.fbk.eu/ontology/core#Conceptualization)s
-- [`pmo:SemanticClass`](http://premon.fbk.eu/ontology/core#SemanticClass)es (in this case, [`ontolex:isConceptOf`](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Concept)) can be seen as a subproperty of [`pmo:ontologyMatch`](http://premon.fbk.eu/ontology/core#ontologyMatch), although we abstained from formally enforcing this)
+- [`pmo:SemanticClass`](http://premon.fbk.eu/ontology/core#SemanticClass)es (in this case, [`ontolex:isConceptOf`](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Concept) can be seen as a subproperty of [`pmo:ontologyMatch`](http://premon.fbk.eu/ontology/core#ontologyMatch), although we abstained from formally enforcing this)
 - [`pmo:SemanticRole`](http://premon.fbk.eu/ontology/core#SemanticRole)s.
 
 #### Annotations
@@ -84,7 +84,7 @@ Additional classes and properties are defined in the specific submodule for each
 
 ### PreMOn datasets
 
-To populate PreMOn with content from the various resources (predicate models, mappings), we developed an [open-source Java command-line tool](premonitor.html) available. The tool applies pluggable, resource-specific converters to the original distribution files of each resource, instantiating the proper individuals and assertions according to the PreMOn Ontology. If available, mappings to additional resources (e.g., WordNet synsets, OntoNotes groupings) are also extracted. OWL 2 RL inference, statistics extraction and some cross-resource cleanup (e.g., for dropping inconsistent mappings) are applied to extracted triples, leveraging [RDFpro](http://rdfpro.fbk.eu) for RDF processing.
+To populate PreMOn with content from the various resources (predicate models, mappings), we developed an [open-source Java command-line tool](premonitor.html). The tool applies pluggable, resource-specific converters to the original distribution files of each resource, instantiating the proper individuals and assertions according to the PreMOn Ontology. If available, mappings to additional resources (e.g., WordNet synsets, OntoNotes groupings) are also extracted. OWL 2 RL inference, statistics extraction and some cross-resource cleanup (e.g., for dropping inconsistent mappings) are applied to extracted triples, leveraging [RDFpro](http://rdfpro.fbk.eu) for RDF processing.
 
 Specific conversion strategies had to be implemented for each predicate model. E.g., in VerbNet, semantic roles (with selectional constraints) and frames have to be propagated from a class to its subclasses, unless redefined in the latter. In PropBank (and NomBank), the instantiation of [`pmopb:SemanticRole`](http://premon.fbk.eu/ontology/pb#SemanticRole)s requires creating an individual for each ⟨[`pmopb:Roleset`](http://premon.fbk.eu/ontology/pb#Roleset), [`pmopb:Argument`](http://premon.fbk.eu/ontology/pb#Argument)⟩ pair, as no information is provided on which arguments a predicate may have (besides explicit occurrence in frame files, in which case semantic role attributes [`pmopb:core`](http://premon.fbk.eu/ontology/pb#core)/[`pmonb:core`](http://premon.fbk.eu/ontology/nb#core) are set to “true”).
 We applied the conversion suite on a large collection of resources, producing a comprehensive dataset, namely the [PreMOn Dataset](download.html), containing:
@@ -110,15 +110,11 @@ By adopting an homogeneous schema for heterogeneous predicate models, PreMOn fac
 ```
 SELECT DISTINCT ?lexEnt (COUNT(?resource) as ?n)
 WHERE {
-	{SELECT DISTINCT ?lexEnt ?resource
-	WHERE {
-		GRAPH ?resource
-			{?lexEnt ontolex:evokes ?semCla .
-			?semCla a pmo:SemanticClass . }
-	}} FILTER NOT EXISTS {
-		?conc pmo:evokingEntry ?lexEnt .
-		?mapping a pmo:Mapping ; pmo:item ?conc }
-} GROUP BY ?lexEnt ORDER BY DESC(?n) ?lexEnt
+    {   SELECT DISTINCT ?lexEnt ?resource
+        WHERE { GRAPH ?resource { ?lexEnt ontolex:evokes ?semCla. ?semCla a pmo:SemanticClass. } }   }
+    FILTER NOT EXISTS { ?conc pmo:evokingEntry ?lexEnt. ?mapping a pmo:Mapping; pmo:item ?conc }
+}
+GROUP BY ?lexEnt ORDER BY DESC(?n) ?lexEnt
 ```
 
 looks for lexical entries (`?lexEnt`) evoking semantic classes in different resources (`?resource`), for which no mappings are defined ([try this query](http://bit.ly/premon-example) on our SPARQL endpoint). Results are ordered by decreasing number of resources defining the lexical entry. This query hints a way to exploit PreMOn to investigate, and possibly extend, mappings between predicate models.

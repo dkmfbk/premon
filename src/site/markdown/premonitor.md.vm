@@ -53,7 +53,7 @@ Run
 
 Starting from a downloaded or compiled version, you should use the `./premonitor` executable to run the tool.
 
-The default configuration of the tool, contained in `premonitor.properties`, expect to find the resources to convert under the directory `resources` and its sub-directories. It is enough to populate the sub-directories for the resources you want to convert (or replacing these sub-directories with symlinks to the paths where containing the required files), and then execute
+The default configuration of the tool, contained in `premonitor.properties`, expects to find the resources to convert under the directory `resources` and its sub-directories. It is enough to populate the sub-directories for the resources you want to convert (or replacing these sub-directories with symlinks to the paths containing the required files), and then execute
 
 ```
 ./premonitor
@@ -81,7 +81,7 @@ Note that the PropBank/NomBank folders must contain the `frameset.dtd` file.
 If missing, you can use the one provided with this tool (in `src/main/resources/`):
 just copy it in the XMLs folder.
 
-This is the complete list of options (that the tool print when the `-h` option is set):
+This is the complete list of options (that the tool prints when the `-h` option is set):
 
 ```
 usage: ./premonitor [-b <PATH>] [-D] [-f <FMTS>] [-h] [-i <FOLDER>] [-m] [-p
