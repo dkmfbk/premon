@@ -76,7 +76,7 @@ To specifically model the aforementioned examples complementing predicate models
 Below you can find an image illustrating the instantiation of the PreMOn Ontology with some semantic classes, semantic roles, mappings, and examples, with predicate model data.
 
 <div style="text-align: center; padding-top: 20px; padding-bottom: 20px">
-<img src="images/example.png" alt="Example of predicates representation using the PreMOn ontology" style="width: 90%"/>
+<img src="images/example.svg" alt="Example of predicates representation using the PreMOn ontology" style="width: 90%"/>
 </div>
 
 Additional classes and properties are defined in the specific submodule for each predicate model ([PropBank](http://premon.fbk.eu/ontology/pb), [NomBank](http://premon.fbk.eu/ontology/nb), [VerbNet](http://premon.fbk.eu/ontology/vn), and [FrameNet](http://premon.fbk.eu/ontology/vn)).
