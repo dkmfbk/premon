@@ -6,7 +6,7 @@ basedir=$(pwd -L)
 popd > /dev/null
 #echo "${basedir}"
 
-(cd ${basedir}/../../../; mvn package site:site site:deploy -DskipTests -Prelease)     
+(cd ${basedir}/../; mvn package site:site site:deploy -DskipTests -Prelease)
 
 
 
