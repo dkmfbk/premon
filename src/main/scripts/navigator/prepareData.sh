@@ -1,5 +1,11 @@
 #!/bin/bash
 #retrieved data via SPARQL on the PreMOn endpoint for the PreMOn Navigator
+echo "preparaData"
+echo "retrieved data via SPARQL on the PreMOn endpoint for the PreMOn Navigator, and create the JSON files."
+echo "Usage: 'preparaData.sh premon-git-folder'"
+echo ""
+
+
 if [ "$1" != "" ]; then
     echo "Output folder: " $1
 else
@@ -9,12 +15,12 @@ fi
 
 output=$1
 
+#get path where the script is placed, to get the correct path also of csv2json.sh
 pushd $(dirname "${0}") > /dev/null
 basedir=$(pwd -L)
 # Use "pwd -P" for the path without links. man bash for more info.
 popd > /dev/null
-
-echo "${basedir}"
+#echo "${basedir}"
 
 mkdir -p $output/data
 
@@ -34,5 +40,5 @@ for dataset in {fn15,fn16,fn17,nb10,pb17,pb215,pb31,vn32}; do
 done
 
 wget "$endpoint?$query_lexEnt" --header "Accept: text/csv" -O $output/data/lexEnt.csv
-./csv2json.sh $output/data/lexEnt.csv > $output/data/lexEnt.json
+${basedir}/csv2json.sh $output/data/lexEnt.csv > $output/data/lexEnt.json
 rm $output/data/lexEnt.csv

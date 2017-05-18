@@ -1,5 +1,4 @@
 @prefix : <http://premon.fbk.eu/ontology/all#> .
-@prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix pmo: <http://premon.fbk.eu/ontology/core#> .
@@ -19,12 +18,16 @@
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
 @base <http://premon.fbk.eu/ontology/core> .
 
-<http://premon.fbk.eu/ontology/core> rdf:type owl:Ontology ;
+<http://premon.fbk.eu/ontology/core> rdf:type owl:Ontology;
                                      
-                                     dc:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ,
+                                     dcterms:issued "2015-10-28"^^xsd:date ;
+                                     dcterms:modified "2017-05-01"^^xsd:date ;
+									 owl:versionInfo "2017a" ;                                     
+                                     
+                                     dcterms:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ,
                                                 "Francesco Corcoglioniti" ;
                                      
-                                     dc:description """###  Semantic Classes and Roles
+                                     dcterms:description """###  Semantic Classes and Roles
 
 The *PreMOn Ontology Core Module* extends *lemon* by introducing classes [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole). [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) homogeneously represents the semantic classes from the various predicate models. That is, individuals of this class correspond to rolesets in PB and NB (e.g., *pm:nb10-seller.01* and *pm:pb17-sell.01*), verb classes in VN (e.g., *pm:vn32-give-13.1-1*), and frames in FN (e.g., *pm:fn15-commerce sell*). An instance of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) typically has (via property [pmo:semRole](http://premon.fbk.eu/ontology/core#semRole)) a number of [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole)s, representing, from a semantic point of view, the roles the arguments of that [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) can play.
 
@@ -58,13 +61,13 @@ The PreMOn Ontology provides some common primitives, based on the [NLP Interchan
 
 To specifically model the aforementioned examples complementing predicate models, we introduce [pmo:Example](http://premon.fbk.eu/ontology/core#Example), subclass of [nif:Context](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context), to represent the string associated with the example. The occurrence of a [ontolex:LexicalEntry](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Entry), [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass), or [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole) in a [nif:Context](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context) is denoted by an instance of [nif:Annotation](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Annotation), related to the given [ontolex:LexicalEntry](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Entry), [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass), or [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole) via property [pmo:valueObj](http://premon.fbk.eu/ontology/core#valueObj) (the value attached to the annotation), and to the [nif:Context](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context) instance via property [nif:annotation](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#annotation). If detailed information on the specific span of text (i.e., substring) denoting the [ontolex:LexicalEntry](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Entry), [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass), or [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole) is available (e.g., FN provides the specific offsets of lexical units, frames, and frame elements, in the example text) an additional instance of [pmo:Markable](http://premon.fbk.eu/ontology/core#Markable), subclass of [nif:String](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#String), is created and linked to the specific [nif:Annotation](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Annotation) and [nif:Context](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context) via properties [nif:annotation](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#annotation) and [nif:referenceContext](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#referenceContext), respectively. As the same [nif:Context](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context) may contain multiple [nif:Annotation](http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Annotation)s referring to one or more semantic classes and their corresponding roles, an additional [pmo:AnnotationSet](http://premon.fbk.eu/ontology/core#AnnotationSet) instance is created to cluster annotations from the same predicate structure."""@en ;
                                      
-                                     dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+                                     dcterms:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                      
                                      dcterms:title "Predicate Model for Ontologies (PreMOn) - Core ontology module"@en ;
                                      
                                      rdfs:comment "The [PreMOn Ontology](http://premon.fbk.eu) is an extension of [lemon](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification) (W3C Ontology Lexicon Community Group, 2015) for representing *predicate models* and their *mappings*. The Core Module of the PreMOn Ontology defines the main abstractions for modelling *semantic classes* with their *semantic roles*, *mappings* between different predicate models, and *annotations*."@en ;
                                      
-                                     dc:rights "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en ;
+                                     dcterms:rights "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en ;
                                      
                                      vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/core#" ;
                                      
@@ -72,7 +75,7 @@ To specifically model the aforementioned examples complementing predicate models
                                      
                                      dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
                                      
-                                     dc:description <http://premon.fbk.eu/images/core.svg> ;
+                                     dcterms:description <http://premon.fbk.eu/images/core.svg> ;
                                      
                                      rdfs:isDefinedBy <http://premon.fbk.eu/ns/core.ttl> ;
                                      
@@ -86,27 +89,27 @@ To specifically model the aforementioned examples complementing predicate models
 #################################################################
 
 
-###  http://purl.org/dc/elements/1.1/creator
+###  http://purl.org/dc/terms/creator
 
-dc:creator rdf:type owl:AnnotationProperty .
-
-
-
-###  http://purl.org/dc/elements/1.1/description
-
-dc:description rdf:type owl:AnnotationProperty .
+dcterms:creator rdf:type owl:AnnotationProperty .
 
 
 
-###  http://purl.org/dc/elements/1.1/publisher
+###  http://purl.org/dc/terms/description
 
-dc:publisher rdf:type owl:AnnotationProperty .
+dcterms:description rdf:type owl:AnnotationProperty .
 
 
 
-###  http://purl.org/dc/elements/1.1/rights
+###  http://purl.org/dc/terms/publisher
 
-dc:rights rdf:type owl:AnnotationProperty .
+dcterms:publisher rdf:type owl:AnnotationProperty .
+
+
+
+###  http://purl.org/dc/terms/rights
+
+dcterms:rights rdf:type owl:AnnotationProperty .
 
 
 
@@ -565,9 +568,3 @@ pmo:SemanticRoleMapping rdf:type owl:Class ;
                                         ] ;
                         
                         rdfs:comment "An individual of this class represents a mapping between SemanticRoles"@en .
-
-
-
-
-###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
-

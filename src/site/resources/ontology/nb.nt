@@ -1,13 +1,16 @@
 <http://premon.fbk.eu/ontology/nb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Ontology> .
-<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/elements/1.1/creator> "Francesco Corcoglioniti" .
-<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/elements/1.1/creator> "Marco Rospocher <https://dkm.fbk.eu/rospocher>" .
+<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/issued> "2015-10-28"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/modified> "2017-05-01"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://premon.fbk.eu/ontology/nb> <http://www.w3.org/2002/07/owl#versionInfo> "2017a" .
+<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/creator> "Francesco Corcoglioniti" .
+<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/creator> "Marco Rospocher <https://dkm.fbk.eu/rospocher>" .
 <http://premon.fbk.eu/ontology/nb> <http://purl.org/vocab/vann/preferredNamespaceUri> "http://premon.fbk.eu/ontology/nb#" .
-<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/elements/1.1/publisher> "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" .
+<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/publisher> "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" .
 <http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/title> "Predicate Model for Ontologies (PreMOn) - NomBank ontology module"@en .
-<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/elements/1.1/description> <http://premon.fbk.eu/images/nb.svg> .
-<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/elements/1.1/description> "The NomBank module of the PreMOn ontology defines [pmonb:Roleset](http://premon.fbk.eu/ontology/nb#Roleset) and [pmonb:SemanticRole](http://premon.fbk.eu/ontology/nb#SemanticRole) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively.\n\nEach [pmonb:SemanticRole](http://premon.fbk.eu/ontology/nb#SemanticRole) instance is related (via property [pmonb:argument](http://premon.fbk.eu/ontology/nb#argument)) to exactly one [pmonb:Argument](http://premon.fbk.eu/ontology/nb#Argument), which is defined as the disjoint union of two subclasses: \n\n* [pmonb:NumberedArgument](http://premon.fbk.eu/ontology/nb#NumberedArgument), containing the individuals corresponding to numbered argument (e.g., *Arg0*, *Arg1*); and, \n* [pmonb:Modifier](http://premon.fbk.eu/ontology/nb#Modifier), containing the individuals corresponding to modifiers (e.g., *ArgM-LOC*, *ArgM-TMP*).\n\nWe also define class [pmonb:Tag](http://premon.fbk.eu/ontology/nb#Tag) to capture (via property [pmonb:tag](http://premon.fbk.eu/ontology/nb#tag)) some specific annotations of markables (e.g., *PRD*, *REF*, *SUPPORT*) in the examples."@en .
+<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/description> <http://premon.fbk.eu/images/nb.svg> .
+<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/description> "The NomBank module of the PreMOn ontology defines [pmonb:Roleset](http://premon.fbk.eu/ontology/nb#Roleset) and [pmonb:SemanticRole](http://premon.fbk.eu/ontology/nb#SemanticRole) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively.\n\nEach [pmonb:SemanticRole](http://premon.fbk.eu/ontology/nb#SemanticRole) instance is related (via property [pmonb:argument](http://premon.fbk.eu/ontology/nb#argument)) to exactly one [pmonb:Argument](http://premon.fbk.eu/ontology/nb#Argument), which is defined as the disjoint union of two subclasses: \n\n* [pmonb:NumberedArgument](http://premon.fbk.eu/ontology/nb#NumberedArgument), containing the individuals corresponding to numbered argument (e.g., *Arg0*, *Arg1*); and, \n* [pmonb:Modifier](http://premon.fbk.eu/ontology/nb#Modifier), containing the individuals corresponding to modifiers (e.g., *ArgM-LOC*, *ArgM-TMP*).\n\nWe also define class [pmonb:Tag](http://premon.fbk.eu/ontology/nb#Tag) to capture (via property [pmonb:tag](http://premon.fbk.eu/ontology/nb#tag)) some specific annotations of markables (e.g., *PRD*, *REF*, *SUPPORT*) in the examples."@en .
 <http://premon.fbk.eu/ontology/nb> <http://www.w3.org/2000/01/rdf-schema#comment> "The NomBank module of the PreMOn ontology extends the core module for representing concepts specific to NomBank. The modelling is based on the [NomBank Specifications](http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf)."@en .
-<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/elements/1.1/rights> "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en .
+<http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/rights> "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en .
 <http://premon.fbk.eu/ontology/nb> <http://purl.org/vocab/vann/preferredNamespacePrefix> "pmonb" .
 <http://premon.fbk.eu/ontology/nb> <http://purl.org/dc/terms/license> <http://creativecommons.org/licenses/by-sa/4.0/> .
 <http://premon.fbk.eu/ontology/nb> <http://www.w3.org/2002/07/owl#imports> <http://premon.fbk.eu/ontology/core> .
@@ -26,13 +29,13 @@
 <http://premon.fbk.eu/ontology/nb#argument> <http://www.w3.org/2000/01/rdf-schema#domain> <http://premon.fbk.eu/ontology/nb#SemanticRole> .
 <http://premon.fbk.eu/ontology/nb#Argument> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/nb#Argument> <http://www.w3.org/2000/01/rdf-schema#label> "Argument (NB)"@en .
-<http://premon.fbk.eu/ontology/nb#Argument> <http://www.w3.org/2002/07/owl#equivalentClass> _:node1bfugdm1ix1 .
+<http://premon.fbk.eu/ontology/nb#Argument> <http://www.w3.org/2002/07/owl#equivalentClass> _:node1bgdrd80sx1 .
 <http://premon.fbk.eu/ontology/nb#Argument> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#Concept> .
 <http://premon.fbk.eu/ontology/nb#SemanticRole> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/nb#SemanticRole> <http://www.w3.org/2000/01/rdf-schema#label> "Semantic Role (NB)"@en .
 <http://premon.fbk.eu/ontology/nb#SemanticRole> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://premon.fbk.eu/ontology/core#SemanticRole> .
-<http://premon.fbk.eu/ontology/nb#SemanticRole> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bfugdm1ix24 .
-<http://premon.fbk.eu/ontology/nb#SemanticRole> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bfugdm1ix25 .
+<http://premon.fbk.eu/ontology/nb#SemanticRole> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bgdrd80sx24 .
+<http://premon.fbk.eu/ontology/nb#SemanticRole> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bgdrd80sx25 .
 <http://premon.fbk.eu/ontology/nb#tag> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#ObjectProperty> .
 <http://premon.fbk.eu/ontology/nb#tag> <http://www.w3.org/2000/01/rdf-schema#label> "tag"@en .
 <http://premon.fbk.eu/ontology/nb#tag> <http://www.w3.org/2000/01/rdf-schema#range> <http://premon.fbk.eu/ontology/nb#Tag> .
@@ -41,12 +44,12 @@
 <http://premon.fbk.eu/ontology/nb#Modifier> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/nb#Modifier> <http://www.w3.org/2000/01/rdf-schema#label> "Modifier (NB)"@en .
 <http://premon.fbk.eu/ontology/nb#Modifier> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://premon.fbk.eu/ontology/nb#Argument> .
-<http://premon.fbk.eu/ontology/nb#Modifier> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bfugdm1ix4 .
+<http://premon.fbk.eu/ontology/nb#Modifier> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bgdrd80sx4 .
 <http://premon.fbk.eu/ontology/nb#Modifier> <http://www.w3.org/2002/07/owl#disjointWith> <http://premon.fbk.eu/ontology/nb#NumberedArgument> .
 <http://premon.fbk.eu/ontology/nb#NumberedArgument> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/nb#NumberedArgument> <http://www.w3.org/2000/01/rdf-schema#label> "Numbered Argument (NB)"@en .
 <http://premon.fbk.eu/ontology/nb#NumberedArgument> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://premon.fbk.eu/ontology/nb#Argument> .
-<http://premon.fbk.eu/ontology/nb#NumberedArgument> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bfugdm1ix16 .
+<http://premon.fbk.eu/ontology/nb#NumberedArgument> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bgdrd80sx16 .
 <http://premon.fbk.eu/ontology/nb#argm-cau> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
 <http://premon.fbk.eu/ontology/nb#argm-cau> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://premon.fbk.eu/ontology/nb#Modifier> .
 <http://premon.fbk.eu/ontology/nb#argm-tmp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
@@ -84,64 +87,64 @@
 <http://premon.fbk.eu/ontology/nb#Roleset> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
 <http://premon.fbk.eu/ontology/nb#Roleset> <http://www.w3.org/2000/01/rdf-schema#label> "Roleset (NB)"@en .
 <http://premon.fbk.eu/ontology/nb#Roleset> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://premon.fbk.eu/ontology/core#SemanticClass> .
-<http://premon.fbk.eu/ontology/nb#Roleset> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bfugdm1ix23 .
+<http://premon.fbk.eu/ontology/nb#Roleset> <http://www.w3.org/2000/01/rdf-schema#subClassOf> _:node1bgdrd80sx23 .
 <http://premon.fbk.eu/ontology/nb#tag-prd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
 <http://premon.fbk.eu/ontology/nb#tag-prd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://premon.fbk.eu/ontology/nb#Tag> .
 <http://premon.fbk.eu/ontology/nb#tag-ref> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
 <http://premon.fbk.eu/ontology/nb#tag-ref> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://premon.fbk.eu/ontology/nb#Tag> .
 <http://premon.fbk.eu/ontology/nb#tag-support> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#NamedIndividual> .
 <http://premon.fbk.eu/ontology/nb#tag-support> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://premon.fbk.eu/ontology/nb#Tag> .
-_:node1bfugdm1ix1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
-_:node1bfugdm1ix1 <http://www.w3.org/2002/07/owl#unionOf> _:node1bfugdm1ix2 .
-_:node1bfugdm1ix10 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-ext> .
-_:node1bfugdm1ix10 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix11 .
-_:node1bfugdm1ix11 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-mnr> .
-_:node1bfugdm1ix11 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix12 .
-_:node1bfugdm1ix12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-loc> .
-_:node1bfugdm1ix12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix13 .
-_:node1bfugdm1ix13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-neg> .
-_:node1bfugdm1ix13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix14 .
-_:node1bfugdm1ix14 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-pnc> .
-_:node1bfugdm1ix14 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix15 .
-_:node1bfugdm1ix15 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-adv> .
-_:node1bfugdm1ix15 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
-_:node1bfugdm1ix16 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
-_:node1bfugdm1ix16 <http://www.w3.org/2002/07/owl#oneOf> _:node1bfugdm1ix17 .
-_:node1bfugdm1ix17 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg5> .
-_:node1bfugdm1ix17 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix18 .
-_:node1bfugdm1ix18 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg4> .
-_:node1bfugdm1ix18 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix19 .
-_:node1bfugdm1ix19 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg3> .
-_:node1bfugdm1ix19 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix20 .
-_:node1bfugdm1ix2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#Modifier> .
-_:node1bfugdm1ix2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix3 .
-_:node1bfugdm1ix20 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg2> .
-_:node1bfugdm1ix20 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix21 .
-_:node1bfugdm1ix21 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg1> .
-_:node1bfugdm1ix21 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix22 .
-_:node1bfugdm1ix22 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg0> .
-_:node1bfugdm1ix22 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
-_:node1bfugdm1ix23 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
-_:node1bfugdm1ix23 <http://www.w3.org/2002/07/owl#onProperty> <http://premon.fbk.eu/ontology/core#semRole> .
-_:node1bfugdm1ix23 <http://www.w3.org/2002/07/owl#allValuesFrom> <http://premon.fbk.eu/ontology/nb#SemanticRole> .
-_:node1bfugdm1ix24 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
-_:node1bfugdm1ix24 <http://www.w3.org/2002/07/owl#onProperty> <http://premon.fbk.eu/ontology/nb#argument> .
-_:node1bfugdm1ix24 <http://www.w3.org/2002/07/owl#someValuesFrom> <http://premon.fbk.eu/ontology/nb#Argument> .
-_:node1bfugdm1ix25 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
-_:node1bfugdm1ix25 <http://www.w3.org/2002/07/owl#onProperty> _:node1bfugdm1ix26 .
-_:node1bfugdm1ix25 <http://www.w3.org/2002/07/owl#allValuesFrom> <http://premon.fbk.eu/ontology/nb#Roleset> .
-_:node1bfugdm1ix26 <http://www.w3.org/2002/07/owl#inverseOf> <http://premon.fbk.eu/ontology/core#semRole> .
-_:node1bfugdm1ix3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#NumberedArgument> .
-_:node1bfugdm1ix3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
-_:node1bfugdm1ix4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
-_:node1bfugdm1ix4 <http://www.w3.org/2002/07/owl#oneOf> _:node1bfugdm1ix5 .
-_:node1bfugdm1ix5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-cau> .
-_:node1bfugdm1ix5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix6 .
-_:node1bfugdm1ix6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-tmp> .
-_:node1bfugdm1ix6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix7 .
-_:node1bfugdm1ix7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-dis> .
-_:node1bfugdm1ix7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix8 .
-_:node1bfugdm1ix8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-dir> .
-_:node1bfugdm1ix8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix9 .
-_:node1bfugdm1ix9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-prd> .
-_:node1bfugdm1ix9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bfugdm1ix10 .
+_:node1bgdrd80sx1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+_:node1bgdrd80sx1 <http://www.w3.org/2002/07/owl#unionOf> _:node1bgdrd80sx2 .
+_:node1bgdrd80sx10 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-ext> .
+_:node1bgdrd80sx10 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx11 .
+_:node1bgdrd80sx11 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-mnr> .
+_:node1bgdrd80sx11 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx12 .
+_:node1bgdrd80sx12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-loc> .
+_:node1bgdrd80sx12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx13 .
+_:node1bgdrd80sx13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-neg> .
+_:node1bgdrd80sx13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx14 .
+_:node1bgdrd80sx14 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-pnc> .
+_:node1bgdrd80sx14 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx15 .
+_:node1bgdrd80sx15 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-adv> .
+_:node1bgdrd80sx15 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:node1bgdrd80sx16 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+_:node1bgdrd80sx16 <http://www.w3.org/2002/07/owl#oneOf> _:node1bgdrd80sx17 .
+_:node1bgdrd80sx17 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg5> .
+_:node1bgdrd80sx17 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx18 .
+_:node1bgdrd80sx18 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg4> .
+_:node1bgdrd80sx18 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx19 .
+_:node1bgdrd80sx19 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg3> .
+_:node1bgdrd80sx19 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx20 .
+_:node1bgdrd80sx2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#Modifier> .
+_:node1bgdrd80sx2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx3 .
+_:node1bgdrd80sx20 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg2> .
+_:node1bgdrd80sx20 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx21 .
+_:node1bgdrd80sx21 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg1> .
+_:node1bgdrd80sx21 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx22 .
+_:node1bgdrd80sx22 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#arg0> .
+_:node1bgdrd80sx22 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:node1bgdrd80sx23 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
+_:node1bgdrd80sx23 <http://www.w3.org/2002/07/owl#onProperty> <http://premon.fbk.eu/ontology/core#semRole> .
+_:node1bgdrd80sx23 <http://www.w3.org/2002/07/owl#allValuesFrom> <http://premon.fbk.eu/ontology/nb#SemanticRole> .
+_:node1bgdrd80sx24 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
+_:node1bgdrd80sx24 <http://www.w3.org/2002/07/owl#onProperty> <http://premon.fbk.eu/ontology/nb#argument> .
+_:node1bgdrd80sx24 <http://www.w3.org/2002/07/owl#someValuesFrom> <http://premon.fbk.eu/ontology/nb#Argument> .
+_:node1bgdrd80sx25 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Restriction> .
+_:node1bgdrd80sx25 <http://www.w3.org/2002/07/owl#onProperty> _:node1bgdrd80sx26 .
+_:node1bgdrd80sx25 <http://www.w3.org/2002/07/owl#allValuesFrom> <http://premon.fbk.eu/ontology/nb#Roleset> .
+_:node1bgdrd80sx26 <http://www.w3.org/2002/07/owl#inverseOf> <http://premon.fbk.eu/ontology/core#semRole> .
+_:node1bgdrd80sx3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#NumberedArgument> .
+_:node1bgdrd80sx3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+_:node1bgdrd80sx4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> .
+_:node1bgdrd80sx4 <http://www.w3.org/2002/07/owl#oneOf> _:node1bgdrd80sx5 .
+_:node1bgdrd80sx5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-cau> .
+_:node1bgdrd80sx5 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx6 .
+_:node1bgdrd80sx6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-tmp> .
+_:node1bgdrd80sx6 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx7 .
+_:node1bgdrd80sx7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-dis> .
+_:node1bgdrd80sx7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx8 .
+_:node1bgdrd80sx8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-dir> .
+_:node1bgdrd80sx8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx9 .
+_:node1bgdrd80sx9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://premon.fbk.eu/ontology/nb#argm-prd> .
+_:node1bgdrd80sx9 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:node1bgdrd80sx10 .

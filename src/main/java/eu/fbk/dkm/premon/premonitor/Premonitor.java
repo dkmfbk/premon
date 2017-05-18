@@ -1027,8 +1027,6 @@ public class Premonitor {
 
         final Table<String, String, Integer> otherMappings;
 
-        //final Table<String, String, Integer> ontoMappings;
-
         public MappingStatistics(final Iterable<? extends QuadModel> models,
                 final Iterable<String> sources, final String resource) {
 
@@ -1036,7 +1034,6 @@ public class Premonitor {
             final Table<String, String, Set<Hash>> classHashes = HashBasedTable.create();
             final Table<String, String, Set<Hash>> roleHashes = HashBasedTable.create();
             final Table<String, String, Set<Hash>> otherHashes = HashBasedTable.create();
-            //final Table<String, String, Set<Hash>> ontoHashes = HashBasedTable.create();
 
             final List<String> sourceKeys = ImmutableList.copyOf(sources);
             final List<Pattern> sourcePatterns = ImmutableList.copyOf(sourceKeys.stream()
@@ -1124,7 +1121,6 @@ public class Premonitor {
             this.classMappings = countHashes(classHashes);
             this.roleMappings = countHashes(roleHashes);
             this.otherMappings = countHashes(otherHashes);
-            //this.ontoMappings = countHashes(ontoHashes);
         }
 
         private static void addHash(final Table<String, String, Set<Hash>> hashes,
