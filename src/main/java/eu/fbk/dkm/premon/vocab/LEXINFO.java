@@ -60,6 +60,9 @@ public final class LEXINFO {
     /** Individual lexinfo:noun(a lexinfo:PartOfSpeech). */
     public static final URI NOUN = createURI("noun");
 
+    /** Individual lexinfo:particle (a lexinfo:PartOfSpeech). */
+    public static final URI PARTICLE = createURI("particle");
+
     /** Individual lexinfo:preposition (a lexinfo:PartOfSpeech). */
     public static final URI PREPOSITION = createURI("preposition");
 

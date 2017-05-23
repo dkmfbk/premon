@@ -101,6 +101,9 @@ public final class PMOFN {
     /** Object property pmofn:reFrameMapping. */
     public static final URI REFRAME_MAPPING = createURI("reFrameMapping");
 
+    /** Object property pmofn:metaphor. */
+    public static final URI METAPHOR = createURI("metaphor");
+
     /** Object property pmofn:reFrameMappingFER. */
     public static final URI REFRAME_MAPPING_FEr = createURI("reFrameMappingFER");
 

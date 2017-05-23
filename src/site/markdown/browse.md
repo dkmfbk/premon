@@ -19,12 +19,12 @@ No quad format is currently supported (e.g.,
 Here are some URIs you can retrieve with your browser or client (e.g., `wget`) to try the URI dereferencing mechanism:
 
   * Lexical Entry: [http://premon.fbk.eu/resource/v-look](http://premon.fbk.eu/resource/v-look)
-  * Semantic Class
+  * Semantic Class:
       * PropBank Roleset: [http://premon.fbk.eu/resource/pb17-look.01](http://premon.fbk.eu/resource/pb17-look.01)
       * NomBank Roleset: [http://premon.fbk.eu/resource/nb10-look.01](http://premon.fbk.eu/resource/nb10-look.01)
       * VerbNet Class: [http://premon.fbk.eu/resource/vn32-stimulus_subject-30.4](http://premon.fbk.eu/resource/vn32-stimulus_subject-30.4)
       * FrameNet Frame: [http://premon.fbk.eu/resource/fn15-seeking](http://premon.fbk.eu/resource/fn15-seeking)
-  * Semantic Role
+  * Semantic Role:
       * PropBank Semantic Role: [http://premon.fbk.eu/resource/pb17-look.01-arg0](http://premon.fbk.eu/resource/pb17-look.01-arg0)
       * NomBank Semantic Role: [http://premon.fbk.eu/resource/nb10-look.01-arg0](http://premon.fbk.eu/resource/nb10-look.01-arg0)
       * VerbNet Semantic Role: [http://premon.fbk.eu/resource/vn32-stimulus_subject-30.4-experiencer](http://premon.fbk.eu/resource/vn32-stimulus_subject-30.4-experiencer)
@@ -38,6 +38,10 @@ Here are some URIs you can retrieve with your browser or client (e.g., `wget`) t
       * (NomBank) NomBank - PropBank: [conceptualization](http://premon.fbk.eu/resource/con-A-GMtLZb2HgJdwIkW2QJXe) and [semantic role](http://premon.fbk.eu/resource/arg-IwjnkbGi2ESF-uzgHVXDnZ)
       * VerbNet - WordNet - OntoNote Groupings: on a [VN member](http://premon.fbk.eu/resource/sense-DSyxMNFyzdJBSEQeV1YyB8)
       * FrameNet 1.5 - FrameNet 1.6: [semantic classes](http://premon.fbk.eu/resource/pred-A2wgvkV1GF9FhCqCjrMu3W) and [semantic role](http://premon.fbk.eu/resource/arg-Eqjd_xCZg9nNhuU7KzC9hX)
+      * FrameNet 1.6 - FrameNet 1.7: [semantic classes](http://premon.fbk.eu/resource/pred-GezKDCWZAFVBSO-_Zz56Z_) and [semantic role](http://premon.fbk.eu/resource/arg-B55KUgL2z_QMC5hNrJvkpH)
+  * Ontological Mapping (check [`pmo:ontologyMatch`](http://premon.fbk.eu/ontology/core#ontologyMatch) assertions in the following examples):
+      * (FrameBase) FrameNet 1.5 - FrameBase 2.0: [conceptualization](http://premon.fbk.eu/resource/co-v-sell-fn15-commerce_sell) and [semantic role](http://premon.fbk.eu/resource/fn15-commerce_sell@seller)
+      * (ESO) FrameNet 1.6 - ESO 2.0: [semantic classes](http://premon.fbk.eu/resource/fn16-commerce_sell) and [semantic role](http://premon.fbk.eu/resource/fn16-commerce_sell@seller)   
   * Example:
       * PropBank: [http://premon.fbk.eu/resource/pb17-look.01-example_LJfSq7Uz](http://premon.fbk.eu/resource/pb17-look.01-example_LJfSq7Uz)
       * NomBank: [http://premon.fbk.eu/resource/nb10-look.01-example_DNhmvHaf](http://premon.fbk.eu/resource/nb10-look.01-example_DNhmvHaf)

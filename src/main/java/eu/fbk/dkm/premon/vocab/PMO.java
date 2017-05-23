@@ -83,6 +83,15 @@ public final class PMO {
     /** Object property pmo:valueObj. */
     public static final URI VALUE_OBJ = createURI("valueObj");
 
+    /** Object property pmo:ontologyMatch. */
+    public static final URI ONTO_MATCH = createURI("ontologyMatch");
+
+    /** Object property pmo:ontologyBroaderMatch. */
+    //public static final URI ONTO_BROADER_MATCH = createURI("ontologyBroaderMatch");
+
+    /** Object property pmo:ontologyNarrowerMatch. */
+    //public static final URI ONTO_NARROWER_MATCH = createURI("ontologyNarrowerMatch");
+
     // Datatype properties
 
     /** Datatype property pmo:valueDt. */
@@ -90,6 +99,11 @@ public final class PMO {
 
     /** Datatype property pmo:abbreviation. */
     public static final URI ABBREVIATION = createURI("abbreviation");
+
+    // Individuals
+
+    /** Individual pmo:idiosyncratic. */
+    public static final URI IDIOSYNCRATIC = createURI("idiosyncratic");
 
     // Utility methods
 

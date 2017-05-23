@@ -1,29 +1,17 @@
 package eu.fbk.dkm.premon.premonitor;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.regex.Matcher;
-
-import javax.annotation.Nullable;
-
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-
-import org.openrdf.model.URI;
-import org.openrdf.rio.RDFHandler;
-
 import eu.fbk.dkm.premon.premonitor.propbank.Inflection;
 import eu.fbk.dkm.premon.premonitor.propbank.Role;
 import eu.fbk.dkm.premon.premonitor.propbank.Roleset;
-import eu.fbk.dkm.premon.util.URITreeSet;
 import eu.fbk.dkm.premon.vocab.NIF;
 import eu.fbk.dkm.premon.vocab.PMONB;
+import org.openrdf.model.URI;
+import org.openrdf.rio.RDFHandler;
+
+import java.io.File;
+import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * Created by alessio on 03/11/15.
@@ -97,11 +85,11 @@ public class NombankConverter extends BankConverter {
     @Override URI getRoleToArgumentProperty() {
         return PMONB.ARGUMENT_P;
     }
-    
+
     @Override URI getCoreProperty() {
         return PMONB.CORE;
     }
-    
+
     @Override HashMap<String, URI> getFunctionMap() {
         return PMONB.mapM;
     }
@@ -135,20 +123,19 @@ public class NombankConverter extends BankConverter {
         }
 
         List<String> vnLemmas = Lists.newArrayList();
-        for (Matcher matcher : getPropBankPredicates(roleset)) {
+        for (Matcher matcher : getPropBankPredicates(roleset.getSource())) {
             vnLemmas.add(getLemmaFromPredicateName(matcher.group(2)));
         }
 
-        
         addArgumentToSink(key, keyURI, argumentURI, lemma, type, rolesetID, lexicalEntryURI, role, vnLemmas);
 
         // todo: bad! this should be merged with the addExternalLinks method
         // URI argConceptualizationURI = uriForConceptualization(lemma, type, rolesetID, key);
-        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
+        ArrayList<Matcher> matchers = getPropBankPredicates(roleset.getSource());
 
         URI rolesetURI = uriForRoleset(rolesetID);
         URI conceptualizationURI = uriForConceptualization(lemma, type, rolesetID);
-        
+
         for (Matcher matcher : matchers) {
             String pbLemma = matcher.group(2);
             String pbPredicate = matcher.group(1);
@@ -163,16 +150,16 @@ public class NombankConverter extends BankConverter {
                 pbLemma = getLemmaFromPredicateName(pbLemma);
                 // URI argPropBankConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, key, pbLink);
                 // addSingleMapping(prefix, DEFAULT_ARG_SUFFIX, argConceptualizationURI, argPropBankConceptualizationURI);
-                
+
                 URI pbRolesetURI = uriForRoleset(pbPredicate, pbLink);
                 URI pbConceptualizationURI = uriForConceptualizationWithPrefix(pbLemma, "v", pbPredicate, pbLink);
                 URI pbArgumentURI = uriForArgument(pbPredicate, key, pbLink);
-                
+
                 addMappings(rolesetURI, pbRolesetURI, conceptualizationURI, pbConceptualizationURI, argumentURI, pbArgumentURI);
             }
         }
     }
-    
+
     @Override Type getType(String code) {
         if (code != null) {
             if (PMONB.mapM.containsKey(code)) {
@@ -201,15 +188,15 @@ public class NombankConverter extends BankConverter {
         return Type.NULL;
     }
 
-    protected void addExternalLinks(Roleset roleset, URI conceptualizationURI, String uriLemma, String type) {
+    protected void addExternalLinks(ComplexLemmaWithMappings complexLemmaWithMappings, URI conceptualizationURI, String uriLemma, String type) {
 
         Set<String> lemmas = new HashSet<>();
 
-        String rolesetID = ((Roleset) roleset).getId();
+        String rolesetID = complexLemmaWithMappings.getRolesetID();
         URI rolesetURI = uriForRoleset(rolesetID);
-        
+
         // PropBank
-        ArrayList<Matcher> matchers = getPropBankPredicates(roleset);
+        ArrayList<Matcher> matchers = getPropBankPredicates(complexLemmaWithMappings.getPbSource());
         for (Matcher matcher : matchers) {
             String pbLemma = matcher.group(2);
             String lemma = getLemmaFromPredicateName(pbLemma);
@@ -224,7 +211,7 @@ public class NombankConverter extends BankConverter {
         }
 
         // VerbNet
-        List<String> vnClasses = getVnClasses(roleset.getVncls());
+        List<String> vnClasses = getVnClasses(complexLemmaWithMappings.getVn());
         for (String vnClass : vnClasses) {
             for (String vnLink : vnLinks) {
                 for (String lemma : lemmas) {

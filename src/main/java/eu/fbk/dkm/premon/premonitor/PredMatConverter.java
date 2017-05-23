@@ -122,7 +122,7 @@ public class PredMatConverter extends Converter {
 					continue;
 				}																										// Filter non english languages -->
 
-				String vnSc = pme.get(VN_SUBCLASS).compareToIgnoreCase("vn:null") == 0?									// --> save needed data
+				String vnSc = pme.get(VN_SUBCLASS).compareToIgnoreCase("vn:null") == 0?									// --> get needed data
 						pme.get(VN_CLASS) : pme.get(VN_SUBCLASS);														// If sublcass = null take class instead
 				String vnLe = pme.get(VN_LEMA);
 				String vnSr = pme.get(VN_ROLE);
@@ -139,7 +139,7 @@ public class PredMatConverter extends Converter {
 				String pbSr = pme.get(PB_ARG);
 				pbSr = pbSr.toLowerCase();
 
-				String wnSense = pme.get(WN_SENSE);																		// save needed data -->
+				String wnSense = pme.get(WN_SENSE);																		// get needed data -->
 
 				vnSc = removeNameSpace(vnSc); vnLe = removeNameSpace(vnLe); vnSr = removeNameSpace(vnSr);				// --> Removing Namespaces vn:abate => abate or if vn:null => java null
 				fnSc = removeNameSpace(fnSc); fnLe = removeNameSpace(fnLe); fnSr = removeNameSpace(fnSr);
@@ -217,7 +217,7 @@ public class PredMatConverter extends Converter {
 							arguments.clear();
 						}
 					}
-				}
+				}																										// Adding data to "sink" -->
 
 			}
 

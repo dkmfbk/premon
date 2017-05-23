@@ -44,6 +44,8 @@ public class FramenetConverter extends Converter {
     private static final String ONE_FRAME = null;
     private static final Set<String> bugMap = new HashSet<>();
 
+    private String thisVersion = null;
+
     public FramenetConverter(File path, RDFHandler sink, Properties properties, Map<String, URI> wnInfo) {
         super(path, properties.getProperty("source"), sink, properties, properties.getProperty("language"), wnInfo);
 
@@ -53,7 +55,7 @@ public class FramenetConverter extends Converter {
         paths.put("semTypes", new File(this.path.getAbsolutePath() + File.separator + "semTypes.xml"));
         paths.put("frRelation", new File(this.path.getAbsolutePath() + File.separator + "frRelation.xml"));
         paths.put("retroMappings",
-                new File(this.path.getAbsolutePath() + File.separator + "miscXML/DifferencesR1.5-R16.xml"));
+                new File(this.path.getAbsolutePath() + File.separator + properties.getProperty("retromapfile")));
 
         bugMap.add("Test35");
         bugMap.add("Test_the_test");
@@ -61,6 +63,7 @@ public class FramenetConverter extends Converter {
         argumentSeparator = "@";
 
         retroMappings = properties.getProperty("retromappings");
+        thisVersion = properties.getProperty("thisversion", "1.5");
 
         LOGGER.info("Starting dataset: {}", prefix);
     }
@@ -80,6 +83,16 @@ public class FramenetConverter extends Converter {
 
         try {
 
+            String tagPrevious = "r1-5";
+            String tagCurrent = "r1-6";
+            String fnPrevious = "r1-5_FrameName";
+
+            if (thisVersion.equals("1.7")) {
+                tagPrevious = "r1.6";
+                tagCurrent = "r1.7";
+                fnPrevious = "r1.6_FrameName";
+            }
+
             Document document;
             HashSet<String> added = new HashSet<>();
             HashMap<String, String> changed = new HashMap<>();
@@ -97,8 +110,8 @@ public class FramenetConverter extends Converter {
                 }
                 diffs = JOOX.$(document).xpath("FrameDiff/Changed/Frame");
                 for (Element diff : diffs) {
-                    String r15 = JOOX.$(diff.getElementsByTagName("r1-5")).text().toLowerCase();
-                    String r16 = JOOX.$(diff.getElementsByTagName("r1-6")).text().toLowerCase();
+                    String r15 = JOOX.$(diff.getElementsByTagName(tagPrevious)).text().toLowerCase();
+                    String r16 = JOOX.$(diff.getElementsByTagName(tagCurrent)).text().toLowerCase();
                     changed.put(r16, r15);
                 }
 
@@ -107,16 +120,16 @@ public class FramenetConverter extends Converter {
                     added.add(diff.getAttribute("FrameName").toLowerCase() + argumentSeparator + diff.getTextContent()
                             .toLowerCase());
                 }
-                diffs = JOOX.$(document).xpath("Changed/FrameElement");
+                diffs = JOOX.$(document).xpath("FrameElementDiff/Changed/FrameElement");
                 for (Element diff : diffs) {
                     String f16 = diff.getAttribute("FrameName").toLowerCase();
-                    String f15 = diff.getAttribute("r1-5_FrameName");
+                    String f15 = diff.getAttribute(fnPrevious);
                     if (f15 == null || f15.length() == 0) {
                         f15 = f16;
                     }
                     f15 = f15.toLowerCase();
-                    String r15 = JOOX.$(diff.getElementsByTagName("r1-5")).text().toLowerCase();
-                    String r16 = JOOX.$(diff.getElementsByTagName("r1-6")).text().toLowerCase();
+                    String r15 = JOOX.$(diff.getElementsByTagName(tagPrevious)).text().toLowerCase();
+                    String r16 = JOOX.$(diff.getElementsByTagName(tagCurrent)).text().toLowerCase();
                     changed.put(f16 + argumentSeparator + r16, f15 + argumentSeparator + r15);
                 }
 
@@ -182,6 +195,9 @@ public class FramenetConverter extends Converter {
                     break;
                 case "ReFraming_Mapping":
                     typeURI = PMOFN.REFRAME_MAPPING;
+                    break;
+                case "Metaphor":
+                    typeURI = PMOFN.METAPHOR;
                     break;
                 }
 
@@ -290,7 +306,7 @@ public class FramenetConverter extends Converter {
                             addStatementToSink(frameURI, DCTERMS.CREATED, date);
                             addStatementToSink(frameURI, DCTERMS.IDENTIFIER, Integer.parseInt(identifier));
                             addStatementToSink(frameURI, SKOS.DEFINITION, defText);
- 
+
                             HashSet<String> FEs = new HashSet<>();
                             final Match fes = JOOX.$(element.getElementsByTagName("FE"));
                             for (Element fe : fes) {
@@ -496,8 +512,7 @@ public class FramenetConverter extends Converter {
 
                                 String goodLemma = String.join(" ", lexemeList);
                                 String uriLemma = String.join("+", lexemeList);
-                                URI lexicalEntryURI = addLexicalEntry(goodLemma, uriLemma, lexemeList, posList, pos,
-                                        getLexicon());
+                                URI lexicalEntryURI = addLexicalEntry(goodLemma, uriLemma, lexemeList, posList, pos, getLexicon());
                                 URI luURI = getLuURI(pos, uriLemma, frameName.toLowerCase());
 
 //                                String origLemma = null;
@@ -972,7 +987,12 @@ public class FramenetConverter extends Converter {
         builder.append(NAMESPACE);
         builder.append(CONCEPTUALIZATION_PREFIX);
         builder.append(separator);
-        builder.append(pos);
+        
+        
+        
+        // builder.append(pos); // FIXME should normalize pos as below!!
+        builder.append(LEXINFO.map.get(getPosURI(pos)));
+        
         builder.append(separator);
         builder.append(luName.replaceAll("[^a-zA-Z0-9-_+]", ""));
         builder.append(separator);
@@ -1024,6 +1044,10 @@ public class FramenetConverter extends Converter {
             return LEXINFO.SUBORDINATING_CONJUNCTION;
         case "V":
             return LEXINFO.VERB;
+        case "IDIO":
+            return PMO.IDIOSYNCRATIC;
+        case "AVP":
+            return LEXINFO.PARTICLE;
         }
 
         return null;

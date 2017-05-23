@@ -1,5 +1,4 @@
 @prefix : <http://premon.fbk.eu/ontology/all#> .
-@prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix pmo: <http://premon.fbk.eu/ontology/core#> .
@@ -19,23 +18,27 @@
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
 @base <http://premon.fbk.eu/ontology/fn> .
 
-<http://premon.fbk.eu/ontology/fn> rdf:type owl:Ontology ;
-                                   
+<http://premon.fbk.eu/ontology/fn> rdf:type owl:Ontology;
+                                     
+                                     dcterms:issued "2015-10-28"^^xsd:date ;
+                                     dcterms:modified "2017-05-01"^^xsd:date ;
+									 owl:versionInfo "2017a" ;  
+									 
                                    vann:preferredNamespacePrefix "pmofn" ;
                                    
-                                   dc:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
+                                   dcterms:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                    
-                                   dc:creator "Francesco Corcoglioniti" ;
+                                   dcterms:creator "Francesco Corcoglioniti" ;
                                    
                                    vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/fn#" ;
                                    
-                                   dc:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
+                                   dcterms:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
                                    
                                    dcterms:title "Predicate Model for Ontologies (PreMOn) - FrameNet ontology module"@en ;
                                    
                                    rdfs:comment "The FrameNet module of the PreMOn ontology extends the core module for representing concepts specific to FrameNet. The modelling is based on the [FrameNet II: Extended Theory and Practice](https://framenet2.icsi.berkeley.edu/docs/r1.5/book.pdf) book."@en ;
                                    
-                                   dc:description """The PreMOn FrameNet ontology module defines classes [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame) and [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively. [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement) is further specialized in four subclasses, denoting the four typologies of FN frame elements (e.g., [pmofn:CoreFrameElement](http://premon.fbk.eu/ontology/fn#CoreFrameElement)). Being [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole)s, in PreMOn Ontology frame elements are always specific to the frame where they are defined, even for extra thematic frame elements that are typically shared across frames in FN (e.g., the *Circumstances* extra thematic frame element corresponds to multiple individuals of type [pmofn:ExtraThematicFrameElement](http://premon.fbk.eu/ontology/fn#ExtraThematicFrameElement), one for each frame where it is defined). Frame element core sets of a [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame) are represented as reified objects of type [pmofn:FECoreSet](http://premon.fbk.eu/ontology/fn#FECoreSet), having as members some [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement)s.
+                                   dcterms:description """The PreMOn FrameNet ontology module defines classes [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame) and [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively. [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement) is further specialized in four subclasses, denoting the four typologies of FN frame elements (e.g., [pmofn:CoreFrameElement](http://premon.fbk.eu/ontology/fn#CoreFrameElement)). Being [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole)s, in PreMOn Ontology frame elements are always specific to the frame where they are defined, even for extra thematic frame elements that are typically shared across frames in FN (e.g., the *Circumstances* extra thematic frame element corresponds to multiple individuals of type [pmofn:ExtraThematicFrameElement](http://premon.fbk.eu/ontology/fn#ExtraThematicFrameElement), one for each frame where it is defined). Frame element core sets of a [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame) are represented as reified objects of type [pmofn:FECoreSet](http://premon.fbk.eu/ontology/fn#FECoreSet), having as members some [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement)s.
 
 Relations between [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s are modeled using the subproperties of [pmofn:frameRelation](http://premon.fbk.eu/ontology/fn#frameRelation) (e.g., [pmofn:inheritsFrom](http://premon.fbk.eu/ontology/fn#inheritsFrom)). Similarly, mappings between [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement)s of [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s related via some [pmofn:frameRelation](http://premon.fbk.eu/ontology/fn#frameRelation) are represented using frame relation-specific subproperties of [pmofn:frameElementRelation](http://premon.fbk.eu/ontology/fn#frameElementRelation) (e.g., [pmofn:inheritsFromFER](http://premon.fbk.eu/ontology/fn#inheritsFromFER)). Within a frame, a frame element may exclude/require the presence of another frame element ([pmofn:excludesFrameElement](http://premon.fbk.eu/ontology/fn#excludesFrameElement)/[pmofn:requiresFrameElement](http://premon.fbk.eu/ontology/fn#requiresFrameElement)).
 
@@ -43,11 +46,11 @@ Relations between [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s are mod
 
 Finally, [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s, [pmofn:FrameElement](http://premon.fbk.eu/ontology/fn#FrameElement)s and [pmofn:LexicalUnit](http://premon.fbk.eu/ontology/fn#LexicalUnit)s can be constrained according to some semantic types, defined in [pmofn:SemType](http://premon.fbk.eu/ontology/fn#SemType), and organized in a hierarchy according to [pmofn:subTypeOf](http://premon.fbk.eu/ontology/fn#subTypeOf) relations between them."""@en ;
                                    
-                                   dc:rights "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en ;
+                                   dcterms:rights "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en ;
                                    
                                    dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
                                    
-                                   dc:description <http://premon.fbk.eu/images/fn.svg> ;
+                                   dcterms:description <http://premon.fbk.eu/images/fn.svg> ;
                                    
                                    owl:imports <http://premon.fbk.eu/ontology/core> ;
                                    
@@ -551,9 +554,3 @@ pmofn:SemType rdf:type owl:Class ;
                 pmofn:uses
               )
 ] .
-
-
-
-
-###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
-

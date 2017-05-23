@@ -495,7 +495,7 @@ public class Premonitor_old {
 						for (Object roleset : noteOrRoleset) {
 							if (roleset instanceof Roleset) {
 
-								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExample();
+								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExampleOrAliases();
 								for (Object roles : rolesOrExample) {
 									if (roles instanceof Roles) {
 
@@ -722,7 +722,7 @@ public class Premonitor_old {
 									addDefinition(statements, senseURI, definitionURI, name, language);
 								}
 
-								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExample();
+								List<Object> rolesOrExample = ((Roleset) roleset).getNoteOrRolesOrExampleOrAliases();
 
 								List<Example> examples = new ArrayList<Example>();
 

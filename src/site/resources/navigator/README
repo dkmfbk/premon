@@ -1,0 +1,6 @@
+To prepare the JSON files for the PreMOn Navigator
+
+0. upload the resources on the web-site
+1. Check all the required datasets are the ones in the for loop in prepare_data.sh
+2. run prepare_data.sh
+3. Check all the required datasets have a "createTable()" call and corresponding entry in array "file" in js/index.js

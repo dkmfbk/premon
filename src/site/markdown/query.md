@@ -8,12 +8,16 @@ The following named graphs are available, with their content included by default
  `pm:entries` for lexical entries, forms and WordNet links;
  `pm:pb17` for PropBank 1.7 data;
  `pm:pb215` for PropBank 2.1.5 data;
+ `pm:pb31` for PropBank 3.1 data; 
  `pm:nb10` for NomBank 1.0 data;
  `pm:vn32` for VerbNet 3.2 data;
  `pm:fn15` for FrameNet 1.5 data;
  `pm:fn16` for FrameNet 1.6 data;
+ `pm:fn17` for FrameNet 1.7 data; 
  `pm:sl122c` for SemLink 1.2.2c data;
- `pm:pm13` for PredicateMatrix 1.3 data.
+ `pm:pm13` for PredicateMatrix 1.3 data;
+ `pm:fb20` for FrameBase 2.0 mapping data;
+ `pm:eso20` for ESO 2.0 mapping data.
 
 To run the query, hit the triangle button on the top right corner of the query form.
 
