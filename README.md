@@ -47,13 +47,18 @@ All the options are optional and the default configuration, if option `-p` is om
 
 Here is the list of available sub-directories of `resources` with the indication of what to place under each of them:
 
+  * `eso-2.0` - put here the file `ESO_Version2.owl` downloadable from this [link](https://github.com/newsreader/eso/blob/master/ESO_Version2.owl) in this [page](https://github.com/newsreader/eso/)
+  * `framebase-2.0` - put here the file `FrameBase_schema_core.ttl.gz` downloadable from this [link](http://www.framebase.org/files/data/dump/schema/FrameBase_schema_core.ttl.gz) in this [page](http://www.framebase.org/data/) (do not extract)
   * `framenet-1.5` - put here the contents of the `fndata-1.5` folder in the archive obtainable from this  [page](https://framenet.icsi.berkeley.edu/fndrupal/framenet_request_data)
   * `framenet-1.6` - put here the contents of the `fndata-1.6` folder in the archive obtainable from this [page](https://framenet.icsi.berkeley.edu/fndrupal/framenet_request_data)
+  * `framenet-1.7` - put here the contents of the `fndata-1.7` folder in the archive obtainable from this [page](https://framenet.icsi.berkeley.edu/fndrupal/framenet_request_data)
   * `nombank-1.0` - put here the contents of the `nombank.1.0.tgz` archive downloadable from this [link](http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz) in this [page](http://nlp.cs.nyu.edu/meyers/NomBank.html)
-  * `pm-1.3` - put here the content of the `PredicateMatrix.v1.3.tar.gz` archive downloadable from this [link](http://adimen.si.ehu.es/web/files/PredicateMatrix/PredicateMatrix.v1.3.tar.gz) in this [page](http://adimen.si.ehu.es/web/PredicateMatrix/)
+  * `predicatematrix-1.3` - put here the content of the `PredicateMatrix.v1.3.tar.gz` archive downloadable from this [link](http://adimen.si.ehu.es/web/files/PredicateMatrix/PredicateMatrix.v1.3.tar.gz) in this [page](http://adimen.si.ehu.es/web/PredicateMatrix/)
   * `propbank-1.7` - put here the contents of the `propbank-1.7.tar.gz' archive downloadable from this [link](http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz) in this [page](http://verbs.colorado.edu/verb-index/index.php)
   * `propbank-2.1.5` - put here the contents of the `v2.1.5.tar.gz' archive downloadable from this [link](https://github.com/propbank/propbank-frames/archive/v2.1.5.tar.gz) in this [page](https://github.com/propbank/propbank-frames/releases/tag/v2.1.5)
+  * `propbank-3.1` - put here the contents of the `v3.1.tar.gz' archive downloadable from this [link](https://github.com/propbank/propbank-frames/archive/v3.1.tar.gz) in this [page](https://github.com/propbank/propbank-frames/releases/tag/v3.1)
   * `semlink-1.2.2c` - put here the content of the `1.2.2c.zip` archive downloadable from this [link](https://verbs.colorado.edu/semlink/versions/1.2.2c.zip) in this [page](https://verbs.colorado.edu/semlink/)
   * `verbnet-3.2` - put here the contents of the `verbnet-3.2.tar.gz` archive downloadable from this  [link](http://verbs.colorado.edu/verb-index/vn/verbnet-3.2.tar.gz) in this [page](http://verbs.colorado.edu/verbnet_downloads/downloads.html)
   * `wordnet-3.0` - put here the contents of the `WordNet-3.0.tar.gz` archive downloadable from this [link](http://wordnetcode.princeton.edu/3.0/WordNet-3.0.tar.gz) in this [page](https://wordnet.princeton.edu/wordnet/download/current-version/)
   * `wordnet-3.1` - put here the file `wn31.nt.gz` downloadable from this [link](http://wordnet-rdf.princeton.edu/wn31.nt.gz) in this [page](http://wordnet-rdf.princeton.edu/) (do not extract)
+
