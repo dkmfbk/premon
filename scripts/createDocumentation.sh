@@ -16,7 +16,7 @@ fi
 for f in {core,pb,nb,fn,vn}; do
 
 	echo "$1"/src/site/resources/ontology/${f}.html
-	java -cp "$2"/lodeStandalone-0.1-onejar.jar eu.fbk.dkm.Converter -i "$1"/src/site/resources/ontology/${f}.owl -o "$1"/src/site/resources/ontology/${f}-pre.html
+	java -cp "$2"/lodeStandalone-0.1-onejar.jar eu.fbk.dkm.Converter -i "$1"/src/site/resources/ontology/${f}.owl -o "$1"/src/site/resources/ontology/${f}-pre.html -c http://premon.fbk.eu/lode/lode.css -f http://premon.fbk.eu/images/favicon.png
 
     cat "$1"/src/site/resources/ontology/${f}-pre.html \
         | sed -E 's/href="http:\/\/www.w3.org\/ns\/lemon\/ontolex"/href="http:\/\/www.w3.org\/community\/ontolex\/wiki\/Final_Model_Specification"/g' \
