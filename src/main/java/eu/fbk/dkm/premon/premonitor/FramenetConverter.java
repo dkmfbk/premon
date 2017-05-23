@@ -120,7 +120,7 @@ public class FramenetConverter extends Converter {
                     added.add(diff.getAttribute("FrameName").toLowerCase() + argumentSeparator + diff.getTextContent()
                             .toLowerCase());
                 }
-                diffs = JOOX.$(document).xpath("Changed/FrameElement");
+                diffs = JOOX.$(document).xpath("FrameElementDiff/Changed/FrameElement");
                 for (Element diff : diffs) {
                     String f16 = diff.getAttribute("FrameName").toLowerCase();
                     String f15 = diff.getAttribute(fnPrevious);
