@@ -322,7 +322,7 @@ public class FramebaseConverter extends Converter {
         return createURI(builder.toString());
     }
 
-    private static URI uriForSemanticRole(final String prefix, final String clazz,
+    private URI uriForSemanticRole(final String prefix, final String clazz,
             final String role) {
         final StringBuilder builder = new StringBuilder();
         builder.append(NAMESPACE);
@@ -330,9 +330,9 @@ public class FramebaseConverter extends Converter {
         builder.append("-");
         builder.append(clazz);
         if (prefix.startsWith("fn")) {
-            builder.append("@").append(role.toLowerCase());
+            builder.append(argumentSeparator).append(role.toLowerCase());
         } else if (prefix.startsWith("pb") || prefix.startsWith("nb")) {
-            builder.append("-arg").append(role.toLowerCase());
+            builder.append(argumentSeparator).append("arg").append(role.toLowerCase());
         } else {
             throw new UnsupportedOperationException();
         }

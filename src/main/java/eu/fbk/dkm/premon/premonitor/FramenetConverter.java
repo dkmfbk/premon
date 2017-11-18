@@ -60,7 +60,7 @@ public class FramenetConverter extends Converter {
         bugMap.add("Test35");
         bugMap.add("Test_the_test");
 
-        argumentSeparator = "@";
+//        argumentSeparator = "@";
 
         retroMappings = properties.getProperty("retromappings");
         thisVersion = properties.getProperty("thisversion", "1.5");

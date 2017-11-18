@@ -169,10 +169,7 @@ public class PredMatConverter extends Converter {
 							URI fnFrameURI = fnSc == null? null : uriForRoleset(fnSc, fnLink);
 							URI fnConceptualizationURI = fnLe == null || fnSc == null?
 									null : uriForConceptualizationWithPrefix(fnLe, DEFAULT_TYPE, fnSc, fnLink);
-							String oldArgumentSeparator = argumentSeparator;
-							argumentSeparator = "@";
 							URI fnArgURI = fnSr == null || fnSc == null? null : uriForArgument(fnSc, fnSr, fnLink);
-							argumentSeparator = oldArgumentSeparator;
 
 							URI pbRolesetURI = pbSc == null? null : uriForRoleset(pbSc, pbLink);
 							URI pbConceptualizationURI = pbSc == null?
