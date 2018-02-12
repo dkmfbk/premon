@@ -1,0 +1,8 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+SELECT ?pred ?value
+WHERE{ 
+?pred a vn:LexSynItem .
+?pred pmo:valueDt ?value .
+}
+

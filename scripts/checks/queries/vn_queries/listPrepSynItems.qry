@@ -1,0 +1,5 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX lexinfo:<http://www.lexinfo.net/ontology/2.0/lexinfo#>
+SELECT DISTINCT (?prep)
+WHERE {?prep a vn:PrepSynItem . ?prep lexinfo:partOfSpeech lexinfo:preposition}
+

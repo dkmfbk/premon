@@ -1,0 +1,10 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+SELECT DISTINCT ?prop
+WHERE{ 
+?pred a vn:NpSynItem .
+?pred vn:restriction ?res .
+?res  pmo:valueObj ?prop .
+}
+ORDER BY ?prop
+

@@ -1,0 +1,7 @@
+PREFIX fn:<http://premon.fbk.eu/ontology/fn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+PREFIX nif:<http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+SELECT ?frame (COUNT(DISTINCT ?example) as ?n) { ?frame a fn:Frame . ?frame pmo:example ?example } 
+GROUP BY ?frame
+ORDER BY DESC(?n)
+
