@@ -46,7 +46,10 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.vocabulary.*;
+import org.openrdf.model.vocabulary.DCTERMS;
+import org.openrdf.model.vocabulary.OWL;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
@@ -106,9 +109,7 @@ public class Premonitor {
     public static void main(final String[] args) {
 
         try {
-            final CommandLine cmd = CommandLine
-                    .parser()
-                    .withName("./premonitor")
+            final CommandLine cmd = CommandLine.parser().withName("./premonitor")
                     .withHeader("Transform linguistic resources into RDF")
                     .withOption("i", "input",
                             String.format("input folder (default %s)", DEFAULT_PATH), "FOLDER",
@@ -123,18 +124,17 @@ public class Premonitor {
                             "FILE", CommandLine.Type.FILE, true, false, false)
                     .withOption("s", "single", "Extract single lemma (apply to all resources)",
                             "LEMMA", CommandLine.Type.STRING, true, false, false)
-                    .withOption(
-                            null,
-                            "wordnet",
+                    .withOption(null, "wordnet",
                             String.format("WordNet RDF triple file (default: %s)",
-                                    DEFAULT_WORDNET_FILE), "FILE", CommandLine.Type.FILE_EXISTING,
-                            true, false, false)
+                                    DEFAULT_WORDNET_FILE),
+                            "FILE", CommandLine.Type.FILE_EXISTING, true, false, false)
                     .withOption(null, "wordnet-sensekeys", "WordNet senseKey mapping", "FILE",
                             CommandLine.Type.FILE_EXISTING, true, false, false)
                     .withOption("r", "omit-owl2rl", "Omit OWL2RL reasoning (faster)")
                     .withOption("x", "omit-stats", "Omit generation of statistics (faster)")
-                    .withOption("m", "omit-filter-mappings", "Omit filtering illegal mappings " //
-                            + "referring to non-existing conceptualizations (faster)")
+                    .withOption("m", "omit-filter-mappings",
+                            "Omit filtering illegal mappings " //
+                                    + "referring to non-existing conceptualizations (faster)")
                     .withLogger(LoggerFactory.getLogger("eu.fbk")).parse(args);
 
             // Input/output
@@ -152,16 +152,16 @@ public class Premonitor {
             // WordNet
             final HashMap<String, URI> wnInfo = new HashMap<>();
 
-            final URL resource = ClassLoader.getSystemClassLoader().getResource(
-                    "eu/fbk/dkm/premon/premonitor/wn30-senseKeys.tsv");
+            final URL resource = ClassLoader.getSystemClassLoader()
+                    .getResource("eu/fbk/dkm/premon/premonitor/wn30-senseKeys.tsv");
             List<String> allLines = null;
             if (resource != null) {
                 allLines = Resources.readLines(resource, Charsets.UTF_8);
             }
 
             if (cmd.hasOption("wordnet-sensekeys")) {
-                allLines = Files.readAllLines(cmd.getOptionValue("wordnet-sensekeys", File.class)
-                        .toPath());
+                allLines = Files.readAllLines(
+                        cmd.getOptionValue("wordnet-sensekeys", File.class).toPath());
             }
             if (allLines != null) {
                 for (String line : allLines) {
@@ -211,12 +211,12 @@ public class Premonitor {
                                         final int start = name.lastIndexOf('/') + 1;
                                         final int end = name.lastIndexOf('-',
                                                 name.indexOf('#', start));
-                                        final String lemma = name.substring(start, end).replace(
-                                                '+', '_');
+                                        final String lemma = name.substring(start, end)
+                                                .replace('+', '_');
                                         final String key = o.stringValue() + "|" + lemma;
                                         final URI oldURI = wnInfo.put(key, (URI) s);
-                                        Preconditions.checkState(oldURI == null
-                                                || oldURI.equals(s));
+                                        Preconditions
+                                                .checkState(oldURI == null || oldURI.equals(s));
                                     }
                                 }
                             }
@@ -369,8 +369,8 @@ public class Premonitor {
             try {
                 // Extract output base name and formats, removing leading '.' character from them
                 final String base = cmd.getOptionValue("b", String.class, DEFAULT_OUTPUT_BASE);
-                final String[] formats = cmd.getOptionValue("f", String.class,
-                        DEFAULT_OUTPUT_FORMATS).split(",");
+                final String[] formats = cmd
+                        .getOptionValue("f", String.class, DEFAULT_OUTPUT_FORMATS).split(",");
                 for (int i = 0; i < formats.length; ++i) {
                     if (formats[i].charAt(0) == '.') {
                         formats[i] = formats[i].substring(1);
@@ -389,7 +389,8 @@ public class Premonitor {
                 // Wrap and propagate
                 throw new RDFHandlerException(
                         "IO error, some files might not have been properly saved ("
-                                + ex.getMessage() + ")", ex);
+                                + ex.getMessage() + ")",
+                        ex);
             }
 
         } catch (final Throwable ex) {
@@ -403,23 +404,21 @@ public class Premonitor {
 
         // Load TBox and get rid of unwanted classes
         final QuadModel tbox = QuadModel.create();
-        RDFSources.read(false, true, null, null,
-                "classpath:/eu/fbk/dkm/premon/premonitor/tbox.ttl")
+        RDFSources
+                .read(false, true, null, null, "classpath:/eu/fbk/dkm/premon/premonitor/tbox.ttl")
                 .emit(RDFHandlers.wrap(tbox), 1);
         final String semNS = "http://www.ontologydesignpatterns.org/cp/owl/semiotics.owl#";
-        final Set<URI> unwantedConcepts = ImmutableSet.of(NIF.URISCHEME, NIF.RFC5147_STRING,
-                NIF.CSTRING, new URIImpl(semNS + "InformationEntity"), new URIImpl(semNS
-                        + "Expression"), new URIImpl(semNS + "Meaning"));
+        final Set<URI> unwantedConcepts = ImmutableSet.of(RDFS.RESOURCE, NIF.URISCHEME,
+                NIF.RFC5147_STRING, NIF.CSTRING, new URIImpl(semNS + "InformationEntity"),
+                new URIImpl(semNS + "Expression"), new URIImpl(semNS + "Meaning"));
         for (final Statement stmt : ImmutableList.copyOf(tbox)) {
             final Resource s = stmt.getSubject();
             final URI p = stmt.getPredicate();
             final Value o = stmt.getObject();
-            if (unwantedConcepts.contains(s)
-                    || unwantedConcepts.contains(o)
-                    || (s.equals(PMO.SEMANTIC_CLASS_MAPPING)
-                            || s.equals(PMO.SEMANTIC_ROLE_MAPPING) || s
-                                .equals(PMO.CONCEPTUALIZATION_MAPPING))
-                    && p.equals(RDFS.SUBCLASSOF) && o instanceof BNode) {
+            if (unwantedConcepts.contains(s) || unwantedConcepts.contains(o)
+                    || (s.equals(PMO.SEMANTIC_CLASS_MAPPING) || s.equals(PMO.SEMANTIC_ROLE_MAPPING)
+                            || s.equals(PMO.CONCEPTUALIZATION_MAPPING))
+                            && p.equals(RDFS.SUBCLASSOF) && o instanceof BNode) {
                 tbox.remove(stmt);
             }
         }
@@ -479,7 +478,7 @@ public class Premonitor {
                                     }
                                 }
                             } else if (!isEntries) {
-                                if (entriesModel!=null && entriesModel.contains(stmt)) {
+                                if (entriesModel != null && entriesModel.contains(stmt)) {
                                     continue;
                                 }
                             }
@@ -499,7 +498,7 @@ public class Premonitor {
         for (final Statement stmt : ImmutableList.copyOf(tbox)) {
             if (stmt.getPredicate().getNamespace().equals("sys:")
                     || stmt.getObject() instanceof URI
-                    && ((URI) stmt.getObject()).getNamespace().equals("sys:")) {
+                            && ((URI) stmt.getObject()).getNamespace().equals("sys:")) {
                 tbox.remove(stmt);
             }
         }
@@ -515,9 +514,9 @@ public class Premonitor {
             msBefore = Maps.newHashMap();
             for (final Map.Entry<String, Map<URI, QuadModel>> entry : models.entrySet()) {
                 msBefore.put(entry.getKey(), new MappingStatistics(entry.getValue().values(),
-                        sourceKeys,entry.getKey()));
+                        sourceKeys, entry.getKey()));
             }
-            msBefore.put("all", new MappingStatistics(quadModels, ImmutableList.of(),"all"));
+            msBefore.put("all", new MappingStatistics(quadModels, ImmutableList.of(), "all"));
             msAfter = msBefore;
         }
 
@@ -532,9 +531,9 @@ public class Premonitor {
                 msAfter = Maps.newHashMap();
                 for (final Map.Entry<String, Map<URI, QuadModel>> entry : models.entrySet()) {
                     msAfter.put(entry.getKey(), new MappingStatistics(entry.getValue().values(),
-                            sourceKeys,entry.getKey()));
+                            sourceKeys, entry.getKey()));
                 }
-                msAfter.put("all", new MappingStatistics(quadModels, ImmutableList.of(),"all"));
+                msAfter.put("all", new MappingStatistics(quadModels, ImmutableList.of(), "all"));
             }
             LOGGER.info("Resource statistics");
             LOGGER.info(String.format("  %-10s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s %-9s",
@@ -579,8 +578,8 @@ public class Premonitor {
                         if (nxb + ncb + nrb + nob > 0) {
                             LOGGER.info(String.format(
                                     "  %-10s %-10s %-10s %-9d %-9d %-9d %-9d %-9d %-9d %-9d %-9d",
-                                    from, to, resource, nx, nc, nr, no, nxb - nx, ncb - nc, nrb
-                                            - nr, nob - no));
+                                    from, to, resource, nx, nc, nr, no, nxb - nx, ncb - nc,
+                                    nrb - nr, nob - no));
                         }
                     }
                 }
@@ -601,7 +600,8 @@ public class Premonitor {
             emit(base, source, formats, Maps.filterKeys(graphModels, g -> !isExampleGraph(g)),
                     tbox, owl2rl, statistics);
             emit(base, source + "-examples", formats,
-                    Maps.filterKeys(graphModels, g -> isExampleGraph(g)), tbox, owl2rl, statistics);
+                    Maps.filterKeys(graphModels, g -> isExampleGraph(g)), tbox, owl2rl,
+                    statistics);
             modelsByURI.putAll(Multimaps.forMap(graphModels));
         }
 
@@ -628,8 +628,8 @@ public class Premonitor {
     }
 
     private static void emit(final String base, final String classifier, final String[] formats,
-            final Map<URI, QuadModel> models, @Nullable final QuadModel tbox,
-            final boolean owl2rl, final boolean statistics) throws RDFHandlerException {
+            final Map<URI, QuadModel> models, @Nullable final QuadModel tbox, final boolean owl2rl,
+            final boolean statistics) throws RDFHandlerException {
 
         // Assemble RDFpro pipeline - start emitting closed data in all configured formats
         final List<RDFProcessor> processors = Lists.newArrayList();
@@ -637,8 +637,8 @@ public class Premonitor {
             final String location = base + "-" + classifier + (owl2rl ? "-inf." : ".") + format;
             processors.add(RDFProcessors.write(null, 1000, location));
         }
-        processors.add(RDFProcessors.track(new Tracker(LOGGER, null, classifier
-                + (owl2rl ? "-inf" : "") + " - %d quads", null)));
+        processors.add(RDFProcessors.track(new Tracker(LOGGER, null,
+                classifier + (owl2rl ? "-inf" : "") + " - %d quads", null)));
 
         // Compute and emit statistics if enabled
         if (statistics) {
@@ -648,12 +648,12 @@ public class Premonitor {
                 final String location = base + "-" + classifier + "-stats." + format;
                 statsProcessors.add(RDFProcessors.write(null, 1000, location));
             }
-            statsProcessors.add(RDFProcessors.track(new Tracker(LOGGER, null, classifier
-                    + "-stats - %d quads", null)));
+            statsProcessors.add(RDFProcessors
+                    .track(new Tracker(LOGGER, null, classifier + "-stats - %d quads", null)));
             statsProcessors.add(RDFProcessors.NIL);
-            processors.add(RDFProcessors.parallel(SetOperator.UNION_MULTISET,
-                    RDFProcessors.IDENTITY,
-                    RDFProcessors.sequence(statsProcessors.toArray(new RDFProcessor[0]))));
+            processors
+                    .add(RDFProcessors.parallel(SetOperator.UNION_MULTISET, RDFProcessors.IDENTITY,
+                            RDFProcessors.sequence(statsProcessors.toArray(new RDFProcessor[0]))));
         }
 
         // Remove inferrable triples, write, compute statistics, write
@@ -663,13 +663,13 @@ public class Premonitor {
                 final String location = base + "-" + classifier + "-noinf." + format;
                 processors.add(RDFProcessors.write(null, 1000, location));
             }
-            processors.add(RDFProcessors.track(new Tracker(LOGGER, null, classifier
-                    + "-noinf - %d quads", null)));
+            processors.add(RDFProcessors
+                    .track(new Tracker(LOGGER, null, classifier + "-noinf - %d quads", null)));
         }
 
         // Build the resulting sequence processor
-        final RDFProcessor processor = RDFProcessors.sequence(processors
-                .toArray(new RDFProcessor[processors.size()]));
+        final RDFProcessor processor = RDFProcessors
+                .sequence(processors.toArray(new RDFProcessor[processors.size()]));
 
         // Apply the processor
         final RDFHandler handler = RDFHandlers.decouple(processor.wrap(RDFHandlers.NIL));
@@ -694,16 +694,16 @@ public class Premonitor {
             if (models.containsKey(PM.ENTRIES)) {
                 sortedGraphs.add(PM.ENTRIES);
             }
-            for (final URI graph : Ordering.from(Statements.valueComparator()).sortedCopy(
-                    models.keySet())) {
+            for (final URI graph : Ordering.from(Statements.valueComparator())
+                    .sortedCopy(models.keySet())) {
                 if (!graph.equals(PM.META) && !graph.equals(PM.ENTRIES)) {
                     sortedGraphs.add(graph);
                 }
             }
             for (final URI graph : sortedGraphs) {
                 for (final Statement stmt : models.get(graph)) {
-                    handler.handleStatement(new ContextStatementImpl(stmt.getSubject(), stmt
-                            .getPredicate(), stmt.getObject(), graph));
+                    handler.handleStatement(new ContextStatementImpl(stmt.getSubject(),
+                            stmt.getPredicate(), stmt.getObject(), graph));
                 }
             }
         } catch (final Throwable ex) {
@@ -740,8 +740,6 @@ public class Premonitor {
                 for (final URI type : new URI[] { PMO.CONCEPTUALIZATION_MAPPING,
                         PMO.SEMANTIC_CLASS_MAPPING, PMO.SEMANTIC_ROLE_MAPPING }) {
 
-
-
                     int numMappingsToDelete = 0;
                     int numMappings = 0;
                     int mappingsDeletedCompletely = 0;
@@ -750,8 +748,8 @@ public class Premonitor {
                     final List<Statement> stmtsToDelete = Lists.newArrayList();
                     for (final Resource m : model.filter(null, RDF.TYPE, type).subjects()) {
                         ++numMappings;
-                        final List<Statement> stmts = ImmutableList.copyOf(model.filter(m, null,
-                                null));
+                        final List<Statement> stmts = ImmutableList
+                                .copyOf(model.filter(m, null, null));
                         boolean valid = true;
                         final List<Statement> stmtsInvalid = Lists.newArrayList();
                         for (final Statement stmt : stmts) {
@@ -791,7 +789,8 @@ public class Premonitor {
                             }
                             for (final Statement stmt : stmtsInvalid) {
                                 if (stmt.getPredicate().equals(PMO.ITEM)) {
-                                    itemsInv++;//useless (all Statement in stmtsInvalid are items)
+                                    itemsInv++;// useless (all Statement in stmtsInvalid are
+                                               // items)
                                 }
                             }
                             if (items - itemsInv < 2) {
@@ -815,73 +814,72 @@ public class Premonitor {
                         }
                         LOGGER.warn(
                                 "{}/{} illegal {} mappings and {} references {} removed from {}\n############################################################################################################",
-                                mappingsDeletedCompletely,
-                                numMappings,
+                                mappingsDeletedCompletely, numMappings,
                                 type.equals(PMO.SEMANTIC_CLASS_MAPPING) ? "semantic class"
-                                        : type.equals(PMO.CONCEPTUALIZATION_MAPPING) ? "conceptualization"
-                                                : "semantic role", referencesRemoved,
-                                numMappingsPerSource, entry.getKey());
+                                        : type.equals(PMO.CONCEPTUALIZATION_MAPPING)
+                                                ? "conceptualization" : "semantic role",
+                                referencesRemoved, numMappingsPerSource, entry.getKey());
                     }
                 }
             }
         }
 
-        //Cleaning Ontological Mappings
+        // Cleaning Ontological Mappings
         for (final Map<URI, QuadModel> map : models.values()) {
             for (final Map.Entry<URI, QuadModel> entry : map.entrySet()) {
                 final QuadModel model = entry.getValue();
 
-
-                final List<Statement> stmts = ImmutableList.copyOf(model.filter(null,PMO.ONTO_MATCH,
-                        null));
+                final List<Statement> stmts = ImmutableList
+                        .copyOf(model.filter(null, PMO.ONTO_MATCH, null));
                 int numMappingsToDelete = 0;
                 int numTriplesToDelete = 0;
 
-                for (Statement stmt:stmts
-                     ) {
+                for (Statement stmt : stmts) {
                     if (!validItems.contains(stmt.getSubject())) {
                         ++numMappingsToDelete;
 
-                        //delete ontology matching triple
+                        // delete ontology matching triple
                         ++numTriplesToDelete;
                         model.remove(stmt);
                         if (numMappingsToDelete <= 10) {
-                            LOGGER.warn("Removing illegal ontoMatch {} - missing {}", stmt.getSubject(),
-                                    stmt.getObject());
+                            LOGGER.warn("Removing illegal ontoMatch {} - missing {}",
+                                    stmt.getSubject(), stmt.getObject());
                         } else if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("Removing illegal ontoMatch {} - missing {}", stmt.getSubject(),
-                                    stmt.getObject());
+                            LOGGER.debug("Removing illegal ontoMatch {} - missing {}",
+                                    stmt.getSubject(), stmt.getObject());
                         } else if (numMappingsToDelete == 11) {
                             LOGGER.warn("Omitting further illegal ontoMatch assertions ....");
                         }
 
+                        // check if there are other things mapping to the same ontological
+                        // concept, otherwise remove all its triple
+                        if (ImmutableList
+                                .copyOf(model.filter(null, PMO.ONTO_MATCH, stmt.getObject()))
+                                .isEmpty()) {
 
-                        //check if there are other things mapping to the same ontological concept, otherwise remove all its triple
-                        if (ImmutableList.copyOf(model.filter(null, PMO.ONTO_MATCH,
-                                stmt.getObject())).isEmpty()) {
-
-                            final List<Statement> onto_stmts_all = ImmutableList.copyOf(model.filter((URI) stmt.getObject(),null, null));
-                            for (final Statement s: onto_stmts_all
-                                 ) {
+                            final List<Statement> onto_stmts_all = ImmutableList
+                                    .copyOf(model.filter((URI) stmt.getObject(), null, null));
+                            for (final Statement s : onto_stmts_all) {
 
                                 ++numTriplesToDelete;
                                 model.remove(s);
-                                LOGGER.debug("Removing onto triple {} - {} - {}", s.getSubject(),s.getPredicate(),
-                                        s.getObject());
+                                LOGGER.debug("Removing onto triple {} - {} - {}", s.getSubject(),
+                                        s.getPredicate(), s.getObject());
                             }
                         }
 
-                        //for all
-                        //Check if only remaining triple on subject is "rdf:type skos:Concept". if so remove
+                        // for all
+                        // Check if only remaining triple on subject is "rdf:type skos:Concept".
+                        // if so remove
 
-                        if (!model.contains(stmt.getSubject(),PMO.ONTO_MATCH,
-                                null)) {
+                        if (!model.contains(stmt.getSubject(), PMO.ONTO_MATCH, null)) {
 
-                            for (Statement rel_stmt : ImmutableList.copyOf(model.filter(stmt.getSubject(),null,
-                                    null))){
+                            for (Statement rel_stmt : ImmutableList
+                                    .copyOf(model.filter(stmt.getSubject(), null, null))) {
 
                                 ++numTriplesToDelete;
-                                LOGGER.debug("Removing type triple {} - {} - {}", rel_stmt.getSubject(),rel_stmt.getPredicate(),
+                                LOGGER.debug("Removing type triple {} - {} - {}",
+                                        rel_stmt.getSubject(), rel_stmt.getPredicate(),
                                         rel_stmt.getObject());
                                 model.remove(stmt);
 
@@ -894,9 +892,7 @@ public class Premonitor {
 
                 LOGGER.warn(
                         "{} illegal ontoMatch assertions and {} related triples removed from {}\n############################################################################################################",
-                        numMappingsToDelete,
-                        numTriplesToDelete,
-                        entry.getKey());
+                        numMappingsToDelete, numTriplesToDelete, entry.getKey());
 
             }
         }
@@ -927,7 +923,8 @@ public class Premonitor {
 
         final int numCoreTriples;
 
-        public InstanceStatistics(final Iterable<? extends QuadModel> models, final QuadModel tbox) {
+        public InstanceStatistics(final Iterable<? extends QuadModel> models,
+                final QuadModel tbox) {
 
             final Set<URI> roleRelProperties = Sets.newHashSet();
             for (final Resource rel : tbox.filter(null, RDFS.SUBPROPERTYOF, PMO.ROLE_REL)
@@ -1040,7 +1037,8 @@ public class Premonitor {
                     .map(s -> Pattern.compile("[-/]" + Pattern.quote(s) + "-")).iterator());
 
             for (final QuadModel model : models) {
-                for (final Resource mapping : model.filter(null, RDF.TYPE, PMO.MAPPING).subjects()) {
+                for (final Resource mapping : model.filter(null, RDF.TYPE, PMO.MAPPING)
+                        .subjects()) {
 
                     final Table<String, String, Set<Hash>> hashes;
                     if (model.contains(mapping, RDF.TYPE, PMO.CONCEPTUALIZATION_MAPPING)) {
@@ -1077,7 +1075,9 @@ public class Premonitor {
                 }
 
                 int mappingsCount = model.filter(null, PMO.ONTO_MATCH, null).size();
-                if (mappingsCount!=0) LOGGER.debug("Processing "+mappingsCount+" for mapping resource "+resource);
+                if (mappingsCount != 0)
+                    LOGGER.debug(
+                            "Processing " + mappingsCount + " for mapping resource " + resource);
 
                 for (final Statement mapping : model.filter(null, PMO.ONTO_MATCH, null)) {
 
@@ -1092,30 +1092,24 @@ public class Premonitor {
                         hashes = classHashes;
                     } else if (model.contains(subject, RDF.TYPE, PMO.SEMANTIC_ROLE)) {
                         hashes = roleHashes;
-                    } else hashes = otherHashes;
+                    } else
+                        hashes = otherHashes;
 
                     final String subjStr = subject.stringValue();
-                    String subjRes ="";
+                    String subjRes = "";
                     for (int i = 0; i < sourceKeys.size(); ++i) {
                         if (sourcePatterns.get(i).matcher(subjStr).find()) {
-                            subjRes=sourceKeys.get(i); break;
+                            subjRes = sourceKeys.get(i);
+                            break;
                         }
                     }
                     final String objStr = object.stringValue();
 
-                    addHash(hashes, subjRes, resource, subjStr, "|",
-                            objStr);
-                    addHash(hashes, "all", "all",
-                            subjStr, "|",
-                            objStr);
+                    addHash(hashes, subjRes, resource, subjStr, "|", objStr);
+                    addHash(hashes, "all", "all", subjStr, "|", objStr);
                 }
 
-
             }
-
-
-
-
 
             this.conMappings = countHashes(conHashes);
             this.classMappings = countHashes(classHashes);

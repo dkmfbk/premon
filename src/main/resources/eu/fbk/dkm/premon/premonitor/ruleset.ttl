@@ -239,7 +239,7 @@ sys:expandOneOf a rr:MetaVocabularyTerm.
                 ?l2 owl:intersectionOf ?l2. """;
     rr:body """ ?c owl:intersectionOf ?l1.
                 ?l1 rdf:first ?c1; rdf:rest ?l2.
-                FILTER (?l1 != rdf:nil) """.
+                FILTER (?l2 != rdf:nil) """.
 
 :cls-int-abox a rr:Rule;
     rr:head """ ?x rdf:type ?c. """;
