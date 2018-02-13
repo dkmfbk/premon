@@ -1,0 +1,12 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+PREFIX nif:<http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+SELECT DISTINCT ?ex ?text
+WHERE{ 
+?class vn:definesFrame ?frame .
+?frame pmo:example ?ex .
+?ex a vn:Example .
+?ex nif:isString ?text .
+}
+ORDER BY ?ex
+

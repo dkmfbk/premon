@@ -1,0 +1,5 @@
+PREFIX fn:<http://premon.fbk.eu/ontology/fn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+PREFIX nif:<http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+SELECT (COUNT(*) as ?n) { ?s fn:isCausativeOfFER ?o }
+

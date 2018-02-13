@@ -1,0 +1,8 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+SELECT ?pred ?role
+WHERE{ 
+?pred a pmo:SemanticArgument .
+?pred pmo:role ?role .
+}
+

@@ -1,0 +1,11 @@
+PREFIX fn:<http://premon.fbk.eu/ontology/fn#>
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pb:<http://premon.fbk.eu/ontology/pb#>
+PREFIX nb:<http://premon.fbk.eu/ontology/nb#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+PREFIX nif:<http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+PREFIX lexinfo:<http://www.lexinfo.net/ontology/2.0/lexinfo#>
+PREFIX ontolex:<http://www.w3.org/ns/lemon/ontolex#>
+
+SELECT (COUNT (*) as ?n)
+WHERE {?s pmo:semArg ?o}

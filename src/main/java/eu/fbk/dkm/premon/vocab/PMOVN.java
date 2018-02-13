@@ -71,17 +71,11 @@ public final class PMOVN {
     /** Class pmovn:Pred. */
     public static final URI PRED = createURI("Pred");
 
-    /** Class pmovn:NegPred. */
-    public static final URI NEG_PRED = createURI("NegPred");
-
     /** Class pmovn:PredType. */
     public static final URI PRED_TYPE = createURI("PredType");
 
     /** Class pmovn:PredArg. */
     public static final URI PRED_ARG = createURI("PredArg");
-
-    /** Class pmovn:ImplicitPredArg. */
-    public static final URI IMPLICIT_PRED_ARG = createURI("ImplicitPredArg");
 
     /** Class pmovn:VerbSpecificPredArg. */
     public static final URI VERB_SPECIFIC_PRED_ARG = createURI("VerbSpecificPredArg");
@@ -192,6 +186,12 @@ public final class PMOVN {
 
     /** Datatype property pmovn:frameXtag. */
     public static final URI FRAME_XTAG = createURI("frameXtag");
+
+    /** Datatype property pmovn:negPred. */
+    public static final URI NEG_PRE = createURI("negPred");
+
+    /** Datatype property pmovn:implicitPredArg. */
+    public static final URI IMPL_PRED_ARG = createURI("implPredArg");
 
     // Individuals - Thematic roles
 

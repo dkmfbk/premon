@@ -1,0 +1,11 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+PREFIX nif:<http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+SELECT ?class ?frame ?item
+WHERE{ 
+?class a vn:VerbClass .
+?class vn:definesFrame ?frame .
+?frame pmo:first / pmo:next* ?item .
+?item a vn:AdvSynItem .
+}
+ORDER BY ?class ?frame ?item
