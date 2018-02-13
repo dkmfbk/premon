@@ -18,6 +18,7 @@ rdfpro @read "$input"/src/main/owl/core.ttl \
              "$input"/src/main/owl/nb.ttl \
              "$input"/src/main/owl/fn.ttl \
              "$input"/src/main/owl/vn.ttl \
+	     "$input"/src/main/owl/meta.ttl \
              "$input"/src/main/owl/ontolex.rdf \
              "$input"/src/main/owl/decomp.rdf \
              "$input"/src/main/owl/synsem.rdf \
@@ -25,6 +26,8 @@ rdfpro @read "$input"/src/main/owl/core.ttl \
              "$input"/src/main/owl/vartrans.rdf \
              "$input"/src/main/owl/nif-core.owl \
              "$input"/src/main/owl/semiotics.owl \
+	     "$input"/src/main/owl/dcterms.ttl \
+	     "$input"/src/main/owl/skos.rdf \
        @tbox \
        @transform '-o owl:Thing owl:topDataProperty owl:topObjectProperty' \
        @unique \

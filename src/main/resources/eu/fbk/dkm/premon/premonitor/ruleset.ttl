@@ -62,6 +62,7 @@ sys:expandOneOf a rr:MetaVocabularyTerm.
 :owl_axioms a rr:Rule;
     rr:head """ owl:Thing rdf:type owl:Class.
                 owl:Nothing rdf:type owl:Class.
+                owl:sameAs rdf:type owl:ObjectProperty. 
                 rdfs:label rdf:type owl:AnnotationProperty.
                 rdfs:comment rdf:type owl:AnnotationProperty.
                 rdfs:seeAlso rdf:type owl:AnnotationProperty.

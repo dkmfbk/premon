@@ -31,319 +31,268 @@ skos:related a owl:AnnotationProperty .
 
 <http://premon.fbk.eu/ontology/vn> a owl:Ontology .
 
-_:node1c677sg4jx2 rdf:first pmovn:NpSynItem ;
-	rdf:rest _:node1c677sg4jx3 .
+_:node1c678v3plx2 rdf:first pmovn:NpSynItem ;
+	rdf:rest _:node1c678v3plx3 .
 
-_:node1c677sg4jx20 rdf:first pmovn:resultEventArg ;
-	rdf:rest _:node1c677sg4jx21 .
+_:node1c678v3plx20 rdf:first pmovn:resultEventArg ;
+	rdf:rest _:node1c678v3plx21 .
 
-_:node1c677sg4jx21 rdf:first pmovn:endEventArg ;
-	rdf:rest _:node1c677sg4jx22 .
+_:node1c678v3plx21 rdf:first pmovn:endEventArg ;
+	rdf:rest _:node1c678v3plx22 .
 
-_:node1c677sg4jx22 rdf:first pmovn:duringEventArg ;
+_:node1c678v3plx22 rdf:first pmovn:duringEventArg ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx23 a owl:Restriction ;
+_:node1c678v3plx23 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:someValuesFrom owl:Thing .
 
-_:node1c677sg4jx24 a owl:Restriction ;
+_:node1c678v3plx24 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
-	owl:allValuesFrom _:node1c677sg4jx25 .
+	owl:allValuesFrom _:node1c678v3plx25 .
 
-_:node1c677sg4jx25 a owl:Class ;
-	owl:unionOf _:node1c677sg4jx26 .
+_:node1c678v3plx25 a owl:Class ;
+	owl:unionOf _:node1c678v3plx26 .
 
-_:node1c677sg4jx26 rdf:first pmovn:AuxnpType ;
-	rdf:rest _:node1c677sg4jx27 .
+_:node1c678v3plx26 rdf:first pmovn:AuxnpType ;
+	rdf:rest _:node1c678v3plx27 .
 
-_:node1c677sg4jx27 rdf:first pmovn:SemanticRole ;
+_:node1c678v3plx27 rdf:first pmovn:SemanticRole ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx28 a owl:Restriction ;
+_:node1c678v3plx28 a owl:Restriction ;
 	owl:onProperty pmovn:restriction ;
-	owl:allValuesFrom _:node1c677sg4jx29 .
+	owl:allValuesFrom _:node1c678v3plx29 .
 
-_:node1c677sg4jx29 a owl:Class ;
-	owl:unionOf _:node1c677sg4jx30 .
+_:node1c678v3plx29 a owl:Class ;
+	owl:unionOf _:node1c678v3plx30 .
 
-_:node1c677sg4jx3 rdf:first pmovn:PrepSynItem ;
-	rdf:rest _:node1c677sg4jx4 .
+_:node1c678v3plx3 rdf:first pmovn:PrepSynItem ;
+	rdf:rest _:node1c678v3plx4 .
 
-_:node1c677sg4jx30 rdf:first pmovn:RoleSelectionalRestriction ;
-	rdf:rest _:node1c677sg4jx31 .
+_:node1c678v3plx30 rdf:first pmovn:RoleSelectionalRestriction ;
+	rdf:rest _:node1c678v3plx31 .
 
-_:node1c677sg4jx31 rdf:first pmovn:SyntacticRestriction ;
+_:node1c678v3plx31 rdf:first pmovn:SyntacticRestriction ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx32 a owl:Restriction ;
+_:node1c678v3plx32 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:cardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1c677sg4jx33 a owl:Restriction ;
+_:node1c678v3plx33 a owl:Restriction ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 	owl:onProperty pmo:first ;
 	owl:onClass pmovn:PredArg .
 
-_:node1c677sg4jx34 a owl:Restriction ;
+_:node1c678v3plx34 a owl:Restriction ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 	owl:onProperty pmovn:negPred ;
 	owl:onDataRange xsd:boolean .
 
-_:node1c677sg4jx35 a owl:Restriction ;
+_:node1c678v3plx35 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:someValuesFrom owl:Thing .
 
-_:node1c677sg4jx36 a owl:Restriction ;
+_:node1c678v3plx36 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:allValuesFrom pmovn:PredType .
 
-_:node1c677sg4jx37 a owl:Restriction ;
+_:node1c678v3plx37 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:someValuesFrom pmovn:PredArg .
 
-_:node1c677sg4jx38 a owl:Restriction ;
+_:node1c678v3plx38 a owl:Restriction ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 	owl:onProperty pmo:valueDt ;
 	owl:onDataRange xsd:string .
 
-_:node1c677sg4jx39 a owl:Restriction ;
+_:node1c678v3plx39 a owl:Restriction ;
 	owl:onProperty pmo:next ;
 	owl:allValuesFrom pmovn:PredArg .
 
-_:node1c677sg4jx4 rdf:first pmovn:SemanticRole ;
+_:node1c678v3plx4 rdf:first pmovn:SemanticRole ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx40 a owl:Restriction ;
+_:node1c678v3plx40 a owl:Restriction ;
 	owl:onProperty pmo:valueDt ;
 	owl:allValuesFrom xsd:string .
 
-_:node1c677sg4jx41 a owl:Restriction ;
+_:node1c678v3plx41 a owl:Restriction ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 	owl:onProperty pmovn:implPredArg ;
 	owl:onDataRange xsd:boolean .
 
-_:node1c677sg4jx42 rdf:first pmovn:ConstantPredArg ;
-	rdf:rest _:node1c677sg4jx43 .
+_:node1c678v3plx42 rdf:first pmovn:ConstantPredArg ;
+	rdf:rest _:node1c678v3plx43 .
 
-_:node1c677sg4jx43 rdf:first pmovn:EventPredArg ;
-	rdf:rest _:node1c677sg4jx44 .
-
-_:node1c677sg4jx44 rdf:first pmovn:ThemRolePredArg ;
-	rdf:rest _:node1c677sg4jx45 .
-
-_:node1c677sg4jx45 rdf:first pmovn:VerbSpecificPredArg ;
-	rdf:rest rdf:nil .
-
-_:node1c677sg4jx46 a owl:Restriction ;
-	owl:onProperty pmo:valueObj ;
-	owl:allValuesFrom _:node1c677sg4jx47 .
-
-_:node1c677sg4jx47 a owl:Class ;
-	owl:intersectionOf _:node1c677sg4jx48 .
-
-_:node1c677sg4jx48 rdf:first ontolex:LexicalEntry ;
-	rdf:rest _:node1c677sg4jx49 .
-
-_:node1c677sg4jx49 rdf:first _:node1c677sg4jx50 ;
-	rdf:rest rdf:nil .
-
-_:node1c677sg4jx5 a owl:Restriction ;
-	owl:onProperty pmo:valueObj ;
-	owl:cardinality "1"^^xsd:nonNegativeInteger .
-
-_:node1c677sg4jx50 a owl:Restriction ;
-	owl:onProperty <http://www.lexinfo.net/ontology/2.0/lexinfo#partOfSpeech> ;
-	owl:hasValue <http://www.lexinfo.net/ontology/2.0/lexinfo#preposition> .
-
-_:node1c677sg4jx51 a owl:Restriction ;
-	owl:onProperty pmovn:restriction ;
-	owl:allValuesFrom pmovn:PrepositionSelectionalRestriction .
-
-_:node1c677sg4jx52 a owl:Class ;
-	owl:unionOf _:node1c677sg4jx53 .
-
-_:node1c677sg4jx53 rdf:first _:node1c677sg4jx54 ;
-	rdf:rest _:node1c677sg4jx64 .
-
-_:node1c677sg4jx54 a owl:Class ;
-	owl:intersectionOf _:node1c677sg4jx55 .
-
-_:node1c677sg4jx55 rdf:first _:node1c677sg4jx56 ;
-	rdf:rest _:node1c677sg4jx62 .
-
-_:node1c677sg4jx56 a owl:Class ;
-	owl:complementOf _:node1c677sg4jx57 .
-
-_:node1c677sg4jx57 a owl:Class ;
-	owl:oneOf _:node1c677sg4jx58 .
-
-_:node1c677sg4jx58 rdf:first pmovn:startEventArg ;
-	rdf:rest _:node1c677sg4jx59 .
-
-_:node1c677sg4jx59 rdf:first pmovn:resultEventArg ;
-	rdf:rest _:node1c677sg4jx60 .
-
-_:node1c677sg4jx6 rdf:first pmovn:AbsentAtomicRestriction ;
-	rdf:rest _:node1c677sg4jx7 .
-
-_:node1c677sg4jx60 rdf:first pmovn:endEventArg ;
-	rdf:rest _:node1c677sg4jx61 .
-
-_:node1c677sg4jx61 rdf:first pmovn:duringEventArg ;
-	rdf:rest rdf:nil .
-
-_:node1c677sg4jx62 rdf:first _:node1c677sg4jx63 ;
-	rdf:rest rdf:nil .
-
-_:node1c677sg4jx63 a owl:Restriction ;
-	owl:onProperty pmovn:restriction .
+_:node1c678v3plx43 rdf:first pmovn:EventPredArg ;
+	rdf:rest _:node1c678v3plx44 .
 
 <http://premon.fbk.eu/ontology/vn> dcterms:issued "2015-10-28"^^xsd:date .
 
-_:node1c677sg4jx63 owl:someValuesFrom owl:Thing .
+_:node1c678v3plx44 rdf:first pmovn:ThemRolePredArg ;
+	rdf:rest _:node1c678v3plx45 .
 
-_:node1c677sg4jx64 rdf:first _:node1c677sg4jx65 ;
+_:node1c678v3plx45 rdf:first pmovn:VerbSpecificPredArg ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx65 a owl:Class ;
-	owl:intersectionOf _:node1c677sg4jx66 .
-
-_:node1c677sg4jx66 rdf:first _:node1c677sg4jx67 ;
-	rdf:rest _:node1c677sg4jx69 .
-
-_:node1c677sg4jx67 a owl:Class ;
-	owl:complementOf _:node1c677sg4jx68 .
+_:node1c678v3plx46 a owl:Restriction ;
+	owl:onProperty pmo:valueObj .
 
 <http://premon.fbk.eu/ontology/vn> dcterms:modified "2018-02-08"^^xsd:date .
 
-_:node1c677sg4jx68 a owl:Restriction ;
-	owl:onProperty pmovn:restriction ;
-	owl:someValuesFrom owl:Thing .
+_:node1c678v3plx46 owl:allValuesFrom _:node1c678v3plx47 .
 
 <http://premon.fbk.eu/ontology/vn> vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/vn#" .
 
-_:node1c677sg4jx69 rdf:first _:node1c677sg4jx70 ;
-	rdf:rest rdf:nil .
+_:node1c678v3plx47 a owl:Class .
 
-<http://premon.fbk.eu/ontology/vn> owl:versionInfo "2018a" .
+<http://premon.fbk.eu/ontology/vn> owl:versionInfo "2018a" ;
+	dcterms:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" .
 
-_:node1c677sg4jx7 rdf:first pmovn:ExistAtomicRestriction .
+_:node1c678v3plx47 owl:intersectionOf _:node1c678v3plx48 .
 
-<http://premon.fbk.eu/ontology/vn> dcterms:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" .
+<http://premon.fbk.eu/ontology/vn> vann:preferredNamespacePrefix "pmovn" ;
+	dcterms:creator "Francesco Corcoglioniti" .
 
-_:node1c677sg4jx7 rdf:rest rdf:nil .
-
-_:node1c677sg4jx70 a owl:Restriction .
-
-<http://premon.fbk.eu/ontology/vn> vann:preferredNamespacePrefix "pmovn" .
-
-_:node1c677sg4jx70 owl:onProperty pmo:valueObj .
-
-<http://premon.fbk.eu/ontology/vn> dcterms:creator "Francesco Corcoglioniti" .
-
-_:node1c677sg4jx70 owl:someValuesFrom owl:Thing .
-
-_:node1c677sg4jx71 a owl:Class .
+_:node1c678v3plx48 rdf:first ontolex:LexicalEntry .
 
 <http://premon.fbk.eu/ontology/vn> dcterms:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" .
 
-_:node1c677sg4jx71 owl:oneOf _:node1c677sg4jx72 .
+_:node1c678v3plx48 rdf:rest _:node1c678v3plx49 .
 
-_:node1c677sg4jx72 rdf:first pmovn:dest_prp ;
-	rdf:rest _:node1c677sg4jx73 .
-
-_:node1c677sg4jx73 rdf:first pmovn:path_prp ;
-	rdf:rest _:node1c677sg4jx74 .
-
-_:node1c677sg4jx74 rdf:first pmovn:dir_prp ;
-	rdf:rest _:node1c677sg4jx75 .
-
-_:node1c677sg4jx75 rdf:first pmovn:loc_prp ;
-	rdf:rest _:node1c677sg4jx76 .
-
-_:node1c677sg4jx76 rdf:first pmovn:spatial_prp ;
-	rdf:rest _:node1c677sg4jx77 .
-
-_:node1c677sg4jx77 rdf:first pmovn:plural_prp ;
-	rdf:rest _:node1c677sg4jx78 .
-
-_:node1c677sg4jx78 rdf:first pmovn:src_prp ;
-	rdf:rest _:node1c677sg4jx79 .
-
-_:node1c677sg4jx79 rdf:first pmovn:dest_dir_prp ;
-	rdf:rest _:node1c677sg4jx80 .
-
-_:node1c677sg4jx8 a owl:Class ;
-	owl:oneOf _:node1c677sg4jx9 .
-
-_:node1c677sg4jx80 rdf:first pmovn:dest_conf_prp ;
+_:node1c678v3plx49 rdf:first _:node1c678v3plx50 ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx81 a owl:Restriction ;
+_:node1c678v3plx5 a owl:Restriction ;
+	owl:onProperty pmo:valueObj ;
+	owl:cardinality "1"^^xsd:nonNegativeInteger .
+
+_:node1c678v3plx50 a owl:Restriction ;
+	owl:onProperty <http://www.lexinfo.net/ontology/2.0/lexinfo#partOfSpeech> ;
+	owl:hasValue <http://www.lexinfo.net/ontology/2.0/lexinfo#preposition> .
+
+_:node1c678v3plx51 a owl:Restriction ;
+	owl:onProperty pmovn:restriction ;
+	owl:allValuesFrom pmovn:PrepositionSelectionalRestriction .
+
+_:node1c678v3plx52 a owl:Class ;
+	owl:unionOf _:node1c678v3plx53 .
+
+_:node1c678v3plx53 rdf:first _:node1c678v3plx54 ;
+	rdf:rest _:node1c678v3plx64 .
+
+_:node1c678v3plx54 a owl:Class ;
+	owl:intersectionOf _:node1c678v3plx55 .
+
+_:node1c678v3plx55 rdf:first _:node1c678v3plx56 ;
+	rdf:rest _:node1c678v3plx62 .
+
+_:node1c678v3plx56 a owl:Class ;
+	owl:complementOf _:node1c678v3plx57 .
+
+_:node1c678v3plx57 a owl:Class ;
+	owl:oneOf _:node1c678v3plx58 .
+
+_:node1c678v3plx58 rdf:first pmovn:startEventArg ;
+	rdf:rest _:node1c678v3plx59 .
+
+_:node1c678v3plx59 rdf:first pmovn:resultEventArg ;
+	rdf:rest _:node1c678v3plx60 .
+
+_:node1c678v3plx6 rdf:first pmovn:AbsentAtomicRestriction ;
+	rdf:rest _:node1c678v3plx7 .
+
+_:node1c678v3plx60 rdf:first pmovn:endEventArg ;
+	rdf:rest _:node1c678v3plx61 .
+
+_:node1c678v3plx61 rdf:first pmovn:duringEventArg ;
+	rdf:rest rdf:nil .
+
+_:node1c678v3plx62 rdf:first _:node1c678v3plx63 ;
+	rdf:rest rdf:nil .
+
+_:node1c678v3plx63 a owl:Restriction ;
+	owl:onProperty pmovn:restriction ;
+	owl:someValuesFrom owl:Thing .
+
+_:node1c678v3plx64 rdf:first _:node1c678v3plx65 ;
+	rdf:rest rdf:nil .
+
+_:node1c678v3plx65 a owl:Class ;
+	owl:intersectionOf _:node1c678v3plx66 .
+
+_:node1c678v3plx66 rdf:first _:node1c678v3plx67 ;
+	rdf:rest _:node1c678v3plx69 .
+
+_:node1c678v3plx67 a owl:Class ;
+	owl:complementOf _:node1c678v3plx68 .
+
+_:node1c678v3plx68 a owl:Restriction ;
+	owl:onProperty pmovn:restriction ;
+	owl:someValuesFrom owl:Thing .
+
+_:node1c678v3plx69 rdf:first _:node1c678v3plx70 ;
+	rdf:rest rdf:nil .
+
+_:node1c678v3plx7 rdf:first pmovn:ExistAtomicRestriction ;
+	rdf:rest rdf:nil .
+
+_:node1c678v3plx70 a owl:Restriction ;
+	owl:onProperty pmo:valueObj ;
+	owl:someValuesFrom owl:Thing .
+
+_:node1c678v3plx71 a owl:Class .
+
+<http://premon.fbk.eu/ontology/vn> dcterms:title "Predicate Model for Ontologies (PreMOn) - VerbNet ontology module"@en .
+
+_:node1c678v3plx71 owl:oneOf _:node1c678v3plx72 .
+
+<http://premon.fbk.eu/ontology/vn> dcterms:description <http://premon.fbk.eu/images/vn.svg> .
+
+_:node1c678v3plx72 rdf:first pmovn:dest_prp ;
+	rdf:rest _:node1c678v3plx73 .
+
+_:node1c678v3plx73 rdf:first pmovn:path_prp ;
+	rdf:rest _:node1c678v3plx74 .
+
+_:node1c678v3plx74 rdf:first pmovn:dir_prp ;
+	rdf:rest _:node1c678v3plx75 .
+
+_:node1c678v3plx75 rdf:first pmovn:loc_prp ;
+	rdf:rest _:node1c678v3plx76 .
+
+_:node1c678v3plx76 rdf:first pmovn:spatial_prp ;
+	rdf:rest _:node1c678v3plx77 .
+
+_:node1c678v3plx77 rdf:first pmovn:plural_prp ;
+	rdf:rest _:node1c678v3plx78 .
+
+_:node1c678v3plx78 rdf:first pmovn:src_prp ;
+	rdf:rest _:node1c678v3plx79 .
+
+_:node1c678v3plx79 rdf:first pmovn:dest_dir_prp ;
+	rdf:rest _:node1c678v3plx80 .
+
+_:node1c678v3plx8 a owl:Class ;
+	owl:oneOf _:node1c678v3plx9 .
+
+_:node1c678v3plx80 rdf:first pmovn:dest_conf_prp ;
+	rdf:rest rdf:nil .
+
+_:node1c678v3plx81 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmovn:PrepositionSelectionalRestriction .
 
-_:node1c677sg4jx82 a owl:Restriction ;
+_:node1c678v3plx82 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:allValuesFrom pmovn:PrepositionRestrictionProperty .
 
-_:node1c677sg4jx83 rdf:first pmovn:SelectionalRestriction ;
-	rdf:rest _:node1c677sg4jx84 .
+_:node1c678v3plx83 rdf:first pmovn:SelectionalRestriction ;
+	rdf:rest _:node1c678v3plx84 .
 
-_:node1c677sg4jx84 rdf:first pmovn:SyntacticRestriction ;
-	rdf:rest rdf:nil .
-
-_:node1c677sg4jx85 rdf:first pmovn:AtomicRestriction ;
-	rdf:rest _:node1c677sg4jx86 .
-
-_:node1c677sg4jx86 rdf:first pmovn:CompoundRestriction ;
-	rdf:rest rdf:nil .
-
-_:node1c677sg4jx87 a owl:Class ;
-	owl:oneOf _:node1c677sg4jx88 .
-
-_:node1c677sg4jx88 rdf:first pmovn:machine_rrp ;
-	rdf:rest _:node1c677sg4jx89 .
-
-_:node1c677sg4jx89 rdf:first pmovn:pointy_rrp ;
-	rdf:rest _:node1c677sg4jx90 .
-
-_:node1c677sg4jx9 rdf:first pmovn:oblique_auxnpType ;
-	rdf:rest _:node1c677sg4jx10 .
-
-_:node1c677sg4jx90 rdf:first pmovn:animate_rrp ;
-	rdf:rest _:node1c677sg4jx91 .
-
-_:node1c677sg4jx91 rdf:first pmovn:comestible_rrp ;
-	rdf:rest _:node1c677sg4jx92 .
-
-_:node1c677sg4jx92 rdf:first pmovn:scalar_rrp ;
-	rdf:rest _:node1c677sg4jx93 .
-
-_:node1c677sg4jx93 rdf:first pmovn:shape_rrp ;
-	rdf:rest _:node1c677sg4jx94 .
-
-_:node1c677sg4jx94 rdf:first pmovn:region_rrp ;
-	rdf:rest _:node1c677sg4jx95 .
-
-_:node1c677sg4jx95 rdf:first pmovn:communication_rrp ;
-	rdf:rest _:node1c677sg4jx96 .
-
-_:node1c677sg4jx96 rdf:first pmovn:plant_rrp ;
-	rdf:rest _:node1c677sg4jx97 .
-
-_:node1c677sg4jx97 rdf:first pmovn:body_part_rrp ;
-	rdf:rest _:node1c677sg4jx98 .
-
-_:node1c677sg4jx98 rdf:first pmovn:nonrigid_rrp ;
-	rdf:rest _:node1c677sg4jx99 .
-
-_:node1c677sg4jx99 rdf:first pmovn:human_rrp ;
-	rdf:rest _:node1c677sg4jx100 .
-
-<http://premon.fbk.eu/ontology/vn> dcterms:title "Predicate Model for Ontologies (PreMOn) - VerbNet ontology module"@en ;
-	dcterms:description <http://premon.fbk.eu/images/vn.svg> , """The VerbNet module of the PreMOn ontology defines classes [pmovn:VerbClass](http://premon.fbk.eu/ontology/vn#VerbClass) and [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively. 
+<http://premon.fbk.eu/ontology/vn> dcterms:description """The VerbNet module of the PreMOn ontology defines classes [pmovn:VerbClass](http://premon.fbk.eu/ontology/vn#VerbClass) and [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively. 
 
 *Class members* are modeled as instances of [ontolex:LexicalEntry](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Entry), connected to their class via property [ontolex:evokes](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Evokes). 
 
@@ -368,39 +317,120 @@ A [pmovn:VerbNetFrame](http://premon.fbk.eu/ontology/vn#VerbNetFrame) is directl
 
 ### Restrictions
 
-[pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)s are modeled structurally as AND / OR compositions ([pmovn:CompoundRestriction](http://premon.fbk.eu/ontology/vn#CompoundRestriction) and subclasses) of atomic restrictions ([pmovn:AtomicRestriction](http://premon.fbk.eu/ontology/vn#AtomicRestriction) and subclasses) that require the presence or absence of a certain [pmovn:RestrictionProperty](http://premon.fbk.eu/ontology/vn#RestrictionProperty). Semantically, restrictions are divided in [pmovn:SyntacticRestriction](http://premon.fbk.eu/ontology/vn#SyntacticRestriction)s, which refer to a [pmovn:SyntacticRestrictionProperty](http://premon.fbk.eu/ontology/vn#SyntacticRestrictionProperty) and are attached to [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s, and [pmovn:SelectionalRestriction](http://premon.fbk.eu/ontology/vn#SelectionalRestriction)s. The latter are divided in [pmovn:PrepositionalSelectionalRestriction](http://premon.fbk.eu/ontology/vn#PrepositionalSelectionalRestriction)s, which refer to a [pmovn:PrepositionalRestrictionProperty](http://premon.fbk.eu/ontology/vn#PrepositionalRestrictionProperty) and are attached to [pmovn:PrepSynItem](http://premon.fbk.eu/ontology/vn#PrepSynItem)s, and [pmovn:RoleSelectionalRestriction](http://premon.fbk.eu/ontology/vn#RoleSelectionalRestriction)s, which refer to a [pmovn:RoleRestrictionProperty](http://premon.fbk.eu/ontology/vn#RoleRestrictionProperty) and are attached both to [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole)s and [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s. Every restriction instance instantiates both a structural and a semantic subclass of [pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)."""@en ;
-	rdfs:comment "The VerbNet module of the PreMOn ontology extends the core module with classes and properties specific to the VerbNet predicate model. The modelling is based on the [VerbNet Annotation Guidelines](http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf)."@en ;
-	dcterms:rights "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en ;
-	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
-	owl:imports <http://premon.fbk.eu/ontology/core> , <http://www.w3.org/ns/lemon/ontolex> ;
-	rdfs:isDefinedBy <http://premon.fbk.eu/ontology/vn.ttl> .
+[pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)s are modeled structurally as AND / OR compositions ([pmovn:CompoundRestriction](http://premon.fbk.eu/ontology/vn#CompoundRestriction) and subclasses) of atomic restrictions ([pmovn:AtomicRestriction](http://premon.fbk.eu/ontology/vn#AtomicRestriction) and subclasses) that require the presence or absence of a certain [pmovn:RestrictionProperty](http://premon.fbk.eu/ontology/vn#RestrictionProperty). Semantically, restrictions are divided in [pmovn:SyntacticRestriction](http://premon.fbk.eu/ontology/vn#SyntacticRestriction)s, which refer to a [pmovn:SyntacticRestrictionProperty](http://premon.fbk.eu/ontology/vn#SyntacticRestrictionProperty) and are attached to [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s, and [pmovn:SelectionalRestriction](http://premon.fbk.eu/ontology/vn#SelectionalRestriction)s. The latter are divided in [pmovn:PrepositionalSelectionalRestriction](http://premon.fbk.eu/ontology/vn#PrepositionalSelectionalRestriction)s, which refer to a [pmovn:PrepositionalRestrictionProperty](http://premon.fbk.eu/ontology/vn#PrepositionalRestrictionProperty) and are attached to [pmovn:PrepSynItem](http://premon.fbk.eu/ontology/vn#PrepSynItem)s, and [pmovn:RoleSelectionalRestriction](http://premon.fbk.eu/ontology/vn#RoleSelectionalRestriction)s, which refer to a [pmovn:RoleRestrictionProperty](http://premon.fbk.eu/ontology/vn#RoleRestrictionProperty) and are attached both to [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole)s and [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s. Every restriction instance instantiates both a structural and a semantic subclass of [pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)."""@en .
 
-pmovn:definesFrame a owl:ObjectProperty ;
-	rdfs:label "defines frame"@en ;
-	rdfs:subPropertyOf pmovn:frame .
+_:node1c678v3plx84 rdf:first pmovn:SyntacticRestriction ;
+	rdf:rest rdf:nil .
 
-pmovn:frame a owl:ObjectProperty ;
-	rdfs:label "frame"@en ;
-	rdfs:range pmovn:VerbNetFrame ;
-	rdfs:domain pmovn:VerbClass .
+_:node1c678v3plx85 rdf:first pmovn:AtomicRestriction .
 
-pmovn:definesSemRole a owl:ObjectProperty ;
-	rdfs:label "defines semantic role"@en ;
-	rdfs:subPropertyOf pmo:semRole ;
-	rdfs:range pmovn:SemanticRole ;
-	rdfs:domain pmovn:VerbClass .
+<http://premon.fbk.eu/ontology/vn> rdfs:comment "The VerbNet module of the PreMOn ontology extends the core module with classes and properties specific to the VerbNet predicate model. The modelling is based on the [VerbNet Annotation Guidelines](http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf)."@en .
 
-pmovn:SemanticRole a owl:Class ;
-	rdfs:label "Semantic Role (VN)"@en ;
-	rdfs:subClassOf pmo:SemanticRole , _:node1c677sg4jx130 , _:node1c677sg4jx132 , _:node1c677sg4jx133 .
+_:node1c678v3plx85 rdf:rest _:node1c678v3plx86 .
 
-pmovn:VerbClass a owl:Class ;
-	rdfs:label "Verb Class (VN)"@en ;
-	rdfs:subClassOf pmo:SemanticClass , _:node1c677sg4jx185 .
+_:node1c678v3plx86 rdf:first pmovn:CompoundRestriction ;
+	rdf:rest rdf:nil .
 
-pmovn:VerbNetFrame a owl:Class ;
-	rdfs:label "Syntactic Frame (VN)"@en ;
-	rdfs:subClassOf _:node1c677sg4jx186 , _:node1c677sg4jx187 , _:node1c677sg4jx191 .
+<http://premon.fbk.eu/ontology/vn> dcterms:rights "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en .
+
+_:node1c678v3plx87 a owl:Class .
+
+<http://premon.fbk.eu/ontology/vn> dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	owl:imports <http://premon.fbk.eu/ontology/core> .
+
+_:node1c678v3plx87 owl:oneOf _:node1c678v3plx88 .
+
+<http://premon.fbk.eu/ontology/vn> owl:imports <http://www.w3.org/ns/lemon/ontolex> .
+
+_:node1c678v3plx88 rdf:first pmovn:machine_rrp .
+
+<http://premon.fbk.eu/ontology/vn> rdfs:isDefinedBy <http://premon.fbk.eu/ontology/vn.ttl> .
+
+pmovn:definesFrame a owl:ObjectProperty .
+
+_:node1c678v3plx88 rdf:rest _:node1c678v3plx89 .
+
+_:node1c678v3plx89 rdf:first pmovn:pointy_rrp .
+
+pmovn:definesFrame rdfs:label "defines frame"@en .
+
+_:node1c678v3plx89 rdf:rest _:node1c678v3plx90 .
+
+pmovn:definesFrame rdfs:subPropertyOf pmovn:frame .
+
+_:node1c678v3plx9 rdf:first pmovn:oblique_auxnpType .
+
+pmovn:frame a owl:ObjectProperty .
+
+_:node1c678v3plx9 rdf:rest _:node1c678v3plx10 .
+
+_:node1c678v3plx90 rdf:first pmovn:animate_rrp ;
+	rdf:rest _:node1c678v3plx91 .
+
+pmovn:frame rdfs:label "frame"@en .
+
+_:node1c678v3plx91 rdf:first pmovn:comestible_rrp .
+
+pmovn:frame rdfs:range pmovn:VerbNetFrame .
+
+_:node1c678v3plx91 rdf:rest _:node1c678v3plx92 .
+
+pmovn:frame rdfs:domain pmovn:VerbClass .
+
+_:node1c678v3plx92 rdf:first pmovn:scalar_rrp .
+
+pmovn:definesSemRole a owl:ObjectProperty .
+
+_:node1c678v3plx92 rdf:rest _:node1c678v3plx93 .
+
+_:node1c678v3plx93 rdf:first pmovn:shape_rrp ;
+	rdf:rest _:node1c678v3plx94 .
+
+pmovn:definesSemRole rdfs:label "defines semantic role"@en .
+
+_:node1c678v3plx94 rdf:first pmovn:region_rrp .
+
+pmovn:definesSemRole rdfs:subPropertyOf pmo:semRole ;
+	rdfs:range pmovn:SemanticRole .
+
+_:node1c678v3plx94 rdf:rest _:node1c678v3plx95 .
+
+pmovn:definesSemRole rdfs:domain pmovn:VerbClass .
+
+_:node1c678v3plx95 rdf:first pmovn:communication_rrp .
+
+pmovn:SemanticRole a owl:Class .
+
+_:node1c678v3plx95 rdf:rest _:node1c678v3plx96 .
+
+_:node1c678v3plx96 rdf:first pmovn:plant_rrp ;
+	rdf:rest _:node1c678v3plx97 .
+
+pmovn:SemanticRole rdfs:label "Semantic Role (VN)"@en ;
+	rdfs:subClassOf pmo:SemanticRole , _:node1c678v3plx130 .
+
+_:node1c678v3plx97 rdf:first pmovn:body_part_rrp .
+
+pmovn:SemanticRole rdfs:subClassOf _:node1c678v3plx132 , _:node1c678v3plx133 .
+
+_:node1c678v3plx97 rdf:rest _:node1c678v3plx98 .
+
+pmovn:VerbClass a owl:Class .
+
+_:node1c678v3plx98 rdf:first pmovn:nonrigid_rrp ;
+	rdf:rest _:node1c678v3plx99 .
+
+_:node1c678v3plx99 rdf:first pmovn:human_rrp .
+
+pmovn:VerbClass rdfs:label "Verb Class (VN)"@en ;
+	rdfs:subClassOf pmo:SemanticClass , _:node1c678v3plx185 .
+
+pmovn:VerbNetFrame a owl:Class .
+
+_:node1c678v3plx99 rdf:rest _:node1c678v3plx100 .
+
+pmovn:VerbNetFrame rdfs:label "Syntactic Frame (VN)"@en ;
+	rdfs:subClassOf _:node1c678v3plx186 , _:node1c678v3plx187 , _:node1c678v3plx191 .
 
 pmovn:frameExample a owl:ObjectProperty ;
 	rdfs:comment "directly associates a VerbNet frame to its corresponding example"@en ;
@@ -410,21 +440,21 @@ pmovn:restriction a owl:ObjectProperty ;
 	rdfs:label "restriction"@en ;
 	rdfs:subPropertyOf owl:topObjectProperty ;
 	rdfs:range pmovn:Restriction ;
-	rdfs:domain _:node1c677sg4jx1 .
+	rdfs:domain _:node1c678v3plx1 .
 
 pmovn:Restriction a owl:Class ;
 	rdfs:label "Restriction"@en ;
-	owl:disjointUnionOf _:node1c677sg4jx83 , _:node1c677sg4jx85 .
+	owl:disjointUnionOf _:node1c678v3plx83 , _:node1c678v3plx85 .
 
 pmovn:NpSynItem a owl:Class ;
 	skos:closeMatch <http://www.lexinfo.net/lexinfo#NounPhrase> ;
 	rdfs:label "NP Syntactic Item"@en ;
-	rdfs:subClassOf pmovn:SynItem , _:node1c677sg4jx24 , _:node1c677sg4jx28 , _:node1c677sg4jx32 .
+	rdfs:subClassOf pmovn:SynItem , _:node1c678v3plx24 , _:node1c678v3plx28 , _:node1c678v3plx32 .
 
 pmovn:PrepSynItem a owl:Class ;
 	skos:closeMatch <http://www.lexinfo.net/lexinfo#Preposition> ;
 	rdfs:label "Preposition Syntactic Item"@en ;
-	rdfs:subClassOf pmovn:SynItem , _:node1c677sg4jx46 , _:node1c677sg4jx51 , _:node1c677sg4jx52 .
+	rdfs:subClassOf pmovn:SynItem , _:node1c678v3plx46 , _:node1c678v3plx51 , _:node1c678v3plx52 .
 
 pmovn:subclassOf a owl:ObjectProperty ;
 	rdfs:label "subclass of"@en ;
@@ -482,8 +512,8 @@ pmovn:implPredArg a owl:FunctionalProperty , owl:DatatypeProperty ;
 
 pmovn:PredArg a owl:Class ;
 	rdfs:label "Predicate Argument"@en ;
-	rdfs:subClassOf _:node1c677sg4jx38 , _:node1c677sg4jx39 , _:node1c677sg4jx40 , _:node1c677sg4jx41 ;
-	owl:disjointUnionOf _:node1c677sg4jx42 .
+	rdfs:subClassOf _:node1c678v3plx38 , _:node1c678v3plx39 , _:node1c678v3plx40 , _:node1c678v3plx41 ;
+	owl:disjointUnionOf _:node1c678v3plx42 .
 
 pmovn:negPred a owl:FunctionalProperty , owl:DatatypeProperty ;
 	rdfs:label "negated predicate"@en ;
@@ -492,7 +522,7 @@ pmovn:negPred a owl:FunctionalProperty , owl:DatatypeProperty ;
 
 pmovn:Pred a owl:Class ;
 	rdfs:label "Predicate"@en ;
-	rdfs:subClassOf _:node1c677sg4jx33 , _:node1c677sg4jx34 , _:node1c677sg4jx35 , _:node1c677sg4jx36 , _:node1c677sg4jx37 .
+	rdfs:subClassOf _:node1c678v3plx33 , _:node1c678v3plx34 , _:node1c678v3plx35 , _:node1c678v3plx36 , _:node1c678v3plx37 .
 
 pmovn:AbsentAtomicRestriction a owl:Class ;
 	rdfs:label "Absent Atomic Restriction"@en ;
@@ -500,8 +530,8 @@ pmovn:AbsentAtomicRestriction a owl:Class ;
 
 pmovn:AtomicRestriction a owl:Class ;
 	rdfs:label "Atomic Restriction"@en ;
-	rdfs:subClassOf pmovn:Restriction , _:node1c677sg4jx5 ;
-	owl:disjointUnionOf _:node1c677sg4jx6 .
+	rdfs:subClassOf pmovn:Restriction , _:node1c678v3plx5 ;
+	owl:disjointUnionOf _:node1c678v3plx6 .
 
 pmovn:AdjSynItem a owl:Class ;
 	skos:closeMatch <http://www.lexinfo.net/lexinfo#Adjective> ;
@@ -510,8 +540,8 @@ pmovn:AdjSynItem a owl:Class ;
 
 pmovn:SynItem a owl:Class ;
 	rdfs:label "Syntactic Item"@en ;
-	rdfs:subClassOf _:node1c677sg4jx134 ;
-	owl:disjointUnionOf _:node1c677sg4jx135 .
+	rdfs:subClassOf _:node1c678v3plx134 ;
+	owl:disjointUnionOf _:node1c678v3plx135 .
 
 pmovn:AdvSynItem a owl:Class ;
 	skos:closeMatch <http://www.lexinfo.net/lexinfo#Adverb> ;
@@ -525,8 +555,8 @@ pmovn:AndCompoundRestriction a owl:Class ;
 
 pmovn:CompoundRestriction a owl:Class ;
 	rdfs:label "Compound Restriction"@en ;
-	rdfs:subClassOf pmovn:Restriction , _:node1c677sg4jx13 ;
-	owl:disjointUnionOf _:node1c677sg4jx14 .
+	rdfs:subClassOf pmovn:Restriction , _:node1c678v3plx13 ;
+	owl:disjointUnionOf _:node1c678v3plx14 .
 
 pmovn:ExistAtomicRestriction a owl:Class ;
 	rdfs:label "Exist Atomic Restriction"@en ;
@@ -534,7 +564,7 @@ pmovn:ExistAtomicRestriction a owl:Class ;
 
 pmovn:AuxnpType a owl:Class ;
 	rdfs:label "Auxiliary NP Type"@en ;
-	owl:equivalentClass _:node1c677sg4jx8 .
+	owl:equivalentClass _:node1c678v3plx8 .
 
 pmovn:oblique_auxnpType a owl:NamedIndividual , pmovn:AuxnpType ;
 	rdfs:label "Oblique" .
@@ -558,11 +588,11 @@ pmovn:ConstantPredArg a owl:Class ;
 
 pmovn:EventPredArg a owl:Class ;
 	rdfs:label "Event Predicate Argument"@en ;
-	rdfs:subClassOf pmovn:PredArg , _:node1c677sg4jx16 , _:node1c677sg4jx17 .
+	rdfs:subClassOf pmovn:PredArg , _:node1c678v3plx16 , _:node1c678v3plx17 .
 
 pmovn:EventPredArgType a owl:Class ;
 	rdfs:label "Event Predicate Argument Type"@en ;
-	owl:equivalentClass _:node1c677sg4jx18 .
+	owl:equivalentClass _:node1c678v3plx18 .
 
 pmovn:startEventArg a owl:NamedIndividual , pmovn:EventPredArgType ;
 	rdfs:label "start of event"@en .
@@ -579,22 +609,22 @@ pmovn:duringEventArg a owl:NamedIndividual , pmovn:EventPredArgType ;
 pmovn:LexSynItem a owl:Class ;
 	rdfs:comment "Not clear if there is an equivalent in lexInfo" ;
 	rdfs:label "Lexical Syntactic Item"@en ;
-	rdfs:subClassOf pmovn:SynItem , _:node1c677sg4jx23 .
+	rdfs:subClassOf pmovn:SynItem , _:node1c678v3plx23 .
 
 pmovn:RoleSelectionalRestriction a owl:Class ;
 	rdfs:label "Role Selectional Restriction"@en ;
-	rdfs:subClassOf pmovn:SelectionalRestriction , _:node1c677sg4jx122 , _:node1c677sg4jx123 .
+	rdfs:subClassOf pmovn:SelectionalRestriction , _:node1c678v3plx122 , _:node1c678v3plx123 .
 
 pmovn:SyntacticRestriction a owl:Class ;
 	rdfs:label "Syntactic Restriction"@en ;
-	rdfs:subClassOf pmovn:Restriction , _:node1c677sg4jx141 , _:node1c677sg4jx142 .
+	rdfs:subClassOf pmovn:Restriction , _:node1c678v3plx141 , _:node1c678v3plx142 .
 
 pmovn:PredType a owl:Class ;
 	rdfs:label "Predicate Type"@en .
 
 pmovn:ThemRolePredArg a owl:Class ;
 	rdfs:label "Thematic Role Predicate Argument"@en ;
-	rdfs:subClassOf pmovn:PredArg , _:node1c677sg4jx183 , _:node1c677sg4jx184 .
+	rdfs:subClassOf pmovn:PredArg , _:node1c678v3plx183 , _:node1c678v3plx184 .
 
 pmovn:VerbSpecificPredArg a owl:Class ;
 	rdfs:label "Verb Specific Predicate Argument"@en ;
@@ -604,12 +634,12 @@ pmovn:VerbSpecificPredArg a owl:Class ;
 
 pmovn:PrepositionSelectionalRestriction a owl:Class ;
 	rdfs:label "Preposition Selectional Restriction"@en ;
-	rdfs:subClassOf pmovn:SelectionalRestriction , _:node1c677sg4jx81 , _:node1c677sg4jx82 .
+	rdfs:subClassOf pmovn:SelectionalRestriction , _:node1c678v3plx81 , _:node1c678v3plx82 .
 
 pmovn:PrepositionRestrictionProperty a owl:Class ;
 	rdfs:label "Preposition Selectional Restriction Property"@en ;
 	rdfs:subClassOf pmovn:SelectionalRestrictionProperty ;
-	owl:equivalentClass _:node1c677sg4jx71 .
+	owl:equivalentClass _:node1c678v3plx71 .
 
 pmovn:dest_prp a owl:NamedIndividual , pmovn:PrepositionRestrictionProperty ;
 	rdfs:label "dest" .
@@ -641,12 +671,12 @@ pmovn:dest_conf_prp a owl:NamedIndividual , pmovn:PrepositionRestrictionProperty
 pmovn:SelectionalRestrictionProperty a owl:Class ;
 	rdfs:label "Selectional Restriction Property"@en ;
 	rdfs:subClassOf pmovn:RestrictionProperty ;
-	owl:disjointUnionOf _:node1c677sg4jx128 .
+	owl:disjointUnionOf _:node1c678v3plx128 .
 
 pmovn:SelectionalRestriction a owl:Class ;
 	rdfs:label "Selectional Restriction"@en ;
-	rdfs:subClassOf pmovn:Restriction , _:node1c677sg4jx124 , _:node1c677sg4jx125 ;
-	owl:disjointUnionOf _:node1c677sg4jx126 .
+	rdfs:subClassOf pmovn:Restriction , _:node1c678v3plx124 , _:node1c678v3plx125 ;
+	owl:disjointUnionOf _:node1c678v3plx126 .
 
 pmovn:RestrictionProperty a owl:Class ;
 	rdfs:label "Restriction Property"@en .
@@ -654,7 +684,7 @@ pmovn:RestrictionProperty a owl:Class ;
 pmovn:RoleRestrictionProperty a owl:Class ;
 	rdfs:label "Role Selectional Restriction Property"@en ;
 	rdfs:subClassOf pmovn:SelectionalRestrictionProperty ;
-	owl:equivalentClass _:node1c677sg4jx87 .
+	owl:equivalentClass _:node1c678v3plx87 .
 
 pmovn:machine_rrp a owl:NamedIndividual , pmovn:RoleRestrictionProperty ;
 	skos:broader pmovn:int_control_rrp , pmovn:artifact_rrp ;
@@ -800,7 +830,7 @@ pmovn:VerbSynItem a owl:Class ;
 pmovn:SyntacticRestrictionProperty a owl:Class ;
 	rdfs:label "Syntactic Restriction Property" ;
 	rdfs:subClassOf pmovn:RestrictionProperty ;
-	owl:equivalentClass _:node1c677sg4jx143 .
+	owl:equivalentClass _:node1c678v3plx143 .
 
 pmovn:adv_loc_syrp a owl:NamedIndividual , pmovn:SyntacticRestrictionProperty ;
 	rdfs:label "adv_loc" .
@@ -1091,333 +1121,333 @@ pmovn:trajectory a owl:NamedIndividual , pmovn:ThematicRole ;
 	skos:broader pmovn:participant ;
 	rdfs:label "trajectory"@en .
 
-_:node1c677sg4jx1 a owl:Class ;
-	owl:unionOf _:node1c677sg4jx2 .
+_:node1c678v3plx1 a owl:Class ;
+	owl:unionOf _:node1c678v3plx2 .
 
-_:node1c677sg4jx10 rdf:first pmovn:oblique2_auxnpType ;
-	rdf:rest _:node1c677sg4jx11 .
+_:node1c678v3plx10 rdf:first pmovn:oblique2_auxnpType ;
+	rdf:rest _:node1c678v3plx11 .
 
-_:node1c677sg4jx100 rdf:first pmovn:int_control_rrp ;
-	rdf:rest _:node1c677sg4jx101 .
+_:node1c678v3plx100 rdf:first pmovn:int_control_rrp ;
+	rdf:rest _:node1c678v3plx101 .
 
-_:node1c677sg4jx101 rdf:first pmovn:substance_rrp ;
-	rdf:rest _:node1c677sg4jx102 .
+_:node1c678v3plx101 rdf:first pmovn:substance_rrp ;
+	rdf:rest _:node1c678v3plx102 .
 
-_:node1c677sg4jx102 rdf:first pmovn:organization_rrp ;
-	rdf:rest _:node1c677sg4jx103 .
+_:node1c678v3plx102 rdf:first pmovn:organization_rrp ;
+	rdf:rest _:node1c678v3plx103 .
 
-_:node1c677sg4jx103 rdf:first pmovn:concrete_rrp ;
-	rdf:rest _:node1c677sg4jx104 .
+_:node1c678v3plx103 rdf:first pmovn:concrete_rrp ;
+	rdf:rest _:node1c678v3plx104 .
 
-_:node1c677sg4jx104 rdf:first pmovn:biotic_rrp ;
-	rdf:rest _:node1c677sg4jx105 .
+_:node1c678v3plx104 rdf:first pmovn:biotic_rrp ;
+	rdf:rest _:node1c678v3plx105 .
 
-_:node1c677sg4jx105 rdf:first pmovn:tool_rrp ;
-	rdf:rest _:node1c677sg4jx106 .
+_:node1c678v3plx105 rdf:first pmovn:tool_rrp ;
+	rdf:rest _:node1c678v3plx106 .
 
-_:node1c677sg4jx106 rdf:first pmovn:rigid_rrp ;
-	rdf:rest _:node1c677sg4jx107 .
+_:node1c678v3plx106 rdf:first pmovn:rigid_rrp ;
+	rdf:rest _:node1c678v3plx107 .
 
-_:node1c677sg4jx107 rdf:first pmovn:sound_rrp ;
-	rdf:rest _:node1c677sg4jx108 .
+_:node1c678v3plx107 rdf:first pmovn:sound_rrp ;
+	rdf:rest _:node1c678v3plx108 .
 
-_:node1c677sg4jx108 rdf:first pmovn:vehicle_rrp ;
-	rdf:rest _:node1c677sg4jx109 .
+_:node1c678v3plx108 rdf:first pmovn:vehicle_rrp ;
+	rdf:rest _:node1c678v3plx109 .
 
-_:node1c677sg4jx109 rdf:first pmovn:solid_rrp ;
-	rdf:rest _:node1c677sg4jx110 .
+_:node1c678v3plx109 rdf:first pmovn:solid_rrp ;
+	rdf:rest _:node1c678v3plx110 .
 
-_:node1c677sg4jx11 rdf:first pmovn:oblique1_auxnpType ;
-	rdf:rest _:node1c677sg4jx12 .
+_:node1c678v3plx11 rdf:first pmovn:oblique1_auxnpType ;
+	rdf:rest _:node1c678v3plx12 .
 
-_:node1c677sg4jx110 rdf:first pmovn:artifact_rrp ;
-	rdf:rest _:node1c677sg4jx111 .
+_:node1c678v3plx110 rdf:first pmovn:artifact_rrp ;
+	rdf:rest _:node1c678v3plx111 .
 
-_:node1c677sg4jx111 rdf:first pmovn:force_rrp ;
-	rdf:rest _:node1c677sg4jx112 .
+_:node1c678v3plx111 rdf:first pmovn:force_rrp ;
+	rdf:rest _:node1c678v3plx112 .
 
-_:node1c677sg4jx112 rdf:first pmovn:location_rrp ;
-	rdf:rest _:node1c677sg4jx113 .
+_:node1c678v3plx112 rdf:first pmovn:location_rrp ;
+	rdf:rest _:node1c678v3plx113 .
 
-_:node1c677sg4jx113 rdf:first pmovn:time_rrp ;
-	rdf:rest _:node1c677sg4jx114 .
+_:node1c678v3plx113 rdf:first pmovn:time_rrp ;
+	rdf:rest _:node1c678v3plx114 .
 
-_:node1c677sg4jx114 rdf:first pmovn:animal_rrp ;
-	rdf:rest _:node1c677sg4jx115 .
+_:node1c678v3plx114 rdf:first pmovn:animal_rrp ;
+	rdf:rest _:node1c678v3plx115 .
 
-_:node1c677sg4jx115 rdf:first pmovn:elongated_rrp ;
-	rdf:rest _:node1c677sg4jx116 .
+_:node1c678v3plx115 rdf:first pmovn:elongated_rrp ;
+	rdf:rest _:node1c678v3plx116 .
 
-_:node1c677sg4jx116 rdf:first pmovn:abstract_rrp ;
-	rdf:rest _:node1c677sg4jx117 .
+_:node1c678v3plx116 rdf:first pmovn:abstract_rrp ;
+	rdf:rest _:node1c678v3plx117 .
 
-_:node1c677sg4jx117 rdf:first pmovn:phys_obj_rrp ;
-	rdf:rest _:node1c677sg4jx118 .
+_:node1c678v3plx117 rdf:first pmovn:phys_obj_rrp ;
+	rdf:rest _:node1c678v3plx118 .
 
-_:node1c677sg4jx118 rdf:first pmovn:state_rrp ;
-	rdf:rest _:node1c677sg4jx119 .
+_:node1c678v3plx118 rdf:first pmovn:state_rrp ;
+	rdf:rest _:node1c678v3plx119 .
 
-_:node1c677sg4jx119 rdf:first pmovn:currency_rrp ;
-	rdf:rest _:node1c677sg4jx120 .
+_:node1c678v3plx119 rdf:first pmovn:currency_rrp ;
+	rdf:rest _:node1c678v3plx120 .
 
-_:node1c677sg4jx12 rdf:first pmovn:np_auxnpType ;
+_:node1c678v3plx12 rdf:first pmovn:np_auxnpType ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx120 rdf:first pmovn:garment_rrp ;
-	rdf:rest _:node1c677sg4jx121 .
+_:node1c678v3plx120 rdf:first pmovn:garment_rrp ;
+	rdf:rest _:node1c678v3plx121 .
 
-_:node1c677sg4jx121 rdf:first pmovn:refl_rrp ;
+_:node1c678v3plx121 rdf:first pmovn:refl_rrp ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx122 a owl:Restriction ;
+_:node1c678v3plx122 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:allValuesFrom pmovn:RoleRestrictionProperty .
 
-_:node1c677sg4jx123 a owl:Restriction ;
+_:node1c678v3plx123 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmovn:RoleSelectionalRestriction .
 
-_:node1c677sg4jx124 a owl:Restriction ;
+_:node1c678v3plx124 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmovn:SelectionalRestriction .
 
-_:node1c677sg4jx125 a owl:Restriction ;
+_:node1c678v3plx125 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:allValuesFrom pmovn:SelectionalRestrictionProperty .
 
-_:node1c677sg4jx126 rdf:first pmovn:PrepositionSelectionalRestriction ;
-	rdf:rest _:node1c677sg4jx127 .
+_:node1c678v3plx126 rdf:first pmovn:PrepositionSelectionalRestriction ;
+	rdf:rest _:node1c678v3plx127 .
 
-_:node1c677sg4jx127 rdf:first pmovn:RoleSelectionalRestriction ;
+_:node1c678v3plx127 rdf:first pmovn:RoleSelectionalRestriction ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx128 rdf:first pmovn:PrepositionRestrictionProperty ;
-	rdf:rest _:node1c677sg4jx129 .
+_:node1c678v3plx128 rdf:first pmovn:PrepositionRestrictionProperty ;
+	rdf:rest _:node1c678v3plx129 .
 
-_:node1c677sg4jx129 rdf:first pmovn:RoleRestrictionProperty ;
+_:node1c678v3plx129 rdf:first pmovn:RoleRestrictionProperty ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx13 a owl:Restriction ;
+_:node1c678v3plx13 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:someValuesFrom owl:Thing .
 
-_:node1c677sg4jx130 a owl:Restriction ;
-	owl:onProperty _:node1c677sg4jx131 ;
+_:node1c678v3plx130 a owl:Restriction ;
+	owl:onProperty _:node1c678v3plx131 ;
 	owl:allValuesFrom pmovn:VerbClass .
 
-_:node1c677sg4jx131 owl:inverseOf pmo:semRole .
+_:node1c678v3plx131 owl:inverseOf pmo:semRole .
 
-_:node1c677sg4jx132 a owl:Restriction ;
+_:node1c678v3plx132 a owl:Restriction ;
 	owl:onProperty pmovn:restriction ;
 	owl:allValuesFrom pmovn:RoleRestrictionProperty .
 
-_:node1c677sg4jx133 a owl:Restriction ;
+_:node1c678v3plx133 a owl:Restriction ;
 	owl:onProperty pmovn:thematicRole ;
 	owl:someValuesFrom pmovn:ThematicRole .
 
-_:node1c677sg4jx134 a owl:Restriction ;
+_:node1c678v3plx134 a owl:Restriction ;
 	owl:onProperty pmo:next ;
 	owl:allValuesFrom pmovn:SynItem .
 
-_:node1c677sg4jx135 rdf:first pmovn:AdjSynItem ;
-	rdf:rest _:node1c677sg4jx136 .
+_:node1c678v3plx135 rdf:first pmovn:AdjSynItem ;
+	rdf:rest _:node1c678v3plx136 .
 
-_:node1c677sg4jx136 rdf:first pmovn:AdvSynItem ;
-	rdf:rest _:node1c677sg4jx137 .
+_:node1c678v3plx136 rdf:first pmovn:AdvSynItem ;
+	rdf:rest _:node1c678v3plx137 .
 
-_:node1c677sg4jx137 rdf:first pmovn:LexSynItem ;
-	rdf:rest _:node1c677sg4jx138 .
+_:node1c678v3plx137 rdf:first pmovn:LexSynItem ;
+	rdf:rest _:node1c678v3plx138 .
 
-_:node1c677sg4jx138 rdf:first pmovn:NpSynItem ;
-	rdf:rest _:node1c677sg4jx139 .
+_:node1c678v3plx138 rdf:first pmovn:NpSynItem ;
+	rdf:rest _:node1c678v3plx139 .
 
-_:node1c677sg4jx139 rdf:first pmovn:PrepSynItem ;
-	rdf:rest _:node1c677sg4jx140 .
+_:node1c678v3plx139 rdf:first pmovn:PrepSynItem ;
+	rdf:rest _:node1c678v3plx140 .
 
-_:node1c677sg4jx14 rdf:first pmovn:AndCompoundRestriction ;
-	rdf:rest _:node1c677sg4jx15 .
+_:node1c678v3plx14 rdf:first pmovn:AndCompoundRestriction ;
+	rdf:rest _:node1c678v3plx15 .
 
-_:node1c677sg4jx140 rdf:first pmovn:VerbSynItem ;
+_:node1c678v3plx140 rdf:first pmovn:VerbSynItem ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx141 a owl:Restriction ;
+_:node1c678v3plx141 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:allValuesFrom pmovn:SyntacticRestrictionProperty .
 
-_:node1c677sg4jx142 a owl:Restriction ;
+_:node1c678v3plx142 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmovn:SyntacticRestriction .
 
-_:node1c677sg4jx143 a owl:Class ;
-	owl:oneOf _:node1c677sg4jx144 .
+_:node1c678v3plx143 a owl:Class ;
+	owl:oneOf _:node1c678v3plx144 .
 
-_:node1c677sg4jx144 rdf:first pmovn:adv_loc_syrp ;
-	rdf:rest _:node1c677sg4jx145 .
+_:node1c678v3plx144 rdf:first pmovn:adv_loc_syrp ;
+	rdf:rest _:node1c678v3plx145 .
 
-_:node1c677sg4jx145 rdf:first pmovn:np_omit_ing_syrp ;
-	rdf:rest _:node1c677sg4jx146 .
+_:node1c678v3plx145 rdf:first pmovn:np_omit_ing_syrp ;
+	rdf:rest _:node1c678v3plx146 .
 
-_:node1c677sg4jx146 rdf:first pmovn:tensed_that_syrp ;
-	rdf:rest _:node1c677sg4jx147 .
+_:node1c678v3plx146 rdf:first pmovn:tensed_that_syrp ;
+	rdf:rest _:node1c678v3plx147 .
 
-_:node1c677sg4jx147 rdf:first pmovn:np_ing_syrp ;
-	rdf:rest _:node1c677sg4jx148 .
+_:node1c678v3plx147 rdf:first pmovn:np_ing_syrp ;
+	rdf:rest _:node1c678v3plx148 .
 
-_:node1c677sg4jx148 rdf:first pmovn:oc_ing_syrp ;
-	rdf:rest _:node1c677sg4jx149 .
+_:node1c678v3plx148 rdf:first pmovn:oc_ing_syrp ;
+	rdf:rest _:node1c678v3plx149 .
 
-_:node1c677sg4jx149 rdf:first pmovn:sc_to_inf_syrp ;
-	rdf:rest _:node1c677sg4jx150 .
+_:node1c678v3plx149 rdf:first pmovn:sc_to_inf_syrp ;
+	rdf:rest _:node1c678v3plx150 .
 
-_:node1c677sg4jx15 rdf:first pmovn:OrCompoundRestriction ;
+_:node1c678v3plx15 rdf:first pmovn:OrCompoundRestriction ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx150 rdf:first pmovn:vc_to_inf_syrp ;
-	rdf:rest _:node1c677sg4jx151 .
+_:node1c678v3plx150 rdf:first pmovn:vc_to_inf_syrp ;
+	rdf:rest _:node1c678v3plx151 .
 
-_:node1c677sg4jx151 rdf:first pmovn:small_clause_syrp ;
-	rdf:rest _:node1c677sg4jx152 .
+_:node1c678v3plx151 rdf:first pmovn:small_clause_syrp ;
+	rdf:rest _:node1c678v3plx152 .
 
-_:node1c677sg4jx152 rdf:first pmovn:genitive_syrp ;
-	rdf:rest _:node1c677sg4jx153 .
+_:node1c678v3plx152 rdf:first pmovn:genitive_syrp ;
+	rdf:rest _:node1c678v3plx153 .
 
-_:node1c677sg4jx153 rdf:first pmovn:wheth_inf_syrp ;
-	rdf:rest _:node1c677sg4jx154 .
+_:node1c678v3plx153 rdf:first pmovn:wheth_inf_syrp ;
+	rdf:rest _:node1c678v3plx154 .
 
-_:node1c677sg4jx154 rdf:first pmovn:oc_to_inf_syrp ;
-	rdf:rest _:node1c677sg4jx155 .
+_:node1c678v3plx154 rdf:first pmovn:oc_to_inf_syrp ;
+	rdf:rest _:node1c678v3plx155 .
 
-_:node1c677sg4jx155 rdf:first pmovn:what_extract_syrp ;
-	rdf:rest _:node1c677sg4jx156 .
+_:node1c678v3plx155 rdf:first pmovn:what_extract_syrp ;
+	rdf:rest _:node1c678v3plx156 .
 
-_:node1c677sg4jx156 rdf:first pmovn:oc_bare_inf_syrp ;
-	rdf:rest _:node1c677sg4jx157 .
+_:node1c678v3plx156 rdf:first pmovn:oc_bare_inf_syrp ;
+	rdf:rest _:node1c678v3plx157 .
 
-_:node1c677sg4jx157 rdf:first pmovn:np_p_ing_syrp ;
-	rdf:rest _:node1c677sg4jx158 .
+_:node1c678v3plx157 rdf:first pmovn:np_p_ing_syrp ;
+	rdf:rest _:node1c678v3plx158 .
 
-_:node1c677sg4jx158 rdf:first pmovn:wh_ing_syrp ;
-	rdf:rest _:node1c677sg4jx159 .
+_:node1c678v3plx158 rdf:first pmovn:wh_ing_syrp ;
+	rdf:rest _:node1c678v3plx159 .
 
-_:node1c677sg4jx159 rdf:first pmovn:how_extract_syrp ;
-	rdf:rest _:node1c677sg4jx160 .
+_:node1c678v3plx159 rdf:first pmovn:how_extract_syrp ;
+	rdf:rest _:node1c678v3plx160 .
 
-_:node1c677sg4jx16 a owl:Restriction ;
+_:node1c678v3plx16 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:allValuesFrom pmovn:EventPredArgType .
 
-_:node1c677sg4jx160 rdf:first pmovn:to_be_syrp ;
-	rdf:rest _:node1c677sg4jx161 .
+_:node1c678v3plx160 rdf:first pmovn:to_be_syrp ;
+	rdf:rest _:node1c678v3plx161 .
 
-_:node1c677sg4jx161 rdf:first pmovn:wh_extract_syrp ;
-	rdf:rest _:node1c677sg4jx162 .
+_:node1c678v3plx161 rdf:first pmovn:wh_extract_syrp ;
+	rdf:rest _:node1c678v3plx162 .
 
-_:node1c677sg4jx162 rdf:first pmovn:what_inf_syrp ;
-	rdf:rest _:node1c677sg4jx163 .
+_:node1c678v3plx162 rdf:first pmovn:what_inf_syrp ;
+	rdf:rest _:node1c678v3plx163 .
 
-_:node1c677sg4jx163 rdf:first pmovn:np_ppart_syrp ;
-	rdf:rest _:node1c677sg4jx164 .
+_:node1c678v3plx163 rdf:first pmovn:np_ppart_syrp ;
+	rdf:rest _:node1c678v3plx164 .
 
-_:node1c677sg4jx164 rdf:first pmovn:that_comp_syrp ;
-	rdf:rest _:node1c677sg4jx165 .
+_:node1c678v3plx164 rdf:first pmovn:that_comp_syrp ;
+	rdf:rest _:node1c678v3plx165 .
 
-_:node1c677sg4jx165 rdf:first pmovn:ac_ing_syrp ;
-	rdf:rest _:node1c677sg4jx166 .
+_:node1c678v3plx165 rdf:first pmovn:ac_ing_syrp ;
+	rdf:rest _:node1c678v3plx166 .
 
-_:node1c677sg4jx166 rdf:first pmovn:plural_syrp ;
-	rdf:rest _:node1c677sg4jx167 .
+_:node1c678v3plx166 rdf:first pmovn:plural_syrp ;
+	rdf:rest _:node1c678v3plx167 .
 
-_:node1c677sg4jx167 rdf:first pmovn:quotation_syrp ;
-	rdf:rest _:node1c677sg4jx168 .
+_:node1c678v3plx167 rdf:first pmovn:quotation_syrp ;
+	rdf:rest _:node1c678v3plx168 .
 
-_:node1c677sg4jx168 rdf:first pmovn:wh_comp_syrp ;
-	rdf:rest _:node1c677sg4jx169 .
+_:node1c678v3plx168 rdf:first pmovn:wh_comp_syrp ;
+	rdf:rest _:node1c678v3plx169 .
 
-_:node1c677sg4jx169 rdf:first pmovn:np_to_inf_syrp ;
-	rdf:rest _:node1c677sg4jx170 .
+_:node1c678v3plx169 rdf:first pmovn:np_to_inf_syrp ;
+	rdf:rest _:node1c678v3plx170 .
 
-_:node1c677sg4jx17 a owl:Restriction ;
+_:node1c678v3plx17 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:cardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1c677sg4jx170 rdf:first pmovn:acc_ing_syrp ;
-	rdf:rest _:node1c677sg4jx171 .
+_:node1c678v3plx170 rdf:first pmovn:acc_ing_syrp ;
+	rdf:rest _:node1c678v3plx171 .
 
-_:node1c677sg4jx171 rdf:first pmovn:rs_to_inf_syrp ;
-	rdf:rest _:node1c677sg4jx172 .
+_:node1c678v3plx171 rdf:first pmovn:rs_to_inf_syrp ;
+	rdf:rest _:node1c678v3plx172 .
 
-_:node1c677sg4jx172 rdf:first pmovn:np_tobe_syrp ;
-	rdf:rest _:node1c677sg4jx173 .
+_:node1c678v3plx172 rdf:first pmovn:np_tobe_syrp ;
+	rdf:rest _:node1c678v3plx173 .
 
-_:node1c677sg4jx173 rdf:first pmovn:for_comp_syrp ;
-	rdf:rest _:node1c677sg4jx174 .
+_:node1c678v3plx173 rdf:first pmovn:for_comp_syrp ;
+	rdf:rest _:node1c678v3plx174 .
 
-_:node1c677sg4jx174 rdf:first pmovn:wh_inf_syrp ;
-	rdf:rest _:node1c677sg4jx175 .
+_:node1c678v3plx174 rdf:first pmovn:wh_inf_syrp ;
+	rdf:rest _:node1c678v3plx175 .
 
-_:node1c677sg4jx175 rdf:first pmovn:be_sc_ing_syrp ;
-	rdf:rest _:node1c677sg4jx176 .
+_:node1c678v3plx175 rdf:first pmovn:be_sc_ing_syrp ;
+	rdf:rest _:node1c678v3plx176 .
 
-_:node1c677sg4jx176 rdf:first pmovn:sentential_syrp ;
-	rdf:rest _:node1c677sg4jx177 .
+_:node1c678v3plx176 rdf:first pmovn:sentential_syrp ;
+	rdf:rest _:node1c678v3plx177 .
 
-_:node1c677sg4jx177 rdf:first pmovn:definite_syrp ;
-	rdf:rest _:node1c677sg4jx178 .
+_:node1c678v3plx177 rdf:first pmovn:definite_syrp ;
+	rdf:rest _:node1c678v3plx178 .
 
-_:node1c677sg4jx178 rdf:first pmovn:poss_ing_syrp ;
-	rdf:rest _:node1c677sg4jx179 .
+_:node1c678v3plx178 rdf:first pmovn:poss_ing_syrp ;
+	rdf:rest _:node1c678v3plx179 .
 
-_:node1c677sg4jx179 rdf:first pmovn:sc_ing_syrp ;
-	rdf:rest _:node1c677sg4jx180 .
+_:node1c678v3plx179 rdf:first pmovn:sc_ing_syrp ;
+	rdf:rest _:node1c678v3plx180 .
 
-_:node1c677sg4jx18 a owl:Class ;
-	owl:oneOf _:node1c677sg4jx19 .
+_:node1c678v3plx18 a owl:Class ;
+	owl:oneOf _:node1c678v3plx19 .
 
-_:node1c677sg4jx180 rdf:first pmovn:ac_to_inf_syrp ;
-	rdf:rest _:node1c677sg4jx181 .
+_:node1c678v3plx180 rdf:first pmovn:ac_to_inf_syrp ;
+	rdf:rest _:node1c678v3plx181 .
 
-_:node1c677sg4jx181 rdf:first pmovn:body_part_syrp ;
-	rdf:rest _:node1c677sg4jx182 .
+_:node1c678v3plx181 rdf:first pmovn:body_part_syrp ;
+	rdf:rest _:node1c678v3plx182 .
 
-_:node1c677sg4jx182 rdf:first pmovn:refl_syrp ;
+_:node1c678v3plx182 rdf:first pmovn:refl_syrp ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx183 a owl:Restriction ;
+_:node1c678v3plx183 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:allValuesFrom pmovn:SemanticRole .
 
-_:node1c677sg4jx184 a owl:Restriction ;
+_:node1c678v3plx184 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:cardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1c677sg4jx185 a owl:Restriction ;
+_:node1c678v3plx185 a owl:Restriction ;
 	owl:onProperty pmo:semRole ;
 	owl:allValuesFrom pmovn:SemanticRole .
 
-_:node1c677sg4jx186 a owl:Restriction ;
+_:node1c678v3plx186 a owl:Restriction ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 	owl:onProperty pmo:item ;
 	owl:onClass pmovn:VerbSynItem .
 
-_:node1c677sg4jx187 a owl:Restriction ;
+_:node1c678v3plx187 a owl:Restriction ;
 	owl:onProperty pmo:item ;
-	owl:allValuesFrom _:node1c677sg4jx188 .
+	owl:allValuesFrom _:node1c678v3plx188 .
 
-_:node1c677sg4jx188 a owl:Class ;
-	owl:unionOf _:node1c677sg4jx189 .
+_:node1c678v3plx188 a owl:Class ;
+	owl:unionOf _:node1c678v3plx189 .
 
-_:node1c677sg4jx189 rdf:first pmovn:Pred ;
-	rdf:rest _:node1c677sg4jx190 .
+_:node1c678v3plx189 rdf:first pmovn:Pred ;
+	rdf:rest _:node1c678v3plx190 .
 
-_:node1c677sg4jx19 rdf:first pmovn:startEventArg ;
-	rdf:rest _:node1c677sg4jx20 .
+_:node1c678v3plx19 rdf:first pmovn:startEventArg ;
+	rdf:rest _:node1c678v3plx20 .
 
-_:node1c677sg4jx190 rdf:first pmovn:SynItem ;
+_:node1c678v3plx190 rdf:first pmovn:SynItem ;
 	rdf:rest rdf:nil .
 
-_:node1c677sg4jx191 a owl:Restriction ;
+_:node1c678v3plx191 a owl:Restriction ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
 	owl:onProperty pmo:first ;
 	owl:onClass pmovn:SynItem .
 
-_:node1c677sg4jx192 owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
+_:node1c678v3plx192 owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .

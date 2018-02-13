@@ -65,8 +65,8 @@ Finally, [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s, [pmofn:FrameEle
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label xml:lang="en">Frame Element (FN)</rdfs:label>
 	<rdfs:subClassOf rdf:resource="http://premon.fbk.eu/ontology/core#SemanticRole"/>
-	<rdfs:subClassOf rdf:nodeID="node1c677sf9qx10"/>
-	<owl:disjointUnionOf rdf:nodeID="node1c677sf9qx12"/>
+	<rdfs:subClassOf rdf:nodeID="node1c678v2tax10"/>
+	<owl:disjointUnionOf rdf:nodeID="node1c678v2tax12"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/fn#requiresFrameElement">
@@ -88,16 +88,16 @@ Finally, [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s, [pmofn:FrameEle
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/fn#FECoreSet">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label xml:lang="en">Frame Element Core Set</rdfs:label>
-	<rdfs:subClassOf rdf:nodeID="node1c677sf9qx5"/>
-	<rdfs:subClassOf rdf:nodeID="node1c677sf9qx6"/>
+	<rdfs:subClassOf rdf:nodeID="node1c678v2tax5"/>
+	<rdfs:subClassOf rdf:nodeID="node1c678v2tax6"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/fn#Frame">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label xml:lang="en">Frame (FN)</rdfs:label>
 	<rdfs:subClassOf rdf:resource="http://premon.fbk.eu/ontology/core#SemanticClass"/>
-	<rdfs:subClassOf rdf:nodeID="node1c677sf9qx7"/>
-	<rdfs:subClassOf rdf:nodeID="node1c677sf9qx9"/>
+	<rdfs:subClassOf rdf:nodeID="node1c678v2tax7"/>
+	<rdfs:subClassOf rdf:nodeID="node1c678v2tax9"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/fn#frameRelation">
@@ -126,7 +126,7 @@ Finally, [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s, [pmofn:FrameEle
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
 	<rdfs:label xml:lang="en">Lexical Unit</rdfs:label>
 	<rdfs:subClassOf rdf:resource="http://premon.fbk.eu/ontology/core#Conceptualization"/>
-	<rdfs:subClassOf rdf:nodeID="node1c677sf9qx16"/>
+	<rdfs:subClassOf rdf:nodeID="node1c678v2tax16"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/fn#inheritsFrom">
@@ -235,7 +235,7 @@ Finally, [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s, [pmofn:FrameEle
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
 	<rdfs:label xml:lang="en">semantic type</rdfs:label>
 	<rdfs:range rdf:resource="http://premon.fbk.eu/ontology/fn#SemType"/>
-	<rdfs:domain rdf:nodeID="node1c677sf9qx1"/>
+	<rdfs:domain rdf:nodeID="node1c678v2tax1"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://premon.fbk.eu/ontology/fn#SemType">
@@ -308,135 +308,135 @@ Finally, [pmofn:Frame](http://premon.fbk.eu/ontology/fn#Frame)s, [pmofn:FrameEle
 	<rdfs:subClassOf rdf:resource="http://premon.fbk.eu/ontology/fn#FrameElement"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx1">
+<rdf:Description rdf:nodeID="node1c678v2tax1">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
-	<owl:unionOf rdf:nodeID="node1c677sf9qx2"/>
+	<owl:unionOf rdf:nodeID="node1c678v2tax2"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx10">
+<rdf:Description rdf:nodeID="node1c678v2tax10">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
-	<owl:onProperty rdf:nodeID="node1c677sf9qx11"/>
+	<owl:onProperty rdf:nodeID="node1c678v2tax11"/>
 	<owl:allValuesFrom rdf:resource="http://premon.fbk.eu/ontology/fn#Frame"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx11">
+<rdf:Description rdf:nodeID="node1c678v2tax11">
 	<owl:inverseOf rdf:resource="http://premon.fbk.eu/ontology/core#semRole"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx12">
+<rdf:Description rdf:nodeID="node1c678v2tax12">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#CoreFrameElement"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx13"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax13"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx13">
+<rdf:Description rdf:nodeID="node1c678v2tax13">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#CoreUnexpressedFrameElement"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx14"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax14"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx14">
+<rdf:Description rdf:nodeID="node1c678v2tax14">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#ExtraThematicFrameElement"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx15"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax15"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx15">
+<rdf:Description rdf:nodeID="node1c678v2tax15">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#PeripheralFrameElement"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx16">
+<rdf:Description rdf:nodeID="node1c678v2tax16">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://premon.fbk.eu/ontology/core#evokedConcept"/>
 	<owl:allValuesFrom rdf:resource="http://premon.fbk.eu/ontology/fn#Frame"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx17">
+<rdf:Description rdf:nodeID="node1c678v2tax17">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
-	<owl:members rdf:nodeID="node1c677sf9qx18"/>
+	<owl:members rdf:nodeID="node1c678v2tax18"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx18">
+<rdf:Description rdf:nodeID="node1c678v2tax18">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#inheritsFrom"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx19"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax19"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx19">
+<rdf:Description rdf:nodeID="node1c678v2tax19">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#isCausativeOf"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx20"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax20"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx2">
+<rdf:Description rdf:nodeID="node1c678v2tax2">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#Frame"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx3"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax3"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx20">
+<rdf:Description rdf:nodeID="node1c678v2tax20">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#isInchoativeOf"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx21"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax21"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx21">
+<rdf:Description rdf:nodeID="node1c678v2tax21">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#perspectiveOn"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx22"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax22"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx22">
+<rdf:Description rdf:nodeID="node1c678v2tax22">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#precedes"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx23"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax23"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx23">
+<rdf:Description rdf:nodeID="node1c678v2tax23">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#reFrameMapping"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx24"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax24"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx24">
+<rdf:Description rdf:nodeID="node1c678v2tax24">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#seeAlso"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx25"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax25"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx25">
+<rdf:Description rdf:nodeID="node1c678v2tax25">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#subframeOf"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx26"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax26"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx26">
+<rdf:Description rdf:nodeID="node1c678v2tax26">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#uses"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx3">
+<rdf:Description rdf:nodeID="node1c678v2tax3">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#FrameElement"/>
-	<rdf:rest rdf:nodeID="node1c677sf9qx4"/>
+	<rdf:rest rdf:nodeID="node1c678v2tax4"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx4">
+<rdf:Description rdf:nodeID="node1c678v2tax4">
 	<rdf:first rdf:resource="http://premon.fbk.eu/ontology/fn#LexicalUnit"/>
 	<rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx5">
+<rdf:Description rdf:nodeID="node1c678v2tax5">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://premon.fbk.eu/ontology/core#item"/>
 	<owl:allValuesFrom rdf:resource="http://premon.fbk.eu/ontology/fn#FrameElement"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx6">
+<rdf:Description rdf:nodeID="node1c678v2tax6">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://premon.fbk.eu/ontology/core#item"/>
 	<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:minCardinality>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx7">
+<rdf:Description rdf:nodeID="node1c678v2tax7">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
-	<owl:onProperty rdf:nodeID="node1c677sf9qx8"/>
+	<owl:onProperty rdf:nodeID="node1c678v2tax8"/>
 	<owl:allValuesFrom rdf:resource="http://premon.fbk.eu/ontology/fn#LexicalUnit"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx8">
+<rdf:Description rdf:nodeID="node1c678v2tax8">
 	<owl:inverseOf rdf:resource="http://premon.fbk.eu/ontology/core#evokedConcept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1c677sf9qx9">
+<rdf:Description rdf:nodeID="node1c678v2tax9">
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
 	<owl:onProperty rdf:resource="http://premon.fbk.eu/ontology/core#semRole"/>
 	<owl:allValuesFrom rdf:resource="http://premon.fbk.eu/ontology/fn#FrameElement"/>
