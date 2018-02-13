@@ -570,9 +570,9 @@ public class VerbnetConverter extends Converter {
             URI thisA = PMOVN.PRED;
             final String bool = element.getAttribute("bool");
             if (bool != null && bool.equals("!")) {
-                addStatementToSink(obj, PMOVN.NEG_PRE, true);
+                addStatementToSink(thisURI, PMOVN.NEG_PRE, true);
             } else {
-                addStatementToSink(obj, PMOVN.NEG_PRE, false);
+                addStatementToSink(thisURI, PMOVN.NEG_PRE, false);
             }
             addStatementToSink(thisURI, RDF.TYPE, thisA);
             addStatementToSink(thisURI, PMO.VALUE_OBJ, obj);
