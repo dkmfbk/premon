@@ -28,7 +28,8 @@ public final class PMOFN {
     public static final URI CORE_FRAME_ELEMENT = createURI("CoreFrameElement");
 
     /** Class pmofn:CoreUnexpressedFrameElement. */
-    public static final URI CORE_UNEXPRESSED_FRAME_ELEMENT = createURI("CoreUnexpressedFrameElement");
+    public static final URI CORE_UNEXPRESSED_FRAME_ELEMENT = createURI(
+            "CoreUnexpressedFrameElement");
 
     /** Class pmofn:ExtraThematicFrameElement. */
     public static final URI EXTRA_THEMATIC_FRAME_ELEMENT = createURI("ExtraThematicFrameElement");
@@ -104,8 +105,11 @@ public final class PMOFN {
     /** Object property pmofn:metaphor. */
     public static final URI METAPHOR = createURI("metaphor");
 
+    /** Object property pmofn:metaphorFER. */
+    public static final URI METAPHOR_FER = createURI("metaphorFER");
+
     /** Object property pmofn:reFrameMappingFER. */
-    public static final URI REFRAME_MAPPING_FEr = createURI("reFrameMappingFER");
+    public static final URI REFRAME_MAPPING_FER = createURI("reFrameMappingFER");
 
     /** Object property pmofn:requiresFrameElement. */
     public static final URI REQUIRES_FRAME_ELEMENT = createURI("requiresFrameElement");
@@ -133,6 +137,9 @@ public final class PMOFN {
 
     /** Object property pmofn:uses. */
     public static final URI USES = createURI("uses");
+    
+    /** Object property pmofn:usesFER. */
+    public static final URI USES_FER = createURI("usesFER");
 
     // Datatype properties
 

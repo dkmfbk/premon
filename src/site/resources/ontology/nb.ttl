@@ -57,12 +57,12 @@ pmonb:argument a owl:FunctionalProperty , owl:ObjectProperty ;
 
 pmonb:Argument a owl:Class ;
 	rdfs:label "Argument (NB)"@en ;
-	owl:equivalentClass _:node1c67cm5mnx1 ;
+	owl:equivalentClass _:node1c67fj75bx1 ;
 	rdfs:subClassOf skos:Concept .
 
 pmonb:SemanticRole a owl:Class ;
 	rdfs:label "Semantic Role (NB)"@en ;
-	rdfs:subClassOf pmo:SemanticRole , _:node1c67cm5mnx24 , _:node1c67cm5mnx25 .
+	rdfs:subClassOf pmo:SemanticRole , _:node1c67fj75bx24 , _:node1c67fj75bx25 .
 
 pmonb:tag a owl:ObjectProperty ;
 	rdfs:label "tag"@en ;
@@ -73,12 +73,12 @@ pmonb:Tag a owl:Class ;
 
 pmonb:Modifier a owl:Class ;
 	rdfs:label "Modifier (NB)"@en ;
-	rdfs:subClassOf pmonb:Argument , _:node1c67cm5mnx4 ;
+	rdfs:subClassOf pmonb:Argument , _:node1c67fj75bx4 ;
 	owl:disjointWith pmonb:NumberedArgument .
 
 pmonb:NumberedArgument a owl:Class ;
 	rdfs:label "Numbered Argument (NB)"@en ;
-	rdfs:subClassOf pmonb:Argument , _:node1c67cm5mnx16 .
+	rdfs:subClassOf pmonb:Argument , _:node1c67fj75bx16 .
 
 pmonb:argm-cau a owl:NamedIndividual , pmonb:Modifier .
 
@@ -116,7 +116,7 @@ pmonb:arg0 a owl:NamedIndividual , pmonb:NumberedArgument .
 
 pmonb:Roleset a owl:Class ;
 	rdfs:label "Roleset (NB)"@en ;
-	rdfs:subClassOf pmo:SemanticClass , _:node1c67cm5mnx23 .
+	rdfs:subClassOf pmo:SemanticClass , _:node1c67fj75bx23 .
 
 pmonb:tag-prd a owl:NamedIndividual , pmonb:Tag .
 
@@ -124,82 +124,82 @@ pmonb:tag-ref a owl:NamedIndividual , pmonb:Tag .
 
 pmonb:tag-support a owl:NamedIndividual , pmonb:Tag .
 
-_:node1c67cm5mnx1 a owl:Class ;
-	owl:unionOf _:node1c67cm5mnx2 .
+_:node1c67fj75bx1 a owl:Class ;
+	owl:unionOf _:node1c67fj75bx2 .
 
-_:node1c67cm5mnx10 rdf:first pmonb:argm-ext ;
-	rdf:rest _:node1c67cm5mnx11 .
+_:node1c67fj75bx10 rdf:first pmonb:argm-ext ;
+	rdf:rest _:node1c67fj75bx11 .
 
-_:node1c67cm5mnx11 rdf:first pmonb:argm-mnr ;
-	rdf:rest _:node1c67cm5mnx12 .
+_:node1c67fj75bx11 rdf:first pmonb:argm-mnr ;
+	rdf:rest _:node1c67fj75bx12 .
 
-_:node1c67cm5mnx12 rdf:first pmonb:argm-loc ;
-	rdf:rest _:node1c67cm5mnx13 .
+_:node1c67fj75bx12 rdf:first pmonb:argm-loc ;
+	rdf:rest _:node1c67fj75bx13 .
 
-_:node1c67cm5mnx13 rdf:first pmonb:argm-neg ;
-	rdf:rest _:node1c67cm5mnx14 .
+_:node1c67fj75bx13 rdf:first pmonb:argm-neg ;
+	rdf:rest _:node1c67fj75bx14 .
 
-_:node1c67cm5mnx14 rdf:first pmonb:argm-pnc ;
-	rdf:rest _:node1c67cm5mnx15 .
+_:node1c67fj75bx14 rdf:first pmonb:argm-pnc ;
+	rdf:rest _:node1c67fj75bx15 .
 
-_:node1c67cm5mnx15 rdf:first pmonb:argm-adv ;
+_:node1c67fj75bx15 rdf:first pmonb:argm-adv ;
 	rdf:rest rdf:nil .
 
-_:node1c67cm5mnx16 a owl:Class ;
-	owl:oneOf _:node1c67cm5mnx17 .
+_:node1c67fj75bx16 a owl:Class ;
+	owl:oneOf _:node1c67fj75bx17 .
 
-_:node1c67cm5mnx17 rdf:first pmonb:arg5 ;
-	rdf:rest _:node1c67cm5mnx18 .
+_:node1c67fj75bx17 rdf:first pmonb:arg5 ;
+	rdf:rest _:node1c67fj75bx18 .
 
-_:node1c67cm5mnx18 rdf:first pmonb:arg4 ;
-	rdf:rest _:node1c67cm5mnx19 .
+_:node1c67fj75bx18 rdf:first pmonb:arg4 ;
+	rdf:rest _:node1c67fj75bx19 .
 
-_:node1c67cm5mnx19 rdf:first pmonb:arg3 ;
-	rdf:rest _:node1c67cm5mnx20 .
+_:node1c67fj75bx19 rdf:first pmonb:arg3 ;
+	rdf:rest _:node1c67fj75bx20 .
 
-_:node1c67cm5mnx2 rdf:first pmonb:Modifier ;
-	rdf:rest _:node1c67cm5mnx3 .
+_:node1c67fj75bx2 rdf:first pmonb:Modifier ;
+	rdf:rest _:node1c67fj75bx3 .
 
-_:node1c67cm5mnx20 rdf:first pmonb:arg2 ;
-	rdf:rest _:node1c67cm5mnx21 .
+_:node1c67fj75bx20 rdf:first pmonb:arg2 ;
+	rdf:rest _:node1c67fj75bx21 .
 
-_:node1c67cm5mnx21 rdf:first pmonb:arg1 ;
-	rdf:rest _:node1c67cm5mnx22 .
+_:node1c67fj75bx21 rdf:first pmonb:arg1 ;
+	rdf:rest _:node1c67fj75bx22 .
 
-_:node1c67cm5mnx22 rdf:first pmonb:arg0 ;
+_:node1c67fj75bx22 rdf:first pmonb:arg0 ;
 	rdf:rest rdf:nil .
 
-_:node1c67cm5mnx23 a owl:Restriction ;
+_:node1c67fj75bx23 a owl:Restriction ;
 	owl:onProperty pmo:semRole ;
 	owl:allValuesFrom pmonb:SemanticRole .
 
-_:node1c67cm5mnx24 a owl:Restriction ;
+_:node1c67fj75bx24 a owl:Restriction ;
 	owl:onProperty pmonb:argument ;
 	owl:someValuesFrom pmonb:Argument .
 
-_:node1c67cm5mnx25 a owl:Restriction ;
-	owl:onProperty _:node1c67cm5mnx26 ;
+_:node1c67fj75bx25 a owl:Restriction ;
+	owl:onProperty _:node1c67fj75bx26 ;
 	owl:allValuesFrom pmonb:Roleset .
 
-_:node1c67cm5mnx26 owl:inverseOf pmo:semRole .
+_:node1c67fj75bx26 owl:inverseOf pmo:semRole .
 
-_:node1c67cm5mnx3 rdf:first pmonb:NumberedArgument ;
+_:node1c67fj75bx3 rdf:first pmonb:NumberedArgument ;
 	rdf:rest rdf:nil .
 
-_:node1c67cm5mnx4 a owl:Class ;
-	owl:oneOf _:node1c67cm5mnx5 .
+_:node1c67fj75bx4 a owl:Class ;
+	owl:oneOf _:node1c67fj75bx5 .
 
-_:node1c67cm5mnx5 rdf:first pmonb:argm-cau ;
-	rdf:rest _:node1c67cm5mnx6 .
+_:node1c67fj75bx5 rdf:first pmonb:argm-cau ;
+	rdf:rest _:node1c67fj75bx6 .
 
-_:node1c67cm5mnx6 rdf:first pmonb:argm-tmp ;
-	rdf:rest _:node1c67cm5mnx7 .
+_:node1c67fj75bx6 rdf:first pmonb:argm-tmp ;
+	rdf:rest _:node1c67fj75bx7 .
 
-_:node1c67cm5mnx7 rdf:first pmonb:argm-dis ;
-	rdf:rest _:node1c67cm5mnx8 .
+_:node1c67fj75bx7 rdf:first pmonb:argm-dis ;
+	rdf:rest _:node1c67fj75bx8 .
 
-_:node1c67cm5mnx8 rdf:first pmonb:argm-dir ;
-	rdf:rest _:node1c67cm5mnx9 .
+_:node1c67fj75bx8 rdf:first pmonb:argm-dir ;
+	rdf:rest _:node1c67fj75bx9 .
 
-_:node1c67cm5mnx9 rdf:first pmonb:argm-prd ;
-	rdf:rest _:node1c67cm5mnx10 .
+_:node1c67fj75bx9 rdf:first pmonb:argm-prd ;
+	rdf:rest _:node1c67fj75bx10 .

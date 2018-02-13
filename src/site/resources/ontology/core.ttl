@@ -45,7 +45,7 @@ nif:referenceContext a owl:ObjectProperty ;
 skos:broader a owl:ObjectProperty .
 
 nif:Annotation a owl:Class ;
-	rdfs:subClassOf _:node1c67cm2vux9 .
+	rdfs:subClassOf _:node1c67fj5hmx9 .
 
 nif:Context a owl:Class .
 
@@ -118,7 +118,7 @@ pmo:evokedConcept a owl:ObjectProperty , owl:FunctionalProperty ;
 pmo:Conceptualization a owl:Class ;
 	rdfs:comment "Structurally, it can be seen as the reification of the ontolex:evokes relation between ontolex:LexicalEntry and ontolex:LexicalConcept. Semantically, it can be seen as a very specific intensional concept (among many, in case of polysemy) evoked by a single ontolex:LexicalEntry, which can be generalized to a ontolex:LexicalConcept when multiple entries are considered but with a possible loss of information that prevents precise alignments to be represented."@en ;
 	rdfs:label "Conceptualization"@en ;
-	rdfs:subClassOf skos:Concept , _:node1c67cm2vux13 , _:node1c67cm2vux14 .
+	rdfs:subClassOf skos:Concept , _:node1c67fj5hmx13 , _:node1c67fj5hmx14 .
 
 pmo:evokingEntry a owl:ObjectProperty , owl:FunctionalProperty ;
 	rdfs:label "evoking entry"@en ;
@@ -133,7 +133,7 @@ pmo:first a owl:ObjectProperty ;
 pmo:item a owl:ObjectProperty ;
 	rdfs:comment "first, item, next are used to model set-like construct"@en ;
 	rdfs:label "item"@en ;
-	owl:propertyChainAxiom _:node1c67cm2vux1 .
+	owl:propertyChainAxiom _:node1c67fj5hmx1 .
 
 pmo:next a owl:ObjectProperty ;
 	rdfs:comment "first, item, next are used to model set-like construct"@en ;
@@ -159,29 +159,29 @@ pmo:semRole a owl:ObjectProperty ;
 pmo:semRoleMapping a owl:ObjectProperty ;
 	rdfs:comment "relates a mapping between semantic roles to the corresponding mapping between semantic classes and/or conceptualizations"@en ;
 	rdfs:label "semantic role mapping"@en ;
-	rdfs:domain _:node1c67cm2vux3 ;
+	rdfs:domain _:node1c67fj5hmx3 ;
 	rdfs:range pmo:SemanticRoleMapping .
 
 pmo:SemanticRoleMapping a owl:Class ;
 	rdfs:comment "An individual of this class represents a mapping between SemanticRoles"@en ;
 	rdfs:label "Semantic Role Mapping"@en ;
-	rdfs:subClassOf pmo:Mapping , _:node1c67cm2vux29 , _:node1c67cm2vux31 .
+	rdfs:subClassOf pmo:Mapping , _:node1c67fj5hmx29 , _:node1c67fj5hmx31 .
 
 pmo:ConceptualizationMapping a owl:Class ;
 	rdfs:comment "An individual of this class represents a mapping between Conceptualizations"@en ;
 	rdfs:label "Conceptualization Mapping"@en ;
-	rdfs:subClassOf pmo:Mapping , _:node1c67cm2vux15 .
+	rdfs:subClassOf pmo:Mapping , _:node1c67fj5hmx15 .
 
 pmo:SemanticClassMapping a owl:Class ;
 	rdfs:comment "An individual of this class represents a mapping between SemanticClasses"@en ;
 	rdfs:label "Semantic Class Mapping"@en ;
-	rdfs:subClassOf pmo:Mapping , _:node1c67cm2vux28 .
+	rdfs:subClassOf pmo:Mapping , _:node1c67fj5hmx28 .
 
 pmo:valueObj a owl:ObjectProperty ;
 	rdfs:comment "generic property to associate an object value to an instance"@en ;
 	rdfs:label "value"@en .
 
-ontolex:evokes owl:propertyChainAxiom _:node1c67cm2vux6 .
+ontolex:evokes owl:propertyChainAxiom _:node1c67fj5hmx6 .
 
 pmo:ontologyMatch a owl:ObjectProperty ;
 	rdfs:comment "PreMOn generic property to associate a SKOS concept to an ontological entity"@en ;
@@ -200,130 +200,130 @@ pmo:valueDt a owl:DatatypeProperty ;
 pmo:AnnotationSet a owl:Class ;
 	rdfs:comment "Represent each annotation of a semantic class, togheter with its semantic roles, in an example"@en ;
 	rdfs:label "Annotation Set"@en ;
-	rdfs:subClassOf _:node1c67cm2vux11 , _:node1c67cm2vux12 .
+	rdfs:subClassOf _:node1c67fj5hmx11 , _:node1c67fj5hmx12 .
 
 pmo:Mapping a owl:Class ;
 	rdfs:comment "An individual of this class represents a mapping between skos:Concepts"@en ;
 	rdfs:label "Mapping"@en ;
-	rdfs:subClassOf _:node1c67cm2vux18 , _:node1c67cm2vux19 .
+	rdfs:subClassOf _:node1c67fj5hmx18 , _:node1c67fj5hmx19 .
 
 pmo:Example a owl:Class ;
 	rdfs:comment "Represent the text associated to an example"@en ;
 	rdfs:label "Example"@en ;
-	rdfs:subClassOf nif:Context , _:node1c67cm2vux16 .
+	rdfs:subClassOf nif:Context , _:node1c67fj5hmx16 .
 
 pmo:Markable a owl:Class ;
 	rdfs:comment "Represent a piece of text to which some annotation is attached to"@en ;
 	rdfs:label "Markable"@en ;
-	rdfs:subClassOf nif:RFC5147String , _:node1c67cm2vux26 , _:node1c67cm2vux27 .
+	rdfs:subClassOf nif:RFC5147String , _:node1c67fj5hmx26 , _:node1c67fj5hmx27 .
 
-_:node1c67cm2vux1 rdf:first pmo:item ;
-	rdf:rest _:node1c67cm2vux2 .
+_:node1c67fj5hmx1 rdf:first pmo:item ;
+	rdf:rest _:node1c67fj5hmx2 .
 
-_:node1c67cm2vux10 owl:inverseOf pmo:item .
+_:node1c67fj5hmx10 owl:inverseOf pmo:item .
 
-_:node1c67cm2vux11 a owl:Restriction ;
+_:node1c67fj5hmx11 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom nif:Annotation .
 
-_:node1c67cm2vux12 a owl:Restriction ;
+_:node1c67fj5hmx12 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:onClass nif:Annotation ;
 	owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1c67cm2vux13 a owl:Restriction ;
+_:node1c67fj5hmx13 a owl:Restriction ;
 	owl:onProperty pmo:evokedConcept ;
 	owl:onClass ontolex:LexicalConcept ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1c67cm2vux14 a owl:Restriction ;
+_:node1c67fj5hmx14 a owl:Restriction ;
 	owl:onProperty pmo:evokingEntry ;
 	owl:onClass ontolex:LexicalEntry ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1c67cm2vux15 a owl:Restriction ;
+_:node1c67fj5hmx15 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:Conceptualization .
 
-_:node1c67cm2vux16 a owl:Restriction ;
-	owl:onProperty _:node1c67cm2vux17 ;
+_:node1c67fj5hmx16 a owl:Restriction ;
+	owl:onProperty _:node1c67fj5hmx17 ;
 	owl:allValuesFrom pmo:Markable .
 
-_:node1c67cm2vux17 owl:inverseOf nif:referenceContext .
+_:node1c67fj5hmx17 owl:inverseOf nif:referenceContext .
 
-_:node1c67cm2vux18 a owl:Restriction ;
+_:node1c67fj5hmx18 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:onClass skos:Concept ;
 	owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger .
 
-_:node1c67cm2vux19 a owl:Class ;
-	owl:unionOf _:node1c67cm2vux20 .
+_:node1c67fj5hmx19 a owl:Class ;
+	owl:unionOf _:node1c67fj5hmx20 .
 
-_:node1c67cm2vux2 rdf:first pmo:next ;
+_:node1c67fj5hmx2 rdf:first pmo:next ;
 	rdf:rest rdf:nil .
 
-_:node1c67cm2vux20 rdf:first _:node1c67cm2vux21 ;
-	rdf:rest _:node1c67cm2vux22 .
+_:node1c67fj5hmx20 rdf:first _:node1c67fj5hmx21 ;
+	rdf:rest _:node1c67fj5hmx22 .
 
-_:node1c67cm2vux21 a owl:Restriction ;
+_:node1c67fj5hmx21 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:Conceptualization .
 
-_:node1c67cm2vux22 rdf:first _:node1c67cm2vux23 ;
-	rdf:rest _:node1c67cm2vux24 .
+_:node1c67fj5hmx22 rdf:first _:node1c67fj5hmx23 ;
+	rdf:rest _:node1c67fj5hmx24 .
 
-_:node1c67cm2vux23 a owl:Restriction ;
+_:node1c67fj5hmx23 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:SemanticClass .
 
-_:node1c67cm2vux24 rdf:first _:node1c67cm2vux25 ;
+_:node1c67fj5hmx24 rdf:first _:node1c67fj5hmx25 ;
 	rdf:rest rdf:nil .
 
-_:node1c67cm2vux25 a owl:Restriction ;
+_:node1c67fj5hmx25 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:SemanticRole .
 
-_:node1c67cm2vux26 a owl:Restriction ;
+_:node1c67fj5hmx26 a owl:Restriction ;
 	owl:onProperty nif:referenceContext ;
 	owl:onClass pmo:Example ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
-_:node1c67cm2vux27 a owl:Restriction ;
+_:node1c67fj5hmx27 a owl:Restriction ;
 	owl:onProperty nif:referenceContext ;
 	owl:allValuesFrom pmo:Example .
 
-_:node1c67cm2vux28 a owl:Restriction ;
+_:node1c67fj5hmx28 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:SemanticClass .
 
-_:node1c67cm2vux29 a owl:Restriction ;
-	owl:onProperty _:node1c67cm2vux30 ;
+_:node1c67fj5hmx29 a owl:Restriction ;
+	owl:onProperty _:node1c67fj5hmx30 ;
 	owl:someValuesFrom owl:Thing .
 
-_:node1c67cm2vux3 a owl:Class ;
-	owl:unionOf _:node1c67cm2vux4 .
+_:node1c67fj5hmx3 a owl:Class ;
+	owl:unionOf _:node1c67fj5hmx4 .
 
-_:node1c67cm2vux30 owl:inverseOf pmo:semRoleMapping .
+_:node1c67fj5hmx30 owl:inverseOf pmo:semRoleMapping .
 
-_:node1c67cm2vux31 a owl:Restriction ;
+_:node1c67fj5hmx31 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmo:SemanticRole .
 
-_:node1c67cm2vux4 rdf:first pmo:ConceptualizationMapping ;
-	rdf:rest _:node1c67cm2vux5 .
+_:node1c67fj5hmx4 rdf:first pmo:ConceptualizationMapping ;
+	rdf:rest _:node1c67fj5hmx5 .
 
-_:node1c67cm2vux5 rdf:first pmo:SemanticClassMapping ;
+_:node1c67fj5hmx5 rdf:first pmo:SemanticClassMapping ;
 	rdf:rest rdf:nil .
 
-_:node1c67cm2vux6 rdf:first _:node1c67cm2vux7 ;
-	rdf:rest _:node1c67cm2vux8 .
+_:node1c67fj5hmx6 rdf:first _:node1c67fj5hmx7 ;
+	rdf:rest _:node1c67fj5hmx8 .
 
-_:node1c67cm2vux7 owl:inverseOf pmo:evokingEntry .
+_:node1c67fj5hmx7 owl:inverseOf pmo:evokingEntry .
 
-_:node1c67cm2vux8 rdf:first pmo:evokedConcept ;
+_:node1c67fj5hmx8 rdf:first pmo:evokedConcept ;
 	rdf:rest rdf:nil .
 
-_:node1c67cm2vux9 a owl:Restriction ;
-	owl:onProperty _:node1c67cm2vux10 ;
+_:node1c67fj5hmx9 a owl:Restriction ;
+	owl:onProperty _:node1c67fj5hmx10 ;
 	owl:onClass pmo:AnnotationSet ;
 	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
