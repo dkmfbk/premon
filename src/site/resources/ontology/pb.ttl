@@ -61,12 +61,12 @@ pmopb:argument a owl:FunctionalProperty , owl:ObjectProperty ;
 
 pmopb:Argument a owl:Class ;
 	rdfs:label "Argument (PB)"@en ;
-	owl:equivalentClass _:node1c67fj6bfx5 ;
+	owl:equivalentClass _:node1c67lqoldx5 ;
 	rdfs:subClassOf skos:Concept .
 
 pmopb:SemanticRole a owl:Class ;
 	rdfs:label "Semantic Role (PB)"@en ;
-	rdfs:subClassOf pmo:SemanticRole , _:node1c67fj6bfx54 , _:node1c67fj6bfx55 .
+	rdfs:subClassOf pmo:SemanticRole , _:node1c67lqoldx54 , _:node1c67lqoldx55 .
 
 pmopb:aspect a owl:ObjectProperty ;
 	rdfs:label "aspect"@en ;
@@ -75,7 +75,7 @@ pmopb:aspect a owl:ObjectProperty ;
 
 pmopb:Aspect a owl:Class ;
 	rdfs:label "Aspect"@en ;
-	rdfs:subClassOf _:node1c67fj6bfx9 .
+	rdfs:subClassOf _:node1c67lqoldx9 .
 
 pmopb:Inflection a owl:Class ;
 	rdfs:label "Inflection"@en .
@@ -87,7 +87,7 @@ pmopb:form a owl:FunctionalProperty , owl:ObjectProperty ;
 
 pmopb:Form a owl:Class ;
 	rdfs:label "Form"@en ;
-	rdfs:subClassOf _:node1c67fj6bfx12 .
+	rdfs:subClassOf _:node1c67lqoldx12 .
 
 pmopb:inflection a owl:FunctionalProperty , owl:ObjectProperty ;
 	rdfs:label "inflection"@en ;
@@ -101,15 +101,15 @@ pmopb:person a owl:FunctionalProperty , owl:ObjectProperty ;
 
 pmopb:Person a owl:Class ;
 	rdfs:label "Person"@en ;
-	rdfs:subClassOf _:node1c67fj6bfx50 .
+	rdfs:subClassOf _:node1c67lqoldx50 .
 
 pmopb:tag a owl:FunctionalProperty , owl:ObjectProperty ;
 	rdfs:label "tag"@en ;
-	rdfs:range _:node1c67fj6bfx1 .
+	rdfs:range _:node1c67lqoldx1 .
 
 pmopb:Modifier a owl:Class ;
 	rdfs:label "Modifier (PB)"@en ;
-	rdfs:subClassOf pmopb:Argument , _:node1c67fj6bfx17 ;
+	rdfs:subClassOf pmopb:Argument , _:node1c67lqoldx17 ;
 	owl:disjointWith pmopb:NumberedArgument , pmopb:SecondaryAgent .
 
 pmopb:Tag a owl:Class ;
@@ -122,7 +122,7 @@ pmopb:tense a owl:FunctionalProperty , owl:ObjectProperty ;
 
 pmopb:Tense a owl:Class ;
 	rdfs:label "Tense"@en ;
-	rdfs:subClassOf _:node1c67fj6bfx57 .
+	rdfs:subClassOf _:node1c67lqoldx57 .
 
 pmopb:voice a owl:FunctionalProperty , owl:ObjectProperty ;
 	rdfs:label "voice"@en ;
@@ -131,11 +131,11 @@ pmopb:voice a owl:FunctionalProperty , owl:ObjectProperty ;
 
 pmopb:Voice a owl:Class ;
 	rdfs:label "Voice"@en ;
-	rdfs:subClassOf _:node1c67fj6bfx61 .
+	rdfs:subClassOf _:node1c67lqoldx61 .
 
 pmopb:NumberedArgument a owl:Class ;
 	rdfs:label "Numbered Argument (PB)"@en ;
-	rdfs:subClassOf pmopb:Argument , _:node1c67fj6bfx42 ;
+	rdfs:subClassOf pmopb:Argument , _:node1c67lqoldx42 ;
 	owl:disjointWith pmopb:SecondaryAgent .
 
 pmopb:SecondaryAgent a owl:Class ;
@@ -222,7 +222,7 @@ pmopb:third a owl:NamedIndividual , pmopb:Person .
 
 pmopb:Roleset a owl:Class ;
 	rdfs:label "Roleset (PB)"@en ;
-	rdfs:subClassOf pmo:SemanticClass , _:node1c67fj6bfx53 .
+	rdfs:subClassOf pmo:SemanticClass , _:node1c67lqoldx53 .
 
 pmopb:future a owl:NamedIndividual , pmopb:Tense .
 
@@ -242,193 +242,193 @@ pmopb:tag-ppt a owl:NamedIndividual , pmopb:Tag .
 
 pmopb:tag-vsp a owl:NamedIndividual , pmopb:Tag .
 
-_:node1c67fj6bfx1 a owl:Class ;
-	owl:unionOf _:node1c67fj6bfx2 .
+_:node1c67lqoldx1 a owl:Class ;
+	owl:unionOf _:node1c67lqoldx2 .
 
-_:node1c67fj6bfx10 rdf:first pmopb:perfect ;
-	rdf:rest _:node1c67fj6bfx11 .
+_:node1c67lqoldx10 rdf:first pmopb:perfect ;
+	rdf:rest _:node1c67lqoldx11 .
 
-_:node1c67fj6bfx11 rdf:first pmopb:progressive ;
+_:node1c67lqoldx11 rdf:first pmopb:progressive ;
 	rdf:rest rdf:nil .
 
-_:node1c67fj6bfx12 a owl:Class ;
-	owl:oneOf _:node1c67fj6bfx13 .
+_:node1c67lqoldx12 a owl:Class ;
+	owl:oneOf _:node1c67lqoldx13 .
 
-_:node1c67fj6bfx13 rdf:first pmopb:gerund ;
-	rdf:rest _:node1c67fj6bfx14 .
+_:node1c67lqoldx13 rdf:first pmopb:gerund ;
+	rdf:rest _:node1c67lqoldx14 .
 
-_:node1c67fj6bfx14 rdf:first pmopb:full ;
-	rdf:rest _:node1c67fj6bfx15 .
+_:node1c67lqoldx14 rdf:first pmopb:full ;
+	rdf:rest _:node1c67lqoldx15 .
 
-_:node1c67fj6bfx15 rdf:first pmopb:participle ;
-	rdf:rest _:node1c67fj6bfx16 .
+_:node1c67lqoldx15 rdf:first pmopb:participle ;
+	rdf:rest _:node1c67lqoldx16 .
 
-_:node1c67fj6bfx16 rdf:first pmopb:infinitive ;
+_:node1c67lqoldx16 rdf:first pmopb:infinitive ;
 	rdf:rest rdf:nil .
 
-_:node1c67fj6bfx17 a owl:Class ;
-	owl:oneOf _:node1c67fj6bfx18 .
+_:node1c67lqoldx17 a owl:Class ;
+	owl:oneOf _:node1c67lqoldx18 .
 
-_:node1c67fj6bfx18 rdf:first pmopb:argm-lvb ;
-	rdf:rest _:node1c67fj6bfx19 .
+_:node1c67lqoldx18 rdf:first pmopb:argm-lvb ;
+	rdf:rest _:node1c67lqoldx19 .
 
-_:node1c67fj6bfx19 rdf:first pmopb:argm-cau ;
-	rdf:rest _:node1c67fj6bfx20 .
+_:node1c67lqoldx19 rdf:first pmopb:argm-cau ;
+	rdf:rest _:node1c67lqoldx20 .
 
-_:node1c67fj6bfx2 rdf:first pmopb:Modifier ;
-	rdf:rest _:node1c67fj6bfx3 .
+_:node1c67lqoldx2 rdf:first pmopb:Modifier ;
+	rdf:rest _:node1c67lqoldx3 .
 
-_:node1c67fj6bfx20 rdf:first pmopb:argm-tmp ;
-	rdf:rest _:node1c67fj6bfx21 .
+_:node1c67lqoldx20 rdf:first pmopb:argm-tmp ;
+	rdf:rest _:node1c67lqoldx21 .
 
-_:node1c67fj6bfx21 rdf:first pmopb:argm-rcl ;
-	rdf:rest _:node1c67fj6bfx22 .
+_:node1c67lqoldx21 rdf:first pmopb:argm-rcl ;
+	rdf:rest _:node1c67lqoldx22 .
 
-_:node1c67fj6bfx22 rdf:first pmopb:argm-loc ;
-	rdf:rest _:node1c67fj6bfx23 .
+_:node1c67lqoldx22 rdf:first pmopb:argm-loc ;
+	rdf:rest _:node1c67lqoldx23 .
 
-_:node1c67fj6bfx23 rdf:first pmopb:argm-gol ;
-	rdf:rest _:node1c67fj6bfx24 .
+_:node1c67lqoldx23 rdf:first pmopb:argm-gol ;
+	rdf:rest _:node1c67lqoldx24 .
 
-_:node1c67fj6bfx24 rdf:first pmopb:argm-mod ;
-	rdf:rest _:node1c67fj6bfx25 .
+_:node1c67lqoldx24 rdf:first pmopb:argm-mod ;
+	rdf:rest _:node1c67lqoldx25 .
 
-_:node1c67fj6bfx25 rdf:first pmopb:argm-prd ;
-	rdf:rest _:node1c67fj6bfx26 .
+_:node1c67lqoldx25 rdf:first pmopb:argm-prd ;
+	rdf:rest _:node1c67lqoldx26 .
 
-_:node1c67fj6bfx26 rdf:first pmopb:argm-com ;
-	rdf:rest _:node1c67fj6bfx27 .
+_:node1c67lqoldx26 rdf:first pmopb:argm-com ;
+	rdf:rest _:node1c67lqoldx27 .
 
-_:node1c67fj6bfx27 rdf:first pmopb:argm-dsp ;
-	rdf:rest _:node1c67fj6bfx28 .
+_:node1c67lqoldx27 rdf:first pmopb:argm-dsp ;
+	rdf:rest _:node1c67lqoldx28 .
 
-_:node1c67fj6bfx28 rdf:first pmopb:argm-ext ;
-	rdf:rest _:node1c67fj6bfx29 .
+_:node1c67lqoldx28 rdf:first pmopb:argm-ext ;
+	rdf:rest _:node1c67lqoldx29 .
 
-_:node1c67fj6bfx29 rdf:first pmopb:argm-adj ;
-	rdf:rest _:node1c67fj6bfx30 .
+_:node1c67lqoldx29 rdf:first pmopb:argm-adj ;
+	rdf:rest _:node1c67lqoldx30 .
 
-_:node1c67fj6bfx3 rdf:first pmopb:Tag ;
-	rdf:rest _:node1c67fj6bfx4 .
+_:node1c67lqoldx3 rdf:first pmopb:Tag ;
+	rdf:rest _:node1c67lqoldx4 .
 
-_:node1c67fj6bfx30 rdf:first pmopb:argm-pnc ;
-	rdf:rest _:node1c67fj6bfx31 .
+_:node1c67lqoldx30 rdf:first pmopb:argm-pnc ;
+	rdf:rest _:node1c67lqoldx31 .
 
-_:node1c67fj6bfx31 rdf:first pmopb:argm-slc ;
-	rdf:rest _:node1c67fj6bfx32 .
+_:node1c67lqoldx31 rdf:first pmopb:argm-slc ;
+	rdf:rest _:node1c67lqoldx32 .
 
-_:node1c67fj6bfx32 rdf:first pmopb:argm-neg ;
-	rdf:rest _:node1c67fj6bfx33 .
+_:node1c67lqoldx32 rdf:first pmopb:argm-neg ;
+	rdf:rest _:node1c67lqoldx33 .
 
-_:node1c67fj6bfx33 rdf:first pmopb:argm-rec ;
-	rdf:rest _:node1c67fj6bfx34 .
+_:node1c67lqoldx33 rdf:first pmopb:argm-rec ;
+	rdf:rest _:node1c67lqoldx34 .
 
-_:node1c67fj6bfx34 rdf:first pmopb:argm-dis ;
-	rdf:rest _:node1c67fj6bfx35 .
+_:node1c67lqoldx34 rdf:first pmopb:argm-dis ;
+	rdf:rest _:node1c67lqoldx35 .
 
-_:node1c67fj6bfx35 rdf:first pmopb:argm-prp ;
-	rdf:rest _:node1c67fj6bfx36 .
+_:node1c67lqoldx35 rdf:first pmopb:argm-prp ;
+	rdf:rest _:node1c67lqoldx36 .
 
-_:node1c67fj6bfx36 rdf:first pmopb:argm-dir ;
-	rdf:rest _:node1c67fj6bfx37 .
+_:node1c67lqoldx36 rdf:first pmopb:argm-dir ;
+	rdf:rest _:node1c67lqoldx37 .
 
-_:node1c67fj6bfx37 rdf:first pmopb:argm-adv ;
-	rdf:rest _:node1c67fj6bfx38 .
+_:node1c67lqoldx37 rdf:first pmopb:argm-adv ;
+	rdf:rest _:node1c67lqoldx38 .
 
-_:node1c67fj6bfx38 rdf:first pmopb:argm-mnr ;
-	rdf:rest _:node1c67fj6bfx39 .
+_:node1c67lqoldx38 rdf:first pmopb:argm-mnr ;
+	rdf:rest _:node1c67lqoldx39 .
 
-_:node1c67fj6bfx39 rdf:first pmopb:argm-prn ;
-	rdf:rest _:node1c67fj6bfx40 .
+_:node1c67lqoldx39 rdf:first pmopb:argm-prn ;
+	rdf:rest _:node1c67lqoldx40 .
 
-_:node1c67fj6bfx4 rdf:first ontolex:LexicalEntry ;
+_:node1c67lqoldx4 rdf:first ontolex:LexicalEntry ;
 	rdf:rest rdf:nil .
 
-_:node1c67fj6bfx40 rdf:first pmopb:argm-cxn ;
-	rdf:rest _:node1c67fj6bfx41 .
+_:node1c67lqoldx40 rdf:first pmopb:argm-cxn ;
+	rdf:rest _:node1c67lqoldx41 .
 
-_:node1c67fj6bfx41 rdf:first pmopb:argm-vsp ;
+_:node1c67lqoldx41 rdf:first pmopb:argm-vsp ;
 	rdf:rest rdf:nil .
 
-_:node1c67fj6bfx42 a owl:Class ;
-	owl:oneOf _:node1c67fj6bfx43 .
+_:node1c67lqoldx42 a owl:Class ;
+	owl:oneOf _:node1c67lqoldx43 .
 
-_:node1c67fj6bfx43 rdf:first pmopb:arg4 ;
-	rdf:rest _:node1c67fj6bfx44 .
+_:node1c67lqoldx43 rdf:first pmopb:arg4 ;
+	rdf:rest _:node1c67lqoldx44 .
 
-_:node1c67fj6bfx44 rdf:first pmopb:arg3 ;
-	rdf:rest _:node1c67fj6bfx45 .
+_:node1c67lqoldx44 rdf:first pmopb:arg3 ;
+	rdf:rest _:node1c67lqoldx45 .
 
-_:node1c67fj6bfx45 rdf:first pmopb:arg2 ;
-	rdf:rest _:node1c67fj6bfx46 .
+_:node1c67lqoldx45 rdf:first pmopb:arg2 ;
+	rdf:rest _:node1c67lqoldx46 .
 
-_:node1c67fj6bfx46 rdf:first pmopb:arg1 ;
-	rdf:rest _:node1c67fj6bfx47 .
+_:node1c67lqoldx46 rdf:first pmopb:arg1 ;
+	rdf:rest _:node1c67lqoldx47 .
 
-_:node1c67fj6bfx47 rdf:first pmopb:arg0 ;
-	rdf:rest _:node1c67fj6bfx48 .
+_:node1c67lqoldx47 rdf:first pmopb:arg0 ;
+	rdf:rest _:node1c67lqoldx48 .
 
-_:node1c67fj6bfx48 rdf:first pmopb:arg5 ;
-	rdf:rest _:node1c67fj6bfx49 .
+_:node1c67lqoldx48 rdf:first pmopb:arg5 ;
+	rdf:rest _:node1c67lqoldx49 .
 
-_:node1c67fj6bfx49 rdf:first pmopb:arg6 ;
+_:node1c67lqoldx49 rdf:first pmopb:arg6 ;
 	rdf:rest rdf:nil .
 
-_:node1c67fj6bfx5 a owl:Class ;
-	owl:unionOf _:node1c67fj6bfx6 .
+_:node1c67lqoldx5 a owl:Class ;
+	owl:unionOf _:node1c67lqoldx6 .
 
-_:node1c67fj6bfx50 a owl:Class ;
-	owl:oneOf _:node1c67fj6bfx51 .
+_:node1c67lqoldx50 a owl:Class ;
+	owl:oneOf _:node1c67lqoldx51 .
 
-_:node1c67fj6bfx51 rdf:first pmopb:other ;
-	rdf:rest _:node1c67fj6bfx52 .
+_:node1c67lqoldx51 rdf:first pmopb:other ;
+	rdf:rest _:node1c67lqoldx52 .
 
-_:node1c67fj6bfx52 rdf:first pmopb:third ;
+_:node1c67lqoldx52 rdf:first pmopb:third ;
 	rdf:rest rdf:nil .
 
-_:node1c67fj6bfx53 a owl:Restriction ;
+_:node1c67lqoldx53 a owl:Restriction ;
 	owl:onProperty pmo:semRole ;
 	owl:allValuesFrom pmopb:SemanticRole .
 
-_:node1c67fj6bfx54 a owl:Restriction ;
+_:node1c67lqoldx54 a owl:Restriction ;
 	owl:onProperty pmopb:argument ;
 	owl:someValuesFrom pmopb:Argument .
 
-_:node1c67fj6bfx55 a owl:Restriction ;
-	owl:onProperty _:node1c67fj6bfx56 ;
+_:node1c67lqoldx55 a owl:Restriction ;
+	owl:onProperty _:node1c67lqoldx56 ;
 	owl:allValuesFrom pmopb:Roleset .
 
-_:node1c67fj6bfx56 owl:inverseOf pmo:semRole .
+_:node1c67lqoldx56 owl:inverseOf pmo:semRole .
 
-_:node1c67fj6bfx57 a owl:Class ;
-	owl:oneOf _:node1c67fj6bfx58 .
+_:node1c67lqoldx57 a owl:Class ;
+	owl:oneOf _:node1c67lqoldx58 .
 
-_:node1c67fj6bfx58 rdf:first pmopb:future ;
-	rdf:rest _:node1c67fj6bfx59 .
+_:node1c67lqoldx58 rdf:first pmopb:future ;
+	rdf:rest _:node1c67lqoldx59 .
 
-_:node1c67fj6bfx59 rdf:first pmopb:past ;
-	rdf:rest _:node1c67fj6bfx60 .
+_:node1c67lqoldx59 rdf:first pmopb:past ;
+	rdf:rest _:node1c67lqoldx60 .
 
-_:node1c67fj6bfx6 rdf:first pmopb:Modifier ;
-	rdf:rest _:node1c67fj6bfx7 .
+_:node1c67lqoldx6 rdf:first pmopb:Modifier ;
+	rdf:rest _:node1c67lqoldx7 .
 
-_:node1c67fj6bfx60 rdf:first pmopb:present ;
+_:node1c67lqoldx60 rdf:first pmopb:present ;
 	rdf:rest rdf:nil .
 
-_:node1c67fj6bfx61 a owl:Class ;
-	owl:oneOf _:node1c67fj6bfx62 .
+_:node1c67lqoldx61 a owl:Class ;
+	owl:oneOf _:node1c67lqoldx62 .
 
-_:node1c67fj6bfx62 rdf:first pmopb:passive ;
-	rdf:rest _:node1c67fj6bfx63 .
+_:node1c67lqoldx62 rdf:first pmopb:passive ;
+	rdf:rest _:node1c67lqoldx63 .
 
-_:node1c67fj6bfx63 rdf:first pmopb:active ;
+_:node1c67lqoldx63 rdf:first pmopb:active ;
 	rdf:rest rdf:nil .
 
-_:node1c67fj6bfx7 rdf:first pmopb:NumberedArgument ;
-	rdf:rest _:node1c67fj6bfx8 .
+_:node1c67lqoldx7 rdf:first pmopb:NumberedArgument ;
+	rdf:rest _:node1c67lqoldx8 .
 
-_:node1c67fj6bfx8 rdf:first pmopb:SecondaryAgent ;
+_:node1c67lqoldx8 rdf:first pmopb:SecondaryAgent ;
 	rdf:rest rdf:nil .
 
-_:node1c67fj6bfx9 a owl:Class ;
-	owl:oneOf _:node1c67fj6bfx10 .
+_:node1c67lqoldx9 a owl:Class ;
+	owl:oneOf _:node1c67lqoldx10 .
