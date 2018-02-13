@@ -52,8 +52,8 @@ pmofn:excludesFrameElement a owl:ObjectProperty , owl:SymmetricProperty ;
 
 pmofn:FrameElement a owl:Class ;
 	rdfs:label "Frame Element (FN)"@en ;
-	rdfs:subClassOf pmo:SemanticRole , _:node1c678v2tax10 ;
-	owl:disjointUnionOf _:node1c678v2tax12 .
+	rdfs:subClassOf pmo:SemanticRole , _:node1c67cm73cx10 ;
+	owl:disjointUnionOf _:node1c67cm73cx12 .
 
 pmofn:requiresFrameElement a owl:ObjectProperty ;
 	rdfs:label "requires frame element"@en ;
@@ -68,11 +68,11 @@ pmofn:feCoreSet a owl:ObjectProperty , owl:InverseFunctionalProperty ;
 
 pmofn:FECoreSet a owl:Class ;
 	rdfs:label "Frame Element Core Set"@en ;
-	rdfs:subClassOf _:node1c678v2tax5 , _:node1c678v2tax6 .
+	rdfs:subClassOf _:node1c67cm73cx5 , _:node1c67cm73cx6 .
 
 pmofn:Frame a owl:Class ;
 	rdfs:label "Frame (FN)"@en ;
-	rdfs:subClassOf pmo:SemanticClass , _:node1c678v2tax7 , _:node1c678v2tax9 .
+	rdfs:subClassOf pmo:SemanticClass , _:node1c67cm73cx7 , _:node1c67cm73cx9 .
 
 pmofn:frameRelation a owl:ObjectProperty ;
 	rdfs:label "frame relation"@en ;
@@ -91,7 +91,7 @@ pmofn:incorporatedFrameElement a owl:ObjectProperty , owl:FunctionalProperty ;
 
 pmofn:LexicalUnit a owl:Class ;
 	rdfs:label "Lexical Unit"@en ;
-	rdfs:subClassOf pmo:Conceptualization , _:node1c678v2tax16 .
+	rdfs:subClassOf pmo:Conceptualization , _:node1c67cm73cx16 .
 
 pmofn:inheritsFrom a owl:ObjectProperty ;
 	rdfs:label "inherits from"@en ;
@@ -166,7 +166,7 @@ pmofn:seeAlsoFER a owl:ObjectProperty , owl:SymmetricProperty ;
 pmofn:semType a owl:ObjectProperty , owl:FunctionalProperty ;
 	rdfs:label "semantic type"@en ;
 	rdfs:range pmofn:SemType ;
-	rdfs:domain _:node1c678v2tax1 .
+	rdfs:domain _:node1c67cm73cx1 .
 
 pmofn:SemType a owl:Class ;
 	rdfs:label "Semantic Type"@en .
@@ -215,84 +215,84 @@ pmofn:PeripheralFrameElement a owl:Class ;
 	rdfs:label "Peripheral Frame Element (FN)"@en ;
 	rdfs:subClassOf pmofn:FrameElement .
 
-_:node1c678v2tax1 a owl:Class ;
-	owl:unionOf _:node1c678v2tax2 .
+_:node1c67cm73cx1 a owl:Class ;
+	owl:unionOf _:node1c67cm73cx2 .
 
-_:node1c678v2tax10 a owl:Restriction ;
-	owl:onProperty _:node1c678v2tax11 ;
+_:node1c67cm73cx10 a owl:Restriction ;
+	owl:onProperty _:node1c67cm73cx11 ;
 	owl:allValuesFrom pmofn:Frame .
 
-_:node1c678v2tax11 owl:inverseOf pmo:semRole .
+_:node1c67cm73cx11 owl:inverseOf pmo:semRole .
 
-_:node1c678v2tax12 rdf:first pmofn:CoreFrameElement ;
-	rdf:rest _:node1c678v2tax13 .
+_:node1c67cm73cx12 rdf:first pmofn:CoreFrameElement ;
+	rdf:rest _:node1c67cm73cx13 .
 
-_:node1c678v2tax13 rdf:first pmofn:CoreUnexpressedFrameElement ;
-	rdf:rest _:node1c678v2tax14 .
+_:node1c67cm73cx13 rdf:first pmofn:CoreUnexpressedFrameElement ;
+	rdf:rest _:node1c67cm73cx14 .
 
-_:node1c678v2tax14 rdf:first pmofn:ExtraThematicFrameElement ;
-	rdf:rest _:node1c678v2tax15 .
+_:node1c67cm73cx14 rdf:first pmofn:ExtraThematicFrameElement ;
+	rdf:rest _:node1c67cm73cx15 .
 
-_:node1c678v2tax15 rdf:first pmofn:PeripheralFrameElement ;
+_:node1c67cm73cx15 rdf:first pmofn:PeripheralFrameElement ;
 	rdf:rest rdf:nil .
 
-_:node1c678v2tax16 a owl:Restriction ;
+_:node1c67cm73cx16 a owl:Restriction ;
 	owl:onProperty pmo:evokedConcept ;
 	owl:allValuesFrom pmofn:Frame .
 
-_:node1c678v2tax17 a owl:AllDisjointProperties ;
-	owl:members _:node1c678v2tax18 .
+_:node1c67cm73cx17 a owl:AllDisjointProperties ;
+	owl:members _:node1c67cm73cx18 .
 
-_:node1c678v2tax18 rdf:first pmofn:inheritsFrom ;
-	rdf:rest _:node1c678v2tax19 .
+_:node1c67cm73cx18 rdf:first pmofn:inheritsFrom ;
+	rdf:rest _:node1c67cm73cx19 .
 
-_:node1c678v2tax19 rdf:first pmofn:isCausativeOf ;
-	rdf:rest _:node1c678v2tax20 .
+_:node1c67cm73cx19 rdf:first pmofn:isCausativeOf ;
+	rdf:rest _:node1c67cm73cx20 .
 
-_:node1c678v2tax2 rdf:first pmofn:Frame ;
-	rdf:rest _:node1c678v2tax3 .
+_:node1c67cm73cx2 rdf:first pmofn:Frame ;
+	rdf:rest _:node1c67cm73cx3 .
 
-_:node1c678v2tax20 rdf:first pmofn:isInchoativeOf ;
-	rdf:rest _:node1c678v2tax21 .
+_:node1c67cm73cx20 rdf:first pmofn:isInchoativeOf ;
+	rdf:rest _:node1c67cm73cx21 .
 
-_:node1c678v2tax21 rdf:first pmofn:perspectiveOn ;
-	rdf:rest _:node1c678v2tax22 .
+_:node1c67cm73cx21 rdf:first pmofn:perspectiveOn ;
+	rdf:rest _:node1c67cm73cx22 .
 
-_:node1c678v2tax22 rdf:first pmofn:precedes ;
-	rdf:rest _:node1c678v2tax23 .
+_:node1c67cm73cx22 rdf:first pmofn:precedes ;
+	rdf:rest _:node1c67cm73cx23 .
 
-_:node1c678v2tax23 rdf:first pmofn:reFrameMapping ;
-	rdf:rest _:node1c678v2tax24 .
+_:node1c67cm73cx23 rdf:first pmofn:reFrameMapping ;
+	rdf:rest _:node1c67cm73cx24 .
 
-_:node1c678v2tax24 rdf:first pmofn:seeAlso ;
-	rdf:rest _:node1c678v2tax25 .
+_:node1c67cm73cx24 rdf:first pmofn:seeAlso ;
+	rdf:rest _:node1c67cm73cx25 .
 
-_:node1c678v2tax25 rdf:first pmofn:subframeOf ;
-	rdf:rest _:node1c678v2tax26 .
+_:node1c67cm73cx25 rdf:first pmofn:subframeOf ;
+	rdf:rest _:node1c67cm73cx26 .
 
-_:node1c678v2tax26 rdf:first pmofn:uses ;
+_:node1c67cm73cx26 rdf:first pmofn:uses ;
 	rdf:rest rdf:nil .
 
-_:node1c678v2tax3 rdf:first pmofn:FrameElement ;
-	rdf:rest _:node1c678v2tax4 .
+_:node1c67cm73cx3 rdf:first pmofn:FrameElement ;
+	rdf:rest _:node1c67cm73cx4 .
 
-_:node1c678v2tax4 rdf:first pmofn:LexicalUnit ;
+_:node1c67cm73cx4 rdf:first pmofn:LexicalUnit ;
 	rdf:rest rdf:nil .
 
-_:node1c678v2tax5 a owl:Restriction ;
+_:node1c67cm73cx5 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:allValuesFrom pmofn:FrameElement .
 
-_:node1c678v2tax6 a owl:Restriction ;
+_:node1c67cm73cx6 a owl:Restriction ;
 	owl:onProperty pmo:item ;
 	owl:minCardinality "2"^^xsd:nonNegativeInteger .
 
-_:node1c678v2tax7 a owl:Restriction ;
-	owl:onProperty _:node1c678v2tax8 ;
+_:node1c67cm73cx7 a owl:Restriction ;
+	owl:onProperty _:node1c67cm73cx8 ;
 	owl:allValuesFrom pmofn:LexicalUnit .
 
-_:node1c678v2tax8 owl:inverseOf pmo:evokedConcept .
+_:node1c67cm73cx8 owl:inverseOf pmo:evokedConcept .
 
-_:node1c678v2tax9 a owl:Restriction ;
+_:node1c67cm73cx9 a owl:Restriction ;
 	owl:onProperty pmo:semRole ;
 	owl:allValuesFrom pmofn:FrameElement .
