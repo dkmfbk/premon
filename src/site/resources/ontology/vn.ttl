@@ -47,22 +47,13 @@ _:genid177 a owl:Restriction ;
 _:genid178 a owl:Restriction ;
 	owl:onProperty pmo:valueObj .
 
-<http://premon.fbk.eu/ontology/vn> dcterms:creator "Francesco Corcoglioniti" , "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
-	dcterms:title "Predicate Model for Ontologies (PreMOn) - VerbNet ontology module"@en .
+<http://premon.fbk.eu/ontology/vn> dcterms:creator "Francesco Corcoglioniti" , "Marco Rospocher <https://dkm.fbk.eu/rospocher>" .
 
 _:genid178 owl:cardinality "1"^^xsd:nonNegativeInteger .
 
-<http://premon.fbk.eu/ontology/vn> dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> .
-
-_:genid179 a owl:Restriction .
-
-<http://premon.fbk.eu/ontology/vn> vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/vn#" .
-
-_:genid179 owl:onProperty pmo:semRole .
-
-<http://premon.fbk.eu/ontology/vn> dcterms:description <http://premon.fbk.eu/images/vn.svg> .
-
-_:genid179 owl:allValuesFrom pmovn:SemanticRole .
+_:genid179 a owl:Restriction ;
+	owl:onProperty pmo:semRole ;
+	owl:allValuesFrom pmovn:SemanticRole .
 
 _:genid18 a owl:Class , owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
@@ -89,10 +80,20 @@ _:genid184 a owl:Restriction ;
 	owl:onProperty pmo:first ;
 	owl:onClass pmovn:SynItem .
 
-_:genid185 a owl:Restriction ;
-	owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-	owl:onProperty pmo:item ;
-	owl:onClass pmovn:VerbSynItem .
+<http://premon.fbk.eu/ontology/vn> dcterms:title "Predicate Model for Ontologies (PreMOn) - VerbNet ontology module"@en .
+
+_:genid185 a owl:Restriction .
+
+<http://premon.fbk.eu/ontology/vn> dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> .
+
+_:genid185 owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+	owl:onProperty pmo:item .
+
+<http://premon.fbk.eu/ontology/vn> vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/vn#" .
+
+_:genid185 owl:onClass pmovn:VerbSynItem .
+
+<http://premon.fbk.eu/ontology/vn> dcterms:description <http://premon.fbk.eu/images/vn.svg> .
 
 _:genid186 owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger .
 
@@ -111,33 +112,6 @@ _:genid20 a rdf:List , owl:Restriction ;
 	rdf:rest _:genid19 ;
 	owl:onProperty pmovn:restriction ;
 	owl:someValuesFrom owl:Thing .
-
-<http://premon.fbk.eu/ontology/vn> dcterms:description """The VerbNet module of the PreMOn ontology defines classes [pmovn:VerbClass](http://premon.fbk.eu/ontology/vn#VerbClass) and [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively. 
-
-*Class members* are modeled as instances of [ontolex:LexicalEntry](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Entry), connected to their class via property [ontolex:evokes](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Evokes). 
-
-The VN class hierarchy is modeled via the [pmovn:subclassOf](http://premon.fbk.eu/ontology/vn#subclassOf) property (subproperty of [skos:broader](http://www.w3.org/2004/02/skos/core#broader)), that relates a verb class (e.g., *13.1-1*) with its parent class (e.g., *13.1*). 
-
-Given the propagation of semantic roles along the class hierarchy, we introduce property [pmovn:definesSemRole](http://premon.fbk.eu/ontology/vn#definesSemRole) to differentiate the [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) instances defined on a class from the ones inherited from its ancestor classes. 
-
-Each [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) instance is related (via property [pmovn:thematicRole](http://premon.fbk.eu/ontology/vn#thematicRole)) to exactly one pmovn:ThematicRole, which contains all the thematic roles defined in VB. These thematic roles are organized in a hierarchy, which is formalized via the skos:broader property. 
-
-VN selectional restrictions on [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole)s (e.g., restricting *theme* to something not animate) are formalized using property [pmovn:restriction](http://premon.fbk.eu/ontology/vn#restriction) and class [pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction) (see later).
-
-A verb class may have one or more [pmovn:VerbNetFrame](http://premon.fbk.eu/ontology/vn#VerbNetFrame)s (via property [pmovn:frame](http://premon.fbk.eu/ontology/vn#frame), or its subproperty [pmovn:definesFrame](http://premon.fbk.eu/ontology/vn#definesFrame), to distinguish frames defined on the class or inherited from ancestors), which have:
-
-* one or more ordered [pmo:SynItem](http://premon.fbk.eu/ontology/core#SynItem)s, modeling a syntactic construction (e.g., *Agent V Theme [-sentential]*) shared by all members of the class. [pmo:SynItem](http://premon.fbk.eu/ontology/core#SynItem)s are specialized according to their syntactical function (e.g., [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem) for noun phrases). A [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem) can point (via [pmo:valueObj](http://premon.fbk.eu/ontology/core#valueObj)) to a [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole), and define, via [pmovn:restriction](http://premon.fbk.eu/ontology/vn#restriction), (i) a selectional restriction holding for the [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) in that frame (e.g., *animate*), or (ii) some other syntactic restriction (e.g., *np to inf*). Similarly, selectional restrictions can be modelled on [pmovn:PrepSynItem](http://premon.fbk.eu/ontology/vn#PrepSynItem) (e.g., *spatial*);
-
-
-
-* one or more ordered semantic [pmo:Pred](http://premon.fbk.eu/ontology/core#Pred)s, modeling the meaning of the event, and its participants, expressed by the verb class for that syntactic construction (e.g.,
-*approve(during(E), Agent, Theme)*). Predicates in [pmovn:Pred](http://premon.fbk.eu/ontology/vn#Pred) have a type ([pmovn:PredType](http://premon.fbk.eu/ontology/vn#PredType), e.g., *approve*) and can be further decomposed in [pmovn:PredArg](http://premon.fbk.eu/ontology/vn#PredArg) (e.g., *during(E)*) of various types (e.g., [pmovn:EventPredArg](http://premon.fbk.eu/ontology/vn#EventPredArg)). Negation of a predicate is expressed by property [pmovn:negPred](http://premon.fbk.eu/ontology/vn#negPred), while implicit [pmovn:PredArg](http://premon.fbk.eu/ontology/vn#PredArg)s are marked with property [pmovn:impPredArg](http://premon.fbk.eu/ontology/vn#impPredArg).
-
-A [pmovn:VerbNetFrame](http://premon.fbk.eu/ontology/vn#VerbNetFrame) is directly associated to its corresponding [pmo:Example](http://premon.fbk.eu/ontology/core#Example) via the pmovn:frameExample property.
-
-### Restrictions
-
-[pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)s are modeled structurally as AND / OR compositions ([pmovn:CompoundRestriction](http://premon.fbk.eu/ontology/vn#CompoundRestriction) and subclasses) of atomic restrictions ([pmovn:AtomicRestriction](http://premon.fbk.eu/ontology/vn#AtomicRestriction) and subclasses) that require the presence or absence of a certain [pmovn:RestrictionProperty](http://premon.fbk.eu/ontology/vn#RestrictionProperty). Semantically, restrictions are divided in [pmovn:SyntacticRestriction](http://premon.fbk.eu/ontology/vn#SyntacticRestriction)s, which refer to a [pmovn:SyntacticRestrictionProperty](http://premon.fbk.eu/ontology/vn#SyntacticRestrictionProperty) and are attached to [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s, and [pmovn:SelectionalRestriction](http://premon.fbk.eu/ontology/vn#SelectionalRestriction)s. The latter are divided in [pmovn:PrepositionalSelectionalRestriction](http://premon.fbk.eu/ontology/vn#PrepositionalSelectionalRestriction)s, which refer to a [pmovn:PrepositionalRestrictionProperty](http://premon.fbk.eu/ontology/vn#PrepositionalRestrictionProperty) and are attached to [pmovn:PrepSynItem](http://premon.fbk.eu/ontology/vn#PrepSynItem)s, and [pmovn:RoleSelectionalRestriction](http://premon.fbk.eu/ontology/vn#RoleSelectionalRestriction)s, which refer to a [pmovn:RoleRestrictionProperty](http://premon.fbk.eu/ontology/vn#RoleRestrictionProperty) and are attached both to [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole)s and [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s. Every restriction instance instantiates both a structural and a semantic subclass of [pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)."""@en .
 
 _:genid21 a rdf:List , owl:Restriction ;
 	rdf:first pmovn:endEventArg ;
@@ -169,8 +143,36 @@ _:genid27 a rdf:List ;
 	rdf:rest _:genid26 .
 
 _:genid28 a owl:Restriction ;
-	owl:onProperty pmovn:restriction ;
-	owl:allValuesFrom _:genid29 .
+	owl:onProperty pmovn:restriction .
+
+<http://premon.fbk.eu/ontology/vn> dcterms:description """The VerbNet module of the PreMOn ontology defines classes [pmovn:VerbClass](http://premon.fbk.eu/ontology/vn#VerbClass) and [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) as subclasses of [pmo:SemanticClass](http://premon.fbk.eu/ontology/core#SemanticClass) and [pmo:SemanticRole](http://premon.fbk.eu/ontology/core#SemanticRole), respectively. 
+
+*Class members* are modeled as instances of [ontolex:LexicalEntry](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Lexical_Entry), connected to their class via property [ontolex:evokes](https://www.w3.org/community/ontolex/wiki/Final_Model_Specification#Evokes). 
+
+The VN class hierarchy is modeled via the [pmovn:subclassOf](http://premon.fbk.eu/ontology/vn#subclassOf) property (subproperty of [skos:broader](http://www.w3.org/2004/02/skos/core#broader)), that relates a verb class (e.g., *13.1-1*) with its parent class (e.g., *13.1*). 
+
+Given the propagation of semantic roles along the class hierarchy, we introduce property [pmovn:definesSemRole](http://premon.fbk.eu/ontology/vn#definesSemRole) to differentiate the [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) instances defined on a class from the ones inherited from its ancestor classes. 
+
+Each [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) instance is related (via property [pmovn:thematicRole](http://premon.fbk.eu/ontology/vn#thematicRole)) to exactly one pmovn:ThematicRole, which contains all the thematic roles defined in VB. These thematic roles are organized in a hierarchy, which is formalized via the skos:broader property. 
+
+VN selectional restrictions on [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole)s (e.g., restricting *theme* to something not animate) are formalized using property [pmovn:restriction](http://premon.fbk.eu/ontology/vn#restriction) and class [pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction) (see later).
+
+A verb class may have one or more [pmovn:VerbNetFrame](http://premon.fbk.eu/ontology/vn#VerbNetFrame)s (via property [pmovn:frame](http://premon.fbk.eu/ontology/vn#frame), or its subproperty [pmovn:definesFrame](http://premon.fbk.eu/ontology/vn#definesFrame), to distinguish frames defined on the class or inherited from ancestors), which have:
+
+* one or more ordered [pmo:SynItem](http://premon.fbk.eu/ontology/core#SynItem)s, modeling a syntactic construction (e.g., *Agent V Theme [-sentential]*) shared by all members of the class. [pmo:SynItem](http://premon.fbk.eu/ontology/core#SynItem)s are specialized according to their syntactical function (e.g., [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem) for noun phrases). A [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem) can point (via [pmo:valueObj](http://premon.fbk.eu/ontology/core#valueObj)) to a [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole), and define, via [pmovn:restriction](http://premon.fbk.eu/ontology/vn#restriction), (i) a selectional restriction holding for the [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole) in that frame (e.g., *animate*), or (ii) some other syntactic restriction (e.g., *np to inf*). Similarly, selectional restrictions can be modelled on [pmovn:PrepSynItem](http://premon.fbk.eu/ontology/vn#PrepSynItem) (e.g., *spatial*);
+
+
+
+* one or more ordered semantic [pmo:Pred](http://premon.fbk.eu/ontology/core#Pred)s, modeling the meaning of the event, and its participants, expressed by the verb class for that syntactic construction (e.g.,
+*approve(during(E), Agent, Theme)*). Predicates in [pmovn:Pred](http://premon.fbk.eu/ontology/vn#Pred) have a type ([pmovn:PredType](http://premon.fbk.eu/ontology/vn#PredType), e.g., *approve*) and can be further decomposed in [pmovn:PredArg](http://premon.fbk.eu/ontology/vn#PredArg) (e.g., *during(E)*) of various types (e.g., [pmovn:EventPredArg](http://premon.fbk.eu/ontology/vn#EventPredArg)). Negation of a predicate is expressed by property [pmovn:negPred](http://premon.fbk.eu/ontology/vn#negPred), while implicit [pmovn:PredArg](http://premon.fbk.eu/ontology/vn#PredArg)s are marked with property [pmovn:impPredArg](http://premon.fbk.eu/ontology/vn#impPredArg).
+
+A [pmovn:VerbNetFrame](http://premon.fbk.eu/ontology/vn#VerbNetFrame) is directly associated to its corresponding [pmo:Example](http://premon.fbk.eu/ontology/core#Example) via the pmovn:frameExample property.
+
+### Restrictions
+
+[pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)s are modeled structurally as AND / OR compositions ([pmovn:CompoundRestriction](http://premon.fbk.eu/ontology/vn#CompoundRestriction) and subclasses) of atomic restrictions ([pmovn:AtomicRestriction](http://premon.fbk.eu/ontology/vn#AtomicRestriction) and subclasses) that require the presence or absence of a certain [pmovn:RestrictionProperty](http://premon.fbk.eu/ontology/vn#RestrictionProperty). Semantically, restrictions are divided in [pmovn:SyntacticRestriction](http://premon.fbk.eu/ontology/vn#SyntacticRestriction)s, which refer to a [pmovn:SyntacticRestrictionProperty](http://premon.fbk.eu/ontology/vn#SyntacticRestrictionProperty) and are attached to [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s, and [pmovn:SelectionalRestriction](http://premon.fbk.eu/ontology/vn#SelectionalRestriction)s. The latter are divided in [pmovn:PrepositionalSelectionalRestriction](http://premon.fbk.eu/ontology/vn#PrepositionalSelectionalRestriction)s, which refer to a [pmovn:PrepositionalRestrictionProperty](http://premon.fbk.eu/ontology/vn#PrepositionalRestrictionProperty) and are attached to [pmovn:PrepSynItem](http://premon.fbk.eu/ontology/vn#PrepSynItem)s, and [pmovn:RoleSelectionalRestriction](http://premon.fbk.eu/ontology/vn#RoleSelectionalRestriction)s, which refer to a [pmovn:RoleRestrictionProperty](http://premon.fbk.eu/ontology/vn#RoleRestrictionProperty) and are attached both to [pmovn:SemanticRole](http://premon.fbk.eu/ontology/vn#SemanticRole)s and [pmovn:NpSynItem](http://premon.fbk.eu/ontology/vn#NpSynItem)s. Every restriction instance instantiates both a structural and a semantic subclass of [pmovn:Restriction](http://premon.fbk.eu/ontology/vn#Restriction)."""@en .
+
+_:genid28 owl:allValuesFrom _:genid29 .
 
 _:genid29 a owl:Class ;
 	owl:unionOf _:genid31 .
@@ -269,17 +271,9 @@ _:genid5 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:cardinality "1"^^xsd:nonNegativeInteger .
 
-_:genid51 a rdf:List .
-
-<http://premon.fbk.eu/ontology/vn> dcterms:modified "2018-02-08"^^xsd:date .
-
-_:genid51 rdf:first _:genid52 .
-
-<http://premon.fbk.eu/ontology/vn> rdfs:isDefinedBy <http://premon.fbk.eu/ontology/vn.ttl> .
-
-_:genid51 rdf:rest _:genid49 .
-
-<http://premon.fbk.eu/ontology/vn> owl:versionInfo "2018a" .
+_:genid51 a rdf:List ;
+	rdf:first _:genid52 ;
+	rdf:rest _:genid49 .
 
 _:genid52 a owl:Class ;
 	owl:complementOf _:genid20 .
@@ -288,403 +282,344 @@ _:genid54 a rdf:List ;
 	rdf:first _:genid55 ;
 	rdf:rest _:genid47 .
 
-_:genid55 a owl:Class .
-
-<http://premon.fbk.eu/ontology/vn> dcterms:issued "2015-10-28"^^xsd:date .
-
-_:genid55 owl:intersectionOf _:genid57 .
+_:genid55 a owl:Class ;
+	owl:intersectionOf _:genid57 .
 
 _:genid56 a rdf:List ;
 	rdf:first _:genid21 ;
 	rdf:rest rdf:nil .
 
 _:genid57 a rdf:List ;
-	rdf:first _:genid58 .
+	rdf:first _:genid58 ;
+	rdf:rest _:genid56 .
 
-<http://premon.fbk.eu/ontology/vn> rdfs:comment "The VerbNet module of the PreMOn ontology extends the core module with classes and properties specific to the VerbNet predicate model. The modelling is based on the [VerbNet Annotation Guidelines](http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf)."@en .
-
-_:genid57 rdf:rest _:genid56 .
-
-_:genid58 a owl:Class .
-
-<http://premon.fbk.eu/ontology/vn> dcterms:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" .
-
-_:genid58 owl:complementOf _:genid18 .
-
-<http://premon.fbk.eu/ontology/vn> vann:preferredNamespacePrefix "pmovn" .
+_:genid58 a owl:Class ;
+	owl:complementOf _:genid18 .
 
 _:genid59 a owl:Restriction ;
 	owl:onProperty pmo:valueObj ;
 	owl:allValuesFrom _:genid60 .
 
-_:genid6 a rdf:List .
-
-<http://premon.fbk.eu/ontology/vn> dcterms:rights "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en .
-
-_:genid6 rdf:first pmovn:ExistAtomicRestriction .
-
-pmovn:definesFrame a owl:ObjectProperty .
-
-_:genid6 rdf:rest rdf:nil .
-
-pmovn:definesFrame rdfs:subPropertyOf pmovn:frame .
+_:genid6 a rdf:List ;
+	rdf:first pmovn:ExistAtomicRestriction ;
+	rdf:rest rdf:nil .
 
 _:genid60 a owl:Class ;
 	owl:intersectionOf _:genid63 .
 
 _:genid61 a rdf:List ;
-	rdf:first _:genid62 .
-
-pmovn:definesFrame rdfs:label "defines frame"@en .
-
-_:genid61 rdf:rest rdf:nil .
+	rdf:first _:genid62 ;
+	rdf:rest rdf:nil .
 
 _:genid62 a owl:Restriction ;
-	owl:onProperty <http://www.lexinfo.net/ontology/2.0/lexinfo#partOfSpeech> .
+	owl:onProperty <http://www.lexinfo.net/ontology/2.0/lexinfo#partOfSpeech> ;
+	owl:hasValue <http://www.lexinfo.net/ontology/2.0/lexinfo#preposition> .
 
-pmovn:frame a owl:ObjectProperty .
+_:genid63 a rdf:List ;
+	rdf:first ontolex:LexicalEntry ;
+	rdf:rest _:genid61 .
 
-_:genid62 owl:hasValue <http://www.lexinfo.net/ontology/2.0/lexinfo#preposition> .
-
-_:genid63 a rdf:List .
-
-pmovn:frame rdfs:label "frame"@en .
-
-_:genid63 rdf:first ontolex:LexicalEntry .
-
-pmovn:frame rdfs:domain pmovn:VerbClass .
-
-_:genid63 rdf:rest _:genid61 .
-
-pmovn:frame rdfs:range pmovn:VerbNetFrame .
-
-_:genid64 a owl:Restriction .
-
-pmovn:definesSemRole a owl:ObjectProperty ;
-	rdfs:subPropertyOf pmo:semRole .
-
-_:genid64 owl:onProperty pmovn:restriction ;
+_:genid64 a owl:Restriction ;
+	owl:onProperty pmovn:restriction ;
 	owl:allValuesFrom pmovn:PrepositionSelectionalRestriction .
 
-_:genid65 a owl:Class .
+_:genid65 a owl:Class ;
+	owl:oneOf _:genid74 .
 
-pmovn:definesSemRole rdfs:label "defines semantic role"@en .
+_:genid66 a rdf:List ;
+	rdf:first pmovn:src_prp ;
+	rdf:rest rdf:nil .
 
-_:genid65 owl:oneOf _:genid74 .
+_:genid67 a rdf:List ;
+	rdf:first pmovn:spatial_prp ;
+	rdf:rest _:genid66 .
 
-pmovn:definesSemRole rdfs:domain pmovn:VerbClass .
-
-_:genid66 a rdf:List .
-
-pmovn:definesSemRole rdfs:range pmovn:SemanticRole .
-
-_:genid66 rdf:first pmovn:src_prp .
-
-pmovn:VerbClass a owl:Class .
-
-_:genid66 rdf:rest rdf:nil .
-
-_:genid67 a rdf:List .
-
-pmovn:VerbClass rdfs:label "Verb Class (VN)"@en .
-
-_:genid67 rdf:first pmovn:spatial_prp .
-
-pmovn:VerbClass rdfs:subClassOf pmo:SemanticClass .
-
-_:genid67 rdf:rest _:genid66 .
-
-pmovn:VerbClass rdfs:subClassOf _:genid179 .
+<http://premon.fbk.eu/ontology/vn> dcterms:modified "2018-02-08"^^xsd:date .
 
 _:genid68 a rdf:List .
 
-pmovn:SemanticRole a owl:Class .
+<http://premon.fbk.eu/ontology/vn> rdfs:isDefinedBy <http://premon.fbk.eu/ontology/vn.ttl> .
 
-_:genid68 rdf:first pmovn:plural_prp ;
-	rdf:rest _:genid67 .
+_:genid68 rdf:first pmovn:plural_prp .
 
-_:genid69 a rdf:List .
+<http://premon.fbk.eu/ontology/vn> owl:versionInfo "2018a" .
 
-pmovn:SemanticRole rdfs:label "Semantic Role (VN)"@en .
+_:genid68 rdf:rest _:genid67 .
 
-_:genid69 rdf:first pmovn:path_prp .
+_:genid69 a rdf:List ;
+	rdf:first pmovn:path_prp ;
+	rdf:rest _:genid68 .
 
-pmovn:SemanticRole rdfs:subClassOf pmo:SemanticRole .
-
-_:genid69 rdf:rest _:genid68 .
-
-_:genid7 a rdf:List .
-
-pmovn:SemanticRole rdfs:subClassOf _:genid124 .
-
-_:genid7 rdf:first pmovn:AbsentAtomicRestriction .
-
-pmovn:SemanticRole rdfs:subClassOf _:genid125 , _:genid126 .
-
-_:genid7 rdf:rest _:genid6 .
-
-pmovn:VerbNetFrame a owl:Class .
+_:genid7 a rdf:List ;
+	rdf:first pmovn:AbsentAtomicRestriction ;
+	rdf:rest _:genid6 .
 
 _:genid70 a rdf:List ;
 	rdf:first pmovn:loc_prp ;
 	rdf:rest _:genid69 .
 
-_:genid71 a rdf:List .
+_:genid71 a rdf:List ;
+	rdf:first pmovn:dir_prp .
 
-pmovn:VerbNetFrame rdfs:label "Syntactic Frame (VN)"@en .
-
-_:genid71 rdf:first pmovn:dir_prp .
-
-pmovn:VerbNetFrame rdfs:subClassOf _:genid180 .
+<http://premon.fbk.eu/ontology/vn> dcterms:issued "2015-10-28"^^xsd:date .
 
 _:genid71 rdf:rest _:genid70 .
 
-pmovn:VerbNetFrame rdfs:subClassOf _:genid184 .
-
-_:genid72 a rdf:List .
-
-pmovn:VerbNetFrame rdfs:subClassOf _:genid185 .
-
-_:genid72 rdf:first pmovn:dest_prp .
-
-pmovn:frameExample a owl:ObjectProperty .
-
-_:genid72 rdf:rest _:genid71 .
-
-pmovn:frameExample a owl:FunctionalProperty .
+_:genid72 a rdf:List ;
+	rdf:first pmovn:dest_prp ;
+	rdf:rest _:genid71 .
 
 _:genid73 a rdf:List ;
 	rdf:first pmovn:dest_dir_prp ;
 	rdf:rest _:genid72 .
 
 _:genid74 a rdf:List ;
-	rdf:first pmovn:dest_conf_prp .
+	rdf:first pmovn:dest_conf_prp ;
+	rdf:rest _:genid73 .
 
-pmovn:frameExample rdfs:comment "directly associates a VerbNet frame to its corresponding example"@en .
+<http://premon.fbk.eu/ontology/vn> rdfs:comment "The VerbNet module of the PreMOn ontology extends the core module with classes and properties specific to the VerbNet predicate model. The modelling is based on the [VerbNet Annotation Guidelines](http://nlp.cs.nyu.edu/meyers/nombank/nombank-specs-2007.pdf)."@en .
 
-_:genid74 rdf:rest _:genid73 .
+_:genid75 a owl:Restriction .
 
-_:genid75 a owl:Restriction ;
-	owl:onProperty pmo:item ;
-	owl:allValuesFrom pmovn:PrepositionSelectionalRestriction .
+<http://premon.fbk.eu/ontology/vn> dcterms:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" .
 
-pmovn:frameExample rdfs:label "frame example"@en .
+_:genid75 owl:onProperty pmo:item .
 
-_:genid76 a owl:Restriction .
+<http://premon.fbk.eu/ontology/vn> vann:preferredNamespacePrefix "pmovn" .
 
-pmovn:restriction a owl:ObjectProperty .
+_:genid75 owl:allValuesFrom pmovn:PrepositionSelectionalRestriction .
 
-_:genid76 owl:onProperty pmo:valueObj ;
+_:genid76 a owl:Restriction ;
+	owl:onProperty pmo:valueObj ;
 	owl:allValuesFrom pmovn:PrepositionRestrictionProperty .
 
-pmovn:restriction rdfs:subPropertyOf owl:topObjectProperty .
+_:genid77 a rdf:List .
 
-_:genid77 a rdf:List ;
-	rdf:first pmovn:CompoundRestriction ;
+<http://premon.fbk.eu/ontology/vn> dcterms:rights "This ontology is licensed under CC-BY-SA <http://creativecommons.org/licenses/by-sa/4.0/>"@en .
+
+_:genid77 rdf:first pmovn:CompoundRestriction ;
 	rdf:rest rdf:nil .
 
-pmovn:restriction rdfs:label "restriction"@en .
+pmovn:definesFrame a owl:ObjectProperty .
 
 _:genid78 a rdf:List .
 
-pmovn:restriction rdfs:domain _:genid1 .
+pmovn:definesFrame rdfs:subPropertyOf pmovn:frame .
 
-_:genid78 rdf:first pmovn:AtomicRestriction .
+_:genid78 rdf:first pmovn:AtomicRestriction ;
+	rdf:rest _:genid77 .
 
-pmovn:restriction rdfs:range pmovn:Restriction .
+_:genid79 a rdf:List ;
+	rdf:first pmovn:SyntacticRestriction .
 
-_:genid78 rdf:rest _:genid77 .
-
-_:genid79 a rdf:List .
-
-pmovn:NpSynItem a owl:Class .
-
-_:genid79 rdf:first pmovn:SyntacticRestriction .
-
-pmovn:NpSynItem skos:closeMatch <http://www.lexinfo.net/lexinfo#NounPhrase> .
+pmovn:definesFrame rdfs:label "defines frame"@en .
 
 _:genid79 rdf:rest rdf:nil .
+
+pmovn:frame a owl:ObjectProperty .
 
 _:genid8 a owl:Class ;
 	owl:oneOf _:genid12 .
 
-_:genid80 a rdf:List .
-
-pmovn:NpSynItem rdfs:label "NP Syntactic Item"@en .
-
-_:genid80 rdf:first pmovn:SelectionalRestriction .
-
-pmovn:NpSynItem rdfs:subClassOf pmovn:SynItem .
-
-_:genid80 rdf:rest _:genid79 .
-
-pmovn:NpSynItem rdfs:subClassOf _:genid24 .
+_:genid80 a rdf:List ;
+	rdf:first pmovn:SelectionalRestriction ;
+	rdf:rest _:genid79 .
 
 _:genid81 a owl:Class ;
 	owl:oneOf _:genid115 .
 
-pmovn:NpSynItem rdfs:subClassOf _:genid28 .
+pmovn:frame rdfs:label "frame"@en .
 
-_:genid82 a rdf:List .
+_:genid82 a rdf:List ;
+	rdf:first pmovn:vehicle_rrp .
 
-pmovn:NpSynItem rdfs:subClassOf _:genid32 .
-
-_:genid82 rdf:first pmovn:vehicle_rrp .
-
-pmovn:PrepSynItem a owl:Class .
+pmovn:frame rdfs:domain pmovn:VerbClass .
 
 _:genid82 rdf:rest rdf:nil .
 
+pmovn:frame rdfs:range pmovn:VerbNetFrame .
+
 _:genid83 a rdf:List .
 
-pmovn:PrepSynItem skos:closeMatch <http://www.lexinfo.net/lexinfo#Preposition> .
+pmovn:definesSemRole a owl:ObjectProperty .
 
-_:genid83 rdf:first pmovn:tool_rrp ;
-	rdf:rest _:genid82 .
+_:genid83 rdf:first pmovn:tool_rrp .
+
+pmovn:definesSemRole rdfs:subPropertyOf pmo:semRole .
+
+_:genid83 rdf:rest _:genid82 .
 
 _:genid84 a rdf:List ;
-	rdf:first pmovn:time_rrp .
+	rdf:first pmovn:time_rrp ;
+	rdf:rest _:genid83 .
 
-pmovn:PrepSynItem rdfs:label "Preposition Syntactic Item"@en .
-
-_:genid84 rdf:rest _:genid83 .
-
-_:genid85 a rdf:List .
-
-pmovn:PrepSynItem rdfs:subClassOf pmovn:SynItem .
-
-_:genid85 rdf:first pmovn:substance_rrp .
-
-pmovn:PrepSynItem rdfs:subClassOf _:genid46 .
-
-_:genid85 rdf:rest _:genid84 .
-
-pmovn:PrepSynItem rdfs:subClassOf _:genid59 .
+_:genid85 a rdf:List ;
+	rdf:first pmovn:substance_rrp ;
+	rdf:rest _:genid84 .
 
 _:genid86 a rdf:List .
 
-pmovn:PrepSynItem rdfs:subClassOf _:genid64 .
+pmovn:definesSemRole rdfs:label "defines semantic role"@en .
 
-_:genid86 rdf:first pmovn:state_rrp ;
-	rdf:rest _:genid85 .
+_:genid86 rdf:first pmovn:state_rrp .
 
-pmovn:Restriction a owl:Class .
+pmovn:definesSemRole rdfs:domain pmovn:VerbClass .
 
-_:genid87 a rdf:List ;
-	rdf:first pmovn:sound_rrp ;
-	rdf:rest _:genid86 .
+_:genid86 rdf:rest _:genid85 .
+
+_:genid87 a rdf:List .
+
+pmovn:definesSemRole rdfs:range pmovn:SemanticRole .
+
+_:genid87 rdf:first pmovn:sound_rrp .
+
+pmovn:VerbClass a owl:Class .
+
+_:genid87 rdf:rest _:genid86 .
 
 _:genid88 a rdf:List ;
 	rdf:first pmovn:solid_rrp ;
 	rdf:rest _:genid87 .
 
-_:genid89 a rdf:List .
+_:genid89 a rdf:List ;
+	rdf:first pmovn:shape_rrp .
 
-pmovn:Restriction rdfs:label "Restriction"@en .
-
-_:genid89 rdf:first pmovn:shape_rrp .
-
-pmovn:Restriction owl:disjointUnionOf _:genid78 .
+pmovn:VerbClass rdfs:label "Verb Class (VN)"@en .
 
 _:genid89 rdf:rest _:genid88 .
 
-pmovn:Restriction owl:disjointUnionOf _:genid80 .
+_:genid9 a rdf:List .
 
-_:genid9 a rdf:List ;
-	rdf:first pmovn:oblique_auxnpType .
+pmovn:VerbClass rdfs:subClassOf pmo:SemanticClass .
 
-pmovn:subclassOf a owl:ObjectProperty .
+_:genid9 rdf:first pmovn:oblique_auxnpType .
+
+pmovn:VerbClass rdfs:subClassOf _:genid179 .
 
 _:genid9 rdf:rest rdf:nil .
 
-pmovn:subclassOf rdfs:subPropertyOf skos:broader .
+pmovn:SemanticRole a owl:Class .
 
-_:genid90 a rdf:List .
-
-pmovn:subclassOf rdfs:subPropertyOf pmo:classRel .
-
-_:genid90 rdf:first pmovn:scalar_rrp ;
+_:genid90 a rdf:List ;
+	rdf:first pmovn:scalar_rrp ;
 	rdf:rest _:genid89 .
 
-_:genid91 a rdf:List .
+_:genid91 a rdf:List ;
+	rdf:first pmovn:rigid_rrp .
 
-pmovn:subclassOf rdfs:label "subclass of"@en .
+pmovn:SemanticRole rdfs:label "Semantic Role (VN)"@en .
 
-_:genid91 rdf:first pmovn:rigid_rrp ;
-	rdf:rest _:genid90 .
+_:genid91 rdf:rest _:genid90 .
 
-pmovn:subclassOf rdfs:domain pmovn:VerbClass .
+pmovn:SemanticRole rdfs:subClassOf pmo:SemanticRole .
 
 _:genid92 a rdf:List .
 
-pmovn:subclassOf rdfs:range pmovn:VerbClass .
+pmovn:SemanticRole rdfs:subClassOf _:genid124 .
 
 _:genid92 rdf:first pmovn:region_rrp .
 
-pmovn:thematicRole a owl:ObjectProperty .
+pmovn:SemanticRole rdfs:subClassOf _:genid125 .
 
 _:genid92 rdf:rest _:genid91 .
 
+pmovn:SemanticRole rdfs:subClassOf _:genid126 .
+
 _:genid93 a rdf:List .
 
-pmovn:thematicRole a owl:FunctionalProperty .
+pmovn:VerbNetFrame a owl:Class .
 
 _:genid93 rdf:first pmovn:refl_rrp ;
 	rdf:rest _:genid92 .
 
-_:genid94 a rdf:List .
-
-pmovn:thematicRole rdfs:label "thematic role"@en .
-
-_:genid94 rdf:first pmovn:pointy_rrp ;
+_:genid94 a rdf:List ;
+	rdf:first pmovn:pointy_rrp ;
 	rdf:rest _:genid93 .
-
-pmovn:thematicRole rdfs:domain pmovn:SemanticRole .
 
 _:genid95 a rdf:List ;
 	rdf:first pmovn:plant_rrp .
 
-pmovn:thematicRole rdfs:range pmovn:ThematicRole .
+pmovn:VerbNetFrame rdfs:label "Syntactic Frame (VN)"@en .
 
 _:genid95 rdf:rest _:genid94 .
 
-pmovn:ThematicRole a owl:Class .
+pmovn:VerbNetFrame rdfs:subClassOf _:genid180 .
 
-_:genid96 a rdf:List ;
-	rdf:first pmovn:phys_obj_rrp ;
-	rdf:rest _:genid95 .
+_:genid96 a rdf:List .
+
+pmovn:VerbNetFrame rdfs:subClassOf _:genid184 .
+
+_:genid96 rdf:first pmovn:phys_obj_rrp .
+
+pmovn:VerbNetFrame rdfs:subClassOf _:genid185 .
+
+_:genid96 rdf:rest _:genid95 .
+
+pmovn:frameExample a owl:ObjectProperty .
 
 _:genid97 a rdf:List .
 
-pmovn:ThematicRole rdfs:label "Thematic Role (VN)"@en .
+pmovn:frameExample a owl:FunctionalProperty .
 
-_:genid97 rdf:first pmovn:organization_rrp .
+_:genid97 rdf:first pmovn:organization_rrp ;
+	rdf:rest _:genid96 .
 
-pmovn:ThematicRole rdfs:subClassOf skos:Concept .
+_:genid98 a rdf:List ;
+	rdf:first pmovn:nonrigid_rrp ;
+	rdf:rest _:genid97 .
 
-_:genid97 rdf:rest _:genid96 .
+_:genid99 a rdf:List .
 
-<http://www.lexinfo.net/ontology/2.0/lexinfo#partOfSpeech> a owl:ObjectProperty .
+pmovn:frameExample rdfs:comment "directly associates a VerbNet frame to its corresponding example"@en .
 
-_:genid98 a rdf:List .
+_:genid99 rdf:first pmovn:machine_rrp .
 
-pmovn:frameDescNumber a owl:FunctionalProperty .
+pmovn:frameExample rdfs:label "frame example"@en .
 
-_:genid98 rdf:first pmovn:nonrigid_rrp .
-
-pmovn:frameDescNumber a owl:DatatypeProperty .
-
-_:genid98 rdf:rest _:genid97 .
-
-_:genid99 a rdf:List ;
-	rdf:first pmovn:machine_rrp .
-
-pmovn:frameDescNumber rdfs:label "frame description number"@en ;
-	rdfs:domain pmovn:VerbNetFrame .
+pmovn:restriction a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty .
 
 _:genid99 rdf:rest _:genid98 .
 
-pmovn:frameDescNumber rdfs:range xsd:string .
+pmovn:restriction rdfs:label "restriction"@en ;
+	rdfs:domain _:genid1 ;
+	rdfs:range pmovn:Restriction .
+
+pmovn:NpSynItem a owl:Class ;
+	skos:closeMatch <http://www.lexinfo.net/lexinfo#NounPhrase> ;
+	rdfs:label "NP Syntactic Item"@en ;
+	rdfs:subClassOf pmovn:SynItem , _:genid24 , _:genid28 , _:genid32 .
+
+pmovn:PrepSynItem a owl:Class ;
+	skos:closeMatch <http://www.lexinfo.net/lexinfo#Preposition> ;
+	rdfs:label "Preposition Syntactic Item"@en ;
+	rdfs:subClassOf pmovn:SynItem , _:genid46 , _:genid59 , _:genid64 .
+
+pmovn:Restriction a owl:Class ;
+	rdfs:label "Restriction"@en ;
+	owl:disjointUnionOf _:genid78 , _:genid80 .
+
+pmovn:subclassOf a owl:ObjectProperty ;
+	rdfs:subPropertyOf skos:broader , pmo:classRel ;
+	rdfs:label "subclass of"@en ;
+	rdfs:domain pmovn:VerbClass ;
+	rdfs:range pmovn:VerbClass .
+
+pmovn:thematicRole a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "thematic role"@en ;
+	rdfs:domain pmovn:SemanticRole ;
+	rdfs:range pmovn:ThematicRole .
+
+pmovn:ThematicRole a owl:Class ;
+	rdfs:label "Thematic Role (VN)"@en ;
+	rdfs:subClassOf skos:Concept .
+
+<http://www.lexinfo.net/ontology/2.0/lexinfo#partOfSpeech> a owl:ObjectProperty .
+
+pmovn:frameDescNumber a owl:FunctionalProperty , owl:DatatypeProperty ;
+	rdfs:label "frame description number"@en ;
+	rdfs:domain pmovn:VerbNetFrame ;
+	rdfs:range xsd:string .
 
 pmovn:framePrimary a owl:FunctionalProperty , owl:DatatypeProperty ;
 	rdfs:label "frame primary"@en ;
