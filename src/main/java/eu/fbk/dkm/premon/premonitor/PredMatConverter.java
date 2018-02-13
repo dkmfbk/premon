@@ -312,7 +312,7 @@ public class PredMatConverter extends Converter {
 				URI lexicalEntryURI = uriForLexicalEntry(lemma, type);
 
 				wnConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma,
-						"v", m.group(1), "wn31");
+						"v", wnURI.toString().replace(WN_NAMESPACE,""), "wn31");
 
 				addStatementToSink(wnConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
 				addStatementToSink(wnConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
