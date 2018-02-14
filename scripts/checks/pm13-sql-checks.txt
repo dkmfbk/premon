@@ -1,0 +1,36 @@
+
+Ruoli
+
+VN-FN    
+SELECT DISTINCT `5_VN_CLASS`,`7_VN_SUBCLASS`,`10_VN_ROLE`,`13_FN_FRAME`,`15_FN_FRAME_ELEMENT` FROM `predicatematrix_np_new` WHERE `10_VN_ROLE` not like 'NULL' and `15_FN_FRAME_ELEMENT` not like 'NULL'
+
+FN-PB    
+SELECT DISTINCT `16_PB_ROLESET`,`17_PB_ARG`,`13_FN_FRAME`,`15_FN_FRAME_ELEMENT` FROM `predicatematrix_np_new` WHERE `17_PB_ARG` not like 'NULL' and `15_FN_FRAME_ELEMENT` not like 'NULL'
+
+VN-PB    
+SELECT DISTINCT `16_PB_ROLESET`,`17_PB_ARG`,`5_VN_CLASS`,`7_VN_SUBCLASS`,`10_VN_ROLE` FROM `predicatematrix_np_new` WHERE `17_PB_ARG` not like 'NULL' and `10_VN_ROLE` not like 'NULL'
+
+
+
+Conceptualization / Lexicon
+VN-PB    
+SELECT DISTINCT `9_VN_LEMA`,`5_VN_CLASS`,`7_VN_SUBCLASS`,`16_PB_ROLESET` FROM `predicatematrix_np_new` WHERE `16_PB_ROLESET` not like 'NULL' and `9_VN_LEMA` not like 'NULL'
+
+FN-VN   
+SELECT DISTINCT `9_VN_LEMA`,`5_VN_CLASS`,`7_VN_SUBCLASS`,`13_FN_FRAME`,`14_FN_LE` FROM `predicatematrix_np_new` WHERE `14_FN_LE` not like 'NULL' and `9_VN_LEMA` not like 'NULL'
+
+PB-FN   
+SELECT DISTINCT `16_PB_ROLESET`,`13_FN_FRAME`,`14_FN_LE` FROM `predicatematrix_np_new` WHERE `14_FN_LE` not like 'NULL' and `16_PB_ROLESET` not like 'NULL'
+
+
+
+FN-WN
+SELECT DISTINCT `11_WN_SENSE`,`13_FN_FRAME`,`14_FN_LE` FROM `predicatematrix_np_new` WHERE `14_FN_LE` not like 'NULL' and `11_WN_SENSE` not like 'NULL'
+
+VN-WN
+SELECT DISTINCT `11_WN_SENSE`,`9_VN_LEMA`,`5_VN_CLASS`,`7_VN_SUBCLASS` FROM `predicatematrix_np_new` WHERE `9_VN_LEMA` not like 'NULL' and `11_WN_SENSE` not like 'NULL'
+
+PB-WN
+SELECT DISTINCT `11_WN_SENSE`,`16_PB_ROLESET` FROM `predicatematrix_np_new` WHERE `16_PB_ROLESET` not like 'NULL' and `11_WN_SENSE` not like 'NULL'
+
+
