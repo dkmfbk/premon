@@ -80,6 +80,12 @@ public class PropbankConverter extends BankConverter {
     protected void addExternalLinks(ComplexLemmaWithMappings complexLemmaWithMappings, URI conceptualizationURI, String uriLemma, String type) {
 
         String rolesetID = complexLemmaWithMappings.getRolesetID();
+
+        //added to cope with same rolesets for different lexical entries (noun and verb)
+        if (isOntoNotes)
+            if (type.equals("n"))
+                rolesetID="n-"+rolesetID;
+
         URI rolesetURI = uriForRoleset(rolesetID);
         
         // FrameNet

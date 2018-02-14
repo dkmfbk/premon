@@ -294,6 +294,11 @@ public abstract class BankConverter extends Converter {
                                     rolesetID = rolesetBugMap.get(rolesetID);
                                 }
 
+                                //added to cope with same rolesets for different lexical entries (noun and verb)
+                                if (isOntoNotes)
+                                    if (mainType.equals("n"))
+                                        rolesetID="n-"+rolesetID;
+
                                 URI rolesetURI = uriForRoleset(rolesetID);
 
                                 addStatementToSink(rolesetURI, RDF.TYPE, getPredicate());
