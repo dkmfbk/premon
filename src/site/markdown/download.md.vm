@@ -5,7 +5,7 @@ Each single component of the PreMOn Dataset can be downloaded by clicking the Pr
 For each dataset, we provide, splitted among CORE resource data and EXAMPLE data, three separate RDF dumps (tql.gz - gzipped turtle format - convertible to any other RDF format using [RDFpro](http://rdfpro.fbk.eu)) containing:
 
   * the **base version** of the dataset, complete but without inferred RDF triples;
-  * the **closed version** of the dataset, which includes also triples derived by applying owl2rl inference using PreMOn, lemon ontolex and NIF TBox definitions (recommended download);
+  * the **closed version** of the dataset, which includes also triples derived by applying owl2rl inference using PreMOn, OntoLex-Lemon and NIF TBox definitions (recommended download);
   * the **VOID statistics** associated to the dataset.
 
 <table>
@@ -16,110 +16,119 @@ For each dataset, we provide, splitted among CORE resource data and EXAMPLE data
 <tbody>
 <tr>
 <td>PropBank 1.7 (from <a href="http://verbs.colorado.edu/verb-index/pb/propbank-1.7.tar.gz">here</a>)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb17-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (688729)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb17-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (688715)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pb17-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (429947)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb17-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1068098)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb17-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1068085)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pb17-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (460610)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pb17-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (792)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pb17-examples-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (310)</td>
 </tr>
 <tr>
 <td>PropBank 2.1.5 from Ontonote 5 (from <a href="http://verbs.colorado.edu/propbank/frame_downloads/Ontonote5frames.tar.gz">here</a>)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1007131)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (653258)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1551648)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (700754)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (788)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1050825)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (653395)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1622206)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (700900)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (792)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pb215-examples-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (310)</td>
 </tr>
 <tr>
 <td>PropBank 3.1 (from <a href="https://github.com/propbank/propbank-frames/tree/v3.1/frames/">here</a>)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb31-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1307835)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb31-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1307827)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pb31-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (881774)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb31-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1983227)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pb31-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1983220)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pb31-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (949568)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pb31-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (790)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pb31-examples-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (310)</td>
 </tr>
 <tr>
 <td>NomBank 1.0 (from <a href="http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz">here</a>)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-nb10-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (518395)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-nb10-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (518200)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-nb10-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (339499)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-nb10-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (742553)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-nb10-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (742294)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-nb10-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (368248)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-nb10-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (623)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-nb10-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (635)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-nb10-examples-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (293)</td>
 </tr>
 <tr>
 <td>VerbNet 3.2 (from <a href="http://verbs.colorado.edu/verb-index/vn/verbnet-3.2.tar.gz">here</a>)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn32-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (236528)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn32-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (247885)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-vn32-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (23800)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn32-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (301574)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn32-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (312686)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-vn32-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (27988)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn32-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1186)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn32-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1205)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-vn32-examples-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (211)</td>
 </tr>
 <tr>
+<td>VerbNet 3.3 (from <a href="http://verbs.colorado.edu/verb-index/vn/verbnet-3.3.tar.gz">here</a>)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn33-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (312277)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn33-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (27204)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn33-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (391964)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn33-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (31971)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn33-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1193)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-vn33-examples-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (211)</td>
+</tr>
+<tr>
 <td>FrameNet 1.5 (from <a href="https://framenet.icsi.berkeley.edu/">here</a>)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn15-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (332386)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn15-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (332131)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn15-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (5752132)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn15-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (419910)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn15-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (421770)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn15-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (6212899)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn15-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1102)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn15-examples-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (251)</td>
 </tr>
 <tr>
 <td>FrameNet 1.6 (from <a href="https://framenet.icsi.berkeley.edu/">here</a>)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn16-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (412757)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn16-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (413773)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn16-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (7122995)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn16-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (522495)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn16-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (526340)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn16-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (7646270)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn16-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1153)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn16-examples-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (251)</td>
 </tr>
 <tr>
 <td>FrameNet 1.7 (from <a href="https://framenet.icsi.berkeley.edu/">here</a>)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn17-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (429597)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn17-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (429424)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn17-examples-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (7296304)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn17-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (544088)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-fn17-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (546377)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn17-examples-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (7828555)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn17-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1185)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-fn17-examples-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (251)</td>
 </tr>
 <tr>
 <td>SemLink 1.2.2c (from <a href="https://verbs.colorado.edu/semlink/versions/1.2.2c.zip">here</a>)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-sl122c-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (203291)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-sl122c-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (203256)</td>
 <td>&nbsp;</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-sl122c-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (253173)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-sl122c-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (253129)</td>
 <td>&nbsp;</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-sl122c-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (252)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-sl122c-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (264)</td>
 <td>&nbsp;</td>
 </tr>
 <tr>
 <td>PredicateMatrix 1.3 (from <a href="http://adimen.si.ehu.es/web/files/PredicateMatrix/PredicateMatrix.v1.3.tar.gz">here</a>)</td>
 <td><a href="${site-download}dataset/latest/premon-${premon-version}-pm13-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (332029)</td>
 <td>&nbsp;</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pm13-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (396773)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pm13-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (396774)</td>
 <td>&nbsp;</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-pm13-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (374)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-pm13-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (386)</td>
 <td>&nbsp;</td>
 </tr>
 <tr>
 <td>FrameBase 2.0 (from <a href="http://www.framebase.org/files/data/dump/schema/FrameBase_schema_core.ttl.gz">here</a> -- only mappings)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-fb20-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (82750)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-fb20-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (61227)</td>
 <td>&nbsp;</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-fb20-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (116291)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-fb20-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (94768)</td>
 <td>&nbsp;</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-fb20-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (148)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-fb20-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (136)</td>
 <td>&nbsp;</td>
 </tr>
 <tr>
 <td>ESO 2.0 (from <a href="https://github.com/newsreader/eso/blob/master/ESO_Version2.owl">here</a> -- only mappings)</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-eso20-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1483)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-eso20-noinf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (1374)</td>
 <td>&nbsp;</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-eso20-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (2581)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-eso20-inf.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (2472)</td>
 <td>&nbsp;</td>
-<td><a href="${site-download}dataset/latest/premon-${premon-version}-eso20-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (135)</td>
+<td><a href="${site-download}dataset/latest/premon-${premon-version}-eso20-stats.tql.gz"><img style="width: 20%;" src="images/favicon.png" alt="Download" /></a> (123)</td>
 <td>&nbsp;</td>
 </tr>
 </tbody>
@@ -137,6 +146,7 @@ Triples are placed in different named graphs that can be used when querying to s
   * **`pm:pb31`** contains semantic classes, semantic roles and examples specific to [PropBank 3.1](https://github.com/propbank/propbank-frames/tree/v3.1/frames/)
   * **`pm:nb10`** contains semantic classes, semantic roles and examples specific to [NomBank 1.0](http://nlp.cs.nyu.edu/meyers/nombank/nombank.1.0.tgz)
   * **`pm:vb32`** contains semantic classes, semantic roles and examples specific to [VerbNet 3.2](http://verbs.colorado.edu/verb-index/vn/verbnet-3.2.tar.gz)
+  * **`pm:vb33`** contains semantic classes, semantic roles and examples specific to [VerbNet 3.3](http://verbs.colorado.edu/verb-index/vn/verbnet-3.3.tar.gz)
   * **`pm:fn15`** contains semantic classes, semantic roles and examples specific to [FrameNet 1.5](https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex)
   * **`pm:fn16`** contains semantic classes, semantic roles and examples specific to [FrameNet 1.6](https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex)
   * **`pm:fn17`** contains semantic classes, semantic roles and examples specific to [FrameNet 1.7](https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex)

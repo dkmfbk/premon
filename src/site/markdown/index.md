@@ -20,18 +20,18 @@
 ### About
 
 **PreMOn** (Predicate Model for Ontologies) is a linguistic Linked Data resource representing **predicate** models such as PropBank, NomBank, VerbNet and FrameNet.
-PreMOn provides an **OWL ontology** for modelling **semantic classes** (i.e., verb classes, rolesets, frames) with their **roles**, mappings across different predicate models and to ontological resources, and annotations, based on **lemon** (Lexicon Model for Ontologies). PreMOn comes with a set of **RDF datasets** for the main predicate models described using this ontology.
+PreMOn provides an **OWL ontology** for modelling **semantic classes** (i.e., verb classes, rolesets, frames) with their **roles**, mappings across different predicate models and to ontological resources, and annotations, based on **OntoLex-Lemon** (Lexicon Model for Ontologies). PreMOn comes with a set of **RDF datasets** for the main predicate models described using this ontology.
 
 [learn more...](overview.html)
 
 ### Features
 
 - Modular [OWL 2.0 ontology](ontology.html) (core module with extension for each predicate model)
-- Based on [lemon](http://www.w3.org/community/ontolex/wiki/Final_Model_Specification) by the [Ontology-Lexica Community Group](https://www.w3.org/community/ontolex/) at W3C
+- Based on [OntoLex-Lemon](hhttps://www.w3.org/2016/05/ontolex/) by the [Ontology-Lexica Community Group](https://www.w3.org/community/ontolex/) at W3C
 - [Dataset](download.html) with [VOID](http://www.w3.org/TR/void/) statistics available for: 
 [PropBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) (1.7, 2.1.5, 3.1); 
 [NomBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) (1.0);
-[VerbNet](https://verbs.colorado.edu/~mpalmer/projects/verbnet.html) (3.2);
+[VerbNet](https://verbs.colorado.edu/~mpalmer/projects/verbnet.html) (3.2, 3.3);
 [FrameNet](https://framenet.icsi.berkeley.edu/fndrupal/) (1.5, 1.6, and 1.7); 
 [SemLink](https://verbs.colorado.edu/semlink/) (1.2.2c); 
 [PredicateMatrix](http://adimen.si.ehu.es/web/PredicateMatrix) (1.3); 
@@ -42,6 +42,7 @@ Ontological mappings to [FrameBase](https://framebase.org/) (2.0) and [ESO](http
 - [premonitor](premonitor.html) software for converting original resources
 
 ### News
+- 2018-02-15 PreMOn 2018.a released (Added VerbNet 3.3)
 - 2017-05-01 PreMOn 2017.a released (Added FrameNet 1.7, PropBank 3.1, ontological mappings to FrameBase 2.0 and ESO 2.0)
 - 2016-05-20 Browse PreMOn with the [Navigator](navigator/)!
 - 2016-05-04 PreMOn 2016.b released (Added PredicateMatrix 1.3)
