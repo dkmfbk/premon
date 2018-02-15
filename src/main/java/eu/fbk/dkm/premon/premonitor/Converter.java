@@ -70,7 +70,7 @@ public abstract class Converter {
     public String prefix;
     boolean extractExamples = false;
     public String separator = "-";
-    public String argumentSeparator = "-";
+    public String argumentSeparator = "@";
     public static final String FORM_PREFIX = "form";
     public static final String CONCEPTUALIZATION_PREFIX = "co";
     protected Map<String, URI> wnInfo;

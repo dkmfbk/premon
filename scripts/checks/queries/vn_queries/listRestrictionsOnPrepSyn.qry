@@ -1,0 +1,8 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+SELECT ?pred ?res
+WHERE{ 
+?pred a vn:PrepSynItem .
+?pred vn:restriction ?res .
+}
+ORDER BY ?pred

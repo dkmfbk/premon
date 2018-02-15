@@ -1,0 +1,8 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+SELECT ?pred ?label
+WHERE{ 
+?pred a vn:VerbClass .
+?pred rdfs:label ?label .
+}
+LIMIT 100
+

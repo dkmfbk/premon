@@ -1,0 +1,8 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+PREFIX nif:<http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+SELECT ?class ?sclass 
+WHERE{ 
+?class vn:subclass ?sclass .
+}
+

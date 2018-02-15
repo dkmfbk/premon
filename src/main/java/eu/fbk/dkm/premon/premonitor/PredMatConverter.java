@@ -169,10 +169,7 @@ public class PredMatConverter extends Converter {
 							URI fnFrameURI = fnSc == null? null : uriForRoleset(fnSc, fnLink);
 							URI fnConceptualizationURI = fnLe == null || fnSc == null?
 									null : uriForConceptualizationWithPrefix(fnLe, DEFAULT_TYPE, fnSc, fnLink);
-							String oldArgumentSeparator = argumentSeparator;
-							argumentSeparator = "@";
 							URI fnArgURI = fnSr == null || fnSc == null? null : uriForArgument(fnSc, fnSr, fnLink);
-							argumentSeparator = oldArgumentSeparator;
 
 							URI pbRolesetURI = pbSc == null? null : uriForRoleset(pbSc, pbLink);
 							URI pbConceptualizationURI = pbSc == null?
@@ -315,7 +312,7 @@ public class PredMatConverter extends Converter {
 				URI lexicalEntryURI = uriForLexicalEntry(lemma, type);
 
 				wnConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma,
-						"v", m.group(1), "wn31");
+						"v", wnURI.toString().replace(WN_NAMESPACE,""), "wn31");
 
 				addStatementToSink(wnConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
 				addStatementToSink(wnConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);

@@ -1,0 +1,11 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+SELECT ?pred ?value
+WHERE{ 
+?class vn:definesFrame ?frame .
+?frame pmo:item ?pred .
+?pred a vn:LexSynItem .
+?pred pmo:valueDt ?value .
+}
+ORDER BY ?pred
+

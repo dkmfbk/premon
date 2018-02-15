@@ -25,6 +25,7 @@ $(document).ready(function() {
     createTable("PropBank 2.1.5");
     createTable("PropBank 3.1");    
     createTable("VerbNet 3.2");
+    createTable("VerbNet 3.3");
 
     var file = [
         "data/lexEnt.json",
@@ -35,7 +36,8 @@ $(document).ready(function() {
         "data/pb17semCla.json",
         "data/pb215semCla.json",
         "data/pb31semCla.json",        
-        "data/vn32semCla.json"
+        "data/vn32semCla.json",
+        "data/vn33semCla.json"
     ];
 
     var uri = "https://premon.fbk.eu/resource/";

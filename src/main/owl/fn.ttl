@@ -18,23 +18,25 @@
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
 @base <http://premon.fbk.eu/ontology/fn> .
 
-<http://premon.fbk.eu/ontology/fn> rdf:type owl:Ontology;
-                                     
-                                     dcterms:issued "2015-10-28"^^xsd:date ;
-                                     dcterms:modified "2017-05-01"^^xsd:date ;
-									 owl:versionInfo "2017a" ;  
-									 
-                                   vann:preferredNamespacePrefix "pmofn" ;
+<http://premon.fbk.eu/ontology/fn> rdf:type owl:Ontology ;
+                                   
+                                   dcterms:issued "2015-10-28"^^xsd:date ;
+                                   
+                                   dcterms:modified "2018-02-15"^^xsd:date ;
+                                   
+                                   dcterms:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
                                    
                                    dcterms:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
                                    
                                    dcterms:creator "Francesco Corcoglioniti" ;
                                    
-                                   vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/fn#" ;
-                                   
-                                   dcterms:creator "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
+                                   owl:versionInfo "2018a" ;
                                    
                                    dcterms:title "Predicate Model for Ontologies (PreMOn) - FrameNet ontology module"@en ;
+                                   
+                                   vann:preferredNamespacePrefix "pmofn" ;
+                                   
+                                   vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/fn#" ;
                                    
                                    rdfs:comment "The FrameNet module of the PreMOn ontology extends the core module for representing concepts specific to FrameNet. The modelling is based on the [FrameNet II: Extended Theory and Practice](https://framenet2.icsi.berkeley.edu/docs/r1.5/book.pdf) book."@en ;
                                    
@@ -206,6 +208,30 @@ pmofn:isInchoativeOfFER rdf:type owl:ObjectProperty ;
 
 
 
+###  http://premon.fbk.eu/ontology/fn#metaphor
+
+pmofn:metaphor rdf:type owl:ObjectProperty ;
+               
+               rdfs:label "metaphor"@en ;
+               
+               rdfs:subPropertyOf pmofn:frameRelation .
+
+
+
+###  http://premon.fbk.eu/ontology/fn#metaphorFER
+
+pmofn:metaphorFER rdf:type owl:ObjectProperty ;
+                  
+                  rdfs:label "frame element mapping (on metaphor frame relation)"@en ;
+                  
+                  rdfs:subPropertyOf pmo:roleRel ;
+                  
+                  rdfs:domain pmofn:FrameElement ;
+                  
+                  rdfs:range pmofn:FrameElement .
+
+
+
 ###  http://premon.fbk.eu/ontology/fn#perspectiveOn
 
 pmofn:perspectiveOn rdf:type owl:ObjectProperty ;
@@ -320,8 +346,7 @@ pmofn:seeAlsoFER rdf:type owl:ObjectProperty ,
 
 ###  http://premon.fbk.eu/ontology/fn#semType
 
-pmofn:semType rdf:type owl:FunctionalProperty ,
-                       owl:ObjectProperty ;
+pmofn:semType rdf:type owl:ObjectProperty ;
               
               rdfs:label "semantic type"@en ;
               
@@ -338,8 +363,7 @@ pmofn:semType rdf:type owl:FunctionalProperty ,
 
 ###  http://premon.fbk.eu/ontology/fn#status
 
-pmofn:status rdf:type owl:FunctionalProperty ,
-                      owl:ObjectProperty ;
+pmofn:status rdf:type owl:ObjectProperty ;
              
              rdfs:label "status"@en ;
              
@@ -397,6 +421,20 @@ pmofn:uses rdf:type owl:ObjectProperty ;
 
 
 
+###  http://premon.fbk.eu/ontology/fn#usesFER
+
+pmofn:usesFER rdf:type owl:ObjectProperty ;
+              
+              rdfs:label "frame element mapping (on uses frame relation)"@en ;
+              
+              rdfs:subPropertyOf pmo:roleRel ;
+              
+              rdfs:range pmofn:FrameElement ;
+              
+              rdfs:domain pmofn:FrameElement .
+
+
+
 
 
 #################################################################
@@ -444,11 +482,11 @@ pmofn:FECoreSet rdf:type owl:Class ;
                 
                 rdfs:subClassOf [ rdf:type owl:Restriction ;
                                   owl:onProperty pmo:item ;
-                                  owl:allValuesFrom pmofn:FrameElement
+                                  owl:minCardinality "2"^^xsd:nonNegativeInteger
                                 ] ,
                                 [ rdf:type owl:Restriction ;
                                   owl:onProperty pmo:item ;
-                                  owl:minCardinality "2"^^xsd:nonNegativeInteger
+                                  owl:allValuesFrom pmofn:FrameElement
                                 ] .
 
 
@@ -546,6 +584,7 @@ pmofn:SemType rdf:type owl:Class ;
   owl:members ( pmofn:inheritsFrom
                 pmofn:isCausativeOf
                 pmofn:isInchoativeOf
+                pmofn:metaphor
                 pmofn:perspectiveOn
                 pmofn:precedes
                 pmofn:reFrameMapping
@@ -554,3 +593,9 @@ pmofn:SemType rdf:type owl:Class ;
                 pmofn:uses
               )
 ] .
+
+
+
+
+###  Generated by the OWL API (version 3.5.0) http://owlapi.sourceforge.net
+

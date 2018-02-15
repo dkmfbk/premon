@@ -1,0 +1,16 @@
+PREFIX vn:<http://premon.fbk.eu/ontology/vn#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+PREFIX nif:<http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+SELECT ?classStr (COUNT(?res) as ?n)
+WHERE{ 
+?class a vn:VerbClass .
+?class rdfs:label ?label .
+{?class vn:definesFrame ?frame .
+?frame pmo:first / pmo:next* ?item .
+?item a vn:SynItem .
+{?item vn:restriction ?res . ?res a vn:SelectionalRestriction . ?res a vn:AtomicRestriction} UNION {?item vn:restriction ?resC . ?resC pmo:item ?res . ?res a vn:SelectionalRestriction . ?res a vn:AtomicRestriction} . }
+UNION {?class vn:definesSemArg ?item . {?item vn:restriction ?res . ?res a vn:AtomicRestriction} UNION {?item vn:restriction ?resC . ?resC pmo:item ?res . ?res a vn:AtomicRestriction}}
+BIND (STRBEFORE(?label,"-") as ?classStr)
+}
+GROUP BY ?classStr
+ORDER BY ?classStr

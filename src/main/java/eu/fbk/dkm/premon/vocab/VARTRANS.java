@@ -14,7 +14,7 @@ public final class VARTRANS {
     public static final String PREFIX = "vartrans";
 
     /** Vocabulary namespace: "http://www.w3.org/ns/lemon/vartrans.owl#". */
-    public static final String NAMESPACE = "http://www.w3.org/ns/lemon/vartrans.owl#";
+    public static final String NAMESPACE = "http://www.w3.org/ns/lemon/vartrans#";
 
     /** Immutable {@link Namespace} constant for the vocabulary namespace. */
     public static final Namespace NS = new NamespaceImpl(PREFIX, NAMESPACE);

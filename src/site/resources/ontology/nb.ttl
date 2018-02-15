@@ -5,7 +5,6 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix lime: <http://www.w3.org/ns/lemon/lime#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
@@ -17,11 +16,15 @@
 @prefix pmofn: <http://premon.fbk.eu/ontology/fn#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#> .
+@prefix lime: <http://www.w3.org/ns/lemon/lime#> .
+@prefix synsem: <http://www.w3.org/ns/lemon/synsem#> .
+@prefix decomp: <http://www.w3.org/ns/lemon/decomp#> .
+@prefix vartrans: <http://www.w3.org/ns/lemon/vartrans#> .
 
 <http://premon.fbk.eu/ontology/nb> a owl:Ontology ;
 	dcterms:issued "2015-10-28"^^xsd:date ;
-	dcterms:modified "2017-05-01"^^xsd:date ;
-	owl:versionInfo "2017a" ;
+	dcterms:modified "2018-02-15"^^xsd:date ;
+	owl:versionInfo "2018a" ;
 	dcterms:creator "Francesco Corcoglioniti" , "Marco Rospocher <https://dkm.fbk.eu/rospocher>" ;
 	vann:preferredNamespaceUri "http://premon.fbk.eu/ontology/nb#" ;
 	dcterms:publisher "DKM, Fondazione Bruno Kessler <http://dkm.fbk.eu/>" ;
@@ -54,12 +57,12 @@ pmonb:argument a owl:FunctionalProperty , owl:ObjectProperty ;
 
 pmonb:Argument a owl:Class ;
 	rdfs:label "Argument (NB)"@en ;
-	owl:equivalentClass _:node1bgdrd80sx1 ;
+	owl:equivalentClass _:node1c6crrqdcx1 ;
 	rdfs:subClassOf skos:Concept .
 
 pmonb:SemanticRole a owl:Class ;
 	rdfs:label "Semantic Role (NB)"@en ;
-	rdfs:subClassOf pmo:SemanticRole , _:node1bgdrd80sx24 , _:node1bgdrd80sx25 .
+	rdfs:subClassOf pmo:SemanticRole , _:node1c6crrqdcx24 , _:node1c6crrqdcx25 .
 
 pmonb:tag a owl:ObjectProperty ;
 	rdfs:label "tag"@en ;
@@ -70,12 +73,12 @@ pmonb:Tag a owl:Class ;
 
 pmonb:Modifier a owl:Class ;
 	rdfs:label "Modifier (NB)"@en ;
-	rdfs:subClassOf pmonb:Argument , _:node1bgdrd80sx4 ;
+	rdfs:subClassOf pmonb:Argument , _:node1c6crrqdcx4 ;
 	owl:disjointWith pmonb:NumberedArgument .
 
 pmonb:NumberedArgument a owl:Class ;
 	rdfs:label "Numbered Argument (NB)"@en ;
-	rdfs:subClassOf pmonb:Argument , _:node1bgdrd80sx16 .
+	rdfs:subClassOf pmonb:Argument , _:node1c6crrqdcx16 .
 
 pmonb:argm-cau a owl:NamedIndividual , pmonb:Modifier .
 
@@ -113,7 +116,7 @@ pmonb:arg0 a owl:NamedIndividual , pmonb:NumberedArgument .
 
 pmonb:Roleset a owl:Class ;
 	rdfs:label "Roleset (NB)"@en ;
-	rdfs:subClassOf pmo:SemanticClass , _:node1bgdrd80sx23 .
+	rdfs:subClassOf pmo:SemanticClass , _:node1c6crrqdcx23 .
 
 pmonb:tag-prd a owl:NamedIndividual , pmonb:Tag .
 
@@ -121,82 +124,82 @@ pmonb:tag-ref a owl:NamedIndividual , pmonb:Tag .
 
 pmonb:tag-support a owl:NamedIndividual , pmonb:Tag .
 
-_:node1bgdrd80sx1 a owl:Class ;
-	owl:unionOf _:node1bgdrd80sx2 .
+_:node1c6crrqdcx1 a owl:Class ;
+	owl:unionOf _:node1c6crrqdcx2 .
 
-_:node1bgdrd80sx10 rdf:first pmonb:argm-ext ;
-	rdf:rest _:node1bgdrd80sx11 .
+_:node1c6crrqdcx10 rdf:first pmonb:argm-ext ;
+	rdf:rest _:node1c6crrqdcx11 .
 
-_:node1bgdrd80sx11 rdf:first pmonb:argm-mnr ;
-	rdf:rest _:node1bgdrd80sx12 .
+_:node1c6crrqdcx11 rdf:first pmonb:argm-mnr ;
+	rdf:rest _:node1c6crrqdcx12 .
 
-_:node1bgdrd80sx12 rdf:first pmonb:argm-loc ;
-	rdf:rest _:node1bgdrd80sx13 .
+_:node1c6crrqdcx12 rdf:first pmonb:argm-loc ;
+	rdf:rest _:node1c6crrqdcx13 .
 
-_:node1bgdrd80sx13 rdf:first pmonb:argm-neg ;
-	rdf:rest _:node1bgdrd80sx14 .
+_:node1c6crrqdcx13 rdf:first pmonb:argm-neg ;
+	rdf:rest _:node1c6crrqdcx14 .
 
-_:node1bgdrd80sx14 rdf:first pmonb:argm-pnc ;
-	rdf:rest _:node1bgdrd80sx15 .
+_:node1c6crrqdcx14 rdf:first pmonb:argm-pnc ;
+	rdf:rest _:node1c6crrqdcx15 .
 
-_:node1bgdrd80sx15 rdf:first pmonb:argm-adv ;
+_:node1c6crrqdcx15 rdf:first pmonb:argm-adv ;
 	rdf:rest rdf:nil .
 
-_:node1bgdrd80sx16 a owl:Class ;
-	owl:oneOf _:node1bgdrd80sx17 .
+_:node1c6crrqdcx16 a owl:Class ;
+	owl:oneOf _:node1c6crrqdcx17 .
 
-_:node1bgdrd80sx17 rdf:first pmonb:arg5 ;
-	rdf:rest _:node1bgdrd80sx18 .
+_:node1c6crrqdcx17 rdf:first pmonb:arg5 ;
+	rdf:rest _:node1c6crrqdcx18 .
 
-_:node1bgdrd80sx18 rdf:first pmonb:arg4 ;
-	rdf:rest _:node1bgdrd80sx19 .
+_:node1c6crrqdcx18 rdf:first pmonb:arg4 ;
+	rdf:rest _:node1c6crrqdcx19 .
 
-_:node1bgdrd80sx19 rdf:first pmonb:arg3 ;
-	rdf:rest _:node1bgdrd80sx20 .
+_:node1c6crrqdcx19 rdf:first pmonb:arg3 ;
+	rdf:rest _:node1c6crrqdcx20 .
 
-_:node1bgdrd80sx2 rdf:first pmonb:Modifier ;
-	rdf:rest _:node1bgdrd80sx3 .
+_:node1c6crrqdcx2 rdf:first pmonb:Modifier ;
+	rdf:rest _:node1c6crrqdcx3 .
 
-_:node1bgdrd80sx20 rdf:first pmonb:arg2 ;
-	rdf:rest _:node1bgdrd80sx21 .
+_:node1c6crrqdcx20 rdf:first pmonb:arg2 ;
+	rdf:rest _:node1c6crrqdcx21 .
 
-_:node1bgdrd80sx21 rdf:first pmonb:arg1 ;
-	rdf:rest _:node1bgdrd80sx22 .
+_:node1c6crrqdcx21 rdf:first pmonb:arg1 ;
+	rdf:rest _:node1c6crrqdcx22 .
 
-_:node1bgdrd80sx22 rdf:first pmonb:arg0 ;
+_:node1c6crrqdcx22 rdf:first pmonb:arg0 ;
 	rdf:rest rdf:nil .
 
-_:node1bgdrd80sx23 a owl:Restriction ;
+_:node1c6crrqdcx23 a owl:Restriction ;
 	owl:onProperty pmo:semRole ;
 	owl:allValuesFrom pmonb:SemanticRole .
 
-_:node1bgdrd80sx24 a owl:Restriction ;
+_:node1c6crrqdcx24 a owl:Restriction ;
 	owl:onProperty pmonb:argument ;
 	owl:someValuesFrom pmonb:Argument .
 
-_:node1bgdrd80sx25 a owl:Restriction ;
-	owl:onProperty _:node1bgdrd80sx26 ;
+_:node1c6crrqdcx25 a owl:Restriction ;
+	owl:onProperty _:node1c6crrqdcx26 ;
 	owl:allValuesFrom pmonb:Roleset .
 
-_:node1bgdrd80sx26 owl:inverseOf pmo:semRole .
+_:node1c6crrqdcx26 owl:inverseOf pmo:semRole .
 
-_:node1bgdrd80sx3 rdf:first pmonb:NumberedArgument ;
+_:node1c6crrqdcx3 rdf:first pmonb:NumberedArgument ;
 	rdf:rest rdf:nil .
 
-_:node1bgdrd80sx4 a owl:Class ;
-	owl:oneOf _:node1bgdrd80sx5 .
+_:node1c6crrqdcx4 a owl:Class ;
+	owl:oneOf _:node1c6crrqdcx5 .
 
-_:node1bgdrd80sx5 rdf:first pmonb:argm-cau ;
-	rdf:rest _:node1bgdrd80sx6 .
+_:node1c6crrqdcx5 rdf:first pmonb:argm-cau ;
+	rdf:rest _:node1c6crrqdcx6 .
 
-_:node1bgdrd80sx6 rdf:first pmonb:argm-tmp ;
-	rdf:rest _:node1bgdrd80sx7 .
+_:node1c6crrqdcx6 rdf:first pmonb:argm-tmp ;
+	rdf:rest _:node1c6crrqdcx7 .
 
-_:node1bgdrd80sx7 rdf:first pmonb:argm-dis ;
-	rdf:rest _:node1bgdrd80sx8 .
+_:node1c6crrqdcx7 rdf:first pmonb:argm-dis ;
+	rdf:rest _:node1c6crrqdcx8 .
 
-_:node1bgdrd80sx8 rdf:first pmonb:argm-dir ;
-	rdf:rest _:node1bgdrd80sx9 .
+_:node1c6crrqdcx8 rdf:first pmonb:argm-dir ;
+	rdf:rest _:node1c6crrqdcx9 .
 
-_:node1bgdrd80sx9 rdf:first pmonb:argm-prd ;
-	rdf:rest _:node1bgdrd80sx10 .
+_:node1c6crrqdcx9 rdf:first pmonb:argm-prd ;
+	rdf:rest _:node1c6crrqdcx10 .

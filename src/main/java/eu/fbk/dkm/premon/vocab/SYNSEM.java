@@ -14,7 +14,7 @@ public final class SYNSEM {
     public static final String PREFIX = "synsem";
 
     /** Vocabulary namespace: "http://www.w3.org/ns/lemon/synsem.owl#". */
-    public static final String NAMESPACE = "http://www.w3.org/ns/lemon/synsem.owl#";
+    public static final String NAMESPACE = "http://www.w3.org/ns/lemon/synsem#";
 
     /** Immutable {@link Namespace} constant for the vocabulary namespace. */
     public static final Namespace NS = new NamespaceImpl(PREFIX, NAMESPACE);

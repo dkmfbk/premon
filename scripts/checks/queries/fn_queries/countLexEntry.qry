@@ -1,0 +1,6 @@
+PREFIX fn:<http://premon.fbk.eu/ontology/fn#>
+PREFIX ontolex:<http://www.w3.org/ns/lemon/ontolex#>
+PREFIX pmo:<http://premon.fbk.eu/ontology/core#>
+PREFIX nif:<http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+SELECT (COUNT(DISTINCT ?s) as ?n)
+WHERE { ?s a ontolex:LexicalEntry}

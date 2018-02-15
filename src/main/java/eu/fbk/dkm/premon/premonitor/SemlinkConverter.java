@@ -264,11 +264,8 @@ public class SemlinkConverter extends Converter {
                                 
                                 URI fnFrameURI = uriForRoleset(frame, fnLink);
                                 URI fnConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, frame, fnLink);
-                                String oldArgumentSeparator = argumentSeparator;
-                                argumentSeparator = "@";
                                 URI fnArgURI = uriForArgument(frame, fnrole, fnLink);
-                                argumentSeparator = oldArgumentSeparator;
-                                
+
                                 URI vnClassURI = uriForRoleset(vnSubClass, vnLink);
                                 URI vnConceptualizationURI = uriForConceptualizationWithPrefix(lemma, DEFAULT_TYPE, vnSubClass, vnLink);
                                 URI vnArgURI = uriForArgument(vnSubClass, vnTheta, vnLink);

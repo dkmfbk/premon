@@ -11,6 +11,7 @@ The following named graphs are available, with their content included by default
  `pm:pb31` for PropBank 3.1 data; 
  `pm:nb10` for NomBank 1.0 data;
  `pm:vn32` for VerbNet 3.2 data;
+ `pm:vn33` for VerbNet 3.3 data;
  `pm:fn15` for FrameNet 1.5 data;
  `pm:fn16` for FrameNet 1.6 data;
  `pm:fn17` for FrameNet 1.7 data; 

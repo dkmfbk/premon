@@ -201,7 +201,7 @@ public class VerbnetConverter extends Converter {
                     }
 
                     final URI wnConceptualizationURI = uriForConceptualizationWithPrefix(uriLemma,
-                            "v", m.group(1), "wn31");
+                            "v", wnURI.toString().replace(WN_NAMESPACE,""), "wn31");
 
                     addStatementToSink(wnConceptualizationURI, RDF.TYPE, PMO.CONCEPTUALIZATION);
                     addStatementToSink(wnConceptualizationURI, PMO.EVOKING_ENTRY, lexicalEntryURI);
@@ -490,10 +490,10 @@ public class VerbnetConverter extends Converter {
             boolean questionMark = false;
 
             if (value.startsWith("?")) {
-                addStatementToSink(thisURI, RDF.TYPE, PMOVN.IMPLICIT_PRED_ARG);
+                addStatementToSink(thisURI, PMOVN.IMPL_PRED_ARG,true);
                 value = value.substring(1);
                 questionMark = true;
-            }
+            } else addStatementToSink(thisURI, PMOVN.IMPL_PRED_ARG,false);
 
             addStatementToSink(thisURI, PMO.VALUE_DT, value);
 
@@ -565,10 +565,14 @@ public class VerbnetConverter extends Converter {
             addStatementToSink(obj, RDF.TYPE, PMOVN.PRED_TYPE);
             addStatementToSink(obj, RDFS.LABEL, value);
 
+
+
             URI thisA = PMOVN.PRED;
             final String bool = element.getAttribute("bool");
             if (bool != null && bool.equals("!")) {
-                thisA = PMOVN.NEG_PRED;
+                addStatementToSink(thisURI, PMOVN.NEG_PRE, true);
+            } else {
+                addStatementToSink(thisURI, PMOVN.NEG_PRE, false);
             }
             addStatementToSink(thisURI, RDF.TYPE, thisA);
             addStatementToSink(thisURI, PMO.VALUE_OBJ, obj);
@@ -587,7 +591,7 @@ public class VerbnetConverter extends Converter {
             }
 
             String semString = String.format("%s(%s)", value, argString.trim());
-            if (thisA.equals(PMOVN.NEG_PRED)) {
+            if (bool != null && bool.equals("!")) {
                 semString = String.format("not(%s)", semString);
             }
             this.pieces.add(semString);

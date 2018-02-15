@@ -14,7 +14,7 @@ public final class DECOMP {
     public static final String PREFIX = "decomp";
 
     /** Vocabulary namespace: "http://www.w3.org/ns/lemon/decomp.owl#". */
-    public static final String NAMESPACE = "http://www.w3.org/ns/lemon/decomp.owl#";
+    public static final String NAMESPACE = "http://www.w3.org/ns/lemon/decomp#";
 
     /** Immutable {@link Namespace} constant for the vocabulary namespace. */
     public static final Namespace NS = new NamespaceImpl(PREFIX, NAMESPACE);

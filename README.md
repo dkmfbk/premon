@@ -1,6 +1,6 @@
 # PREMON
 
-[Premon](http://premon.fbk.eu) is a [Lemon model](http://lemon-model.net/index.php) Extension for Exposing Predicate Models as Linked Data.
+[Premon](http://premon.fbk.eu) is a resource for Exposing Predicate Models as Linked Data. It builds on [OntoLex-Lemon](htps://www.w3.org/2016/05/ontolex/) by the [Ontology-Lexica Community Group](https://www.w3.org/community/ontolex/) at W3C.
 
 ## Installation
 
