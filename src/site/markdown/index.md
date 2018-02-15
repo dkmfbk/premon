@@ -27,7 +27,7 @@ PreMOn provides an **OWL ontology** for modelling **semantic classes** (i.e., ve
 ### Features
 
 - Modular [OWL 2.0 ontology](ontology.html) (core module with extension for each predicate model)
-- Based on [OntoLex-Lemon](hhttps://www.w3.org/2016/05/ontolex/) by the [Ontology-Lexica Community Group](https://www.w3.org/community/ontolex/) at W3C
+- Based on [OntoLex-Lemon](https://www.w3.org/2016/05/ontolex/) by the [Ontology-Lexica Community Group](https://www.w3.org/community/ontolex/) at W3C
 - [Dataset](download.html) with [VOID](http://www.w3.org/TR/void/) statistics available for: 
 [PropBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) (1.7, 2.1.5, 3.1); 
 [NomBank](https://verbs.colorado.edu/~mpalmer/projects/ace.html) (1.0);
