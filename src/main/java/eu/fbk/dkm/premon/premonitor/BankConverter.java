@@ -261,13 +261,14 @@ public abstract class BankConverter extends Converter {
                                         for (Object alias : ((Aliases) aliases).getNoteOrAlias()) {
                                             if (alias instanceof Alias) {
                                                 String aliasLemma = ((Alias) alias).getvalue();
+                                                if (aliasLemma.equals(">")) continue;
                                                 String aliasULemma = getLemmaFromPredicateName(aliasLemma);
                                                 String aliasSinglePos = ((Alias) alias).getPos();
                                                 List<String> aliasTokens = new ArrayList<>();
                                                 List<String> aliasPos = new ArrayList<>();
                                                 aliasTokens.add(aliasLemma);
                                                 aliasPos.add(aliasSinglePos);
-                                                URI aliasLexicalEntry = addLexicalEntry(aliasLemma, aliasLemma, aliasTokens, aliasPos, aliasSinglePos,
+                                                URI aliasLexicalEntry =addLexicalEntry(aliasLemma, aliasLemma, aliasTokens, aliasPos, aliasSinglePos,
                                                         getLexicon());
                                                 ComplexLemma aliasComplexLemma = new ComplexLemma(aliasLemma, aliasULemma, aliasTokens, aliasPos,
                                                         aliasPos.get(0), getLexicon(), aliasLexicalEntry);

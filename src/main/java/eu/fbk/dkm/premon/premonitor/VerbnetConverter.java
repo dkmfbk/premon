@@ -629,7 +629,7 @@ public class VerbnetConverter extends Converter {
         @Override void addToSink(final Element element, final URI thisURI) {
             final String tagName = element.getTagName();
 
-            final String value = element.getAttribute("value");
+            String value = element.getAttribute("value");
 
             //            URI tmpURI = factory.createURI("http://premon.fbk.eu/resource/vn32-amalgamate-22.2-1_frame_1_SynItem_4");
             //            System.out.println(thisURI);
@@ -644,7 +644,14 @@ public class VerbnetConverter extends Converter {
                 this.pieces.add(value);
                 this.roles.add(value);
                 addStatementToSink(thisURI, RDF.TYPE, PMOVN.NP_SYN_ITEM);
+
+                //fix for values starting with ?
+                if (value.startsWith("?")) {
+                    value = value.substring(1);
+                }
+
                 final URI argumentURI = uriForArgument(this.rolesetID, value);
+
                 addStatementToSink(thisURI, PMO.VALUE_OBJ, argumentURI);
                 addRestrictions("SYNRESTRS", "SYNRESTR", thisURI, element, "synRes",
                         PMOVN.SYNTACTIC_RESTRICTION, PMOVN.SYNTACTIC_RESTRICTION_PROPERTY,
@@ -660,8 +667,14 @@ public class VerbnetConverter extends Converter {
             case "PREP":
                 if (value != null && value.length() > 0) {
                     this.pieces.add(String.format("{%s}", value));
-                    final String[] values = value.split("\\s+");
-                    for (final String thisValue : values) {
+                    final String[] values = value.replace("|"," ").split("\\s+"); // added | for the alternatives
+                    for (String thisValue : values) {
+
+                        //fix for values starting with ?
+                        if (thisValue.startsWith("?")) {
+                            thisValue = thisValue.substring(1);
+                        }
+
                         final URI lexicalEntryURI = addLexicalEntry(thisValue, thisValue, null,
                                 null, "prep", getLexicon());
                         addStatementToSink(thisURI, PMO.VALUE_OBJ, lexicalEntryURI);
